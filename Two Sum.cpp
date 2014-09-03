@@ -51,6 +51,14 @@ public:
 	///@author zhaowei
 	///@date 2014.09.04
 	///@version 1.1
+
+	///@brief 题目中要求先输出较小下标的元素，故进行相应的修改。将较小下标的元素先push进结果向量
+	///@param numbers 存储整型数组的向量
+	///@param target 指定的和
+	///@return 保存两个向量元素下标的向量
+	///@author zhaowei
+	///@date 2014.09.04
+	///@version 1.2
 	vector<int> twoSum(vector<int> &numbers, int target) 
 	{
 		vector<int> rslt;
