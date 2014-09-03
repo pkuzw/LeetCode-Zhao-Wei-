@@ -13,7 +13,7 @@ Output: index1=1, index2=2
 ///@date 2014.09.02
 ///@version 1.0
 
-///@brief 实现代码，并提交到LeetCode
+///@brief 实现代码，并提交到LeetCode，Accepted
 ///@author zhaowei
 ///@date 2014.09.04
 ///@version 1.1
