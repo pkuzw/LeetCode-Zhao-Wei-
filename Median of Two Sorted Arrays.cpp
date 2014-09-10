@@ -3,9 +3,12 @@
 There are two sorted arrays A and B of size m and n respectively. Find the median of the two sorted arrays. 
 The overall run time complexity should be O(log (m+n)).
 */
+///@brief 最简单的办法是归并排序，然后输出中间的那个数，时间复杂度是O(m+n)。
 ///@author zhaowei
 ///@date 2014.09.09
 ///@version 1.0
+
+
 
 #include <iostream>
 #include <vector>
