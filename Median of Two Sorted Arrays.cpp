@@ -25,5 +25,13 @@ public:
 
 int main()
 {
+	//样例测试
+	int arr_a[6] = {2, 14, 22, 34, 36, 78};
+	int arr_b[9] = {1, 3, 8, 13, 17, 21, 25, 28, 30};
+	double median = 0;
+	Solution slt;
+	median = slt.findMedianSortedArrays(arr_a, 6, arr_b, 9);
+	cout << "median of two sorted arrays: " << arr_b[5] << endl;
+	cout << "program's result: " << median << endl;
 	return 0;
 }
