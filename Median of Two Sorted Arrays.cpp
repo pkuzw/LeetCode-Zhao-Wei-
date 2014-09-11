@@ -8,7 +8,10 @@ The overall run time complexity should be O(log (m+n)).
 ///@date 2014.09.09
 ///@version 1.0
 
-
+///@brief 添加测试样例
+///@author zhaowei
+///@date 2014.09.11
+///@version 1.1
 
 #include <iostream>
 #include <vector>
