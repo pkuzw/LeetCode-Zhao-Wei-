@@ -13,6 +13,8 @@ The overall run time complexity should be O(log (m+n)).
 ///@date 2014.09.11
 ///@version 1.1
 
+///@brief 参考链接：http://leetcode.com/2011/03/median-of-two-sorted-arrays.html
+
 #include <iostream>
 #include <vector>
 using namespace std;
