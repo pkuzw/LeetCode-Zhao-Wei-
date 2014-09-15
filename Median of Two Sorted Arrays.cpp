@@ -39,5 +39,6 @@ int main()
 	median = slt.findMedianSortedArrays(arr_a, 6, arr_b, 9);
 	cout << "median of two sorted arrays: " << arr_b[5] << endl;
 	cout << "program's result: " << median << endl;
+
 	return 0;
 }
