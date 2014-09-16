@@ -14,7 +14,13 @@ The overall run time complexity should be O(log (m+n)).
 ///@version 1.1
 
 ///@brief 参考链接：http://leetcode.com/2011/03/median-of-two-sorted-arrays.html
-
+//		  注意观察两个已经排好序的数组A和B，假设它们的长度分别是m和n，中位数分别是A[i]和B[j]，其中i = m/2，j = n/2，数组从0开始计算下标
+//        当A[i] == B[j]时，两个数组的中位数是(A[i]+B[j])/2；
+//        当A[i] < B[j]时， 两个数组的中位数位于[A[i..m-1], B[0..j]]中，包括A[i]和B[j]
+//		  当A[i] > B[j]时， 两个数组的中位数位于[B[j..n-1], A[0..i]]中，包括A[i]和B[j]
+///@author zhaowei
+///@date 2014.09.16
+///@version 1.1
 #include <iostream>
 #include <vector>
 using namespace std;
