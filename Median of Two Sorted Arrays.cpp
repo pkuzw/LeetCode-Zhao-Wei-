@@ -18,8 +18,9 @@ The overall run time complexity should be O(log (m+n)).
 //        当A[i] == B[j]时，两个数组的中位数是(A[i]+B[j])/2；
 //        当A[i] < B[j]时， 两个数组的中位数位于[A[i..m-1], B[0..j]]中，包括A[i]和B[j]
 //		  当A[i] > B[j]时， 两个数组的中位数位于[B[j..n-1], A[0..i]]中，包括A[i]和B[j]
+//		  先把代码拷贝到源程序里，保证能够编译通过。
 ///@author zhaowei
-///@date 2014.09.16
+///@date 2014.09.23
 ///@version 1.1
 
 #include <iostream>
@@ -36,6 +37,7 @@ public:
 		return rslt;
 	}
 	*/
+
 	double findMedianBaseCase(int med, int C[], int n) {
 		if (n == 1)
 			return (med+C[0])/2.0;
