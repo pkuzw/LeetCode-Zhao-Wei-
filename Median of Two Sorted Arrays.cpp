@@ -92,6 +92,12 @@ public:
 		return ((n%2 == 1) ? A[n/2] : (A[n/2-1]+A[n/2])/2.0);
 	}
 
+	///@brief 找两个整型数组的中位数
+	///@param A 整型数组A
+	///@param m 整型数组A的大小
+	///@param B 整型数组B
+	///@param n 整型数组B的大小
+	///@return 返回
 	double findMedianSortedArrays(int A[], int m, int B[], int n) {
 	//	assert(m+n >= 1);
 		if (m == 0)
@@ -123,12 +129,12 @@ public:
 int main()
 {
 	//样例测试
-	int arr_a[6] = {2, 14, 22, 34, 36, 78};
+	int arr_a[7] = {2, 14, 22, 34, 36, 78, 99};
 	int arr_b[9] = {1, 3, 8, 13, 17, 21, 25, 28, 30};
 	double median = 0;
 	Solution slt;
-	median = slt.findMedianSortedArrays(arr_a, 6, arr_b, 9);
-	cout << "median of two sorted arrays: " << arr_b[5] << endl;
+	median = slt.findMedianSortedArrays(arr_a, 7, arr_b, 9);
+	cout << "median of two sorted arrays: " << arr_a[2] << "or" << arr_b[5] << endl;
 	cout << "program's result: " << median << endl;
 
 	return 0;
