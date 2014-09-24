@@ -135,14 +135,14 @@ public:
 		{
 			if(m % 2 == 0)
 			{
-				if(i - 1 < n - j - 1)
+				if(i - 1 <= n - j - 1)
 					k = i - 1;
 				else
 					k = n - j -1;
 			}
 			else
 			{
-				if(i < n - j - 1)
+				if(i <= n - j - 1)
 					k = i;
 				else
 					k = n - j - 1;
@@ -154,7 +154,7 @@ public:
 		{
 			if (n % 2 == 0)
 			{
-				if (m - i - 1 < j - 1)
+				if (m - i - 1 <= j - 1)
 				{
 					k = m - i - 1;
 				} 
@@ -165,17 +165,17 @@ public:
 			}
 			else
 			{
-				if (m - i - 1 < j)
+				if (m - i - 1 <= j)
 				{
 					k = m - i - 1;
 				} 
 				else
 				{
-					m = j;
+					k = j;
 				}
 			}
 			//k = ((n%2 == 0) ? min(m-i-1, j-1) : min(m-i-1, j));
-			assert(k > 0);
+//			assert(k > 0);
 			return findMedianSortedArrays(A, m-k, B+k, n-k);
 		}
 	}
