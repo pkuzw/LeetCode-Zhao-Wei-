@@ -97,29 +97,83 @@ public:
 	///@param m 整型数组A的大小
 	///@param B 整型数组B
 	///@param n 整型数组B的大小
-	///@return 返回
-	double findMedianSortedArrays(int A[], int m, int B[], int n) {
-	//	assert(m+n >= 1);
+	///@return 如果(m+n)的和为偶数，则返回距离中位数最近的两个相邻元素的算术平均值；如果(m+n)的和为奇数，则直接返回中位数。
+	double findMedianSortedArrays(int A[], int m, int B[], int n) 
+	{
+		//如果A数组为空，则直接返回B数组的中位数
 		if (m == 0)
 			return findMedianSingleArray(B, n);
+
+		//如果B数组为空且A数组不为空，则直接返回A数组的中位数
 		else if (n == 0)
 			return findMedianSingleArray(A, m);
+
+		//如果A数组只含有一个元素且B数组不为空，则认为是基本情况I
 		else if (m == 1)
 			return findMedianBaseCase(A[0], B, n);
+
+		//如果B数组只含有一个元素且A数组不为空，则也认为是基本情况I
 		else if (n == 1)
 			return findMedianBaseCase(B[0], A, m);
+
+		//如果A数组只含有两个元素且B数组不为空，则认为是基本情况II
 		else if (m == 2)
 			return findMedianBaseCase2(A[0], A[1], B, n);
+
+		//如果B数组只含有两个元素且A数组不为空，则认为是基本情况II
 		else if (n == 2)
 			return findMedianBaseCase2(B[0], B[1], A, m);
 
-		int i = m/2, j = n/2, k;
-		if (A[i] <= B[j]) {
-			k = ((m%2 == 0) ? min(i-1, n-j-1) : min(i, n-j-1));
-		//	assert(k > 0);
+
+		int i = m/2;	//数组A的中位数下标
+		int	j = n/2;	//数组B的中位数下标
+		int k = 0;		//用来保存每次查找后子数组截短的长度
+
+		// 如果数组A的中位数小于数组B的中位数，则两数组的中位数应该位于[A[i..m-1], B[0..n]]之间
+		if (A[i] <= B[j])
+		{
+			if(m % 2 == 0)
+			{
+				if(i - 1 < n - j - 1)
+					k = i - 1;
+				else
+					k = n - j -1;
+			}
+			else
+			{
+				if(i < n - j - 1)
+					k = i;
+				else
+					k = n - j - 1;
+			}
+			//k = ((m%2 == 0) ? min(i-1, n-j-1) : min(i, n-j-1));
 			return findMedianSortedArrays(A+k, m-k, B, n-k);
-		} else {
-			k = ((n%2 == 0) ? min(m-i-1, j-1) : min(m-i-1, j));
+		}
+		else
+		{
+			if (n % 2 == 0)
+			{
+				if (m - i - 1 < j - 1)
+				{
+					k = m - i - 1;
+				} 
+				else
+				{
+					k = j - 1;
+				}
+			}
+			else
+			{
+				if (m - i - 1 < j)
+				{
+					k = m - i - 1;
+				} 
+				else
+				{
+					m = j;
+				}
+			}
+			//k = ((n%2 == 0) ? min(m-i-1, j-1) : min(m-i-1, j));
 		//	assert(k > 0);
 			return findMedianSortedArrays(A, m-k, B+k, n-k);
 		}
@@ -134,7 +188,7 @@ int main()
 	double median = 0;
 	Solution slt;
 	median = slt.findMedianSortedArrays(arr_a, 7, arr_b, 9);
-	cout << "median of two sorted arrays: " << arr_a[2] << "or" << arr_b[5] << endl;
+	cout << "median of two sorted arrays: " << arr_a[2] << " or " << arr_b[5] << endl;
 	cout << "program's result: " << median << endl;
 
 	return 0;
