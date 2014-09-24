@@ -25,6 +25,7 @@ The overall run time complexity should be O(log (m+n)).
 
 #include <iostream>
 #include <vector>
+#include <assert.h>
 using namespace std;
 
 class Solution 
@@ -88,7 +89,7 @@ public:
 	}
 
 	double findMedianSingleArray(int A[], int n) {
-	//	assert(n > 0);
+		assert(n > 0);
 		return ((n%2 == 1) ? A[n/2] : (A[n/2-1]+A[n/2])/2.0);
 	}
 
@@ -174,6 +175,7 @@ public:
 				}
 			}
 			//k = ((n%2 == 0) ? min(m-i-1, j-1) : min(m-i-1, j));
+			assert(k > 0);
 			return findMedianSortedArrays(A, m-k, B+k, n-k);
 		}
 	}
