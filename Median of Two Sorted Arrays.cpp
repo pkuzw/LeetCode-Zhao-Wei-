@@ -23,6 +23,10 @@ The overall run time complexity should be O(log (m+n)).
 ///@date 2014.09.23
 ///@version 1.1
 
+///@brief 逐句给原有代码中的findMedianSortedArrays()方法的前半部分添加注释，理解具体含义
+///@author zhaowei
+///@date 2014.09.24
+///@version 1.2
 #include <iostream>
 #include <vector>
 #include <assert.h>
