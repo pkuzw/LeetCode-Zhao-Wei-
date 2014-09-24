@@ -174,7 +174,6 @@ public:
 				}
 			}
 			//k = ((n%2 == 0) ? min(m-i-1, j-1) : min(m-i-1, j));
-		//	assert(k > 0);
 			return findMedianSortedArrays(A, m-k, B+k, n-k);
 		}
 	}
