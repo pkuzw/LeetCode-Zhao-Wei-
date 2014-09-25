@@ -153,6 +153,7 @@ public:
 			}
 			//k = ((m%2 == 0) ? min(i-1, n-j-1) : min(i, n-j-1));
 			assert(k > 0);
+
 			return findMedianSortedArrays(A+k, m-k, B, n-k);
 		}
 		else
@@ -189,12 +190,26 @@ public:
 int main()
 {
 	//样例测试
-	int arr_a[7] = {2, 14, 22, 34, 36, 78, 99};
-	int arr_b[9] = {1, 3, 8, 13, 17, 21, 25, 28, 30};
+	int len_a = 0, len_b = 0;
+	cout << "input length of A: ";
+	cin >> len_a;
+	cout << "input length of B: ";
+	cin >> len_b;
+
+	int* arr_a = new int[len_a];
+	int* arr_b = new int[len_b];
+	
+	cout << "input elements of A: ";
+	for(int i = 0; i < len_a; i++)
+		cin >> arr_a[i];
+
+	cout << "input elements of B: ";
+	for(int i = 0; i < len_b; i++)
+		cin >> arr_b[i];
+
 	double median = 0;
 	Solution slt;
-	median = slt.findMedianSortedArrays(arr_a, 7, arr_b, 9);
-	cout << "median of two sorted arrays: " << arr_a[2] << " or " << arr_b[5] << endl;
+	median = slt.findMedianSortedArrays(arr_a, len_a, arr_b, len_b);
 	cout << "program's result: " << median << endl;
 
 	return 0;
