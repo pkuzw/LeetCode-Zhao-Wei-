@@ -1,16 +1,16 @@
-///@file leetcodeÌâ½âÖĞµÄ½â·¨¡£Ê±¼ä¸´ÔÓ¶ÈO(log(m+n)), ¿Õ¼ä¸´ÔÓ¶ÈO(log(m+n))
+ï»¿///@file leetcodeé¢˜è§£ä¸­çš„è§£æ³•ã€‚æ—¶é—´å¤æ‚åº¦O(log(m+n)), ç©ºé—´å¤æ‚åº¦O(log(m+n))
 ///@author zhaowei
 ///@date 2014.10.27
 ///@version 1.0
-/// ×¢ÒâÑ§Ï°Ò»ÏÂÌâ½âÖĞµÄ´úÂë·ç¸ñ¡£¿ÕĞĞ¡¢¿Õ¸ñºÜÍêÕû£¬´úÂë¼ò½à¡£
-#include <iostream>
+/// æ³¨æ„å­¦ä¹ ä¸€ä¸‹é¢˜è§£ä¸­çš„ä»£ç é£æ ¼ã€‚ç©ºè¡Œã€ç©ºæ ¼å¾ˆå®Œæ•´ï¼Œä»£ç ç®€æ´ã€‚
+#include <iostream> 
 using namespace std;
 
 class Solution
 {
-public:
+public: 
 	double findMedianSortedArrays(int A[], int m, int B[], int n){
-		int total = m + n; //¼ÆËãÁ½Êı×éµÄ³¤¶ÈÖ®ºÍ
+		int total = m + n; //è®¡ç®—ä¸¤æ•°ç»„çš„é•¿åº¦ä¹‹å’Œ
 		if(total & 0x1)
 			return find_kth(A, m, B, n, total / 2 + 1);
 		else
@@ -18,13 +18,13 @@ public:
 	}
 private:
 	static double find_kth(int A[], int m, int B[], int n, int k){
-		//¼ÙÉèm²»´óÓÚn
+		//å‡è®¾mä¸å¤§äºn
 		if (m > n) return find_kth(B, n, A, m, k);
 		if (m == 0) return B[k - 1];
 		if (k == 1) return min(A[0], B[0]);
 
 
-		//½«k·ÖÎªÁ½²¿·Ö
+		//å°†kåˆ†ä¸ºä¸¤éƒ¨åˆ†
 		int pa = min(k / 2, m), pb = k - pa;
 		if (A[pa - 1] < B[pb - 1])
 			return find_kth(A + pa, m - pa, B, n, k - pa);
