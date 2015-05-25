@@ -1,9 +1,9 @@
-///@file	Given a string S, find the longest palindromic substring in S. 
+ï»¿///@file	Given a string S, find the longest palindromic substring in S. 
 ///			You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
 ///@author	zhaowei
 ///@date	2015.05.25
 ///@version 1.0
-///@note	×î¼òµ¥µÄ·½·¨¾ÍÊÇO(n^2)µÄ¸´ÔÓ¶ÈÃ¶¾ÙËùÓĞ×ÓĞòÁĞ£¬»á³¬Ê±¡£
+///@note	æœ€ç®€å•çš„æ–¹æ³•å°±æ˜¯O(n^2)çš„å¤æ‚åº¦æšä¸¾æ‰€æœ‰å­åºåˆ—ï¼Œä¼šè¶…æ—¶ã€‚
 #include <iostream>
 #include <string>
 using namespace std;
@@ -11,17 +11,17 @@ using namespace std;
 class Solution {
 public:
 	string longestPalindrome(string s) {
-		int pstr_head = 0;	//×î´ó»ØÎÄĞòÁĞµÄÊ××Ö·û×ø±ê
-		int pstr_len = 1;	//×î´ó»ØÎÄĞòÁĞµÄ³¤¶È
+		int pstr_head = 0;	//æœ€å¤§å›æ–‡åºåˆ—çš„é¦–å­—ç¬¦åæ ‡
+		int pstr_len = 1;	//æœ€å¤§å›æ–‡åºåˆ—çš„é•¿åº¦
 		string pstr;
-		for (int i = 0; i < s.length(); i++)	//Ã¶¾Ù
+		for (int i = 0; i < s.length(); i++)	//æšä¸¾
 		{
 			int l = i;
-			int count = 0;						//¼ÆËã»ØÎÄĞòÁĞµÄ³¤¶È
-			int k = 1;							//ÓÃÓÚ±ê¼ÇµÚ¶ş²ãÑ­»·µÄ×Ö·û´®Ä©Î²×Ö·û
+			int count = 0;						//è®¡ç®—å›æ–‡åºåˆ—çš„é•¿åº¦
+			int k = 1;							//ç”¨äºæ ‡è®°ç¬¬äºŒå±‚å¾ªç¯çš„å­—ç¬¦ä¸²æœ«å°¾å­—ç¬¦
 			for (int j = s.length() - 1; j >= i-1 && j >= 0; j--)
 			{				
-				if (s[l] == s[j] && l != j && l != j+1)	//i != jÊÇ»ØÎÄ×Ö·û´®ÎªÆæÊı³¤¶ÈµÄÇéĞÎ£»i == j+!ÊÇ»ØÎÄĞòÁĞÎªÅ¼Êı³¤¶ÈµÄÇéĞÎ
+				if (s[l] == s[j] && l != j && l != j+1)	//i != jæ˜¯å›æ–‡å­—ç¬¦ä¸²ä¸ºå¥‡æ•°é•¿åº¦çš„æƒ…å½¢ï¼›i == j+!æ˜¯å›æ–‡åºåˆ—ä¸ºå¶æ•°é•¿åº¦çš„æƒ…å½¢
 				{
 					l++;
 					count++;
@@ -29,7 +29,7 @@ public:
 				}
 				else
 				{
-					if (j - l == 0)				//»ØÎÄ×Ö·û´®ÎªÆæÊı³¤¶ÈµÄÇéĞÎ
+					if (j - l == 0)				//å›æ–‡å­—ç¬¦ä¸²ä¸ºå¥‡æ•°é•¿åº¦çš„æƒ…å½¢
 					{
 						if (pstr_len < count*2 + 1)
 						{
@@ -38,7 +38,7 @@ public:
 							break;
 						}
 					}
-					else if (l == j+1)			//»ØÎÄ×Ö·û´®ÎªÅ¼Êı³¤¶ÈµÄÇéĞÎ
+					else if (l == j+1)			//å›æ–‡å­—ç¬¦ä¸²ä¸ºå¶æ•°é•¿åº¦çš„æƒ…å½¢
 					{
 						if (pstr_len < count*2)
 						{
@@ -47,7 +47,7 @@ public:
 							break;
 						}
 					}
-					else						//Èç¹ûÃ¶¾ÙµÄ×Ó×Ö·û´®²»ÊÇ»ØÎÄ×Ö·û´®£¬ÖØÖÃÄ©Î²×Ö·ûºÍÆğÊ¼×Ö·û
+					else						//å¦‚æœæšä¸¾çš„å­å­—ç¬¦ä¸²ä¸æ˜¯å›æ–‡å­—ç¬¦ä¸²ï¼Œé‡ç½®æœ«å°¾å­—ç¬¦å’Œèµ·å§‹å­—ç¬¦
 					{						
 						j = s.length() - k;
 						k++;
@@ -58,7 +58,7 @@ public:
 			}
 		}
 		char buff[1000] = "";
-		s.copy(buff, pstr_len, pstr_head);		//Í¨¹ıstring×Ô´øµÄcopyº¯Êı½«»ØÎÄ×Ö·û´®¿½±´µ½×Ö·û´®Êı×é
+		s.copy(buff, pstr_len, pstr_head);		//é€šè¿‡stringè‡ªå¸¦çš„copyå‡½æ•°å°†å›æ–‡å­—ç¬¦ä¸²æ‹·è´åˆ°å­—ç¬¦ä¸²æ•°ç»„
 		pstr = buff;
 		return pstr;
 	}
