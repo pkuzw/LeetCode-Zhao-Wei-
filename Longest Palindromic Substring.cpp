@@ -163,18 +163,99 @@ public:
 		}
 		return pstr;
 	}
+
+	///@brief	Manacher's Algorithm
+	///@author	zhaowei
+	///@date	2015.05.26
+	///@note	首先进行预处理，将原来的字符串的字符之间都添加上"#"，在首部添加"$"，尾部添加"^"。这样可以将中心为1个字符或2个字符的回文子串转换为1个字符；
+	//			然后利用一个数组p[i]来保存以字符s[i]为中心时的回文子串长度. 根据回文字符串的对称性特点，在中心右侧的字符s[i]对应的回文子串长度等于其左侧相应的p[2*c - i]和右边界减i的最小值，
+	//			这是因为i' = c - (i - c)，如果i没有超过p[c]的右边界。否则就要算作p[c]的右边界减去i，超出部分重新计算。因为这个差根据回文子串对称性能够
+	//			保证是回文的。如果p[i]的子串右边界超过了p[c]的右边界，那么就将c移动到i，重新确立p[c]右边界。
+	
+	///@brief	对字符串进行预处理，插入"$"，"^"和"#"
+	///@param	s	待处理的字符串
+	///@return	返回插入字符"$"和"#"的字符串
+	///@author	zhaowei
+	///@date	2015.05.26
+	string preprocessString(string s)
+	{
+		string ret = "$";
+		int n = s.length();
+		if (n == 0)
+		{
+			return ret;
+		}
+
+		for (int i = 0; i < n; i++)
+		{
+			ret += "#" + s.substr(i, 1);
+		}
+		ret += "#^";
+		return ret;
+	}
+
+	///@brief	Manacher's Algorithm寻找最长回文子串
+	///@param	s	待处理子串
+	///@return	最长回文子串
+	///@author  zhaowei
+	///@date	2015.05.26
+	string longestPalindrome_Manacher(string s)
+	{
+		string str_p = preprocessString(s);
+		int n = str_p.length();
+		int *p = new int[n];
+		int c = 0;
+		int r = 0;
+
+		for (int i = 1; i < n-1; i++)	
+		{
+			int i_mirror = 2*c - i;
+
+			p[i] = (i < r) ? min(p[i_mirror], r-i) : 0;
+
+			while (str_p[i + p[i] + 1] == str_p[i - p[i] - 1])
+			{
+				p[i]++;
+			}
+
+			if (p[i] + i > r)
+			{
+				c = i;
+				r = i + p[i];
+			}
+		}
+
+		int pstr_head = 0;
+		int pstr_len = 0;
+		for (int i = 0; i < n-1; i++)
+		{
+			if (p[i] > pstr_len)
+			{
+				pstr_head = i;
+				pstr_len = p[i];
+			}
+		}
+
+		string pstr = s.substr((pstr_head - 1 - pstr_len)/2, pstr_len);
+
+		delete []p;
+		
+		return pstr;
+	}
 };
 
 int main()
 {
 	Solution slt;
-	string s = "abbaaaaa";
+	string s = "bb";
 	string pstr_bf = slt.longestPalindrome_BruteForce(s);
 	string pstr_dp = slt.longestPalindrome_DP(s);
 	string pstr_extend = slt.longestPalindrome_extendAroundCenter(s);
+	string pstr_manacher = slt.longestPalindrome_Manacher(s);
 	cout << pstr_bf << endl;
 	cout << pstr_dp;
 	cout << endl;
 	cout << pstr_extend << endl;
+	cout << pstr_manacher << endl;
 	return 0;
 };
