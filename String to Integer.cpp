@@ -12,6 +12,13 @@ class Solution
 public:
 	int myAtoi(string s)
 	{
+		int len = s.length();
+		bool sign_ = false;
+		if (s[0] == '-')
+		{
+			sign_ = true;
+		}
+
 
 	}
 };
