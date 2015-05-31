@@ -52,6 +52,7 @@ public:
 		for (int i = 0; i < int_len; i++)	//计算x的每一位，将其保存到int_arr[]中
 		{
 			int_arr[i] = x/unit[int_len-i-1];
+			int_arr[i] %= unit[1];	//上一步算出来的结果的最后一位就是int_arr[i]的值，故模10.
 		}
 
 		for (int i = 0; i < int_len; i++)	//判断int_arr[]是否是回文数
