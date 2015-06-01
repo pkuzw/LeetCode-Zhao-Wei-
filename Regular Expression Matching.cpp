@@ -27,7 +27,14 @@ using namespace std;
 class Solution
 {
 public:
-	bool isMatch(string s, string p) {
+	///@brief	正则表达式匹配
+	///@param	s	表达式1
+	///@param	p	表达式2
+	///@return	如果s和p能够匹配，则返回true；否则返回false
+	///@author	zhaowei
+	///@date	2015.06.01
+	///@note	这个函数这么写，没法处理"aaa"与"ab*a*c*a"的匹配。如果有多个可重复出现的字符连续出现，则无法处理。
+	bool isMatch_1(string s, string p) {
 		int s_len = s.length();
 		int p_len = p.length();
 
@@ -134,6 +141,40 @@ public:
 
 		return is_matched;
 	}
+
+	///@brief	正则表达式匹配
+	///@param	s	表达式1
+	///@param	p	表达式2
+	///@return	如果s和p能够匹配，则返回true；否则返回false
+	///@author	zhaowei
+	///@date	2015.06.01
+	/* @note	解题思路：参考了leetcode的答案，给出了递归方法来解决这个问题。
+				
+	*/
+	bool isMatch(string s, string p) {
+		const char *s_char = s.c_str();	//先将string转换成const char*表示的字符串
+		const char *p1 = p.c_str();
+
+		//基本情况：如果p1为空，那么s_char为空时返回true，否则返回false
+		if (*p1 == '\0') 
+			return *s_char == '\0';
+
+		// next char is not '*': must match current character
+		// 如果p下一个匹配的字符不是'*'，那么s和p的当前字符一定要匹配
+		if (*(p1+1) != '*') 
+		{		
+			return ((*p1 == *s_char) || (*p1 == '.' && *s_char != '\0')) && isMatch(s_char+1, p1+1);
+		}
+		// next char is '*'
+		// 如果p下一个字符是'*'，那么一直将s匹配下去
+		while ((*p1 == *s_char) || (*p1 == '.' && *s_char != '\0')) 
+		{
+			if (isMatch(s_char, p1+2))	// 如果p+2即'*'后面的第一个字符及后面的所有字符可以和剩余的s匹配，则返回true，否则s自增1 
+				return true;
+			s_char++;
+		}
+		return isMatch(s_char, p1+2);	// 匹配s和p+2
+	}
 };
 
 int main()
@@ -141,11 +182,11 @@ int main()
 	string s = "aab";
 
 	string p = ".*ab";
-	while (cin >> s >> p)
-	{
+	//while (cin >> s >> p)
+	//{
 		Solution slt;
 		cout << slt.isMatch(s, p) << endl;
-	}
+	//}
 	
 	return 0;
 }
