@@ -153,20 +153,19 @@ public:
 	*/
 	bool isMatch(string s, string p) 
 	{
-		const char *s_char = s.c_str();	//先将string转换成const char*表示的字符串
+		const char *s_char = s.c_str();	// 先将string转换成const char*表示的字符串
 		const char *p_char = p.c_str();
 
-		//基本情况：如果p_char为空，那么s_char为空时返回true，否则返回false
+		// 基本情况：如果p_char为空，那么s_char为空时返回true，否则返回false
 		if (*p_char == '\0') 
 			return *s_char == '\0';
-
-		// next char is not '*': must match current character
+				
 		// 如果p下一个匹配的字符不是'*'，那么s和p的当前字符一定要匹配
 		if (*(p_char+1) != '*') 
 		{		
 			return ((*p_char == *s_char) || (*p_char == '.' && *s_char != '\0')) && isMatch(s_char+1, p_char+1);
 		}
-		// next char is '*'
+		
 		// 如果p下一个字符是'*'，那么一直将s匹配下去
 		while ((*p_char == *s_char) || (*p_char == '.' && *s_char != '\0')) 
 		{
