@@ -148,32 +148,33 @@ public:
 	///@return	如果s和p能够匹配，则返回true；否则返回false
 	///@author	zhaowei
 	///@date	2015.06.01
-	/* @note	解题思路：参考了leetcode的答案，给出了递归方法来解决这个问题。
-				
-	*/
-	bool isMatch(string s, string p) {
-		const char *s_char = s.c_str();	//先将string转换成const char*表示的字符串
-		const char *p1 = p.c_str();
+	/* @note	解题思路：参考了leetcode的答案，给出了递归方法来解决这个问题
 
-		//基本情况：如果p1为空，那么s_char为空时返回true，否则返回false
-		if (*p1 == '\0') 
+	*/
+	bool isMatch(string s, string p) 
+	{
+		const char *s_char = s.c_str();	//先将string转换成const char*表示的字符串
+		const char *p_char = p.c_str();
+
+		//基本情况：如果p_char为空，那么s_char为空时返回true，否则返回false
+		if (*p_char == '\0') 
 			return *s_char == '\0';
 
 		// next char is not '*': must match current character
 		// 如果p下一个匹配的字符不是'*'，那么s和p的当前字符一定要匹配
-		if (*(p1+1) != '*') 
+		if (*(p_char+1) != '*') 
 		{		
-			return ((*p1 == *s_char) || (*p1 == '.' && *s_char != '\0')) && isMatch(s_char+1, p1+1);
+			return ((*p_char == *s_char) || (*p_char == '.' && *s_char != '\0')) && isMatch(s_char+1, p_char+1);
 		}
 		// next char is '*'
 		// 如果p下一个字符是'*'，那么一直将s匹配下去
-		while ((*p1 == *s_char) || (*p1 == '.' && *s_char != '\0')) 
+		while ((*p_char == *s_char) || (*p_char == '.' && *s_char != '\0')) 
 		{
-			if (isMatch(s_char, p1+2))	// 如果p+2即'*'后面的第一个字符及后面的所有字符可以和剩余的s匹配，则返回true，否则s自增1 
+			if (isMatch(s_char, p_char+2))	// 如果p+2即'*'后面的第一个字符及后面的所有字符可以和剩余的s匹配，则返回true，否则s自增1 
 				return true;
 			s_char++;
 		}
-		return isMatch(s_char, p1+2);	// 匹配s和p+2
+		return isMatch(s_char, p_char+2);	// 匹配s和p+2
 	}
 };
 
