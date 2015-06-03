@@ -10,9 +10,9 @@ using namespace std;
 class Solution
 {
 public:
-	///@brief	整数转换成罗马字符
+	///@brief	阿拉伯数字转换成罗马数字
 	///@param	num	待处理的整型变量
-	///@return	返回转换后的罗马字符
+	///@return	返回转换后的罗马数字
 	///@author	zhaowei
 	///@date	2015.06.03
 	///@note	逐位处理，每一位分成4种情况，<4, 4, 5-8, 9
@@ -71,6 +71,8 @@ public:
 	
 		return rslt;		
 	}
+
+	
 };
 
 int main()
@@ -80,7 +82,8 @@ int main()
 	int num = 10;
 	while (cin >> num)
 	{
-		cout << slt.intToRoman(num) << endl;
+		string t = slt.intToRoman(num);
+		cout << t << endl;
 	}
 	
 
