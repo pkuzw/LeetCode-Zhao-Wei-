@@ -37,6 +37,7 @@ public:
 
 		int a, b = 0, c;
 		vector<vector<int>> ivvec;
+		vector<int> avec, bvec, cvec;
 
 		for (int i = 0; i < r-2; i++)
 		{				
@@ -47,7 +48,7 @@ public:
 			}
 
 
-			for (int j = r-1; j > i; j--)
+			for (int j = r-1; j > i; j--)	//从另一边向中间靠拢，能够减少不必要的遍历次数
 			{				
 				vector<int> triplet;
 				b = nums[j];
@@ -55,18 +56,27 @@ public:
 				if (c != -1 && nums[c] >= b)
 				{
 					triplet.push_back(a);
-					if (b < nums[c])
+					triplet.push_back(b);
+					triplet.push_back(nums[c]);
+
+					avec.push_back(a);
+					bvec.push_back(b);
+					cvec.push_back(nums[c]);
+
+					if (avec.size() == 1 && bvec.size() == 1 && cvec.size() == 1)
 					{
-						triplet.push_back(b);
-						triplet.push_back(nums[c]);
-					}
-					else
-					{
-						triplet.push_back(nums[c]);
-						triplet.push_back(b);
+						ivvec.push_back(triplet);
 					}
 
-					if (checkTriplet(ivvec, triplet))
+					if ((avec.size() > 1 && bvec.size() > 1 && cvec.size() > 1) &&
+						(BinarySearch(avec, 0, avec.size()-2, a) == -1 || 
+						BinarySearch(bvec, 0, bvec.size()-2, b) == -1 ||
+						BinarySearch(cvec, 0, cvec.size()-2, nums[c]) == -1 ||
+						(BinarySearch(avec, 0, avec.size()-2, a) != BinarySearch(bvec, 0, bvec.size()-2, b)) ||
+						(BinarySearch(avec, 0, avec.size()-2, a) != BinarySearch(cvec, 0, cvec.size()-2, nums[c]) ||
+						BinarySearch(cvec, 0, cvec.size()-2, nums[c]) != BinarySearch(bvec, 0, bvec.size()-2, b))
+						)
+						)
 					{
 						ivvec.push_back(triplet);
 					}						
