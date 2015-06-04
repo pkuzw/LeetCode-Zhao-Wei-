@@ -10,7 +10,7 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 	(-1, -1, 2)
 */
 ///@author	zhaowei
-///@date	2015.06.03
+///@date	2015.06.04
 ///@version 1.0
 
 #include <iostream>
@@ -26,60 +26,95 @@ public:
 	///@param	nums	待处理的数组
 	///@return	返回所有可能的组合，在每一个3元组答案中按照非降序排列元素
 	///@author	zhaowei
-	///@date	2015.06.03
-	/* @note	
+	///@date	2015.06.05
+	/* @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到3个数和为0的组合。时间复杂度为
+				O(nlgn+n^2lgn)，空间复杂度是O(3n)
 	*/
 	vector<vector<int>> threeSum(vector<int>& nums) {
 
 		QuickSort(nums, 0, nums.size()-1);	// 快排
 
-		int l = 0, r = nums.size()-1;	
+		vector<int> nr_nums;	// 将nums中重复出现的元素抽成只出现一次
+		vector<int> rt_nums;	// 记录重复出现元素的个数数组
+		int cnt = 1;			// 记录重复出现的元素个数
+
+		vector<vector<int>> ivvec;	//三元组为元素组成的向量
+
+		if (nums.empty())	//如果nums为空向量，直接返回空向量
+		{
+			return ivvec;
+		}
+
+		for (int i = 0; i < nums.size(); i++)	// 将原有数组转换成没有重复元素的数组
+		{	
+			// 因为i+1有可能越界，所以要单独拿出来判断。循环里的变量边界需要设成num.size()-1，这样不会漏掉最后一个数
+			if (i < nums.size()-1 && nums[i] == nums[i+1])	
+			{
+				cnt++;
+				continue;
+			}
+			nr_nums.push_back(nums[i]);
+			rt_nums.push_back(cnt);
+			cnt = 1;
+		}
+		// 如果输入数组的所有元素全部一样
+		if (rt_nums[0] == nums.size())
+		{
+			// 只有当所有元素都是0的时候才可能输出，其余情况不可能和为0
+			if (nums[0] == 0 && rt_nums[0] > 2)
+			{
+				vector<int> triplet;
+				int k = 3;
+				while (k > 0)
+				{
+					triplet.push_back(0);
+					k--;
+				}
+				ivvec.push_back(triplet);
+			}
+			return ivvec;
+		}
+		
+		
+		int l = 0, r = nr_nums.size()-1;	
 
 		int a, b = 0, c;
-		vector<vector<int>> ivvec;
-		vector<int> avec, bvec, cvec;
-
-		for (int i = 0; i < r-2; i++)
+		for (int i = 0; i <= r; i++)
 		{				
-			a = nums[i];
-			if (a >= 0)	//	不可能三个都是自然数
+			a = nr_nums[i];
+			if (a > 0)	//	不可能三个都是自然数
 			{
 				break;
 			}
 
-
-			for (int j = r-1; j > i; j--)	//从另一边向中间靠拢，能够减少不必要的遍历次数
+			for (int j = i; j <= r; j++)	
 			{				
 				vector<int> triplet;
-				b = nums[j];
-				c = BinarySearch(nums, l, r, 0-a-b);
-				if (c != -1 && nums[c] >= b)
+				b = nr_nums[j];
+
+				if (a == b && rt_nums[i] == 1)	// 如果没有两个重复元素，则跳过
 				{
+					continue;
+				}
+
+				if (a == b && a == 0 && rt_nums[i] < 3) // 如果三个元素一样但是0的出现次数小于3，则跳过
+				{
+					continue;
+				}
+
+				int d = 0-a-b;
+				c = BinarySearch(nr_nums, j, r, d);	// c的二分查找范围只能是在b的下标和r之间
+				if (c != -1 && c >= j)
+				{				
+					if (c == j && rt_nums[c] == 1)	// 如果b和c的下标一样但是该元素只出现了一次，则不可能，需要跳过
+					{
+						continue;
+					}
 					triplet.push_back(a);
 					triplet.push_back(b);
-					triplet.push_back(nums[c]);
-
-					avec.push_back(a);
-					bvec.push_back(b);
-					cvec.push_back(nums[c]);
-
-					if (avec.size() == 1 && bvec.size() == 1 && cvec.size() == 1)
-					{
-						ivvec.push_back(triplet);
-					}
-
-					if ((avec.size() > 1 && bvec.size() > 1 && cvec.size() > 1) &&
-						(BinarySearch(avec, 0, avec.size()-2, a) == -1 || 
-						BinarySearch(bvec, 0, bvec.size()-2, b) == -1 ||
-						BinarySearch(cvec, 0, cvec.size()-2, nums[c]) == -1 ||
-						(BinarySearch(avec, 0, avec.size()-2, a) != BinarySearch(bvec, 0, bvec.size()-2, b)) ||
-						(BinarySearch(avec, 0, avec.size()-2, a) != BinarySearch(cvec, 0, cvec.size()-2, nums[c]) ||
-						BinarySearch(cvec, 0, cvec.size()-2, nums[c]) != BinarySearch(bvec, 0, bvec.size()-2, b))
-						)
-						)
-					{
-						ivvec.push_back(triplet);
-					}						
+					triplet.push_back(nr_nums[c]);
+				
+					ivvec.push_back(triplet);										
  				}
 			}				
 		}
@@ -196,10 +231,14 @@ int main()
  		ivec.push_back(n[i]);
  	}
  	
+	vector<int> ivec2;
+	ivec2.push_back(-2);
+	ivec2.push_back(1);
+	ivec2.push_back(1);
 
 	Solution slt;
 	vector<vector<int>> ivvec;
-	ivvec = slt.threeSum(ivec);
+	ivvec = slt.threeSum(ivec2);
 	for (int i = 0; i < ivvec.size(); i++)
 	{
 		for (int j = 0; j < ivvec[i].size(); j++)
