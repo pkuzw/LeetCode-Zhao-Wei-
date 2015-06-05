@@ -28,7 +28,7 @@ public:
 	///@author	zhaowei
 	///@date	2015.06.05
 	/* @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到3个数和为0的组合。时间复杂度为
-				O(nlgn+n^2lgn)，空间复杂度是O(3n)
+				O(nlgn+n^2lgn)，空间复杂度是O(3n) 
 	*/
 	vector<vector<int>> threeSum(vector<int>& nums) {
 
