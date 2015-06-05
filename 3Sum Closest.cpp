@@ -24,7 +24,7 @@ public:
 	///@return	返回和距离目标值最近的三元组之和
 	///@author	zhaowei
 	///@date	2015.06.05
-	///@note	先对数组进行快排，然后抽取出来没有重复元素组成的数组，以目标值为中心，通过二分查找依次自增和自减1来寻找符合条件的三元组
+	///@note	先对数组进行快排，然后抽取出来没有重复元素组成的数组，以目标值为中心，通过二分查找依次自增和自减1来寻找符合条件的三元组 
 	int threeSumClosest(vector<int>& nums, int target) {
 
 		QuickSort(nums, 0, nums.size()-1);	// 对原数组进行快排
