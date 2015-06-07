@@ -33,6 +33,8 @@ public:
 			cnt[i] = 0;
 		}
 
+		int lmt[10] = {1, 1, 3, 3, 3, 3, 3, 4, 3, 4};
+
 		int k = 0;
 		for (int j = 0; j < str[k].length(); j++)
 		{
