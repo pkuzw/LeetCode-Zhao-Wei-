@@ -276,7 +276,62 @@ public:
 		return result;
 	}
 
-	//
+	///@brief	求4个数之和为指定值的所有组合
+	///@author  zhaowei
+	///@date	2015.06.08
+	/* @note		O（n^2）的算法，先对数组排序。先枚举出所有二个数的和存放在哈希map中，其中map的key对应的是二个数的和，因为多对元素求和可能是相同的值，
+				故哈希map的value是一个链表（下面的代码中用数组代替），链表每个节点存的是这两个数在数组的下标；这个预处理的时间复杂度是O（n^2）。
+				接着枚举第一个和第二个元素，假设分别为v1,v2, 然后在哈希map中查找和为target-v1-v2的所有二元对（在对应的链表中），查找的时间为O（1），
+				为了保证不重复计算，我们只保留两个数下标都大于V2的二元对，即使是这样也有可能重复：比如排好序后数组为-9 -4 -2 0 2 4 4，target = 0，
+				当第一个和第二个元素分别是-4，-2时，我们要得到和为0-（-2）-（-4） = 6的二元对，这样的二元对有两个,都是(2,4)，且他们在数组中的下标都
+				大于-4和-2，如果都加入结果，则(-4,-2,2,4)会出现两次，因此在加入二元对时，要判断是否和已经加入的二元对重复（由于过早二元对之前数组已
+				经排过序，所以两个元素都相同的二元对可以保证在链表中是相邻的，链表不会出现(2,4)->(1,5)->(2,4)的情况，因此只要判断新加入的二元对和上
+				一个加入的二元对是否重复即可），因为同一个链表中的二元对两个元素的和都是相同的，因此只要二元对的一个元素不同，则这个二元对就不同。
+				我们可以认为哈希map中key对应的链表长度为常数，那么算法总的复杂度为O（n^2）
+	*/
+	vector<vector<int> > fourSum(vector<int> &num, int target) {
+		int n = num.size();
+		vector<vector<int> > res;
+		unordered_map<int, vector<pair<int, int> > >pairs;
+		
+		sort(num.begin(), num.end());
+
+		for(int i = 0; i < n; i++)
+			for(int j = i+1 ; j < n; j++)
+				pairs[num[i]+num[j]].push_back(make_pair(i,j));
+
+		for(int i = 0; i < n - 3; i++)
+		{
+			if(i != 0 && num[i] == num[i-1])continue;//防止第一个元素重复
+			for(int j = i+1; j < n - 2; j++)
+			{
+				if(j != i+1 && num[j] == num[j-1])continue;//防止第二个元素重复
+				if(pairs.find(target - num[i] - num[j]) != pairs.end())
+				{
+					vector<pair<int, int>> &sum2 = pairs[target - num[i] - num[j]];
+					bool isFirstPush = true;
+					for(int k = 0; k < sum2.size(); k++)
+					{
+						if(sum2[k].first <= j)continue;//保证所求的四元组的数组下标是递增的
+						if(isFirstPush || (res.back())[2] != num[sum2[k].first])
+						{
+							vector<int> ivec;
+							ivec.push_back(num[i]);
+							ivec.push_back(num[j]);
+							ivec.push_back(num[sum2[k].first]);
+							ivec.push_back(num[sum2[k].second]);
+							res.push_back(ivec);
+							isFirstPush = false;
+						}
+					}
+				}
+			}
+		}
+
+		return res;
+	}
+	
+
 };
 
 int main()
