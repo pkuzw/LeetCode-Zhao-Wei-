@@ -19,9 +19,17 @@ A solution set is:
 ///@author	zhaowei
 ///@date	2015.06.06
 ///@version 1.0
+///@note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到4个数和为指定值的组合。
+//			时间复杂度为	O(nlgn+n^3lgn)，空间复杂度是O(3n).OJ报TLE
+
+///@date	2015.06.08
+///@version 2.0
+///@note	
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <algorithm>
 #include <cstdlib>
 
 using namespace std;
@@ -37,7 +45,7 @@ public:
 	/* @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到4个数和为指定值的组合。
 				时间复杂度为	O(nlgn+n^3lgn)，空间复杂度是O(3n) 
 	*/
-	vector<vector<int>> fourSum(vector<int>& nums, int target) {
+	vector<vector<int>> fourSum_tle(vector<int>& nums, int target) {
 
 		QuickSort(nums, 0, nums.size()-1);	// 快排
 
@@ -72,7 +80,7 @@ public:
 		{				
 			a = nr_nums[i];
 
-			for (int j = i; j <= r; j++)	
+			for (int j = r; j >= i; j--)	
 			{								
 				b = nr_nums[j];
 
@@ -81,7 +89,7 @@ public:
 					continue;
 				}
 
-				for (int k = j; k <= r; k++)
+				for (int k = r; k >= j; k--)
 				{
 					vector<int> four_elem;
 					c = nr_nums[k];
@@ -182,6 +190,54 @@ public:
 			BinarySearch(array_int, p, q-1, v);
 		else 
 			BinarySearch(array_int, q+1, r, v);
+	}
+
+	///@brief	利用<multimap>作为缓冲，时间复杂度O(n^2),空间复杂度O(n^2)
+	///@author	zhaowei
+	///@date	2015.06.08
+	///@note	也报TLE
+	vector<vector<int> > fourSum(vector<int>& nums, int target)
+	{
+		vector<vector<int> > rslt;
+		if (nums.size() < 4) return rslt;
+
+		sort(nums.begin(), nums.end());	// 排序
+
+		unordered_multimap<int, pair<int, int> > cache;	// 转换成两个数之和组成的缓冲区
+		for (int i = 0; i != nums.size()-1; i++)
+		{
+			for (int j = i+1; j != nums.size(); j++)
+			{
+				cache.insert(make_pair(nums[i] + nums[j], make_pair(i, j)));
+			}
+		}
+
+		for (auto i = cache.begin(); i != cache.end(); i++)
+		{
+			auto x = target - i->first;
+			auto range = cache.equal_range(x);	//	找出等于x的范围
+			for (auto j = range.first; j != range.second; j++)
+			{
+				auto a = i->second.first;
+				auto b = i->second.second;
+				auto c = j->second.first;
+				auto d = j->second.second;
+
+				if (a != c && b != d && a != d && b != c)
+				{
+					vector<int> ivec;
+					ivec.push_back(nums[a]);
+					ivec.push_back(nums[b]);
+					ivec.push_back(nums[c]);
+					ivec.push_back(nums[d]);
+					sort(ivec.begin(), ivec.end());
+					rslt.push_back(ivec);
+				}
+			}
+		}
+		sort(rslt.begin(), rslt.end());
+		rslt.erase(unique(rslt.begin(), rslt.end()), rslt.end());
+		return rslt;
 	}
 };
 
