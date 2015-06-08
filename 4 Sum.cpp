@@ -60,7 +60,7 @@ public:
 			return ivvec;
 		}
 
-		for (int i = 0; i < nums.size(); i++)	// 将原有数组转换成没有重复元素的数组
+		for (int i = 0; i != nums.size(); i++)	// 将原有数组转换成没有重复元素的数组
 		{	
 			// 因为i+1有可能越界，所以要单独拿出来判断。循环里的变量边界需要设成num.size()-1，这样不会漏掉最后一个数
 			if (i < nums.size()-1 && nums[i] == nums[i+1])	
@@ -196,7 +196,7 @@ public:
 	///@author	zhaowei
 	///@date	2015.06.08
 	///@note	也报TLE
-	vector<vector<int> > fourSum(vector<int>& nums, int target)
+	vector<vector<int> > fourSum_tle2(vector<int>& nums, int target)
 	{
 		vector<vector<int> > rslt;
 		if (nums.size() < 4) return rslt;
@@ -239,6 +239,44 @@ public:
 		rslt.erase(unique(rslt.begin(), rslt.end()), rslt.end());
 		return rslt;
 	}
+
+	///@brief	利用<map>来作为缓冲区。时间复杂度在最坏情况下是O(n^4)，最好情况下是O(n^2)，空间复杂度是O(n^2)
+	///@author	zhaowei
+	///@date	2015.06.08
+	///@note	也是TLE
+	vector<vector<int> > fourSum_tle3(vector<int> &num, int target) {
+		vector<vector<int>> result;
+		if (num.size() < 4) return result;
+		sort(num.begin(), num.end());
+		unordered_map<int, vector<pair<int, int> > > cache;
+		for (size_t a = 0; a < num.size(); ++a) {
+			for (size_t b = a + 1; b < num.size(); ++b) {
+				cache[num[a] + num[b]].push_back(pair<int, int>(a, b));
+			}
+		}
+		for (int c = 0; c < num.size(); ++c) {
+			for (size_t d = c + 1; d < num.size(); ++d) {
+				const int key = target - num[c] - num[d];
+				if (cache.find(key) == cache.end()) continue;
+				const auto& vec = cache[key];
+				for (size_t k = 0; k < vec.size(); ++k) {
+					if (c <= vec[k].second)
+						continue; // 有重叠
+					vector<int> ivec;
+					ivec.push_back(num[vec[k].first]);
+					ivec.push_back(num[vec[k].second]);
+					ivec.push_back(num[c]);
+					ivec.push_back(num[d]);
+					result.push_back(ivec);
+				}
+			}
+		}
+		sort(result.begin(), result.end());
+		result.erase(unique(result.begin(), result.end()), result.end());
+		return result;
+	}
+
+	//
 };
 
 int main()
