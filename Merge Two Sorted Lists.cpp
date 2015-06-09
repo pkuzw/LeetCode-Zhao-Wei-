@@ -15,6 +15,38 @@ struct ListNode
 
 class Solution {
 public:
+	///@brief	归并两个已排好序的链表
+	///@param	l1	链表1
+	///@param	l2	链表2
+	///@return	返回合并后的链表
+	///@author	zhaowei
+	///@date	2015.06.09
+	///@note	依次比较两链表的首部节点，将较小的节点归入新链表，同时将其后移，时间复杂度O(n)，空间复杂度O(1)。
+
+	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) 
+	{
+		ListNode node(0), *p = &node;
+		while (l1 && l2)
+		{
+			if (l1->val < l2->val)
+			{
+				p->next = l1;	//	先设置p->next
+				l1 = l1->next;	//	再移动l1
+			}
+			else
+			{
+				p->next = l2;	//	同上
+				l2 = l2->next;
+			}
+			p = p->next;
+		}
+		if (l1)		//	如果l1多余出来，将其归入p的尾部
+			p->next = l1;		
+		else		//	如果l2多出来，同上
+			p->next = l2;
+		return node.next;
+	}
+
 	///@brief	将两个已经排好序的链表合二为一
 	///@param	l1	链表1
 	///@param	l2	链表2
@@ -23,7 +55,7 @@ public:
 	///@date	2015.06.08
 	///@note	对于每一个原始的节点都新建一个节点来保存，时间复杂度O(n)，空间复杂度O(n)。应该能够优化到空间复杂度O(1)才对。
 
-	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) 
+	ListNode* mergeTwoLists_zw(ListNode* l1, ListNode* l2) 
 	{
 		ListNode* indx1 = l1, *indx2 = l2;
 		ListNode* newList = new ListNode(0);	//	新链表的首指针
