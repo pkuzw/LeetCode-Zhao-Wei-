@@ -1,10 +1,10 @@
-/*/@file	Merge k Sorted Lists
+ï»¿/*/@file	Merge k Sorted Lists
 			Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
 ///@author	zhaowei
 ///@date	2015.06.09
 ///@version	1.0
-///@note	ÀûÓÃ¹é²¢ÅÅĞòµÄË¼Ïë£¬Ê±¼ä¸´ÔÓ¶ÈÎªO(nklogk)£»»òÕß½«Ã¿¸ö×ÓÁ´±íµÄÊ×½áµã·ÅÈë×îĞ¡¶ÑÖĞ£¬Ã¿´Îµ¯³ö¶Ñ¶¥ºÍ²åÈë¶Ñ¶¥ÔªËØµÄºóÒ»½Úµã£¬
-			Ê±¼ä¸´ÔÓ¶ÈÒ²ÎªO(nklongk)
+///@note	åˆ©ç”¨å½’å¹¶æ’åºçš„æ€æƒ³ï¼Œæ—¶é—´å¤æ‚åº¦ä¸ºO(nklogk)ï¼›æˆ–è€…å°†æ¯ä¸ªå­é“¾è¡¨çš„é¦–ç»“ç‚¹æ”¾å…¥æœ€å°å †ä¸­ï¼Œæ¯æ¬¡å¼¹å‡ºå †é¡¶å’Œæ’å…¥å †é¡¶å…ƒç´ çš„åä¸€èŠ‚ç‚¹ï¼Œ
+			æ—¶é—´å¤æ‚åº¦ä¹Ÿä¸ºO(nklongk)
 */
 
 #include <vector>
@@ -22,8 +22,8 @@ struct ListNode
 class Solution
 {
 private:
-	///@brief	×îĞ¡¶ÑµÄ±È½Ïº¯Êı
-	///@note	Èç¹ûÊÇ×îĞ¡¶Ñ£¬·µ»Øa>b£»·´Ö®·µ»Øa<b¡£
+	///@brief	æœ€å°å †çš„æ¯”è¾ƒå‡½æ•°
+	///@note	å¦‚æœæ˜¯æœ€å°å †ï¼Œè¿”å›a>bï¼›åä¹‹è¿”å›a<bã€‚
 	struct cmp	
 	{
 		bool operator ()(const ListNode *a, const ListNode *b)
@@ -33,39 +33,39 @@ private:
 	};
 
 public:
-	///@brief	¸ø¶¨k¸öÒÑÅÅºÃĞòµÄÁ´±í£¬½«ÆäºÏ²¢ÎªÒ»¸öÁ´±í
-	///@param	lists	×°ÓĞk¸öÁ´±íÍ·µÄÈİÆ÷
-	///@return	·µ»ØºÏ²¢ºóµÄÁ´±íÊ×½áµã
+	///@brief	ç»™å®škä¸ªå·²æ’å¥½åºçš„é“¾è¡¨ï¼Œå°†å…¶åˆå¹¶ä¸ºä¸€ä¸ªé“¾è¡¨
+	///@param	lists	è£…æœ‰kä¸ªé“¾è¡¨å¤´çš„å®¹å™¨
+	///@return	è¿”å›åˆå¹¶åçš„é“¾è¡¨é¦–ç»“ç‚¹
 	///@author	zhaowei
 	///@date	2015.06.09
-	///@note	ÀûÓÃ×îĞ¡¶ÑµÄĞÔÖÊ£¬Ã¿´Î²åÈëºÍ¸üĞÂ½ÚµãµÄÊ±¼ä¸´ÔÓ¶ÈÎªO(logk)£¬Ò»¹²ÓĞnk¸ö½Úµã£¬Ôò×ÜµÄÊ±¼ä¸´ÔÓ¶ÈÎªO(nklogk)
+	///@note	åˆ©ç”¨æœ€å°å †çš„æ€§è´¨ï¼Œå°†kä¸ªé˜Ÿåˆ—çš„é¦–ç»“ç‚¹å…¥å †ï¼Œæ¯æ¬¡æ’å…¥å’Œæ›´æ–°èŠ‚ç‚¹çš„æ—¶é—´å¤æ‚åº¦ä¸ºO(logk)ï¼Œä¸€å…±æœ‰nkä¸ªèŠ‚ç‚¹ï¼Œåˆ™æ€»çš„æ—¶é—´å¤æ‚åº¦ä¸ºO(nklogk)
 	ListNode* mergeKLists(vector<ListNode*>& lists) {
 		
 		int n = lists.size();
 
-		if (n == 0)	//	ÅĞ¶ÏlistsÊÇ·ñÎª¿Õ£¬ÈôÎª¿ÕÖ±½Ó·µ»Ønullptr
+		if (n == 0)	//	åˆ¤æ–­listsæ˜¯å¦ä¸ºç©ºï¼Œè‹¥ä¸ºç©ºç›´æ¥è¿”å›nullptr
 		{
 			return nullptr;
 		}
 		ListNode node(0);
 		ListNode* rslt = &node;
 
-		priority_queue<ListNode*, vector<ListNode*>, cmp> que;	//	Èı¸ö²ÎÊı·Ö±ğÎªÔªËØÀàĞÍ£¬ÔªËØÈİÆ÷ÀàĞÍºÍ±È½Ïº¯Êı
-		for (int i = 0; i != n; i++)	//	½¨¶Ñ
+		priority_queue<ListNode*, vector<ListNode*>, cmp> que;	//	ä¸‰ä¸ªå‚æ•°åˆ†åˆ«ä¸ºå…ƒç´ ç±»å‹ï¼Œå…ƒç´ å®¹å™¨ç±»å‹å’Œæ¯”è¾ƒå‡½æ•°
+		for (int i = 0; i != n; i++)	//	å»ºå †
 		{
-			if (lists[i])	//	ÅĞ¶ÏÒª²åÈëµÄ½ÚµãÊÇ·ñÎª¿Õ
+			if (lists[i])	//	åˆ¤æ–­è¦æ’å…¥çš„èŠ‚ç‚¹æ˜¯å¦ä¸ºç©º
 			{
 				que.push(lists[i]);
 			}			
 		}
 
-		while (!que.empty())	//	½«¶ÑÖĞÔªËØÖğÒ»µ¯³ö
+		while (!que.empty())	//	å°†å †ä¸­å…ƒç´ é€ä¸€å¼¹å‡º
 		{
 			ListNode *p = que.top();
 			que.pop();
 			rslt->next = p;
 			rslt = rslt->next;
-			if (p->next)		//	ÅĞ¶ÏÒªÈë¶ÑµÄÔªËØÊÇ·ñÎª¿Õ
+			if (p->next)		//	åˆ¤æ–­è¦å…¥å †çš„å…ƒç´ æ˜¯å¦ä¸ºç©º
 			{
 				que.push(p->next);
 			}			
@@ -73,10 +73,10 @@ public:
 		return node.next;
 	}
 
-	///@brief	ÔÚĞÂÁ´±íÖĞ²åÈë½Úµã
-	///@param	head	ĞÂÁ´±íµÄÊ×½áµã
-	///@param	Á´±íµÄÖµ
-	///@note	ÓÃÓÚÉú³É²âÊÔÊı¾İ
+	///@brief	åœ¨æ–°é“¾è¡¨ä¸­æ’å…¥èŠ‚ç‚¹
+	///@param	head	æ–°é“¾è¡¨çš„é¦–ç»“ç‚¹
+	///@param	é“¾è¡¨çš„å€¼
+	///@note	ç”¨äºç”Ÿæˆæµ‹è¯•æ•°æ®
 	void insertNode(ListNode *head, int val)
 	{
 		ListNode *node = new ListNode(val);
