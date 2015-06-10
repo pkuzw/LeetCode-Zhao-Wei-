@@ -39,8 +39,8 @@ public:
 	///@date	2015.06.10
 	///@note	利用Swap Nodes in Pairs题中的思想，为组内的每个元素申请一个临时变量进行保存，然后在组内进行反转。
 	//			另外，需要在每次翻转后判断剩余的元素是否足够分组。
-	ListNode* reverseKGroup(ListNode* head, int k) {
-
+	ListNode* reverseKGroup(ListNode* head, int k) 
+	{
 		if (head == nullptr || k == 1)
 		{
 			return head;
@@ -81,7 +81,7 @@ public:
 
 				ListNode *reverseNextGroupHead = nextKNode(l, k-1);	//	翻转后的下一组首节点
 				
-				if (reverseNextGroupHead == nullptr)
+				if (reverseNextGroupHead == nullptr)	//	需要注意尾结点的next为空，也会被计算在剩余元素是否能够组成一组当中。此时需要单独处理
 				{
 					t[0]->next = l;
 				}
