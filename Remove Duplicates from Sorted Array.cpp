@@ -28,7 +28,7 @@ public:
 	///@author	zhaowei
 	///@date	2015.06.10
 	int removeDuplicates(vector<int>& nums) {
-		if (nums.empty())
+		if (nums.empty())	//	注意排除空数组的情形
 		{
 			return 0;
 		}
