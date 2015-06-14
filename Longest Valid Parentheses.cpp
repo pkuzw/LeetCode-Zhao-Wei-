@@ -11,3 +11,8 @@
 ///@author	zhaowei
 ///@date	2015.06.13
 
+#include <iostream>
+#include <string>
+
+using namespace std;
+
