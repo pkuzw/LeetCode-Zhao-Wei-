@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <string>
+#include <stack>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ public:
 	//			其次，当子字符串的两端为"("和")"时，若中间的isValid[i+1][j-1]为true，则isValid[i][j]也为true。
 	//			最后，当字符串的左半部分为有效子串，右半部分也是有效子串时，其和一定为有效字串。
 	//			时间复杂度为O(n^3)，空间复杂度为O(n^2)
-	int longestValidParentheses(string s) 
+	int longestValidParentheses_dp(string s) 
 	{
 		const int len = s.length();
 		
@@ -93,12 +94,76 @@ public:
 		delete[] isValid;				//	最后释放数组头
 		return rslt;
 	}
+
+	///@brief	计算括号字符串中最长有效括号的长度
+	///@param	s	字符串
+	///@return	返回字符串中有效括号的最长值
+	///@author	zhaowei
+	///@date	2015.06.15
+	///@note	对于括号对考虑用栈这种数据结构来解决。当前字符如果是'('，则入栈；当前字符如果是')'，如果栈顶元素是'('，则弹栈；
+	//			如果栈顶是')'，则入栈。最后有效的括号字符串长度应该是当前字符下标 - 栈顶元素下标。注意设置栈为空的哨兵元素-1。
+	//			时间复杂度为O(n)，空间复杂度为O(n)
+	int longestValidParentheses_stack(string s)
+	{
+		int len = s.length();
+		stack<int> stk;
+		int rslt = 0;		
+		int top = -1;	
+		stk.push(top);	//	哨兵元素入栈
+		for (int i = 0; i < len; i++)
+		{			
+			if (stk.top() == -1)	//	若栈为空，则入栈
+			{
+				stk.push(i);
+				continue;
+			}
+
+			if (s[i] == '(')	//	若当前元素为'('，入栈
+			{
+				stk.push(i);
+			}
+			else				//	若当前元素为')'
+			{
+				if (stk.top() == -1)	//	栈为空，入栈
+				{
+					stk.push(i);
+				}
+				else
+				{
+					if (s[stk.top()] == '(')	//	栈顶为'('，弹栈
+					{
+						stk.pop();
+					}
+					else			//	栈顶为')'，入栈
+					{
+						stk.push(i);
+					}
+				}
+			}			
+			
+			top = stk.top();
+			
+			
+			if (top > -1)
+			{
+				if (rslt < i - top)	//	计算出最长值
+					rslt = i - top;
+			}
+			else if (top == -1)
+			{
+				rslt = i+1;
+			}
+			
+		}
+
+		return rslt;
+	}
 };
 
 int main()
 {
-	string s = ")(()(()(()())))())";
+	string s = "((()))())";
 	Solution slt;
-	cout << slt.longestValidParentheses(s) << endl;
+	cout << slt.longestValidParentheses_stack(s) << endl;
 	return 0;
 }
