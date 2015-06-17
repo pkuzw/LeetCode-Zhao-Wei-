@@ -8,8 +8,8 @@
 			A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
 */
 ///@author	zhaowei
-///@date	2015.06.16
-///@version	1.0
+///@date	2015.06.17
+///@version	1.1
 
 #include <iostream>
 #include <vector>
@@ -68,35 +68,22 @@ public:
 					{
 						return false;
 					}
+				}	
+
+				if (board[i][j] != '.')
+				{
+					int a = board[i][j] - '0';
+					if (!square[(i/3)*3+(j/3)][a-1])
+					{
+						square[(i/3)*3+(j/3)][a-1] = true;
+					}
+					else
+					{
+						return false;
+					}
 				}			
 			}
 		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				for (int k = 0; k < 3; k++)
-				{
-					for (int l = 0; l < 3; l++)
-					{
-						if (board[i*3+k][j*3+l] != '.')	
-						{
-							int a = board[i*3+k][j*3+l] - '0';
-							if (!square[i*3+j][a-1])
-							{
-								square[i*3+j][a-1] = true;
-							}
-							else
-							{
-								return false;
-							}
-						}			
-					}
-				}
-			}
-		}
-
 		return true;
 	}
 };
