@@ -25,10 +25,19 @@ public:
 	///@author	zhaowei
 	///@date	2015.06.17
 	bool isValidSudoku(vector<vector<char>>& board) {
-		bool column[9][9], row[9][9], square[9][9];
-		memset(column, false, sizeof(bool)*81);
-		memset(row, false, sizeof(bool)*81);
-		memset(square, false, sizeof(bool)*81);
+
+		bool column[9][9];	//	保存每一列中数字是否有重复出现，如果还未出现是false，出现过的设为true
+		bool row[9][9];		//	保存每一行中数字是否有重复出现
+		bool square[9][9];	//	保存每一3*3方块中数字是否有重复出现
+		for (int i = 0; i < 9; i++)	//	初始化
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				row[i][j] = false;
+				column[i][j] = false;
+				square[i][j] = false;
+			}
+		}
 
 		for (int i = 0; i < 9; i++)
 		{
@@ -37,11 +46,11 @@ public:
 				if (board[i][j] != '.')
 				{
 					int a = board[i][j] - '0';
-					if (!row[i][a])
+					if (!row[i][a-1])	//	如果是第一次出现该数字，则将其设为true
 					{
-						row[i][a] = true;
+						row[i][a-1] = true;
 					}
-					else
+					else				//	如果曾经出现过，则直接返回false
 					{
 						return false;
 					}
@@ -50,22 +59,9 @@ public:
 				if (board[j][i] != '.')
 				{
 					int a = board[j][i] - '0';
-					if (!column[i][a])
+					if (!column[i][a-1])
 					{
-						column[i][a] = true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-
-				if (board[i/3][j/3] != '.')	//有问题
-				{
-					int a = board[i/3][j/3] - '0';
-					if (!square[i][a])
-					{
-						square[i][a] = true;
+						column[i][a-1] = true;
 					}
 					else
 					{
@@ -74,6 +70,32 @@ public:
 				}			
 			}
 		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				for (int k = 0; k < 3; k++)
+				{
+					for (int l = 0; l < 3; l++)
+					{
+						if (board[i*3+k][j*3+l] != '.')	
+						{
+							int a = board[i*3+k][j*3+l] - '0';
+							if (!square[i*3+j][a-1])
+							{
+								square[i*3+j][a-1] = true;
+							}
+							else
+							{
+								return false;
+							}
+						}			
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 };
@@ -182,6 +204,8 @@ int main()
 	Solution slt;
 
 	bool rslt = slt.isValidSudoku(chchvec);
+
+	cout << rslt << endl;
 
 	return 0;
 }
