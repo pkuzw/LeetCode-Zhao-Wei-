@@ -24,6 +24,7 @@ public:
 	///@return	如果一个数独有效，则返回true；否则返回false
 	///@author	zhaowei
 	///@date	2015.06.17
+	///@note	设置三个9*9的bool型二维数组来保存每一行、每一列以及每一个3*3的方块中是否有重复数字。时间复杂度为O(n^2)，空间复杂度为O(n^2)。
 	bool isValidSudoku(vector<vector<char>>& board) {
 
 		bool column[9][9];	//	保存每一列中数字是否有重复出现，如果还未出现是false，出现过的设为true
