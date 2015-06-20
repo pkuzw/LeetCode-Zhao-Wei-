@@ -15,9 +15,18 @@ using namespace std;
 
 class Solution {
 public:
-	///@note	默认num1长于num2，否则将二者交换
+	///@brief	计算两个由string表示的正整数乘积
+	///@param	num1	因子1
+	///@param	num2	因子2
+	///@return	返回两个大整数的积
+	///@note	先计算一位整数与大整数相乘的结果，然后再计算逐位计算的结果的和。就可以得到大整数相乘的积。默认num1长于num2，否则将二者交换。
+	///			时间复杂度为O(n^2)，空间复杂度为O(n)
+	///@author	zhaowei
+	///@date	2015.06.20
 	string multiply(string num1, string num2) 
 	{
+		num1 = trim(num1);	//	清除前缀0
+		num2 = trim(num2);
 		if (num1.size() < num2.size())
 		{
 			swap(num1, num2);
@@ -36,6 +45,7 @@ public:
 		return rslt;
 	}
 
+private:
 	///@brief	计算一个string类型表示的大整数和1个1位整数相乘
 	///@param	num1	大整数1
 	///@param	num2	一位整数2
@@ -57,10 +67,8 @@ public:
 		{
 			rslt = (char)(advance+'0') + rslt;
 		}
-		if (isZero(rslt))
-		{
-			rslt = "0";
-		}
+
+		rslt = trim(rslt);
 		return rslt;
 	}
 	
@@ -85,10 +93,10 @@ public:
 		int interval = len1-len2;
 		string rslt;
 		bool advance = false;	//	标记是否需要进位，默认为false
-		for (int i = len1-1; i >= len1-interval-1; i--)
+		for (int i = len2-1; i >= 0; i--)
 		{			
 			//	一位的和
-			int bit = (int)(num1[i]-'0')+(int)(num2[i-interval]-'0');
+			int bit = (int)(num1[i+interval]-'0')+(int)(num2[i]-'0');
 			
 			if (advance)	//	进位
 			{
@@ -98,6 +106,10 @@ public:
 			{
 				advance = true;
 				bit -= 10;
+			}
+			else
+			{
+				advance = false;
 			}
 			rslt = (char)(bit+'0') + rslt;			
 		}
@@ -112,24 +124,22 @@ public:
 		}
 		rslt = num1_sub + rslt;
 
+		rslt = trim(rslt);
 		return rslt;
 	}
 
-	///@brief	判断字符串是否全为0
-	///@param	s	待判断字符串
-	///@return	如果是则返回true，否则返回false
-	bool isZero(string s)
+	///@brief	清除字符串中的前缀0
+	///@param	s	字符串
+	///@return	清除前缀0后的字符串	
+	string trim(string s)
 	{
-		for (int i = 0; i != s.size(); i++)
+		int i = 0;
+		while (s[i] == '0' && i != s.size()-1)
 		{
-			if (s[i] != '0')
-			{
-				return false;
-			}
+			i++;
 		}
-		return true;
+		return s.substr(i, s.size()-i);
 	}
-
 };
 
 int main()
