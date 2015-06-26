@@ -8,7 +8,7 @@
 */
 ///@author	zhaowei
 ///@date	2015.06.25
-///@version	1.0
+///@version	1.0	LeetCode OJ报TLE
 
 #include <iostream>
 #include <vector>
