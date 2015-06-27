@@ -109,5 +109,9 @@ int main()
 	
 	cout << slt.reverse(x);
 	cout << endl;
+    
+    int a;
+    cin >> a;
+    
 	return 0;
 }
