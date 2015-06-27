@@ -10,8 +10,13 @@
 ///@date	2015.06.25
 ///@version	1.0	LeetCode OJ报TLE
 
+///@author  zhaowei
+///@date    2015.06.27
+///@version 2.0
+
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class Solution {
@@ -19,11 +24,12 @@ public:
 	///@brief	给定候选元素数组，计算所有可能的组合。如果候选数组中有重复元素，需要排除掉重复的组合
 	///@param	nums	候选元素数组
 	///@return	返回没有重复组合的集合
-	///@note	在Permutation递归的基础上，增加一个筛选重复数组的函数去重。OJ报TLE。
+	///@note	在Permutation递归的基础上，增加一个排序操作和在数组遍历下标选择时去掉重复元素。这样就能够排除掉重复出现的可能组合。时间复杂度还是O(n!), 空间复杂度是O(n^2)
 	///@author	zhaowei
-	///@date	2015.06.25
+	///@date	2015.06.27
 	vector<vector<int>> permuteUnique(vector<int>& nums)
 	{
+        sort(nums.begin(), nums.end()); //先排序，使重复元素在一起。
 		vector<int> ivec;
 		if (nums.empty())	
 		{
@@ -44,12 +50,8 @@ public:
 	{
 		if (nums.empty())	//	如果数组为空，则递归结束
 		{
-			if (isExist(rslt, residue))	//	去重
-			{
-				rslt.push_back(residue);	//	将一种可能的组合加入结果二维数组				
-			}
+            rslt.push_back(residue);	//	将一种可能的组合加入结果二维数组
 			return;
-			
 		}
 		int indx = 0;	//	标记当前选到的元素下标
 		while (indx != nums.size())	//	如果当前元素不是数组中的最后一个元素，则进入循环
@@ -66,41 +68,13 @@ public:
 			}
 			getPermutateUnique(tmp, residue);		//	递归
 			residue.pop_back();				//	将结果中的元素弹出
-			indx++;							//	下标后移一位
+            
+            indx++;
+            while (nums[indx] == nums[indx-1] && indx < nums.size())    //	如果元素重复，不要选择，直到不重复为止
+                indx++;
+            
 		}	
 		return;
-	}
-
-	///@brief	排除已经存在的组合
-	///@param	rslt	结果集合
-	///@param	comb	一种组合
-	///@return	如果该组合已经存在，则返回true；否则返回false
-	bool isExist(vector<vector<int>> rslt, vector<int> comb)
-	{
-		for (int i = 0; i != rslt.size(); i++)
-		{
-			if (isEqual(rslt[i], comb))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	///@brief	判断两个数组是否相同
-	///@param	a	数组a
-	///@param	b	数组b
-	///@return	如果数组相同，则返回true；否则返回false
-	bool isEqual(vector<int> a, vector<int> b)
-	{
-		for (int i = 0; i != a.size(); i++)
-		{
-			if (a[i] != b[i])
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 private:
 	vector<vector<int>> rslt;	//	结果数组
@@ -109,9 +83,10 @@ private:
 int main()
 {
 	vector<int> test;
-	test.push_back(1);
-	test.push_back(1);
 	test.push_back(2);
+	test.push_back(2);
+	test.push_back(1);
+    test.push_back(1);
 	Solution slt;
 
 	vector<vector<int>> rslt = slt.permuteUnique(test);
