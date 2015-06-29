@@ -6,12 +6,13 @@
 			[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], and [3,2,1].
 */
 ///@author	zhaowei
-///@date	2015.06.25
-///@version	1.0
+///@date	2015.06.29
+///@version	2.0
 
 #include <iostream>
 #include <vector>
 #include <deque>
+#include <algorithm>
 
 using namespace std;
 
@@ -118,7 +119,7 @@ public:
             residue.pop_back();				//	将结果中的元素弹出
             
             indx++;
-            while (nums[indx] == nums[indx-1] && indx < nums.size())    //	如果元素重复，不要选择，直到不重复为止
+            while (indx < nums.size() && nums[indx] == nums[indx-1])    //	如果元素重复，不要选择，直到不重复为止
                 indx++;
             
         }	
@@ -138,8 +139,6 @@ int main()
  	nums.push_back(1);
  	nums.push_back(2);
  	nums.push_back(2);
-    nums.push_back(5);
-    nums.push_back(5);
 	rslt = slt.permute(nums);
     
     Solution slt2;
