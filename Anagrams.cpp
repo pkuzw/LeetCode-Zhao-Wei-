@@ -93,7 +93,7 @@ private:
 		return	cnvt_str;
 	}
 
-	vector<string> anagrams_vec;
+	vector<string> anagrams_vec;	//结果数组
 };
 
 int main()
