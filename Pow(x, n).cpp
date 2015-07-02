@@ -14,6 +14,7 @@ public:
 	///@param	n	指数
 	///@return	返回x^n的值
 	///@note	先计算出n分解成二进制的表示形式，然后计算出底数x从2^0到2^30的幂值。通过先前计算出来的二进制表示位，将x的不同幂值相乘即可。
+	//			注意INT_MAX = 2147483647，INT_MIN = -2147483648。
 	//			时间复杂度为O(logn)，空间复杂度为O(1)。
 	double myPow(double x, int n) 
 	{
