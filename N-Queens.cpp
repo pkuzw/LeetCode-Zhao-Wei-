@@ -213,7 +213,7 @@ int main()
 	while (cin >> n){
 		Solution slt;
 		vector<vector<string>> rslt = slt.solveNQueens(n);
-		cout << "Total Solutions' Numer: " << rslt.size() << endl;
+		cout << "Total Solutions' Number: " << rslt.size() << endl;
 		for (int i = 0; i != rslt.size(); i++)
 		{
 			cout << "Solution " << i+1 << ": " << endl;
