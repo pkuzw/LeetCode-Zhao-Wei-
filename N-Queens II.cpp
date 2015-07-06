@@ -25,7 +25,7 @@ public:
 	//			以及斜线就置为false。如果到达某一行时，没有任何一列可以继续放置皇后，则重置棋盘，返回上一行的下一个可能位置。然后利用
 	//			一个栈来记录皇后的位置信息，每次从皇后最后一个栈顶元素继续向后寻找可能的位置。直至第一行的皇后到达最后一列。
 	//			时间复杂度为O(n^3)，空间复杂度为O(n^2)
-	int solveNQueens(int n)
+	int totalNQueens(int n)
 	{
 		vector<vector<bool>> chessboard;	//	记录棋盘上的可用位置
 		vector<bool> chess_line;	
@@ -182,7 +182,7 @@ int main()
 	int n;
 	while (cin >> n){
 		Solution slt;
-		int rslt = slt.solveNQueens(n);
+		int rslt = slt.totalNQueens(n);
 		cout << "Total Solutions' Number: " << rslt << endl;		
 	}
 	return 0;
