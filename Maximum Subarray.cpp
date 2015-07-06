@@ -20,7 +20,7 @@ public:
 	///@return	返回整型数组中的最大子段和
 	///@note	动态规划算法：假设sum[i]为结尾为nums[i]的最大子段和，则sum[i+1] = max(sum[i]+nums[i+1], nums[i+1])。时间复杂度为O(n)，
 	//			空间复杂度为O(1)
-	int maxSubArray(vector<int>& nums) 
+	int maxSubArrayDP(vector<int>& nums) 
 	{
 		int rslt = INT_MIN;
 		int sum = 0;	//	因为要找的是最大和，所以对于全都是负数的情形，要尽可能的少选，只选最小的那一个。靠初始值sum = 0来分界
@@ -66,6 +66,60 @@ public:
 
 		return subRange;
 	}
+
+	///@brief	计算整型数组的最大子段和
+	///@param	nums	整型数组
+	///@return	返回整型数组中的最大子段和
+	///@note	分治法：将原数组一分为二，那么最大子段和的位置有三种情况：1. 位于左半部分；2. 位于有半部分；3. 横跨左右部分。
+	//			对于前两种情况，可以直接递归继续求解；对于第三种情况，只需要以middle值为中心，向两侧扩展，找出最大的子段和后，和左右
+	//			两部分的最大子段和进行比较就可以了。因为T(n) = 2T(n/2) + O(n)，所以时间复杂度根据主定理可知为O(nlogn)，空间复杂度为O(1)
+	int maxSubArrayDC(vector<int> &nums)
+	{
+		int rslt = 0;
+		rslt = maxSubArrayRecursive(nums, 0, nums.size()-1);
+		return rslt;
+	}
+
+	///@brief	递归计算整型数组的最大子段和
+	///@param	nums	整型数组
+	///@param	beg		数组起始下标
+	///@param	end		数组终止下标
+	///@return	返回数组的最大子段和
+	int maxSubArrayRecursive(vector<int>& nums, int beg, int end)
+	{
+		if (beg == end)	//	当数组只有一个元素时，递归终止
+		{
+			return nums[beg];
+		}
+		int middle = (beg+end)/2;
+		int left_max = maxSubArrayRecursive(nums, beg, middle);		//	递归计算左半部分的最大子段和
+		int right_max = maxSubArrayRecursive(nums, middle+1, end);	//	递归计算右半部分的最大子段和
+
+		//	计算横跨中心的最大子段和
+		int tmp = nums[middle];	//	左半部分的最靠右边的元素值
+		int midLeft = nums[middle];	//	记录左半部分的跨中心的最大子段和
+		for (int i = middle-1; i >= beg; i--)
+		{
+			tmp += nums[i];
+			if (midLeft < tmp)
+			{
+				midLeft = tmp;
+			}
+		}
+
+		tmp = nums[middle+1];	//	右半部分最靠左边的元素值
+		int midRight = nums[middle+1];	//	记录右半部分的跨中心的最大子段和
+		for (int i = middle+2; i <= end; i++)
+		{
+			tmp += nums[i];
+			if (midRight < tmp)
+			{
+				midRight = tmp;
+			}
+		}
+		
+		return max(max(left_max, right_max), midLeft+midRight);	//	比较三种最大子段和
+	}
 };
 
 int main()
@@ -82,12 +136,13 @@ int main()
 		}
 		nums.push_back(k);
 	}
-	cout << slt.maxSubArray(nums) << endl;
+	cout << slt.maxSubArrayDP(nums) << endl;
 	vector<int> subArr = slt.maxSubArrayRange(nums);
 	for (int i = 0; i != subArr.size(); i++)
 	{
 		cout << subArr[i] << ' ';
 	}
 	cout << endl;
+	cout << slt.maxSubArrayDC(nums) << endl;
 	return 0;
 }
