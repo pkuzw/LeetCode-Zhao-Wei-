@@ -182,8 +182,8 @@ int main()
 	int n;
 	while (cin >> n){
 		Solution slt;
-		vector<vector<string>> rslt = slt.solveNQueens(n);
-		cout << "Total Solutions' Numer: " << rslt << endl;		
+		int rslt = slt.solveNQueens(n);
+		cout << "Total Solutions' Number: " << rslt << endl;		
 	}
 	return 0;
 }
