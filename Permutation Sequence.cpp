@@ -22,11 +22,37 @@ Note: Given n will be between 1 and 9 inclusive.
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 class Solution {
 public:
+	///@brief	计算从1到n的全排列中的第k个排列
+	///@param	n	元素的数目
+	///@param	k	第几个排列
+	///@return	返回1到n的全排列中的第k个
+	///@note	利用<algorithm>中的next_permutation()函数来进行计算。其时间复杂度为O(n)。OJ还是报TLE。
+	string getPermutation_stl(int n, int k)
+	{
+		vector<int> nums;
+		for (int i = 1; i <= n; i++)
+		{
+			nums.push_back(i);
+		}
+		while (k != 1)
+		{
+			next_permutation(nums.begin(), nums.end());
+			k--;
+		}
+		string rslt;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			rslt += nums[i] + '0';
+		}
+		return rslt;
+	}
+	/*
 	///@note	利用一个数组记录下k能够被分解成多少个子序列的排列，然后再根据这个数组来进行相应的排列。还没有想的很清楚。
 	string getPermutation(int n, int k)
 	{
@@ -119,7 +145,7 @@ private:
 		}	
 		return;
 	}
-	
+	*/
 };
 
 int main()
@@ -128,7 +154,7 @@ int main()
 	int n, k;
 	while (cin >> n >> k)
 	{
-		cout << slt.getPermutation(n, k) << endl;
+		cout << slt.getPermutation_stl(n, k) << endl;
 	}
 	return 0;
 }
