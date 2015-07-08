@@ -17,7 +17,7 @@ Note: Given n will be between 1 and 9 inclusive.
 */
 ///@author	zhaowei
 ///@date	2015.07.07
-///@version	1.1
+///@version	1.2
 
 #include <iostream>
 #include <string>
