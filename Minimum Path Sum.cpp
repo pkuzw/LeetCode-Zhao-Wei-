@@ -7,7 +7,7 @@ Note: You can only move either down or right at any point in time.
 */
 ///@author	zhaowei
 ///@date	2015.07.09
-///@version 1.0
+///@version 1.1
 
 #include <vector>
 #include <iostream>
@@ -43,6 +43,36 @@ public:
 			}
 		}
 		return dp[m][n];
+	}
+
+	///@brief	给定一个二维矩阵，计算从左上角到右下角和最小的路径
+	///@param	grid	二维矩阵
+	///@return	返回和最小的路径所经过各点值的和
+	///@note	动态规划算法：设到达点(i, j)的和最小的路径为dp[i][j]，点(i, j)的数值为grid[i][j]，
+	//			则dp[i][j] = grid[i][j] + min{dp[i-1][j], dp[i][j-1]}。
+	//			时间复杂度为O(m*n)，空间复杂度为O(n)。
+	int minPathSum_saveSpace(vector<vector<int>>& grid) 
+	{
+		if (grid.empty())	return 0;
+		int m = grid.size();	//	计算棋盘的行数
+
+		if (grid[0].empty())	return 0;
+		int n = grid[0].size();	//	计算棋盘的列数
+
+
+		//	将dp初始化为INT_MAX的n+1长度的一维数组。之所以是INT_MAX，是为了后续计算时得到前一个点的最小和路径。
+		vector<int> dp(n+1, INT_MAX);	//	多出来一列，方便第一个点的初始化	
+		dp[0] = INT_MAX;	//	将dp[0][1]或dp[1][0]任意一个置为0，以便初始化第一个点dp[1][1]。
+		dp[1] = grid[0][0];
+		for (int i = 1; i < m+1; i++)
+		{
+			for (int j = 1; j < n+1; j++)
+			{
+				if (i*j == 1) continue;
+				dp[j] = grid[i-1][j-1] + min(dp[j], dp[j-1]);
+			}
+		}
+		return dp[n];
 	}
 };
 
@@ -83,6 +113,6 @@ int main()
 	line.push_back(1);
 	grid.push_back(line);
 	
-	int minPath = slt.minPathSum(grid);
+	int minPath = slt.minPathSum_saveSpace(grid);
 	cout << minPath << endl;
 }
