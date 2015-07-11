@@ -14,7 +14,7 @@ Note: It is intended for the problem statement to be ambiguous.
 You should gather all requirements up front before implementing one.
 */
 ///@author	zhaowei
-///@date	2015.07.10
+///@date	2015.07.11
 ///@version	1.0
 
 #include <iostream>
@@ -29,18 +29,25 @@ public:
 	///@return	如果该字符串是数字，返回true；否则返回false
 	///@note	题目故意给的条件很模糊，需要自己去思考一下。
 	//			1. 不能超过2个小数点，在指数形式下， 指数符号前可以有一个，指数符号后可以有一个；
-	//			2. 可以有e，表示指数；
+	//			2. 可以有e，表示10的幂指数；
 	//			3. 可以有'+', '-'，他们可以位于数字的开头或者'e'的后面
 	//			4. 数字之间不能有空白符；
 	//			5. 开头和结尾可以有连续的空白符；
 	//			6. 数字应该允许被表示成十六进制，只要开头是0x或者0X，则后续就可以出现Aa, Bb, Cc, Dd, Ee, Ff。
 	//			7. 如果不是十六进制，则不能出现除了'e'或者'E'之外的其他字母字符；
 	//			8. 'e'或者'E'后面一定要有具体数字或者符号'-', '+'；
-	//			9. 最多只能有一个'e'或者'E'。
+	//			9. 最多只能有一个'e'或者'E'；
+	//			10.小数点可以在首位，即小数点前面可以没有数字；小数点后也可以没有数字
 	bool isNumber(string s) {
 		trimStr(s);	//	去除字符串首尾的连续空白符
+		if (s.empty())	return false;	//	空字符为false
+		else if (existSpace(s))	return false;
+		else if (existSign(s) && !legalSign(s))	return false;
+		else if (existExponent(s) && !legalExponent(s))	return false;
+		else if (existPoint(s) && !legalPoint(s))	return false;
+		else if (existAlphaBesidesExp(s))	return false;
 
-
+		return true;
 	}
 
 private:
@@ -68,8 +75,8 @@ private:
 	{
 		for (int i = 0; i != s.length(); i++)
 			if (s[i] == ' ')
-				return false;
-		return true;
+				return true;
+		return false;
 	}
 
 	///@brief	判断字符串中是否存在正负号
@@ -82,6 +89,8 @@ private:
 				return true;
 		return false;
 	}
+
+	///@brief	计算字符串中的'+'，'-'数目
 
 	///@brief	判断字符串中是否有合法的'+', '-'号
 	///@param	s	字符串
@@ -132,7 +141,7 @@ private:
 				{
 					return false;
 				}
-				if (!((s[i-1] <= '9' && s[i-1] >= '0') && (s[i+1] <= '9' && s[i+1] >= '0')))
+				if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '.') && ((s[i+1] <= '9' && s[i+1] >= '0') || s[i+1] == '-' || s[i+1] == '+' || s[i+1] == '.')))
 				{
 					return false;
 				}
@@ -178,22 +187,30 @@ private:
 	///@brief	判断字符串中的小数点是否合法
 	///@param	s	字符串
 	///@return	如果字符串中的小数点数目为1，且其前后均是数字字符，或者字符串中的小数点数目为2，且其位于指数字符两侧，且其
-	//			前后均是数字字符，则返回true；其他情况返回false
+	//			前后均是数字字符，则返回true；小数点前可以没有数字；小数点后也可以没有数字；其他情况返回false
 	bool legalPoint(string s)
 	{
 		int p_cnt = getPointNum(s);
 		if (p_cnt == 0) return true;
 		else if (p_cnt == 1)
 		{
+			if (s.length() == 1)	return false;	//	如果只有一个小数点，则非法
 			for (int i = 0; i != s.length(); i++)
 			{
 				if (s[i] == '.')
-				{
-					if (i == 0 || i == s.length()-1)
+				{					
+					if (i == s.length()-1)
 					{
-						return false;
+						if (s[i-1] <= '9' && s[i-1] >= '0')	return true;							
+						else	return false;
 					}
-					if (!((s[i-1] <= '9' && s[i-1] >= '0') && (s[i+1] <= '9' && s[i+1] >= '0')))
+					else if (i == 0)
+					{
+						if (s[i+1] <= '9' && s[i+1] >= '0')	return true;
+						else return false;
+					}
+					else if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '+' || s[i-1] == '-' || s[i-1] == 'e') 
+						&& ((s[i+1] <= '9' && s[i+1] >= '0') || s[i+1] == 'e')))
 					{
 						return false;
 					}
@@ -203,10 +220,9 @@ private:
 		}
 		else if (p_cnt == 2)
 		{
-			if (!existExponent(s))
-			{
-				return false;
-			}
+			if (s.length() == 2)	return false;	//	如果只有两个小数点，则非法
+
+			if (!existExponent(s))	return false;			
 			else if (legalExponent(s))
 			{
 				int e_indx = expIndx(s)	;
@@ -217,9 +233,10 @@ private:
 					{						
 						if (i == 0 || i == s.length()-1)
 						{
-							return false;
+							return true;
 						}
-						if (!((s[i-1] <= '9' && s[i-1] >= '0') && (s[i+1] <= '9' && s[i+1] >= '0')))
+						else if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '+' || s[i-1] == '-') 
+							&& ((s[i+1] <= '9' && s[i+1] >= '0') || s[i+1] == 'e')))
 						{
 							return false;
 						}
@@ -227,17 +244,30 @@ private:
 						if (p_indx1 == 0)
 							p_indx1 = i;
 						else
-							p_indx2 = i;
-
-						if (p_indx1+1 < e_indx && e_indx+1 < p_indx2)
-							return true;						
-						else	
-							return false;
+							p_indx2 = i;					
 					}
-				}				
+				}
+				if (p_indx1+1 < e_indx && e_indx+1 < p_indx2)
+					return true;						
+				else	
+					return false;
 			}			
+		}		
+		return false;
+	}
+
+	///@brief	判断字符串中是否存在其他字母字符
+	///@param	s
+	///@return  如果存在则返回false；否则返回true
+	bool existAlphaBesidesExp(string s)
+	{
+		for (int i = 0; i != s.length(); i++)
+		{
+			if ((s[i] <= 'z' && s[i] >= 'a' && s[i] != 'e') || (s[i] <= 'Z' && s[i] >= 'A' && s[i] != 'E'))
+			{
+				return true;
+			}
 		}
-		
 		return false;
 	}
 };
