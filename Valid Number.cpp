@@ -19,6 +19,7 @@ You should gather all requirements up front before implementing one.
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -45,7 +46,7 @@ public:
 		else if (existSign(s) && !legalSign(s))	return false;
 		else if (existExponent(s) && !legalExponent(s))	return false;
 		else if (existPoint(s) && !legalPoint(s))	return false;
-		else if (existAlphaBesidesExp(s))	return false;
+		else if (existIlegal(s))	return false;
 
 		return true;
 	}
@@ -56,6 +57,7 @@ private:
 	///@return  空
 	void trimStr(string &s)
 	{
+		if (s.empty())	return;	//	处理空字符串
 		int head_indx = 0;
 		while (s[head_indx] == ' ')
 			head_indx++;
@@ -90,22 +92,67 @@ private:
 		return false;
 	}
 
-	///@brief	计算字符串中的'+'，'-'数目
+	///@brief	计算字符串中的正负号个数
+	///@param	s	字符串	
+	///@return	包含有正负号数目的数组
+	vector<int> getSignNum(string s)
+	{
+		int pos_cnt = 0, neg_cnt = 0;
+		for (int i = 0; i != s.length(); i++)
+		{
+			if (s[i] == '+')	pos_cnt++;
+			else if (s[i] == '-')	neg_cnt++;
+		}
+		vector<int> r;
+		r.push_back(pos_cnt);
+		r.push_back(neg_cnt);
+		return r;
+	}
 
+	///@brief	计算正负号的下标
+	///@param	s
+	///@param	pos_indx	保存有正号下标的向量
+	///@param	neg_indx	保存有负号下标的向量
+	///@return	无
+	void signIndx(string s, vector<int> &pos_indx, vector<int> &neg_indx)
+	{		
+		for (int i = 0; i != s.length(); i++)
+		{
+			if (s[i] == '+')	pos_indx.push_back(i);
+			else if (s[i] == '-')	neg_indx.push_back(i);
+		}
+		return;
+	}
+	
 	///@brief	判断字符串中是否有合法的'+', '-'号
 	///@param	s	字符串
 	///@return	如果'+'或者'-'出现在字符串的开头或者e的后面，则返回true；否则返回false。
 	bool legalSign(string s)
 	{
-		for (int i = 0; i != s.length(); i++)
+		vector<int> pos_indx, neg_indx;
+		vector<int> sign_cnt = getSignNum(s);
+		signIndx(s, pos_indx, neg_indx);
+
+		if (sign_cnt[0] == 0 && sign_cnt[1] == 0)	return true;
+		else if (sign_cnt[0] == 0 && sign_cnt[1] == 1)
 		{
-			if (s[i] == '+' || s[i] == '-') 
-			{
-				if (i == 0 || s[i-1] == 'e' || s[i-1] == 'E')
-					return true;				
-				else
-					return false;
-			}
+			if (neg_indx[0] == 0 || s[neg_indx[0]-1] == 'e')		return true;
+		}
+		else if (sign_cnt[0] == 1 && sign_cnt[1] == 0)
+		{
+			if (pos_indx[0] == 0 || s[pos_indx[0]-1] == 'e')		return true;
+		}
+		else if (sign_cnt[0] == 1 && sign_cnt[1] == 1)
+		{
+			if ((pos_indx[0] == 0 && s[neg_indx[0]-1] == 'e') || (neg_indx[0] == 0 && s[pos_indx[0]-1] == 'e'))	return true;
+		}
+		else if (sign_cnt[0] == 2 && sign_cnt[1] == 0) 
+		{
+			if (pos_indx[0] == 0 && s[pos_indx[1]-1] == 'e')		return true;
+		}
+		else if (sign_cnt[0] == 0 && sign_cnt[1] == 2) 
+		{
+			if (neg_indx[0] == 0 && s[neg_indx[1]-1] == 'e')		return true;
 		}
 		return false;
 	}
@@ -231,9 +278,19 @@ private:
 				{
 					if (s[i] == '.')
 					{						
-						if (i == 0 || i == s.length()-1)
+						if (i == 0)
 						{
-							return true;
+							if (s[i+1] <= '9' && s[i+1] >= '0')
+								return true;
+							else
+								return false;
+						}
+						else if (i == s.length()-1)
+						{
+							if (s[i-1] <= '9' && s[i-1] >= '0')
+								return true;
+							else
+								return false;
 						}
 						else if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '+' || s[i-1] == '-') 
 							&& ((s[i+1] <= '9' && s[i+1] >= '0') || s[i+1] == 'e')))
@@ -259,11 +316,11 @@ private:
 	///@brief	判断字符串中是否存在其他字母字符
 	///@param	s
 	///@return  如果存在则返回false；否则返回true
-	bool existAlphaBesidesExp(string s)
+	bool existIlegal(string s)
 	{
 		for (int i = 0; i != s.length(); i++)
 		{
-			if ((s[i] <= 'z' && s[i] >= 'a' && s[i] != 'e') || (s[i] <= 'Z' && s[i] >= 'A' && s[i] != 'E'))
+			if (!((s[i] <= '9' && s[i] >= '0') || s[i] == 'e' || s[i] == '.' || s[i] == '+' || s[i] == '-') )
 			{
 				return true;
 			}
