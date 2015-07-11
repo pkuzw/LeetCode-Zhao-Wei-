@@ -29,16 +29,16 @@ public:
 	///@param	s	字符串
 	///@return	如果该字符串是数字，返回true；否则返回false
 	///@note	题目故意给的条件很模糊，需要自己去思考一下。
-	//			1. 不能超过2个小数点，在指数形式下， 指数符号前可以有一个，指数符号后可以有一个；
+	//			1. 不能超过1个小数点；
 	//			2. 可以有e，表示10的幂指数；
 	//			3. 可以有'+', '-'，他们可以位于数字的开头或者'e'的后面
 	//			4. 数字之间不能有空白符；
-	//			5. 开头和结尾可以有连续的空白符；
-	//			6. 数字应该允许被表示成十六进制，只要开头是0x或者0X，则后续就可以出现Aa, Bb, Cc, Dd, Ee, Ff。
-	//			7. 如果不是十六进制，则不能出现除了'e'或者'E'之外的其他字母字符；
-	//			8. 'e'或者'E'后面一定要有具体数字或者符号'-', '+'；
-	//			9. 最多只能有一个'e'或者'E'；
-	//			10.小数点可以在首位，即小数点前面可以没有数字；小数点后也可以没有数字
+	//			5. 开头和结尾可以有连续的空白符；	
+	//			6. 不能出现除了'e'之外的其他字母字符；
+	//			7. 'e'或者'E'后面一定要有具体数字或者符号'-', '+'；
+	//			8. 最多只能有一个'e'；
+	//			9. 小数点可以在首位，即小数点前面可以没有数字；小数点后也可以没有数字；
+	//			10.'e'之后不能有小数点。
 	bool isNumber(string s) {
 		trimStr(s);	//	去除字符串首尾的连续空白符
 		if (s.empty())	return false;	//	空字符为false
@@ -136,23 +136,24 @@ private:
 		if (sign_cnt[0] == 0 && sign_cnt[1] == 0)	return true;
 		else if (sign_cnt[0] == 0 && sign_cnt[1] == 1)
 		{
-			if (neg_indx[0] == 0 || s[neg_indx[0]-1] == 'e')		return true;
+			if (neg_indx[0] == 0 || (neg_indx[0] != s.length()-1 && s[neg_indx[0]-1] == 'e'))		return true;
 		}
 		else if (sign_cnt[0] == 1 && sign_cnt[1] == 0)
 		{
-			if (pos_indx[0] == 0 || s[pos_indx[0]-1] == 'e')		return true;
+			if (pos_indx[0] == 0 || (pos_indx[0] != s.length()-1 && s[pos_indx[0]-1] == 'e'))		return true;
 		}
 		else if (sign_cnt[0] == 1 && sign_cnt[1] == 1)
 		{
-			if ((pos_indx[0] == 0 && s[neg_indx[0]-1] == 'e') || (neg_indx[0] == 0 && s[pos_indx[0]-1] == 'e'))	return true;
+			if ((pos_indx[0] == 0 && (neg_indx[0] != s.length()-1 && s[neg_indx[0]-1] == 'e')) 
+				|| (neg_indx[0] == 0 && (pos_indx[0] != s.length()-1 && s[pos_indx[0]-1] == 'e')))	return true;
 		}
 		else if (sign_cnt[0] == 2 && sign_cnt[1] == 0) 
 		{
-			if (pos_indx[0] == 0 && s[pos_indx[1]-1] == 'e')		return true;
+			if (pos_indx[0] == 0 && (pos_indx[1] != s.length()-1 && s[pos_indx[1]-1] == 'e'))		return true;
 		}
 		else if (sign_cnt[0] == 0 && sign_cnt[1] == 2) 
 		{
-			if (neg_indx[0] == 0 && s[neg_indx[1]-1] == 'e')		return true;
+			if (neg_indx[0] == 0 && (neg_indx[1] != s.length()-1 && s[neg_indx[1]-1] == 'e'))		return true;
 		}
 		return false;
 	}
@@ -238,25 +239,31 @@ private:
 	bool legalPoint(string s)
 	{
 		int p_cnt = getPointNum(s);
-		if (p_cnt == 0) return true;
+		int e_indx = 0;
+		bool exist_exp = existExponent(s);
+		if (exist_exp)	e_indx = expIndx(s);
+
+		if (p_cnt == 0)	return true;	
 		else if (p_cnt == 1)
 		{
 			if (s.length() == 1)	return false;	//	如果只有一个小数点，则非法
 			for (int i = 0; i != s.length(); i++)
 			{
 				if (s[i] == '.')
-				{					
+				{	
+					if (exist_exp)
+					{						
+						if (i > e_indx)	return false;
+					}
 					if (i == s.length()-1)
 					{
-						if (s[i-1] <= '9' && s[i-1] >= '0')	return true;							
-						else	return false;
+						if (!(s[i-1] <= '9' && s[i-1] >= '0'))	return false;
 					}
 					else if (i == 0)
 					{
-						if (s[i+1] <= '9' && s[i+1] >= '0')	return true;
-						else return false;
-					}
-					else if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '+' || s[i-1] == '-' || s[i-1] == 'e') 
+						if (!(s[i+1] <= '9' && s[i+1] >= '0'))	return false;
+					}					
+					else if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '+' || s[i-1] == '-') 
 						&& ((s[i+1] <= '9' && s[i+1] >= '0') || s[i+1] == 'e')))
 					{
 						return false;
@@ -265,51 +272,6 @@ private:
 				}
 			}
 		}
-		else if (p_cnt == 2)
-		{
-			if (s.length() == 2)	return false;	//	如果只有两个小数点，则非法
-
-			if (!existExponent(s))	return false;			
-			else if (legalExponent(s))
-			{
-				int e_indx = expIndx(s)	;
-				int p_indx1 = 0, p_indx2 = 0;
-				for (int i = 0; i != s.length(); i++)
-				{
-					if (s[i] == '.')
-					{						
-						if (i == 0)
-						{
-							if (s[i+1] <= '9' && s[i+1] >= '0')
-								return true;
-							else
-								return false;
-						}
-						else if (i == s.length()-1)
-						{
-							if (s[i-1] <= '9' && s[i-1] >= '0')
-								return true;
-							else
-								return false;
-						}
-						else if (!(((s[i-1] <= '9' && s[i-1] >= '0') || s[i-1] == '+' || s[i-1] == '-') 
-							&& ((s[i+1] <= '9' && s[i+1] >= '0') || s[i+1] == 'e')))
-						{
-							return false;
-						}
-
-						if (p_indx1 == 0)
-							p_indx1 = i;
-						else
-							p_indx2 = i;					
-					}
-				}
-				if (p_indx1+1 < e_indx && e_indx+1 < p_indx2)
-					return true;						
-				else	
-					return false;
-			}			
-		}		
 		return false;
 	}
 
