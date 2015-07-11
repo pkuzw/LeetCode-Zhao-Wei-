@@ -52,13 +52,18 @@ public:
 		}
 		return rslt;
 	}
-	/*
+	
+	///@brief	计算从1到n的全排列中的第k个排列
+	///@param	n	元素的数目
+	///@param	k	第几个排列
+	///@return	返回1到n的全排列中的第k个
 	///@note	利用一个数组记录下k能够被分解成多少个子序列的排列，然后再根据这个数组来进行相应的排列。还没有想的很清楚。
 	string getPermutation(int n, int k)
 	{
 		string str;
-		int cnt[10];	//	记录k能够被分解成多少个子排列。cnt[i]表示第1个数到第i个数所组成的全排列数目的倍数。
+		int cnt[10];	//	记录k能够被分解成多少个子排列。cnt[i]表示第i+1个数到第n个数所组成的全排列数目的倍数。
 		memset(cnt, 0, 10*sizeof(int));
+		fractorial.clear();
 		initFractorial(n);
 
 		if (k > fractorial.back() || k < fractorial.front())
@@ -70,7 +75,7 @@ public:
 		{
 			if (k >= fractorial[i])
 			{
-				cnt[i] = k/fractorial[i];
+				cnt[n-i-1] = k/fractorial[i];
 				k %= fractorial[i];
 			}
 		}
@@ -81,6 +86,29 @@ public:
 			nums.push_back(i);
 		}
 
+		vector<int> tmp;
+		for (int i = 1; i <= n; i++)
+		{			
+			int t = nums[cnt[i]];
+			vector<int>::iterator it = nums.begin();
+
+			for (it = nums.begin(); it != nums.end(); it++)
+			{
+				if (*it == t)
+				{
+					break;
+				}
+			}
+			nums.erase(it);
+			tmp.push_back(t);
+		}
+
+		string rslt;
+		for (int i = 0; i != tmp.size(); i++)
+		{
+			rslt += tmp[i] + '0';
+		}
+		return rslt;
 	}
 
 private:
@@ -98,6 +126,7 @@ private:
 		return;
 	}
 
+	/*
 	///@brief	给定候选元素数组，计算所有可能的组合
 	///@param	nums	候选元素数组
 	///@param	k		候选元素的全排列的第k个排列
@@ -144,7 +173,7 @@ private:
 			indx++;							//	下标后移一位
 		}	
 		return;
-	}
+	}	
 	*/
 };
 
@@ -154,7 +183,7 @@ int main()
 	int n, k;
 	while (cin >> n >> k)
 	{
-		cout << slt.getPermutation_stl(n, k) << endl;
+		cout << slt.getPermutation(n, k) << endl;
 	}
 	return 0;
 }
