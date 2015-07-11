@@ -1,4 +1,4 @@
-///@file	Simplify Path
+ï»¿///@file	Simplify Path
 /*
 Given an absolute path for a file (Unix-style), simplify it.
 
@@ -17,13 +17,13 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	½«¸ø¶¨µÄ¾ø¶ÔÂ·¾¶½øĞĞ¼ò»¯
-	///@param	path	¾ø¶ÔÂ·¾¶
-	///@return	·µ»Ø¼ò»¯ºóµÄÂ·¾¶
-	///@note	Â·¾¶µÄ¼ò»¯¹æÔò£º
-	//			1. È¥µô×îºóÒ»¸ö'/'£»
-	//			2. È¥µô×îºóÒ»¸öÎÄ¼ş¼ĞÃûÖ®Ç°µÄËùÓĞÂ·¾¶
-	//			Ê±¼ä¸´ÔÓ¶ÈÎªO(n)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(1)
+	///@brief	å°†ç»™å®šçš„ç»å¯¹è·¯å¾„è¿›è¡Œç®€åŒ–
+	///@param	path	ç»å¯¹è·¯å¾„
+	///@return	è¿”å›ç®€åŒ–åçš„è·¯å¾„
+	///@note	è·¯å¾„çš„ç®€åŒ–è§„åˆ™ï¼š
+	//			1. å»æ‰æœ€åä¸€ä¸ª'/'ï¼›
+	//			2. å»æ‰æœ€åä¸€ä¸ªæ–‡ä»¶å¤¹åä¹‹å‰çš„æ‰€æœ‰è·¯å¾„
+	//			æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(1)
 	string simplifyPath(string path) {
 		string rslt;
 		int slash_cnt = 0;
