@@ -7,7 +7,7 @@ Here, we will use the integers 0, 1, and 2 to represent the color red, white, an
 */
 ///@author	zhaowei
 ///@date	2015.07.13
-///@version 1.0
+///@version 1.1
 
 #include <iostream>
 #include <vector>
@@ -20,7 +20,7 @@ public:
 	///@param	nums	数组
 	///@return  无
 	///@note	手写快速排序（《算法导论》版），时间复杂度为O(nlogn)，空间复杂度为O(1)。
-	void sortColors(vector<int>& nums) {
+	void sortColors_quickSort(vector<int>& nums) {
 		if (nums.empty())
 		{
 			return;
@@ -29,6 +29,35 @@ public:
 		return;
 	}
 
+	///@brief	对数组nums进行排序
+	///@param	nums	数组
+	///@return	无
+	///@note	计数排序：共需要遍历两次。第一遍统计0，1，2的数目，第二遍直接将0，1，2从头到尾赋值给数组。时间复杂度为O(n)，空间复杂度为O(1)。
+	void sortColors(vector<int>& nums) {
+		int red_cnt = 0, white_cnt = 0, blue_cnt = 0;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			switch (nums[i])
+			{
+			case 0:	red_cnt++;break;
+			case 1: white_cnt++;break;
+			case 2: blue_cnt++;break;
+			}
+		}
+		for (int i = 0; i != red_cnt; i++)
+		{
+			nums[i] = 0;
+		}
+		for (int i = red_cnt; i != red_cnt+white_cnt; i++)
+		{
+			nums[i] = 1;
+		}
+		for (int i = red_cnt+white_cnt; i != red_cnt+white_cnt+blue_cnt; i++)
+		{
+			nums[i] = 2;
+		}
+		return;
+	}
 private:
 	///@brief	快速排序
 	///@param	nums	待排序数组
