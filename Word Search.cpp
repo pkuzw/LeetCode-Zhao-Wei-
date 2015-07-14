@@ -72,16 +72,16 @@ public:
 				while (k < word.length() && k >= 0)	//	以board[i][j]为起点进行匹配
 				{
 					if (word[k] == board[u][v] && !visited(x_indx, y_indx, u, v))
-					{
-						x_indx.push_back(u);
-						y_indx.push_back(v);
-						k++;
-
-						if (k == word.length())	return true;
-
+					{	
 						//	按照上->右->下->左的顺时针顺序来尝试当前匹配字符的邻居
 						if (u > 0 && !visited(x_indx, y_indx, u-1, v) && up[u][v])
 						{
+							x_indx.push_back(u);
+							y_indx.push_back(v);
+							k++;
+
+							if (k == word.length())	return true;
+
 							if (word[k] == board[u-1][v])
 								u--;								
 							else
@@ -98,6 +98,12 @@ public:
 						}
 						if (v < width-1 && !visited(x_indx, y_indx, u, v+1) && right[u][v])
 						{
+							x_indx.push_back(u);
+							y_indx.push_back(v);
+							k++;
+
+							if (k == word.length())	return true;
+
 							if (word[k] == board[u][v+1])
 								v++;								
 							else
@@ -112,6 +118,12 @@ public:
 						}
 						if (u < height-1 && !visited(x_indx, y_indx, u+1, v) && down[u][v])
 						{
+							x_indx.push_back(u);
+							y_indx.push_back(v);
+							k++;
+
+							if (k == word.length())	return true;
+
 							if (word[k] == board[u+1][v])
 								u++;
 							else
@@ -124,17 +136,30 @@ public:
 						}
 						if (v > 0 && !visited(x_indx, y_indx, u, v-1) && left[u][v])
 						{
+							x_indx.push_back(u);
+							y_indx.push_back(v);
+							k++;
+
+							if (k == word.length())	return true;
+
 							if (word[k] == board[u][v-1])
 								v--;
 							else
 								left[u][v] = false;
 							continue;
-						}
- 					
+						}									
+
 						if (up[u][v] || down[u][v] || left[u][v] || right[u][v])
-							continue;
-						else
-							break;						
+						{
+							if (x_indx.empty() && y_indx.empty())	break;
+							u = x_indx.back();
+							v = y_indx.back();	
+							x_indx.pop_back();
+							y_indx.pop_back();
+							k--;
+						}
+						else 
+							break;
 					}
 					else
 					{
@@ -147,10 +172,14 @@ public:
 						k--;
 						if (!x_indx.empty() && !y_indx.empty())
 						{
-							if (u - x_indx.back() == -1)	up[x_indx.size()-1][y_indx.size()-1] = false;
-							else if (u - x_indx.back() == 1)	down[x_indx.size()-1][y_indx.size()-1] = false;
-							else if (v - y_indx.back() == -1)	left[x_indx.size()-1][y_indx.size()-1] = false;
-							else if (v - y_indx.back() == 1)	right[x_indx.size()-1][y_indx.size()-1] = false;
+							if (u - x_indx.back() == -1)	
+								up[x_indx[x_indx.size()-1]][y_indx[y_indx.size()-1]] = false;
+							else if (u - x_indx.back() == 1)
+								down[x_indx[x_indx.size()-1]][y_indx[y_indx.size()-1]] = false;
+							else if (v - y_indx.back() == -1)	
+								left[x_indx[x_indx.size()-1]][y_indx[y_indx.size()-1]] = false;
+							else if (v - y_indx.back() == 1)	
+								right[x_indx[x_indx.size()-1]][y_indx[y_indx.size()-1]] = false;
 						}						
 					}
 				}				
@@ -299,6 +328,7 @@ int main()
 	board.push_back(cvec);
 	cvec.clear();
 
+	//ESECCEDFBASA
 	Solution slt;
 	string word;
 	while (cin >> word)
