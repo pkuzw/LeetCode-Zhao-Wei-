@@ -65,9 +65,11 @@ public:
 				resetDown();
 				resetLeft();
 				resetRight();
+				x_indx.clear();	//	同时重置行列号栈
+				y_indx.clear();
 				int k = 0;	//	标记单词的下标
 				int u = i, v = j;	
-				while (k != word.length())	//	以board[i][j]为起点进行匹配
+				while (k < word.length() && k >= 0)	//	以board[i][j]为起点进行匹配
 				{
 					if (word[k] == board[u][v] && !visited(x_indx, y_indx, u, v))
 					{
@@ -75,52 +77,83 @@ public:
 						y_indx.push_back(v);
 						k++;
 
+						if (k == word.length())	return true;
+
 						//	按照上->右->下->左的顺时针顺序来尝试当前匹配字符的邻居
 						if (u > 0 && !visited(x_indx, y_indx, u-1, v) && up[u][v])
 						{
 							if (word[k] == board[u-1][v])
 								u--;								
 							else
+							{
 								up[u][v] = false;
+								if (v < width-1)
+									v++;
+								else if (u < height-1)
+									u++;
+								else if (v > 0)
+									v--;
+							}
+							continue;
 						}
-						else if (v < width-1 && !visited(x_indx, y_indx, u, v+1) && right[u][v])
+						if (v < width-1 && !visited(x_indx, y_indx, u, v+1) && right[u][v])
 						{
 							if (word[k] == board[u][v+1])
 								v++;								
 							else
+							{
 								right[u][v] = false;
+								if (u < height-1)
+									u++;
+								else if (v > 0)
+									v--;
+							}
+							continue;
 						}
-						else if (u < height-1 && !visited(x_indx, y_indx, u+1, v) && down[u][v])
+						if (u < height-1 && !visited(x_indx, y_indx, u+1, v) && down[u][v])
 						{
 							if (word[k] == board[u+1][v])
 								u++;
 							else
+							{
 								down[u][v] = false;
+								if (v > 0)
+									v--;
+							}
+							continue;
 						}
-						else if (v > 0 && !visited(x_indx, y_indx, u, v-1) && left[u][v])
+						if (v > 0 && !visited(x_indx, y_indx, u, v-1) && left[u][v])
 						{
 							if (word[k] == board[u][v-1])
 								v--;
 							else
 								left[u][v] = false;
+							continue;
 						}
+ 					
+						if (up[u][v] || down[u][v] || left[u][v] || right[u][v])
+							continue;
 						else
-						{
-							x_indx.pop_back();
-							y_indx.pop_back();
-
-							if (x_indx.empty() && y_indx.empty())	break;
-
-							u = x_indx.back();
-							v = y_indx.back();
-						}
+							break;						
 					}
 					else
 					{
-						break;							
+						if (x_indx.empty() && y_indx.empty())	break;
+
+						u = x_indx.back();
+						v = y_indx.back();	
+						x_indx.pop_back();
+						y_indx.pop_back();
+						k--;
+						if (!x_indx.empty() && !y_indx.empty())
+						{
+							if (u - x_indx.back() == -1)	up[x_indx.size()-1][y_indx.size()-1] = false;
+							else if (u - x_indx.back() == 1)	down[x_indx.size()-1][y_indx.size()-1] = false;
+							else if (v - y_indx.back() == -1)	left[x_indx.size()-1][y_indx.size()-1] = false;
+							else if (v - y_indx.back() == 1)	right[x_indx.size()-1][y_indx.size()-1] = false;
+						}						
 					}
-				}
-				if (k == word.length())	return true;
+				}				
 			}
 		}
 		return false;
@@ -180,7 +213,7 @@ private:
 		}
 		for (int i = 0; i != height-1; i++)
 		{
-			up.push_back(line);
+			down.push_back(line);
 		}
 		line.clear();
 
@@ -189,7 +222,7 @@ private:
 		{
 			line.push_back(flg);
 		}
-		up.push_back(line);	
+		down.push_back(line);	
 		return;
 	}
 
