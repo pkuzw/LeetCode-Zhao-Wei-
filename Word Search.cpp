@@ -41,144 +41,89 @@ public:
 			if (word.empty())	return true;
 			else	return false;
 		}
-		int m = board.size();	//	矩阵行数
+		height = board.size();	//	矩阵行数
 
 		if (board[0].empty())
 		{
 			if (word.empty())	return true;
 			else	return false;
 		}
-		int n = board[0].size();	//	矩阵列数
+		width = board[0].size();	//	矩阵列数
 
-		if (word.empty() && (m != 0 && n != 0))
+		if (word.empty() && (height != 0 && width != 0))
 		{
 			return false;
 		}
 
 		vector<int> x_indx, y_indx;	//	保存已经匹配的字符在矩阵中的行列号，以便进行回溯
 
-		bool flg = false;
-		vector<bool> line;
-		for (int i = 0; i != n; i++)
+		for (int i = 0; i != height; i++)
 		{
-			line.push_back(flg);
-		}
-		up.push_back(line);	//	初始化向上的标志矩阵
-		line.clear();
-
-		flg = true;
-		for (int i = 0; i != n; i++)
-		{
-			line.push_back(flg);
-		}
-		for (int i = 0; i != m-1; i++)
-		{
-			up.push_back(line);
-			down.push_back(line);
-		}		
-		line.clear();
-		flg = false;
-		for (int i = 0; i != n; i++)
-		{
-			line.push_back(flg);
-		}
-		down.push_back(line);		//	初始化向下的标志矩阵	
-		line.clear();
-
-		line.push_back(flg);
-		flg = true;
-		for (int i = 0; i != n-1; i++)
-		{
-			line.push_back(flg);
-		}
-		for (int i= 0; i != m; i++)
-		{
-			left.push_back(line);	//	初始化向左的标志矩阵
-		}
-
-		line.clear();
-		flg = true;
-		for (int i = 0; i != n-1; i++)
-		{
-			line.push_back(flg);
-		}
-		flg = false;
-		line.push_back(flg);
-		for (int i= 0; i != m; i++)
-		{
-			right.push_back(line);	//	初始化向右的标志矩阵
-		}
-		line.clear();
-
-		int k = 0;	
-		while (k != word.length())
-		{
-			int i = 0;
-			int j = 0;
-			while (i != m && j != n)
+			for (int j = 0; j != width; j++)
 			{
-				if (word[k] == board[i][j] && !visited(x_indx, y_indx, i, j))
+				resetUp();	//	每次更换匹配起点都要重置方向标志矩阵
+				resetDown();
+				resetLeft();
+				resetRight();
+				int k = 0;	//	标记单词的下标
+				int u = i, v = j;	
+				while (k != word.length())	//	以board[i][j]为起点进行匹配
 				{
-					x_indx.push_back(i);
-					y_indx.push_back(j);
-					k++;
-					
-				}
+					if (word[k] == board[u][v] && !visited(x_indx, y_indx, u, v))
+					{
+						x_indx.push_back(u);
+						y_indx.push_back(v);
+						k++;
 
-				//	按照上->右->下->左的顺时针顺序来尝试当前匹配字符的邻居
-				if (i > 0 && !visited(x_indx, y_indx, i-1, j))
-				{
-					if (word[k] == board[i-1][j])
-					{
-						x_indx.push_back(i-1);
-						y_indx.push_back(j);
-						i--;
-						k++;
-					}					
-				}
-				else if (j < n-1 && !visited(x_indx, y_indx, i, j+1))
-				{
-					if (word[k] == board[i][j+1])
-					{
-						x_indx.push_back(i);
-						y_indx.push_back(j+1);
-						j++;
-						k++;
-					}	
-				}
-				else if (i < m-1 && !visited(x_indx, y_indx, i+1, j))
-				{
-					if (word[k] == board[i+1][j])
-					{
-						x_indx.push_back(i+1);
-						y_indx.push_back(j);
-						i++;
-						k++;
-					}	
-				}
-				else if (j > 0 && !visited(x_indx, y_indx, i, j-1))
-				{
-					if (word[k] == board[i][j-1])
-					{
-						x_indx.push_back(i);
-						y_indx.push_back(j-1);
-						j--;
-						k++;
-					}	
-				}
-				else
-				{
- 					x_indx.pop_back();
- 					y_indx.pop_back();
- 					i = x_indx.back();
- 					j = y_indx.back();
-// 					i = x_indx[x_indx.size()-2];
-// 					j = y_indx[y_indx.size()-2];
-				}
+						//	按照上->右->下->左的顺时针顺序来尝试当前匹配字符的邻居
+						if (u > 0 && !visited(x_indx, y_indx, u-1, v) && up[u][v])
+						{
+							if (word[k] == board[u-1][v])
+								u--;								
+							else
+								up[u][v] = false;
+						}
+						else if (v < width-1 && !visited(x_indx, y_indx, u, v+1) && right[u][v])
+						{
+							if (word[k] == board[u][v+1])
+								v++;								
+							else
+								right[u][v] = false;
+						}
+						else if (u < height-1 && !visited(x_indx, y_indx, u+1, v) && down[u][v])
+						{
+							if (word[k] == board[u+1][v])
+								u++;
+							else
+								down[u][v] = false;
+						}
+						else if (v > 0 && !visited(x_indx, y_indx, u, v-1) && left[u][v])
+						{
+							if (word[k] == board[u][v-1])
+								v--;
+							else
+								left[u][v] = false;
+						}
+						else
+						{
+							x_indx.pop_back();
+							y_indx.pop_back();
 
+							if (x_indx.empty() && y_indx.empty())	break;
+
+							u = x_indx.back();
+							v = y_indx.back();
+						}
+					}
+					else
+					{
+						break;							
+					}
+				}
+				if (k == word.length())	return true;
 			}
 		}
-		
+		return false;
 	}
 
 private:
@@ -198,11 +143,102 @@ private:
 		return false;
 	}
 
+	///@brief	重置向上的标志矩阵
+	void resetUp()
+	{
+		up.clear();
+		bool flg = false;
+		vector<bool> line;
+		for (int i = 0; i != width; i++)
+		{
+			line.push_back(flg);
+		}
+		up.push_back(line);	
+		line.clear();
+
+		flg = true;
+		for (int i = 0; i != width; i++)
+		{
+			line.push_back(flg);
+		}
+		for (int i = 0; i != height-1; i++)
+		{
+			up.push_back(line);
+		}
+		return;
+	}
+
+	///@brief	重置向下的标志矩阵
+	void resetDown()
+	{
+		down.clear();
+		bool flg = true;
+		vector<bool> line;
+		for (int i = 0; i != width; i++)
+		{
+			line.push_back(flg);
+		}
+		for (int i = 0; i != height-1; i++)
+		{
+			up.push_back(line);
+		}
+		line.clear();
+
+		flg = false;
+		for (int i = 0; i != width; i++)
+		{
+			line.push_back(flg);
+		}
+		up.push_back(line);	
+		return;
+	}
+
+	///@brief	重置向左的标志矩阵
+	void resetLeft()
+	{
+		left.clear();
+		vector<bool> line;
+		bool flg = false;
+		line.push_back(flg);
+		flg = true;
+		for (int i = 0; i != width-1; i++)
+		{
+			line.push_back(flg);
+		}
+		for (int i= 0; i != height; i++)
+		{
+			left.push_back(line);	//	初始化向左的标志矩阵
+		}
+		return;
+	}
+
+	///@brief	重置向右的标志矩阵
+	void resetRight()
+	{
+		right.clear();
+		vector<bool> line;
+		bool flg = true;
+		for (int i = 0; i != width-1; i++)
+		{
+			line.push_back(flg);
+		}
+		flg = false;
+		line.push_back(flg);
+		for (int i= 0; i != height; i++)
+		{
+			right.push_back(line);	//	初始化向右的标志矩阵
+		}
+		return;
+	}
+
+	//	方位标志矩阵，用来表示在点board[i][j]处能否向各个方向移动
 	vector<vector<bool>> up;
 	vector<vector<bool>> down;
 	vector<vector<bool>> left;
 	vector<vector<bool>> right;
 	
+	int width;	//	矩阵的宽
+	int height;	//	矩阵的高
 };
 
 int main()
