@@ -23,7 +23,7 @@ public:
 	///@param	word1	单词1
 	///@param	word2	单词2
 	///@return	返回转换需要的最小步数
-	///@note	
+	///@note	先计算两个单词之间的最长公共子串，然后根据最长公共子串来选择进行何种操作？
 	int minDistance(string word1, string word2) {
 
 	}
