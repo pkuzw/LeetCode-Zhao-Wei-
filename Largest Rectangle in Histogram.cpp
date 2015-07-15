@@ -1,4 +1,4 @@
-///@file	Largest Rectangle in Histogram
+ï»¿///@file	Largest Rectangle in Histogram
 /*
 Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
 
@@ -12,19 +12,20 @@ return 10.
 
 #include <vector>
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
 class Solution {
 public:
-	///@brief	¼ÆËãÖ±·½Í¼×î´óµÄ¾ØĞÎÃæ»ı
-	///@param	height	Ö±·½Í¼µÄ¸ß¶ÈÊı×é
-	///@return	·µ»Ø×î´ó¾ØĞÎµÄÃæ»ı
-	///@note	±È½ÏÆÓËØµÄÏë·¨ÊÇÍ¨¹ıÒ»¸ö¶şÖØÑ­»·Ã¶¾ÙÃ¿Ò»ÖÖ¾ØĞÎ£¬È»ºóÕÒ³öÆäÖĞµÄ×î´óÖµ¡£Ê±¼ä¸´ÔÓ¶ÈÎªO(n^2)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(1)£»
-	//			Í¨¹ıË¼¿¼£¬¿ÉÒÔ×öÈçÏÂ¸Ä½ø£¬¶ÔÓÚÃ¿Ò»¸öÖù×Ó£¬ÒÔËüÎªÖĞĞÄ½øĞĞÑÓÕ¹£¬¼´¸ÃÖù×ÓµÄ¸ß¶ÈÎªËüËù´ú±íµÄ¾ØĞÎµÄ×îµÍ¸ß¶È£¬ÕâÑùÊ±¼ä¸´ÔÓ¶ÈÔÚ×î»µ
-	//			Çé¿öÏÂÒ²ÎªO(n^2)£¬µ«×îºÃÇé¿öÄÜµ½O(n)¡£¿Õ¼ä¸´ÔÓ¶ÈÎªO(1)
-	int largestRectangleArea(vector<int>& height) {
-		int max_area = 0;	//	×î´ó¾ØĞÎÃæ»ı
+	///@brief	è®¡ç®—ç›´æ–¹å›¾æœ€å¤§çš„çŸ©å½¢é¢ç§¯
+	///@param	height	ç›´æ–¹å›¾çš„é«˜åº¦æ•°ç»„
+	///@return	è¿”å›æœ€å¤§çŸ©å½¢çš„é¢ç§¯
+	///@note	æ¯”è¾ƒæœ´ç´ çš„æƒ³æ³•æ˜¯é€šè¿‡ä¸€ä¸ªäºŒé‡å¾ªç¯æšä¸¾æ¯ä¸€ç§çŸ©å½¢ï¼Œç„¶åæ‰¾å‡ºå…¶ä¸­çš„æœ€å¤§å€¼ã€‚æ—¶é—´å¤æ‚åº¦ä¸ºO(n^2)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(1)ï¼›
+	//			é€šè¿‡æ€è€ƒï¼Œå¯ä»¥åšå¦‚ä¸‹æ”¹è¿›ï¼Œå¯¹äºæ¯ä¸€ä¸ªæŸ±å­ï¼Œä»¥å®ƒä¸ºä¸­å¿ƒè¿›è¡Œå»¶å±•ï¼Œå³è¯¥æŸ±å­çš„é«˜åº¦ä¸ºå®ƒæ‰€ä»£è¡¨çš„çŸ©å½¢çš„æœ€ä½é«˜åº¦ï¼Œè¿™æ ·æ—¶é—´å¤æ‚åº¦åœ¨æœ€å
+	//			æƒ…å†µä¸‹ä¹Ÿä¸ºO(n^2)ï¼Œä½†æœ€å¥½æƒ…å†µèƒ½åˆ°O(n)ã€‚ç©ºé—´å¤æ‚åº¦ä¸ºO(1)
+	int largestRectangleArea_time_O_n2(vector<int>& height) {
+		int max_area = 0;	//	æœ€å¤§çŸ©å½¢é¢ç§¯
 		for (int i = 0; i != height.size(); i++)
 		{
 			int width = sequentialHistograms(height, i);
@@ -34,11 +35,39 @@ public:
 		return max_area;
 	}
 
+	///@brief	è®¡ç®—ç›´æ–¹å›¾æœ€å¤§çš„çŸ©å½¢é¢ç§¯
+	///@param	height	ç›´æ–¹å›¾çš„é«˜åº¦æ•°ç»„
+	///@return	è¿”å›æœ€å¤§çŸ©å½¢çš„é¢ç§¯
+	///@note	é€šè¿‡ç»´æŠ¤ä¸€ä¸ªæ ˆï¼Œæ¥ä¿å­˜è¿ç»­é€’å¢çš„åœ†æŸ±çš„ä¸‹æ ‡ï¼Œå½“é‡åˆ°æ¯”ä¸Šä¸€ä¸ªæŸ±å­å°çš„æŸ±å­æ—¶ï¼Œå¼¹æ ˆå¹¶è®¡ç®—æ ˆä¸­æŸ±å­çš„é¢ç§¯ã€‚
+	//			å¦‚æœæ ˆä¸ºç©ºï¼Œåˆ™è®¡ç®—å½“å‰æŸ±å­é«˜åº¦ä¸å½“å‰ä¸‹æ ‡çš„ä¹˜ç§¯ã€‚æ¯æ¬¡è®¡ç®—å‰è¦åœ¨æœ«å°¾åŠ ä¸Šä¸€ä¸ª0ï¼Œç”¨æ¥æœ€åæ¸…æ ˆã€‚è¦ä¸ç„¶å°±åœ¨æœ€åæ¸…ä¸€æ¬¡æ ˆã€‚
+	//			æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(n)ã€‚
+	int largestRectangleArea_time_O_n(vector<int>& height) {
+		stack<int> stck;	//	ä¿å­˜æŸ±å­ä¸‹æ ‡çš„æ ˆ
+		height.push_back(0);//	æœ«å°¾æ·»åŠ 0å…ƒç´ ï¼Œä¾¿äºæœ€åæ¸…æ ˆ
+		int max_area = 0;	
+		int i = 0;
+		while (i < height.size())
+		{
+			if (stck.empty() || height[stck.top()] <= height[i])
+			{
+				stck.push(i);
+				i++;
+			}
+			else
+			{
+				int tp = stck.top();
+				stck.pop();
+				max_area = max(max_area, height[tp] * (stck.empty() ? i : i-stck.top()-1));
+			}
+		}
+		return max_area;
+	}
+
 private:
-	///@brief	¸ø¶¨Ö±·½Í¼ºÍÄ³Ò»Öù×ÓµÄÏÂ±ê£¬ÕÒµ½ÒÔËüÎªÖĞĞÄµÄ£¬¸ß¶È×îµÍÎªËüµÄ¸ß¶ÈµÄÁ¬ĞøÖù×ÓÊıÄ¿
-	///@pram	height	Ö±·½Í¼Êı×é
-	///@param	indx	Öù×ÓµÄÏÂ±ê
-	///@return	·µ»Ø¸ß¶È×îµÍÎªËüµÄ¸ß¶ÈµÄÁ¬ĞøÖù×ÓÊıÄ¿
+	///@brief	ç»™å®šç›´æ–¹å›¾å’ŒæŸä¸€æŸ±å­çš„ä¸‹æ ‡ï¼Œæ‰¾åˆ°ä»¥å®ƒä¸ºä¸­å¿ƒçš„ï¼Œé«˜åº¦æœ€ä½ä¸ºå®ƒçš„é«˜åº¦çš„è¿ç»­æŸ±å­æ•°ç›®
+	///@pram	height	ç›´æ–¹å›¾æ•°ç»„
+	///@param	indx	æŸ±å­çš„ä¸‹æ ‡
+	///@return	è¿”å›é«˜åº¦æœ€ä½ä¸ºå®ƒçš„é«˜åº¦çš„è¿ç»­æŸ±å­æ•°ç›®
 	int sequentialHistograms(vector<int> &height, const int indx)
 	{
 		int left_cnt = 0, right_cnt = 0;
@@ -63,14 +92,20 @@ private:
 int main()
 {
 	vector<int> histogram;
-	histogram.push_back(0);
-/*	histogram.push_back(2);/*
-	histogram.push_back(4);
-	histogram.push_back(6);
-	histogram.push_back(2);
-	histogram.push_back(3);*/
+// 	for (int i = 0; i < 20000; i++)
+// 	{
+// 		histogram.push_back(i);
+// 	}
+ 	
+ 	histogram.push_back(4);
+ 	histogram.push_back(2);
+ 	histogram.push_back(7);
+ 	histogram.push_back(3);
+ 	histogram.push_back(2);
+ 	histogram.push_back(5);
 
 	Solution slt;
-	cout << slt.largestRectangleArea(histogram) << endl;
+	cout << slt.largestRectangleArea_time_O_n(histogram) << endl;
+	cout << slt.largestRectangleArea_time_O_n2(histogram) << endl;
 	return 0;
 }
