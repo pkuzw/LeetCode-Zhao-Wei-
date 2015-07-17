@@ -9,11 +9,12 @@ b) Delete a character
 c) Replace a character
 */
 ///@author	zhaowei
-///@date	2015.07.15
+///@date	2015.07.17
 ///@version	1.0
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -23,13 +24,53 @@ public:
 	///@param	word1	单词1
 	///@param	word2	单词2
 	///@return	返回转换需要的最小步数
-	///@note	先计算两个单词之间的最长公共子串，然后根据最长公共子串来选择进行何种操作？
+	///@note	动态规划：设dp[i][j]表示word1[0..i-1]到word2[0..j-1]的操作步数，则初始值为dp[0][j] = j, dp[i][0] = i。
+	//			dp[i][j] = (word1[i-1] == word2[j-1]) ？ dp[i-1][j-1] ： 1+min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])。这个公式表示如果当前
+	//			两个字符相等，则等于除去这两个字符的步骤数；否则等于word1[0..i-2]到word2[0..j-1]的步骤数加上给word1添加一个字符的操作或者
+	//			等于word1[0..i-1]到word2[0..j-2]的步骤数加上给word1删去一个字符的操作或者等于等于word1[0..i-2]到word2[0..j-2]的步骤数加上
+	//			给word1更新最后一个字符的操作的最小值。时间复杂度为O(n^2)，空间复杂度为O(n^2)。
 	int minDistance(string word1, string word2) {
+		const int len1 = word1.length(), len2 = word2.length();
+		vector<vector<int>> dp;
+		vector<int> line;
+		for (int i = 0; i != len2+1; i++)
+		{
+			line.push_back(0);
+		}
+		for (int i = 0; i != len1+1; i++)
+		{
+			dp.push_back(line);
+		}
+		
+		//	初始化dp
+		for (int i = 0; i != len2+1; i++)
+		{
+			dp[0][i] = i; 
+		}
+		for (int i = 0; i != len1+1; i++)
+		{
+			dp[i][0] = i;
+		}
 
+		for (int i = 1; i != len1+1; i++)
+		{
+			for (int j = 1; j != len2+1; j++)
+			{
+				dp[i][j] = (word1[i-1] == word2[j-1]) ? (dp[i-1][j-1]) : (1 + min(dp[i-1][j], min(dp[i][j-1], dp[i-1][j-1])));	//	递推公式
+			}
+		}
+		return dp[len1][len2];
 	}
 };
 
 int main()
 {
+	Solution slt;
+	string word1, word2;
+	while (cin >> word1 >> word2)
+	{
+		cout << slt.minDistance(word1, word2) << endl;
+		cout << endl;
+	}
 	return 0;
 }
