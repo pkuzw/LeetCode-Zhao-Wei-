@@ -1,4 +1,4 @@
-///@file	Search in Rotated Sorted Array II
+ï»¿///@file	Search in Rotated Sorted Array II
 /*
 Follow up for "Search in Rotated Sorted Array":
 Suppose a sorted array is rotated at some pivot unknown to you beforehand.
@@ -26,10 +26,10 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	²éÕÒÒÑÅÅĞòÊı×éÖĞÊÇ·ñ´æÔÚÄ³ÔªËØ£¨Ä¬ÈÏÎªÉıĞò£©
-	///@param	nums	Êı×é
-	///@param	target	´ı²éÕÒÖµ
-	///@return	Èç¹ûÊı×éÖĞ´æÔÚ¸ÃÖµ£¬Ôò·µ»Øtrue£¬·ñÔò·µ»Øfalse
+	///@brief	æŸ¥æ‰¾å·²æ’åºæ•°ç»„ä¸­æ˜¯å¦å­˜åœ¨æŸå…ƒç´ ï¼ˆé»˜è®¤ä¸ºå‡åºï¼‰
+	///@param	nums	æ•°ç»„
+	///@param	target	å¾…æŸ¥æ‰¾å€¼
+	///@return	å¦‚æœæ•°ç»„ä¸­å­˜åœ¨è¯¥å€¼ï¼Œåˆ™è¿”å›trueï¼Œå¦åˆ™è¿”å›false
 	///@author	zhaowei
 	///@date	2015.07.15
 	///@note	
