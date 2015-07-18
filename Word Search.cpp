@@ -313,7 +313,7 @@ public:
 	///@return	如果能够通过上下左右相邻的方式找到该单词，则返回true；否则返回false
 	///@note	遍历矩阵，通过访问它的上下左右邻居来对目标单词进行匹配。需要两个一维数组来存储已经匹配的字符在矩阵中的行列号，
 	//			便于后续字符不匹配时进行回溯。还需要4个m*n的bool型二维数组来存储每一个点能否向相邻元素移动。设矩阵尺寸为m*n，
-	//			单词长度为k，则算法时间复杂度为O(mnk)，空间复杂度为O(mn)。
+	//			单词长度为k，则算法时间复杂度为O(mnk)，空间复杂度为O(mn)。OJ报TLE。
 	bool exist(vector<vector<char>>& board, string word) {
 		if (board.empty())
 		{
