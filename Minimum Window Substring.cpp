@@ -13,8 +13,8 @@ If there is no such window in S that covers all characters in T, return the emtp
 If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
 */
 ///@author	zhaowei
-///@date	2015.07.17
-///@version	1.0
+///@date	2015.07.18
+///@version	2.0
 
 #include <iostream>
 #include <string>
@@ -22,6 +22,7 @@ If there are multiple such windows, you are guaranteed that there will always be
 #include <stack>
 #include <unordered_map>
 #include <deque>
+#include <queue>
 
 using namespace std;
 
@@ -34,7 +35,7 @@ public:
 	///@note	用两个双端队列来存储已经匹配的字符串字符及其下标。当完成一次字符串匹配时，则弹出队首元素，清空两个队列和哈希表，
 	//			然后然后将搜索的起始位置更新为队首元素的后一个元素，直到匹配的起始下标小于等于总长度减去待匹配字符串的长度时，
 	//			循环停止。在匹配的过程中，当字符不匹配时，要及时更新起始下标的值。时间复杂度为O(n^2)，空间复杂度为O(m)。OJ报TLE。
-	string minWindow(string s, string t) {
+	string minWindow_O_n2(string s, string t) {
 		string rslt;
 		if (s.length() < t.length())
 		{
@@ -82,6 +83,65 @@ public:
 		rslt = s.substr(min_end-min_len+1, min_len);
 		return rslt;
 	}
+
+	///@brief 计算字符串s包含t的最小子串
+	///@param	s	字符串s
+	///@param	t	字符串t
+	///@return	返回s中包含t的最短子串
+	///@note	用两个整型数组来存储匹配字符串中出现的字符次数src_cnt和已经匹配的字符次数found_cnt。再用一个队列来保存在字符串s中所有属于
+	//			匹配字符串的字符下标。用一个整型变量来保存已经匹配的字符数目，如果匹配的字符数目等于t的字符串长度，则找到了一个窗口。当找到
+	//			了一个匹配窗口时，则尽量将窗口缩小：1. 当前窗口的起始元素不属于字符串t中的字符或者即使删去当前窗口的起始元素，也能够保证后续
+	//			窗口中的同一个字符总数大于等于t中该字符的出现次数(found_cnt[s[k]] >= src_cnt[s[k]])。将窗口缩小到最小后，就可以来比较上一次
+	//			存储的窗口大小，如果比上一次的小，则将其长度和起始下标存储起来。
+	//			时间复杂度为O(n)，空间复杂度为O(n)。
+	string minWindow(string s, string t)
+	{
+		int src_cnt[256] = {0};	//	字符串t中的每个字符的出现次数
+		int found_cnt[256] = {0};	//	字符串s中已经匹配的字符个数
+		queue<int> que;	//	存储字符串s中属于字符串t的字符下标
+		int has_found = 0;	//	存储已经匹配了多少个字符
+		for (int i = 0; i != t.length(); i++)
+		{
+			src_cnt[t[i]]++;
+		}
+
+		int win_start = -1;	//	匹配窗口的起始下标
+		int win_end = s.length();	//	匹配窗口的终止下标
+
+		for (int i = 0; i != s.length(); i++)
+		{
+			if (src_cnt[s[i]] != 0)	//	如果当前字符属于t中字符
+			{
+				que.push(i);	//	进入队列
+				found_cnt[s[i]]++;	//	寻找到的该字符次数自增1
+				if (found_cnt[s[i]] <= src_cnt[s[i]])	//	如果该字符的出现次数小于t中的出现次数，则认为又找到了一个匹配字符
+				{
+					has_found++;					
+				}
+
+				if (has_found == t.length())	//	如果已经匹配
+				{
+
+					int k = que.front();	//	匹配的第一个字符下标
+
+					do 
+					{
+						k = que.front();	//	找到匹配字符串的起始下标
+						que.pop();			//	出队列
+						found_cnt[s[k]]--;	//	找到的次数自减1
+					} while (src_cnt[s[k]] <= found_cnt[s[k]]);		// 将窗口缩减至最小			
+
+					if (win_end - win_start > i - k)		//	找到最小窗口
+					{
+						win_start = k;
+						win_end = i;
+					}
+					has_found--;		//	匹配的总字符数自减1
+				}
+			}			
+		}
+		return win_start == -1 ? "" : s.substr(win_start, win_end-win_start+1);
+	}
 private:
 	///@brief	判断某字符是否是字符串中的一个字符，如果存在则将该map中的对应次数自减1
 	///@param	ch	字符	
@@ -110,7 +170,7 @@ private:
 		return;
 	}
 
-	unordered_map<char, int> char_app;
+	unordered_map<char, int> char_app;		//	在t字符串中字符的出现次数	
 };
 
 int main()
