@@ -62,7 +62,8 @@ public:
 		return rslt;		
 	}
 
-	///@brief	二分查找Pivot值
+private:
+	///@brief	二分查找Pivot值，即最大值
 	///@param	nums	已排好序的数组
 	///@param	p	数组起始下标
 	///@param	r	数组终止下标
@@ -126,14 +127,18 @@ int main()
 		for (int i = 0; i < j; i++)
 		{
 			nums.push_back(i+10-j);
+			nums.push_back(i+10-j);
+			nums.push_back(i+10-j);			
 		}
 
 		for (int i = 0; i < 10-j; i++)
 		{
 			nums.push_back(i);
+			nums.push_back(i);
+			nums.push_back(i);
 		}
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 30; i++)
 		{
 			cout << nums[i] << ' ';
 		}
