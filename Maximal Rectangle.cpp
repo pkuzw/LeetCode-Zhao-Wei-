@@ -8,6 +8,7 @@ Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle con
 
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -52,7 +53,7 @@ public:
 	
 	动态规划得到所有位置连续1的长度（O(n)），然后再枚举不同的矩形左上角下标（O(n^2)），那么总的时间复杂度为O(n^3)，空间复杂度为O(n^2)
 	*/
-	int maximalRectangle(vector<vector<char>>& matrix) {
+	int maximalRectangle_O_n3(vector<vector<char>>& matrix) {
 		int height = matrix.size(); 
 		if (height == 0)
 		{
@@ -110,6 +111,86 @@ public:
 		}
 		return max_area;
 	}
+
+	///@brief	给定一个二进制的二维矩阵，计算最大的全部都是1的矩形面积
+	///@param	matrix	二维矩阵
+	///@return	返回全部都是1的矩形的面积
+	///@note	利用"Largest Rectangle in Histogram"中O(n)的算法，将二维矩阵中的每一行看做直方图的横坐标，纵坐标是该元素所在位置上方
+	//			连续出现的'1'的数目，通过动归O(n^2)的时间获得。总的时间复杂度为O(n^2)，因为一共有n行，每行调用的算法时间复杂度为O(n)，
+	//			一共就是O(n^2)。空间复杂度为O(n^2)
+	int maximalRectangle(vector<vector<char>>& matrix)
+	{
+		int height = matrix.size();	// 二维矩阵的高度
+		if (height == 0)
+		{
+			return 0;
+		}
+		int width = matrix[0].size();	//	二维矩阵的宽度
+
+		vector<vector<int>> dp;	//	dp[i][j]表示元素matrix[i][j]向上方连续的1的数目
+		vector<int> line;	
+		for (int i = 0; i != width; i++)	//	初始化dp
+		{
+			line.push_back(0);
+		}
+		for (int i = 0; i != height; i++)
+		{
+			dp.push_back(line);
+		}
+
+		for (int i = 0; i != width; i++)	//	动态规划计算dp，要倒着算
+		{
+			dp[height-1][i] = (matrix[height-1][i] == '1') ? 1 : 0;
+		}
+		for (int i = height-2; i != -1; i--)
+		{
+			for (int j = 0; j != width; j++)
+			{
+				dp[i][j] = (matrix[i][j] == '1') ? 1 + dp[i+1][j] : 0;
+			}
+		}
+
+		int max_area = 0;
+		for (int i = 0; i != height; i++)
+		{
+			line.clear();	//	用来保存每一行为底的直方图数组
+			for (int j = 0; j != width; j++)
+			{
+				line.push_back(dp[i][j]);
+			}
+			int rec_area = largestRectangleArea_time_O_n(line);	//	调用O(n)的时间复杂度的算法计算每一行的最大矩形面积
+			max_area = max(max_area, rec_area);
+		}
+		return max_area;
+	}
+private:
+	///@brief	计算直方图最大的矩形面积
+	///@param	height	直方图的高度数组
+	///@return	返回最大矩形的面积
+	///@note	通过维护一个栈，来保存连续递增的圆柱的下标，当遇到比上一个柱子小的柱子时，弹栈并计算栈中柱子的面积。
+	//			如果栈为空，则计算当前柱子高度与当前下标的乘积。每次计算前要在末尾加上一个0，用来最后清栈。要不然就在最后清一次栈。
+	//			时间复杂度为O(n)，空间复杂度为O(n)。
+	int largestRectangleArea_time_O_n(vector<int>& height) {
+		stack<int> stck;	//	保存柱子下标的栈
+		height.push_back(0);//	末尾添加0元素，便于最后清栈
+		int max_area = 0;	
+		int i = 0;
+		while (i < height.size())
+		{
+			if (stck.empty() || height[stck.top()] <= height[i])
+			{
+				stck.push(i);
+				i++;
+			}
+			else
+			{
+				int tp = stck.top();
+				stck.pop();
+				max_area = max(max_area, height[tp] * (stck.empty() ? i : i-stck.top()-1));
+			}
+		}
+		return max_area;
+	}
 };
 
 int main()
@@ -148,7 +229,7 @@ int main()
 	/*
 	1 1 0 1 1 0 2
 	1 1 1 1 1 1 2
-	1 1 1 1 0 1 2
+	0 1 1 1 0 1 2
 	1 1 1 1 1 1 2
 	1 1 1 0 0 1 2
 	1 1 1 0 0 1 2
