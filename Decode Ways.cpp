@@ -52,14 +52,11 @@ public:
 	*/
 	int numDecodings_DP(string s) {
 		if (s.empty())
-		{
 			return 0;
-		}
+		
 		vector<int> dp;	//	初始化。dp[i]表示s[0..i-1]的解码方法数
 		for (int i = 0; i != s.length()+1; i++)
-		{
-			dp.push_back(0);
-		}	
+			dp.push_back(0);			
 
 		dp[0] = 1;	//	用于计算dp[i-2]的值
 		dp[1] = (s[0] == '0') ? 0 : 1;	//	初始条件
@@ -67,17 +64,12 @@ public:
 		for (int i = 2; i != s.length()+1; i++)	
 		{
 			if (s[i-1] != '0')	// 先判前一个元素
-			{
-				dp[i] = dp[i-1];
-			}
+				dp[i] = dp[i-1];			
 			else 
 				dp[i] = 0;	//	出现无法匹配的'0'，直接置为0
 
-
-			if ((s[i-2] == '2' && s[i-1] <= '6') || (s[i-2] == '1'))	//	再判前两个元素
-			{
-				dp[i] += dp[i-2];
-			}			
+			if ((s[i-2] == '2' && s[i-1] <= '6') || (s[i-2] == '1'))	//	再判前两个元素			
+				dp[i] += dp[i-2];			
 		}
 		return dp.back();
 	}
