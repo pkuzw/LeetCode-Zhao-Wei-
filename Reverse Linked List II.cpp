@@ -1,0 +1,165 @@
+﻿///@file	Reverse Linked List II
+/*
+Reverse a linked list from position m to n. Do it in-place and in one-pass.
+
+For example:
+Given 1->2->3->4->5->NULL, m = 2 and n = 4,
+
+return 1->4->3->2->5->NULL.
+
+Note:
+Given m, n satisfy the following condition:
+1 ≤ m ≤ n ≤ length of list.
+*/
+///@author	zhaowei
+///@date	2015.07.20
+///@versio	1.0
+
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+struct ListNode {
+	int val;
+	ListNode *next;
+	ListNode(int x) : val(x), next(NULL) {}
+};
+
+class Solution {
+public:
+	///@brief	给定一个链表，在O(1)的空间复杂度，O(n)的时间复杂度的限制下反转指定范围的节点
+	///@param	head	链表表头
+	///@param	m	指定范围的起点
+	///@param	n	指定范围的终点
+	///@return	返回翻转后新链表的表头
+	/* @note	先找到应该翻转的第一个节点和最后一个节点，然后调用翻转链表的方法（时间复杂度为O(n)，空间复杂度为O(n)，用到了栈，还是用到了
+				额外的空间，不符合题意）。需要注意的是翻转的范围是否包含第一个节点，即表头，因为表头之前没有别的元素，跟其他情形不同，
+				需要单独处理。
+				时间复杂度为O(n)，空间复杂度为O(n)
+	*/
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+		if (m == n)
+		{
+			return head;
+		}
+		ListNode *indx = head;
+		while (m-- > 1)
+			indx = indx->next;		
+		ListNode *r_beg = indx;	//	反转的起始节点
+
+		indx = head;
+		while (n-- > 1)
+			indx = indx->next;
+		ListNode *r_end = indx;	//	反转的终止节点
+
+		indx = head;
+		if (indx == r_beg)	// 当反转的范围包括首元素时，因为它之前没有别的元素，需要单独处理
+		{
+			ListNode *after_range = r_end->next;
+			r_end->next = nullptr;
+			ListNode *rlist = reverseList(head);
+			ListNode *tmp = rlist;
+			while (tmp->next != nullptr)
+			{
+				tmp = tmp->next;
+			}
+			tmp->next = after_range;
+			head = rlist;
+		}
+		else
+		{
+			while (indx->next != r_beg)
+				indx = indx->next;
+			indx->next = r_end->next;	//	将旋转的两侧先连起来，等反转后再重新连接
+			r_end->next = nullptr;      
+
+			ListNode *rlist = reverseList(r_beg);	//	翻转中间的节点
+
+			ListNode *tmp = rlist;	//	将翻转后的节点与之前的节点连接起来
+			while (tmp->next != nullptr)
+			{
+				tmp = tmp->next;
+			}
+			tmp->next = indx->next;
+			indx->next = rlist;			
+		}			
+		return head;
+    }
+
+	///@brief	反转一个单链表
+	///@param	head	链表表头
+	///@return	返回翻转后的链表表头
+	///@note	利用了栈来进行临时存储，空间复杂度为O(n)，时间复杂度为O(n)
+	ListNode* reverseList(ListNode *head)
+	{
+		ListNode *indx = head;		
+		stack<ListNode*> s;
+		while (indx->next != nullptr)
+		{			
+			s.push(indx);
+			indx = indx->next;
+		}
+		ListNode *new_head = indx;
+		while (!s.empty())
+		{
+			ListNode *tmp = s.top();
+			s.pop();
+			tmp->next = nullptr;
+			
+			indx->next = tmp;
+			indx = indx->next;
+		}
+		indx->next = nullptr;
+		return new_head;
+	}
+
+	///@brief	插入新节点
+	///@param	head	原链表的首节点
+	///@param	val		新节点值
+	///@return	无
+	void insertNode(ListNode *head, int val)
+	{
+		ListNode *node = new ListNode(val);
+
+		while (head->next != nullptr)
+		{
+			head = head->next;
+		}
+		head->next = node;
+	}
+};
+
+int main()
+{
+	Solution slt;
+	ListNode* head = new ListNode(1);
+ 	slt.insertNode(head, 2);
+ 	slt.insertNode(head, 3);
+ 	slt.insertNode(head, 4);
+ 	slt.insertNode(head, 5);
+
+	ListNode* display = head;
+	cout << "Before: ";
+	while (head != nullptr)
+	{
+		cout << head->val;
+		cout << ' ';
+		head = head->next;
+	}
+	cout << endl;
+
+//	head = slt.reverseList(display);
+
+	head = slt.reverseBetween(display, 3, 5);
+	cout << "After: ";
+	while (head != nullptr)
+	{
+		cout << head->val;
+		cout << ' ';
+		head = head->next;
+	}
+	cout << endl;
+
+	return 0;
+}
