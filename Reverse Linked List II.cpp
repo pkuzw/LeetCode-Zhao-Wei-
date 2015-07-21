@@ -13,7 +13,7 @@ Given m, n satisfy the following condition:
 */
 ///@author	zhaowei
 ///@date	2015.07.20
-///@versio	1.0
+///@versio	2.0
 
 #include <iostream>
 #include <stack>
@@ -38,8 +38,8 @@ public:
 				需要单独处理。
 				时间复杂度为O(n)，空间复杂度为O(n)
 	*/
-    ListNode* reverseBetween(ListNode* head, int m, int n) {
-		if (m == n)
+    ListNode* reverseBetween_Space_O_n(ListNode* head, int m, int n) {
+		if (head == nullptr || m == n)
 		{
 			return head;
 		}
@@ -58,7 +58,7 @@ public:
 		{
 			ListNode *after_range = r_end->next;
 			r_end->next = nullptr;
-			ListNode *rlist = reverseList(head);
+			ListNode *rlist = reverseList_Space_O_n(head);
 			ListNode *tmp = rlist;
 			while (tmp->next != nullptr)
 			{
@@ -74,7 +74,7 @@ public:
 			indx->next = r_end->next;	//	将旋转的两侧先连起来，等反转后再重新连接
 			r_end->next = nullptr;      
 
-			ListNode *rlist = reverseList(r_beg);	//	翻转中间的节点
+			ListNode *rlist = reverseList_Space_O_n(r_beg);	//	翻转中间的节点
 
 			ListNode *tmp = rlist;	//	将翻转后的节点与之前的节点连接起来
 			while (tmp->next != nullptr)
@@ -87,11 +87,105 @@ public:
 		return head;
     }
 
+	///@brief	给定一个链表，在O(1)的空间复杂度，只能遍历一遍链表的限制下反转指定范围的节点
+	///@param	head	链表表头
+	///@param	m	指定范围的起点
+	///@param	n	指定范围的终点
+	///@return	返回翻转后新链表的表头
+	/* @note	找到开始翻转的首结点，利用两个临时变量，一个存储循环变量的前一个节点，另一个存储后一个节点，逐一进行翻转。时间复杂度为O(n)，
+				空间复杂度为O(1)。 
+	*/
+    ListNode* reverseBetween_Space_O_1(ListNode* head, int m, int n) {
+		if (head == nullptr || m == n)	return head;
+		ListNode *indx = head;
+		ListNode *pre_indx = head;
+		ListNode *after_indx = new ListNode(0);
+
+		int i = m, j = n;
+						
+		while (m-- > 1)
+		{
+			if (indx != nullptr)
+			{
+				pre_indx = indx;
+				indx = indx->next;
+			}			
+		}
+		ListNode *r_beg = indx;	//	翻转的首节点		
+		ListNode *pre_r_beg = pre_indx;	//	翻转的首节点的前一个节点
+
+		pre_indx = r_beg;
+		indx = r_beg->next;
+		if (indx != nullptr)
+			after_indx = indx->next;
+		
+		int k = j-i;
+		while (k-- > 0)
+		{				
+			indx->next = pre_indx;
+			pre_indx = indx;
+			indx = after_indx;
+			if (after_indx != nullptr)
+				after_indx = after_indx->next;
+		}
+		r_beg->next = indx;
+
+		if (r_beg == head)	//	如果翻转的首节点是链表的首节点，则pre_r_beg也是head，此时直接返回pre_indx即可
+			return pre_indx;
+		
+		pre_r_beg->next = pre_indx;
+		return head;		
+	}
+	///@brief	插入新节点
+	///@param	head	原链表的首节点
+	///@param	val		新节点值
+	///@return	无
+	void insertNode(ListNode *head, int val)
+	{
+		ListNode *node = new ListNode(val);
+
+		while (head->next != nullptr)
+		{
+			head = head->next;
+		}
+		head->next = node;
+	}
+
+private:
+	///@brief	翻转一个单链表
+	///@param	head	链表表头
+	///@return	返回翻转后的链表表头
+	/* @note	从前到后依次翻转。利用两个临时变量，一个用来保存循环变量的前一个节点，另一个用来保存后一个节点，然后逐一翻转即可。
+				时间复杂度为O(n)，空间复杂度为O(1)
+	*/
+	ListNode* reverseList_Space_O_1(ListNode *head)
+	{
+		if (head == nullptr)	return head;	//	边界情况
+		ListNode *indx = head->next;
+		ListNode *pre_indx = head;
+		head->next = nullptr;
+
+		ListNode *after_indx = new ListNode(0);
+		if (indx != nullptr)	//	边界情况
+			after_indx = indx->next;
+
+		while (indx != nullptr)	//	翻转操作
+		{			
+			indx->next = pre_indx;	
+			pre_indx = indx;
+			indx = after_indx;
+
+			if (after_indx != nullptr)
+				after_indx = after_indx->next;			
+		}
+		return pre_indx;
+	}
+
 	///@brief	反转一个单链表
 	///@param	head	链表表头
 	///@return	返回翻转后的链表表头
 	///@note	利用了栈来进行临时存储，空间复杂度为O(n)，时间复杂度为O(n)
-	ListNode* reverseList(ListNode *head)
+	ListNode* reverseList_Space_O_n(ListNode *head)
 	{
 		ListNode *indx = head;		
 		stack<ListNode*> s;
@@ -106,27 +200,12 @@ public:
 			ListNode *tmp = s.top();
 			s.pop();
 			tmp->next = nullptr;
-			
+
 			indx->next = tmp;
 			indx = indx->next;
 		}
 		indx->next = nullptr;
 		return new_head;
-	}
-
-	///@brief	插入新节点
-	///@param	head	原链表的首节点
-	///@param	val		新节点值
-	///@return	无
-	void insertNode(ListNode *head, int val)
-	{
-		ListNode *node = new ListNode(val);
-
-		while (head->next != nullptr)
-		{
-			head = head->next;
-		}
-		head->next = node;
 	}
 };
 
@@ -151,7 +230,7 @@ int main()
 
 //	head = slt.reverseList(display);
 
-	head = slt.reverseBetween(display, 3, 5);
+	head = slt.reverseBetween_Space_O_1(display, 1, 2);
 	cout << "After: ";
 	while (head != nullptr)
 	{
