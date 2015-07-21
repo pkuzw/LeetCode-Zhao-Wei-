@@ -11,8 +11,13 @@ Note:
 Given m, n satisfy the following condition:
 1 ≤ m ≤ n ≤ length of list.
 */
+
 ///@author	zhaowei
 ///@date	2015.07.20
+///@versio	1.0
+
+///@author	zhaowei
+///@date	2015.07.21
 ///@versio	2.0
 
 #include <iostream>

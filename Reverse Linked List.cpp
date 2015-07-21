@@ -9,6 +9,10 @@ A linked list can be reversed either iteratively or recursively. Could you imple
 */
 ///@author	zhaowei
 ///@date	2015.07.20
+///@versio	1.0
+
+///@author	zhaowei
+///@date	2015.07.21
 ///@versio	1.1
 
 #include <iostream>
