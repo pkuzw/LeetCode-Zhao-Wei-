@@ -1,4 +1,4 @@
-///@file	Same Tree
+ï»¿///@file	Same Tree
 /*
 Given two binary trees, write a function to check if they are equal or not.
 
@@ -22,12 +22,12 @@ struct TreeNode {
 
 class Solution {
 public:
-	///@brief	ÅĞ¶ÏÁ½¿Ã¶ş²æÊ÷ÊÇ·ñÒ»Ñù
-	///@param	p	µÚÒ»¿ÃÊ÷
-	///@param	q	µÚ¶ş¿ÃÊ÷
-	///@return	Èç¹ûÁ½¿ÃÊ÷ÏàÍ¬£¬Ôò·µ»Øtrue£»·ñÔò·µ»Øfalse
-	/*/@note	Èç¹ûÒ»¸öÊ÷Ç°ÖĞºóĞò±éÀúµÄĞòÁĞºÍÁíÒ»¸öÊ÷Ò»Ñù£¬ÔòÁ½¿ÃÊ÷ÏàÍ¬¡£ÒòÎª½ÚµãÖµÓĞ¿ÉÄÜÖØ¸´£¬OJ±¨WA¡£
-				ÔÚ±éÀú¶ş²æÊ÷Ê±£¬Èç¹û½ÚµãµÄ×ó×ÓÊ÷Îª¿Õ£¬½«INT_MINÈë¶Ó£¬Èç¹û½ÚµãµÄÓÒ×ÓÊ÷Îª¿Õ£¬Ôò½«INT_MAXÈë¶Ó¡£ÕâÑù¾ÍÄÜ¹»½â¾ö½ÚµãÖµÖØ¸´µÄÎÊÌâ¡£
+	///@brief	åˆ¤æ–­ä¸¤æ£µäºŒå‰æ ‘æ˜¯å¦ä¸€æ ·
+	///@param	p	ç¬¬ä¸€æ£µæ ‘
+	///@param	q	ç¬¬äºŒæ£µæ ‘
+	///@return	å¦‚æœä¸¤æ£µæ ‘ç›¸åŒï¼Œåˆ™è¿”å›trueï¼›å¦åˆ™è¿”å›false
+	/*/@note	å¦‚æœä¸€ä¸ªæ ‘å‰ä¸­ååºéå†çš„åºåˆ—å’Œå¦ä¸€ä¸ªæ ‘ä¸€æ ·ï¼Œåˆ™ä¸¤æ£µæ ‘ç›¸åŒã€‚å› ä¸ºèŠ‚ç‚¹å€¼æœ‰å¯èƒ½é‡å¤ï¼ŒOJæŠ¥WAã€‚
+				åœ¨éå†äºŒå‰æ ‘æ—¶ï¼Œå¦‚æœèŠ‚ç‚¹çš„å·¦å­æ ‘ä¸ºç©ºï¼Œå°†INT_MINå…¥é˜Ÿï¼Œå¦‚æœèŠ‚ç‚¹çš„å³å­æ ‘ä¸ºç©ºï¼Œåˆ™å°†INT_MAXå…¥é˜Ÿã€‚è¿™æ ·å°±èƒ½å¤Ÿè§£å†³èŠ‚ç‚¹å€¼é‡å¤çš„é—®é¢˜ã€‚
 	*/
 	bool isSameTree(TreeNode* p, TreeNode* q) {		
 		vector<int> pseq, qseq;
@@ -53,9 +53,9 @@ public:
 		return true;
 	}
 private:	
-	///@brief	Ç°Ğò±éÀú¶ş²æÊ÷
-	///@param	root	Ê÷¸ù
-	///@param	±éÀúµÄ½ÚµãÖµ
+	///@brief	å‰åºéå†äºŒå‰æ ‘
+	///@param	root	æ ‘æ ¹
+	///@param	éå†çš„èŠ‚ç‚¹å€¼
 	void preOrder(TreeNode* root, vector<int>& sequence)
 	{
 		if (root == nullptr) return;
@@ -76,9 +76,9 @@ private:
 		return;
 	}
 	
-	///@brief	ÖĞĞò±éÀú¶ş²æÊ÷£¬Èç¹û½ÚµãµÄ×ó×ÓÊ÷Îª¿Õ£¬½«INT_MINÈë¶Ó£¬Èç¹û½ÚµãµÄÓÒ×ÓÊ÷Îª¿Õ£¬Ôò½«INT_MAXÈë¶Ó¡£ÕâÑù¾ÍÄÜ¹»½â¾ö½ÚµãÖµÖØ¸´µÄÎÊÌâ¡£
-	///@param	root	Ê÷¸ù
-	///@param	±éÀúµÄ½ÚµãÖµ
+	///@brief	ä¸­åºéå†äºŒå‰æ ‘ï¼Œå¦‚æœèŠ‚ç‚¹çš„å·¦å­æ ‘ä¸ºç©ºï¼Œå°†INT_MINå…¥é˜Ÿï¼Œå¦‚æœèŠ‚ç‚¹çš„å³å­æ ‘ä¸ºç©ºï¼Œåˆ™å°†INT_MAXå…¥é˜Ÿã€‚è¿™æ ·å°±èƒ½å¤Ÿè§£å†³èŠ‚ç‚¹å€¼é‡å¤çš„é—®é¢˜ã€‚
+	///@param	root	æ ‘æ ¹
+	///@param	éå†çš„èŠ‚ç‚¹å€¼
 	void inOrder(TreeNode* root, vector<int>& sequence)
 	{			
 		if (root == nullptr) return;
@@ -98,9 +98,9 @@ private:
 		return;
 	}
 
-	///@brief	ºóĞò±éÀú¶ş²æÊ÷
-	///@param	root	Ê÷¸ù
-	///@param	±éÀúµÄ½ÚµãÖµ
+	///@brief	ååºéå†äºŒå‰æ ‘
+	///@param	root	æ ‘æ ¹
+	///@param	éå†çš„èŠ‚ç‚¹å€¼
 	void afterOrder(TreeNode* root, vector<int>& sequence)
 	{
 		if (root == nullptr) return;
@@ -120,10 +120,10 @@ private:
 		return;
 	}
 
-	///@brief	ÅĞ¶ÏÁ½¸öintĞÍvectorÊÇ·ñÏàµÈ
-	///@param	a	Êı×é1
-	///@param	b	Êı×é2
-	///@return	Èç¹ûÏàµÈÔò·µ»Øtrue£¬·ñÔò·µ»Øfalse
+	///@brief	åˆ¤æ–­ä¸¤ä¸ªintå‹vectoræ˜¯å¦ç›¸ç­‰
+	///@param	a	æ•°ç»„1
+	///@param	b	æ•°ç»„2
+	///@return	å¦‚æœç›¸ç­‰åˆ™è¿”å›trueï¼Œå¦åˆ™è¿”å›false
 	bool isSameVec(vector<int> &a, vector<int> &b)
 	{
 		if (a.size() != b.size())
