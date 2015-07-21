@@ -35,7 +35,9 @@ public:
 	*/
     bool isValidBST(TreeNode* root) {
 		if (root == nullptr)	return true;
-		return isValidBST_Recursive(root, INT_MIN, INT_MAX);
+		long long min_num = -21474836480;
+		long long max_num = 21474836470;
+		return isValidBST_Recursive(root, min_num, max_num);
 	}
 
 private:
@@ -46,7 +48,7 @@ private:
 	///@return	如果以node为根的BST合法，则返回true；否则返回false
 	/* @note	递归实现：二叉搜索树应该满足左子树小于根节点，右子树大于根节点。所以用两个参数限制节点的值，一旦超过就判错
 	*/
-	bool isValidBST_Recursive(TreeNode *node, int min_num, int max_num)
+	bool isValidBST_Recursive(TreeNode *node, long long min_num, long long max_num)
 	{		
 		if (node == nullptr)	return true;
 
@@ -62,15 +64,15 @@ private:
 
 int main()
 {
-	TreeNode *root = new TreeNode(7);
+	TreeNode *root = new TreeNode(INT_MAX);
 	TreeNode *n[20];
 	for (int i = 0; i != 20; i++)
 	{
 		n[i] = new TreeNode(i);
 	}
-	root->left = n[4];
-	n[4]->left = n[3];
-	n[4]->right = n[8];
+// 	root->left = n[4];
+// 	n[4]->left = n[3];
+// 	n[4]->right = n[8];
 // 	root->right = n[10];
 // 	n[10]->left = n[1];
 
