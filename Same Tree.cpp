@@ -26,8 +26,10 @@ public:
 	///@param	p	第一棵树
 	///@param	q	第二棵树
 	///@return	如果两棵树相同，则返回true；否则返回false
-	///@note	如果一个树前中后序遍历的序列和另一个树一样，则两棵树相同。因为节点值有可能重复，OJ报WA。
-	bool isSameTree(TreeNode* p, TreeNode* q) {
+	/*/@note	如果一个树前中后序遍历的序列和另一个树一样，则两棵树相同。因为节点值有可能重复，OJ报WA。
+				在遍历二叉树时，如果节点的左子树为空，将INT_MIN入队，如果节点的右子树为空，则将INT_MAX入队。这样就能够解决节点值重复的问题。
+	*/
+	bool isSameTree(TreeNode* p, TreeNode* q) {		
 		vector<int> pseq, qseq;
 		preOrder(p, pseq);
 		preOrder(q, qseq);
@@ -56,36 +58,43 @@ private:
 	///@param	遍历的节点值
 	void preOrder(TreeNode* root, vector<int>& sequence)
 	{
+		if (root == nullptr) return;
+
 		sequence.push_back(root->val);
 
-		if (root->left != nullptr)
-		{
+		if (root->left == nullptr)
+			sequence.push_back(INT_MIN);
+		else		
 			preOrder(root->left, sequence);
-		}
-
-		if (root->right != nullptr)
-		{
+		
+		
+		if (root->right == nullptr)
+			sequence.push_back(INT_MAX);
+		else
 			preOrder(root->right, sequence);
-		}
+		
 		return;
 	}
 	
-	///@brief	中序遍历二叉树
+	///@brief	中序遍历二叉树，如果节点的左子树为空，将INT_MIN入队，如果节点的右子树为空，则将INT_MAX入队。这样就能够解决节点值重复的问题。
 	///@param	root	树根
 	///@param	遍历的节点值
 	void inOrder(TreeNode* root, vector<int>& sequence)
-	{		
-		if (root->left != nullptr)
-		{
-			inOrder(root->left, sequence);
-		}
+	{			
+		if (root == nullptr) return;
+
+		if (root->left == nullptr)
+			sequence.push_back(INT_MIN);
+		else		
+			preOrder(root->left, sequence);
 
 		sequence.push_back(root->val);
 
-		if (root->right != nullptr)
-		{
-			inOrder(root->right, sequence);
-		}
+		if (root->right == nullptr)
+			sequence.push_back(INT_MAX);
+		else
+			preOrder(root->right, sequence);
+
 		return;
 	}
 
@@ -94,17 +103,20 @@ private:
 	///@param	遍历的节点值
 	void afterOrder(TreeNode* root, vector<int>& sequence)
 	{
-		if (root->left != nullptr)
-		{
-			afterOrder(root->left, sequence);
-		}
-		
-		if (root->right != nullptr)
-		{
-			afterOrder(root->right, sequence);
-		}
+		if (root == nullptr) return;
+
+		if (root->left == nullptr)
+			sequence.push_back(INT_MIN);
+		else		
+			preOrder(root->left, sequence);
+				
+		if (root->right == nullptr)
+			sequence.push_back(INT_MAX);
+		else
+			preOrder(root->right, sequence);
 
 		sequence.push_back(root->val);
+
 		return;
 	}
 
@@ -128,5 +140,13 @@ private:
 
 int main()
 {
+	TreeNode *r1 = nullptr;
+	TreeNode *n1 = new TreeNode(1);
+	
+
+	TreeNode *r2 = nullptr;
+
+	Solution slt;
+	cout << slt.isSameTree(r1, r2) << endl;
 	return 0;
 }
