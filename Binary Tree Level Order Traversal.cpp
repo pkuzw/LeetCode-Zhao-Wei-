@@ -42,7 +42,7 @@ public:
 				时间复杂度为O(n)，空间复杂度为O(n)。
 	*/
 	vector<vector<int>> levelOrder(TreeNode* root)  {		
-		if (root == nullptr) return levelOrderSeq;
+		if (root == nullptr) return level_order_seq;
 		queue<TreeNode*> que;	//	保存每一层需要访问的指针
 		que.push(root);
 		que.push(nullptr);	//	插入一个空指针作为每一层的分隔符
@@ -66,7 +66,7 @@ public:
 			}
 			else
 			{
-				levelOrderSeq.push_back(level);
+				level_order_seq.push_back(level);
 				if (!que.empty())	//	之所以加上这个条件，是为了防止在输出最后一层时，最后一个空元素进入死循环。
 				{
 					level.clear();
@@ -74,11 +74,11 @@ public:
 				}
 			}			
 		}
-		return levelOrderSeq;
+		return level_order_seq;
 	}
 
 private:
-	vector<vector<int>> levelOrderSeq;
+	vector<vector<int>> level_order_seq;
 };
 
 int main()
