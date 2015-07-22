@@ -1,4 +1,4 @@
-///@file	Balanced Binary Tree
+ï»¿///@file	Balanced Binary Tree
 /*
 Given a binary tree, determine if it is height-balanced.
 
@@ -25,10 +25,10 @@ struct TreeNode {
 	
 class Solution {
 public:
-	///@brief	ÅÐ¶ÏÒ»¸ö¶þ²æÊ÷ÊÇ·ñÊÇÆ½ºâ¶þ²æÊ÷¡£Æ½ºâ¶þ²æÊ÷µÄ¶¨ÒåÊÇ¶ÔÓÚÊ÷ÖÐµÄÈÎºÎÒ»¸ö½Úµã£¬ËüµÄ×ÓÊ÷Éî¶È¾ù²»»áÏà²î³¬¹ý1
-	///@param	root	¸ù½Úµã
-	///@return	Èç¹ûÒ»¸ö¶þ²æÊ÷ÊÇÆ½ºâ¶þ²æÊ÷£¬Ôò·µ»Øtrue£»·ñÔò·µ»Øfalse
-	///@note	°´ÕÕÒ»¶¨µÄË³Ðò±éÀú¶þ²æÊ÷ÖÐÃ¿¸ö½Úµã£¬¼ìÑéËüµÄ×ÓÊ÷¸ß¶ÈÊÇ·ñ×î¶àÏà²î1¡£ÔÚ¼ìÑéµÄ¹ý³ÌÖÐ£¬Èç¹û½ÚµãÄÜ¹»¼ÌÐøÏòÏÂ£¬ÔòÒ»Ö±ÏòÏÂ£¬Ö±µ½Ò¶×Ó½ÚµãÎªÖ¹¡£
+	///@brief	åˆ¤æ–­ä¸€ä¸ªäºŒå‰æ ‘æ˜¯å¦æ˜¯å¹³è¡¡äºŒå‰æ ‘ã€‚å¹³è¡¡äºŒå‰æ ‘çš„å®šä¹‰æ˜¯å¯¹äºŽæ ‘ä¸­çš„ä»»ä½•ä¸€ä¸ªèŠ‚ç‚¹ï¼Œå®ƒçš„å­æ ‘æ·±åº¦å‡ä¸ä¼šç›¸å·®è¶…è¿‡1
+	///@param	root	æ ¹èŠ‚ç‚¹
+	///@return	å¦‚æžœä¸€ä¸ªäºŒå‰æ ‘æ˜¯å¹³è¡¡äºŒå‰æ ‘ï¼Œåˆ™è¿”å›žtrueï¼›å¦åˆ™è¿”å›žfalse
+	///@note	æŒ‰ç…§ä¸€å®šçš„é¡ºåºéåŽ†äºŒå‰æ ‘ä¸­æ¯ä¸ªèŠ‚ç‚¹ï¼Œæ£€éªŒå®ƒçš„å­æ ‘é«˜åº¦æ˜¯å¦æœ€å¤šç›¸å·®1ã€‚åœ¨æ£€éªŒçš„è¿‡ç¨‹ä¸­ï¼Œå¦‚æžœèŠ‚ç‚¹èƒ½å¤Ÿç»§ç»­å‘ä¸‹ï¼Œåˆ™ä¸€ç›´å‘ä¸‹ï¼Œç›´åˆ°å¶å­èŠ‚ç‚¹ä¸ºæ­¢ã€‚
 	bool isBalanced(TreeNode* root) {
 		
 	}
