@@ -23,6 +23,7 @@ return its zigzag level order traversal as:
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -69,14 +70,8 @@ public:
 			else
 			{
 				if (!flg)
-				{
-					vector<int> tmp(level_seq.rbegin(), level_seq.rend());
-					zigzag_seq.push_back(tmp);
-				}
-				else
-				{					
-					zigzag_seq.push_back(level_seq);
-				}
+					reverse(level_seq.begin(), level_seq.end());									
+				zigzag_seq.push_back(level_seq);				
 				
 				flg = flg ? false : true;	//	在每一层遍历完毕后要改变添加的元素方向
 				if (!que.empty())
