@@ -29,24 +29,51 @@ public:
 	///@param	inorder		中序序列
 	///@return	返回构造的二叉树树根
 	/* @note	通过观察可知，前序序列的首节点是根节点，先找到根节点，然后在中序序列中找到根节点的位置，在中序序列中的根节点之前的元素
-				是左子树节点的中序序列，根节点之后的元素是右子树节点的中序序列。然后通过vector的构造函数来截去出前序、中序序列的左右子树
-				部分，再递归调用建树函数即可。时间复杂度为O(n)，空间复杂度为O(2^n)。
+				是左子树节点的中序序列，根节点之后的元素是右子树节点的中序序列。然后通过vector的迭代器来标记出前序、中序序列的左右子树
+				部分，再递归调用建树函数即可。时间复杂度为O(n)，空间复杂度为O(1)。
 	*/
 	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-		if (preorder.empty() && inorder.empty())	return nullptr;	//	如果前中序序列为空，直接返回空指针
+		return buildTree_Recur(preorder, preorder.begin(), preorder.end(), preorder.size(), inorder, inorder.begin(), inorder.end(), inorder.size());
+	}
 
-		TreeNode *root = new TreeNode(preorder[0]);	//	根节点为前序序列的首元素
-		vector<int>::iterator it = find(inorder.begin(), inorder.end(), preorder[0]);	//	找到中序序列的根节点位置，时间复杂度为O(n)
-		
-		vector<int> inorder_lsub(inorder.begin(), it);	//	利用vector的构造函数来截取左右子树的前中序序列，截取参数应为左闭右开区间
-		vector<int> preorder_lsub(preorder.begin()+1, preorder.begin()+inorder_lsub.size()+1);
-		
-		++it;
-		vector<int> inorder_rsub(it, inorder.end());
-		vector<int> preorder_rsub(preorder.end()-inorder_rsub.size(), preorder.end());
+private:
+	///@brief	通过前中序序列，递归构造二叉树
+	///@param	preorder	前序序列
+	///@param	pstart		前序序列的起始迭代器
+	///@param	pend		前序序列的终止迭代器，末尾元素的后一位
+	///@param	plen		前序序列的长度
+	///@param	inorder		中序序列
+	///@param	istart		中序序列的起始迭代器
+	///@param	iend		中序序列的终止迭代器，末尾元素的后一位
+	///@param	ilen		中序序列的长度
+	///@return	返回构造的二叉树树根
+	///@note	通过将利用的前中序序列范围作为参数传入进函数，能够将空间降为O(1)。
+	TreeNode* buildTree_Recur(vector<int>& preorder, vector<int>::iterator pstart, vector<int>::iterator pend, vector<int>::size_type plen, vector<int>& inorder, vector<int>::iterator istart, vector<int>::iterator iend, vector<int>::size_type ilen) 
+	{
+		if (pstart == pend && istart == iend)	return nullptr;	//	如果前中序序列为空，直接返回空指针
 
-		root->left = buildTree(preorder_lsub, inorder_lsub);	//	递归调用构建二叉树函数
-		root->right = buildTree(preorder_rsub, inorder_rsub);
+		TreeNode *root = new TreeNode(*pstart);	//	根节点为前序序列的首元素
+		vector<int>::iterator it = find(inorder.begin(), inorder.end(), *pstart);	//	找到中序序列的根节点位置，时间复杂度为O(n)
+
+		vector<int>::size_type lsub_len = 0;	//	左子树节点数
+		vector<int>::iterator it_tmp = istart;
+		while (it_tmp != it)
+		{
+			lsub_len++;
+			it_tmp++;
+		}
+
+		vector<int>::size_type rsub_len = 0;	//	右子树节点数
+		it_tmp = it+1;
+		while (it_tmp != iend)
+		{
+			rsub_len++;
+			it_tmp++;
+		}
+
+		//	递归调用构建二叉树函数
+		root->left = buildTree_Recur(preorder, pstart+1, pstart+lsub_len+1, lsub_len, inorder, istart, it, lsub_len);
+		root->right = buildTree_Recur(preorder, pend-rsub_len, pend, rsub_len, inorder, it+1, iend, rsub_len);
 
 		return root;
 	}
