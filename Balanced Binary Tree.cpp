@@ -28,14 +28,105 @@ public:
 	///@brief	判断一个二叉树是否是平衡二叉树。平衡二叉树的定义是对于树中的任何一个节点，它的子树深度均不会相差超过1
 	///@param	root	根节点
 	///@return	如果一个二叉树是平衡二叉树，则返回true；否则返回false
-	///@note	按照一定的顺序遍历二叉树中每个节点，检验它的子树高度是否最多相差1。在检验的过程中，如果节点能够继续向下，则一直向下，直到叶子节点为止。
+	/* @note	按照一定顺序（宽度优先遍历）计算每个节点的左右子树的高度，如果二者相差小于1，则继续遍历直至末尾；否则就返回false。
+				至于计算子树深度的算法，均是利用BFS的思想。可以参考"Maximum Depth of Binary Tree"中的算法。
+				时间复杂度为O(n^2)，空间复杂度为O(n)。 */	
 	bool isBalanced(TreeNode* root) {
-		
+		if (root == nullptr)	return true;
+
+		queue<TreeNode*> que;
+		que.push(root);
+
+		while (!que.empty())
+		{
+			TreeNode *tnode = que.front();
+			que.pop();
+			
+			int ldepth = maxDepth(tnode->left);		//	当前节点的左右子树深度
+			int rdepth = maxDepth(tnode->right);
+
+			if (abs(ldepth - rdepth) > 1)	//	比较当前节点的左右子树的深度差
+				return false;
+			
+			if (tnode->left != nullptr)
+				que.push(tnode->left);
+			
+			if (tnode->right != nullptr)
+				que.push(tnode->right);					
+		}
+		return true;
 	}
 
+private:
+	///@brief	计算二叉树的最大深度
+	///@param	root	树根节点
+	///@return	返回二叉树的最大深度
+	///@note	还是利用宽度优先遍历的思想，每遍历完一层，就将计数器自增1。时间复杂度为O(n)，空间复杂度为O(n)。
+	int maxDepth(TreeNode* root) {
+		int maximum = 0;
+		if (root == nullptr)	return maximum;
+
+		queue<TreeNode*> que;
+		que.push(root);
+		que.push(nullptr);
+
+		while (!que.empty())
+		{
+			TreeNode *tnode = que.front();
+			que.pop();
+
+			if (tnode != nullptr)
+			{
+				if (tnode->left != nullptr)
+					que.push(tnode->left);
+				if (tnode->right != nullptr)
+					que.push(tnode->right);
+			}
+			else
+			{
+				maximum++;
+				if (!que.empty())	//	该条件为了防止que只剩一个nullptr时，造成死循环
+					que.push(nullptr);
+			}
+		}
+		return maximum;
+	}
 };
 
 int main()
 {
+	TreeNode *root = new TreeNode(1);
+	TreeNode *n[20];
+	for (int i = 0; i != 20; i++)
+	{
+		n[i] = new TreeNode(i);
+	}
+	root->left = n[2];
+	n[2]->left = n[3];
+// 	n[2]->left = n[4];
+// 	n[2]->right = n[5];
+// 	n[3]->left = n[6];
+// 	n[3]->right = n[7];
+// 	n[4]->left = n[8];
+// 	n[4]->right = n[9];
+// 	n[5]->left = n[10];
+// 	n[5]->right = n[11];
+// 	n[6]->left = n[12];
+// 	n[6]->right = n[13];
+// 	n[8]->left = n[14];
+// 	n[8]->right = n[15];
+	/*
+	n[2]->left = n[4];
+	n[2]->right = n[5];
+	n[3]->left = n[6];
+	n[3]->right = n[7];
+	n[4]->left = n[8];
+	n[8]->right = n[9];
+	n[6]->left = n[10];
+	n[10]->right = n[11];
+	n[11]->left = n[12];
+	*/
+	Solution slt;
+	int rslt = slt.isBalanced(root);
 	return 0;
 }
