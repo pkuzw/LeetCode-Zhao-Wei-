@@ -23,12 +23,62 @@ struct TreeNode {
 
 class Solution {
 public:
+	///@brief	计算一棵二叉树中叶子节点到根节点的最短距离
+	///@param	root
+	///@return	返回叶子节点到根节点的最短距离，即该路径上的节点数目
 	int minDepth(TreeNode* root) {
+		int minimum = 0;	//	BFS正在遍历的层数
+		if (root == nullptr)	return minimum;
 
+		queue<TreeNode*> que;
+		que.push(root);
+		que.push(nullptr);
+				
+		while (!que.empty())	//	对二叉树进行宽度优先遍历，找到第一个没有左右孩子的节点就返回层数+1
+		{
+			TreeNode *tnode = que.front();
+			que.pop();
+
+			if (tnode != nullptr)
+			{			
+				if (tnode->left != nullptr)
+					que.push(tnode->left);
+				if (tnode->right != nullptr)
+					que.push(tnode->right);
+				if (tnode->left == nullptr && tnode->right == nullptr)	//	找到叶子节点
+					return minimum+1;
+			}
+			else
+			{
+				minimum++;
+				if (!que.empty())
+					que.push(nullptr);
+			}
+		}
+		return minimum;
 	}
 };
 
 int main()
 {
+	TreeNode *root = new TreeNode(1);
+	TreeNode *n[20];
+	for (int i = 0; i != 20; i++)
+	{
+		n[i] = new TreeNode(i);
+	}
+	root->left = n[2];
+	root->right = n[3];
+	n[2]->left = n[4];
+	n[2]->right = n[5];
+	n[3]->left = n[6];
+	n[3]->right = n[7];
+	n[4]->left = n[8];
+	n[8]->right = n[9];
+	n[6]->left = n[10];
+	n[10]->right = n[11];
+	n[11]->left = n[12];
+	Solution slt;
+	int rslt = slt.minDepth(root);
 	return 0;
 }
