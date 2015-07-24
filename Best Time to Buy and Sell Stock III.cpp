@@ -23,7 +23,7 @@ public:
 	/* @note	设mp[i]表示在第i天第一次卖出股票的最大利润。它由两部分构成，第一部分是第一次卖出股票的收益，第二部分是第二次卖出股票的收益。
 				mp[i] = dp[0..i]+dp[i+1..n]。计算dp[i]的方法利用"Best Time to Buy and Sell Stock"中的算法即可。
 				时间复杂度为O(n^2)，空间复杂度为O(n)。OJ报TLE。*/
-	int maxProfit(vector<int>& prices) {
+	int maxProfit_O_n2(vector<int>& prices) {
 		if (prices.empty() || prices.size() == 1)	return 0;
 		
 		vector<int> mp(prices.size(), 0);
@@ -41,6 +41,49 @@ public:
 
 		int max_profit = 0;
 		for (int i = 0; i != mp.size(); i++)
+			if (mp[i] > max_profit)
+				max_profit = mp[i];
+
+		return max_profit;
+	}
+
+	///@brief	如果最多只能进行2次交易，计算最大收益
+	///@param	prices	股价数组
+	///@return	返回最多进行两次交易时的最大收益
+	/* @note	设mp[i]表示在第i天第一次卖出股票的最大利润。它由两部分构成，第一部分是第一次卖出股票的收益，第二部分是第二次卖出股票的收益。
+				mp[i] = dp_sell[0..i] + dp_buy_anyday[i+1..n]。dp_sell[i]表示在第i天卖出获得的最大利润，dp_buy_anyday[i]表示在第i天之后
+				任何一天买入获得的最大利润。因为不一定卖出立即就要买入。dp_buy_anyday的计算方法与dp_sell类似，只不过是先倒着算出来dp_buy[i]，
+				dp_buy[i]表示在第i天买入获得的最大利润。然后再倒着遍历一遍dp_buy，计算出dp_buy_anyday。
+				时间复杂度为O(n)，空间复杂度为O(n)。*/
+	int maxProfit(vector<int>& prices) {
+		if (prices.empty() || prices.size() == 1)	return 0;
+
+		vector<int> dp_sell(prices.size(), 0);	//	dp_sell[i]表示第i天卖出的最大利润
+		dp_sell[0] = 0;
+		for (int i = 1; i < prices.size(); i++)
+			dp_sell[i] = (prices[i] > prices[i-1]) ?	 dp_sell[i-1] + (prices[i] - prices[i-1]) : ((dp_sell[i-1] > prices[i-1] - prices[i]) ? dp_sell[i-1] - (prices[i-1] - prices[i]) : 0);	
+
+		vector<int> dp_buy(prices.size(), 0);	//	dp_buy[i]表示第i天买入的最大利润
+		dp_buy.back() = 0;
+		for (int i = prices.size()-2; i >= 0; i--)
+			dp_buy[i] = (prices[i+1] > prices[i]) ? dp_buy[i+1] + (prices[i+1] - prices[i]) : ((dp_buy[i+1] > prices[i] - prices[i+1]) ? dp_buy[i+1] - (prices[i] - prices[i+1]) : 0);
+
+		vector<int> dp_buy_anyday(prices.size(), 0);	//	dp_buy_anyday[i]表示在第i天之后任何一天买入获得的最大利润
+		int mprofit = 0;
+		for (int i = prices.size()-1; i >= 0; i--)
+		{
+			if (mprofit < dp_buy[i])
+				mprofit = dp_buy[i];
+			
+			dp_buy_anyday[i] = mprofit;
+		}
+
+		vector<int> mp(prices.size(), 0);
+		for (int i = 0; i != prices.size(); i++)
+			mp[i] = dp_sell[i] + dp_buy_anyday[i];		
+		
+		int max_profit = 0;
+		for (int i = 0; i != prices.size(); i++)
 			if (mp[i] > max_profit)
 				max_profit = mp[i];
 
@@ -81,6 +124,7 @@ int main()
 
 	Solution slt;
 	int r = slt.maxProfit(prices);
+	int s = slt.maxProfit_O_n2(prices);
 
 	return 0;
 }
