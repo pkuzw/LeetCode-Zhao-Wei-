@@ -29,7 +29,7 @@ public:
 				dp[i][j] = triangle[i][j] + dp[i-1][j-1] , j = triangle[i].size()-1. 
 				时间复杂度为O(n^2)，空间复杂度为O(n^2)。
 	*/
-	int minimumTotal(vector<vector<int>>& triangle) {
+	int minimumTotal_Space_O_n2(vector<vector<int>>& triangle) {
 		if (triangle.empty())	return 0;
 
 		vector<vector<int>> dp(triangle.size(), vector<int>(triangle.back().size(), 0));
@@ -49,6 +49,28 @@ public:
 			if (dp.back()[i] < min_total)
 				min_total = dp.back()[i];
 		return min_total;
+	}
+
+	///@brief	给定一个三角形，找到从顶点到底层的最小和路径
+	///@param	triangle	三角形
+	///@return	返回最小和路径的和
+	/* @note	动态规划：设dp[i]表示某层第i个元素的最小和路径值。初始条件为dp[i] = triangle.back()[i]。从底向上递推，
+				递推关系式为dp[i] = triangle[i][j] + min(dp[j], dp[j+1]), 0 <= j <= triangle[i].size()-1；
+				时间复杂度为O(n^2)，空间复杂度为O(n)。
+	*/
+	int minimumTotal(vector<vector<int>>& triangle) {
+		if (triangle.empty())	return 0;
+
+		vector<int> dp(triangle.back().size(), 0);
+
+		for (int i = 0; i != triangle.back().size(); i++)
+			dp[i] = triangle.back()[i];
+
+		for (int i = triangle.size()-2; i >= 0; i--)
+			for (int j = 0; j != triangle[i].size(); j++)
+				dp[j] = triangle[i][j] + min(dp[j], dp[j+1]);
+
+		return dp[0];
 	}
 };
 
