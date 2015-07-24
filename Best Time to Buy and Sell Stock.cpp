@@ -16,7 +16,7 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	计算股票交易的最大利润呢
+	///@brief	计算最多只能有一次股票交易的最大利润
 	///@param	prices	股票每一天的价格
 	///@return	返回所能挣到的最大利润
 	/* @note	动态规划：设dp[i]表示第i天卖出的最大利润。初始条件为dp[0] = 0。
