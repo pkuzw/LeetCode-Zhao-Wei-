@@ -13,6 +13,7 @@ Your algorithm should run in O(n) complexity.
 ///@version	1.0
 
 #include <vector>
+#include <unordered_set>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ public:
 	///@return	返回数组的最长连续整数
 	/* @note	利用桶排序的思想，开一个max(nums[i])大的数组，里面凡是在nums中出现过的数都置为true，然后统计连续的下标即可。时间复杂度为O(n)，
 				空间复杂度为O(max(nums[i]))。OJ报RE。*/
-	int longestConsecutive(vector<int>& nums) {
+	int longestConsecutive_RE(vector<int>& nums) {
 		int max = 0;
 		int min = 0;
 		for (int i = 0; i != nums.size(); i++)
@@ -106,14 +107,58 @@ public:
 		
 		return cnt;
 	}
+
+	///@brief	计算最长连续整数
+	///@param	nums	整数数组
+	///@return	返回数组的最长连续整数
+	/* @note	利用哈希表。先将所有的整数映射到哈希表上，然后逐个遍历，在哈希表上向前向后查找是否存在相邻元素，如果存在，那么计数器自增1。否则
+				删除在该哈希表上的元素。时间复杂度为O(n)，空间复杂度为O(n)*/
+	int longestConsecutive(vector<int>& nums) {
+		unordered_set<int> hash_table;	//	初始化哈希表
+		for (int i = 0; i != nums.size(); i++)
+			hash_table.insert(nums[i]);
+
+
+		int len_cnt = 0;	//	连续整数长度记录
+		int max_len = 0;	//	最长连续整数长度记录
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (hash_table.find(nums[i]) != hash_table.end())
+			{
+				hash_table.erase(nums[i]);	//	删除连续元素，避免重复计算
+				len_cnt++;
+
+				int j = nums[i]+1;
+				while (hash_table.find(j) != hash_table.end())
+				{
+					hash_table.erase(j);	//	删除连续元素，避免重复计算
+					len_cnt++;					
+					j++;					
+				}
+
+				j = nums[i]-1;
+				while (hash_table.find(j) != hash_table.end())
+				{
+					hash_table.erase(j);	//	删除连续元素，避免重复计算
+					len_cnt++;					
+					j--;					
+				}
+				if (max_len < len_cnt)	max_len = len_cnt;
+				len_cnt = 0;	//	恢复初始值
+			}
+		}
+		return max_len;
+	}
 };
 
 int main()
 {
-	int n[10] = {0,1,-1,2,6,7,-2,3,4,5};
+	int n[10] = {-2, -10, 0, 100, 2, 3, 400, 5, 60, 7};
 	vector<int> nums;
 	for (int i = 0; i != 10; i++)
 		nums.push_back(n[i]);
+
+//	nums.clear();
 	Solution slt;
 	int rslt = slt.longestConsecutive(nums);
 	return 0;
