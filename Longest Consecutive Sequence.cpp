@@ -1,4 +1,4 @@
-///@file	Longest Consecutive Sequence
+ï»¿///@file	Longest Consecutive Sequence
 /*
 Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
 
@@ -18,11 +18,11 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	¼ÆËã×î³¤Á¬ĞøÕûÊı
-	///@param	nums	ÕûÊıÊı×é
-	///@return	·µ»ØÊı×éµÄ×î³¤Á¬ĞøÕûÊı
-	/* @note	ÀûÓÃÍ°ÅÅĞòµÄË¼Ïë£¬¿ªÒ»¸ömax(nums[i])´óµÄÊı×é£¬ÀïÃæ·²ÊÇÔÚnumsÖĞ³öÏÖ¹ıµÄÊı¶¼ÖÃÎªtrue£¬È»ºóÍ³¼ÆÁ¬ĞøµÄÏÂ±ê¼´¿É¡£Ê±¼ä¸´ÔÓ¶ÈÎªO(n)£¬
-				¿Õ¼ä¸´ÔÓ¶ÈÎªO(max(nums[i]))¡£*/
+	///@brief	è®¡ç®—æœ€é•¿è¿ç»­æ•´æ•°
+	///@param	nums	æ•´æ•°æ•°ç»„
+	///@return	è¿”å›æ•°ç»„çš„æœ€é•¿è¿ç»­æ•´æ•°
+	/* @note	åˆ©ç”¨æ¡¶æ’åºçš„æ€æƒ³ï¼Œå¼€ä¸€ä¸ªmax(nums[i])å¤§çš„æ•°ç»„ï¼Œé‡Œé¢å‡¡æ˜¯åœ¨numsä¸­å‡ºç°è¿‡çš„æ•°éƒ½ç½®ä¸ºtrueï¼Œç„¶åç»Ÿè®¡è¿ç»­çš„ä¸‹æ ‡å³å¯ã€‚æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œ
+				ç©ºé—´å¤æ‚åº¦ä¸ºO(max(nums[i]))ã€‚OJæŠ¥REã€‚*/
 	int longestConsecutive(vector<int>& nums) {
 		int max = 0;
 		int min = 0;
@@ -43,8 +43,8 @@ public:
 			}			
 		}
 
-		vector<bool> bvec1(max+1, false);	//	¼ÇÂ¼×ÔÈ»ÊıµÄÊı×é
-		vector<bool> bvec2(min+1, false);	//	¼ÇÂ¼¸ºÕûÊıµÄÊı×é
+		vector<bool> bvec1(max+1, false);	//	è®°å½•è‡ªç„¶æ•°çš„æ•°ç»„
+		vector<bool> bvec2(min+1, false);	//	è®°å½•è´Ÿæ•´æ•°çš„æ•°ç»„
 		for (int i = 0; i != nums.size(); i++)
 		{
 			int t = 0;
@@ -90,7 +90,7 @@ public:
 
 		int cnt = (cnt1 > cnt2) ? cnt1 : cnt2;
 
-		if (bvec2[1] && bvec1[0])	//	Èç¹û¿ç0Á¬Ğø£¬ĞèÒªµ¥¶À´¦Àí
+		if (bvec2[1] && bvec1[0])	//	å¦‚æœè·¨0è¿ç»­ï¼Œéœ€è¦å•ç‹¬å¤„ç†
 		{
 			int i = 1;
 			while (i < bvec2.size() && bvec2[i])
