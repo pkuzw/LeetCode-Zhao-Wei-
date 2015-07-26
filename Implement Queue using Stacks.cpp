@@ -1,4 +1,4 @@
-﻿///@file Implement Queue using Stacks
+﻿///@file	Implement Queue using Stacks
 /*
 Implement the following operations of a queue using stacks. 
 • push(x) -- Push element x to the back of queue. 
