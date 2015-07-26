@@ -27,40 +27,25 @@ public:
 	///@brief	将int型正整数转换成二十六进制整数:A, B, C, ..., Z, AA, AB, ...
 	///@param	n	十进制整数
 	///@return	返回二十六进制数字符串
-	/* @note	开辟一个数组存储26^k幂，然后用十进制数n从高到低除这个幂数组，得到的商就是二十六进制的各个位*/
+	/* @note	对十进制数n先自减1，然后不断的模26，所得+'A'就是某一位，然后用n自除26，直到其为0为止。时间复杂度为O(logn)，空间复杂度为O(1)*/
 	string convertToTitle(int n) {
-		int ts[7] = {0};
-		ts[0] = 1;
-		for (int i = 1; i < 7; i++)
-		{
-			int k = 1;
-			for (int j = 0; j < i; j++)
-				k *= 26;
-			ts[i] = k;
-		}
-
 		string s;
-		for (int i = 6; i >= 0; i--)
+		while (n > 0)
 		{
-			int div = 0;
-			if (n > ts[i])
-			{
-				div = n / ts[i];
-
-				s += char('A' + div - 1);
-				
-				n %= ts[i];
-			}
+			n--;
+			int k = n % 26;
+			s = char('A'+k) + s;
+			n /= 26;
 		}
-		//s += char('A' + n - 1);
-
 		return s;
 	}
+
+
 };
 
 int main()
 {
-	int n = 1;
+	int n = 702;
 	Solution slt;
 
 	string s = slt.convertToTitle(n);
