@@ -41,10 +41,8 @@ public:
 		if (root == nullptr || p == nullptr || q == nullptr)	
 			return nullptr;
 
-		if (root == p)	//	如果某个节点就是p或q，则该节点就是它的最低公共祖先
-			return p;
-		if (root == q)
-			return q;
+		if (root == p || root == q)	//	如果某个节点就是p或q，则该节点就是它的最低公共祖先
+			return root;
 
 		TreeNode *lsub = lowestCommonAncestor(root->left, p, q);		//递归	
 		TreeNode *rsub = lowestCommonAncestor(root->right, p, q);
