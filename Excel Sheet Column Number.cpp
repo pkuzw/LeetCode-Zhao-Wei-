@@ -55,7 +55,7 @@ public:
 
 int main()
 {
-	string s = "YZ";
+	string s = "ZZZZZZ";
 	Solution slt;
 
 	int n = slt.titleToNumber(s);
