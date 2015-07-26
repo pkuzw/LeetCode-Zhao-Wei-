@@ -18,7 +18,7 @@ class Solution {
 public:
 	///@brief	判断一个数组中每个元素是否只出现了一次
 	///@param	nums	数组
-	///@return	如果数组中每个元素只出现了一次则返回true，否则返回false
+	///@return	如果数组中有重复元素则返回true，否则返回false
 	/* @note	利用Hash Map，将每个元素先存入哈希表，如果哈希表中已经存在该元素，则直接返回false即可。时间复杂度为O(n)，空间复杂度为O(n)。*/
 	bool containsDuplicate(vector<int>& nums) {
 		unordered_set<int> hash_table;	//	哈希表
@@ -27,20 +27,21 @@ public:
 			if (hash_table.find(nums[i]) == hash_table.end())			
 				hash_table.insert(nums[i]);			
 			else
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 };
 
 int main()
 {
-	int n[7] = {1,14,2,2,34,32,4};
+	int n[7] = {1,14,11,2,34,32,4};
 	vector<int> nums;
 	 	for (int i = 0; i != 7; i++)
 	 		nums.push_back(n[i]);
 
 	Solution slt;
+	nums.clear();
 	bool rslt = slt.containsDuplicate(nums);
 	return 0;
 }
