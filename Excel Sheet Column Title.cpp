@@ -1,4 +1,4 @@
-///@file	Excel Sheet Column Title
+ï»¿///@file	Excel Sheet Column Title
 /*
 Given a positive integer, return its corresponding column title as appear in an Excel sheet.
 
@@ -24,10 +24,10 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	½«intÐÍÕýÕûÊý×ª»»³É¶þÊ®Áù½øÖÆÕûÊý:A, B, C, ..., Z, AA, AB, ...
-	///@param	n	Ê®½øÖÆÕûÊý
-	///@return	·µ»Ø¶þÊ®Áù½øÖÆÊý×Ö·û´®
-	/* @note	¶ÔÊ®½øÖÆÊýnÏÈ×Ô¼õ1£¬È»ºó²»¶ÏµÄÄ£26£¬ËùµÃ+'A'¾ÍÊÇÄ³Ò»Î»£¬È»ºóÓÃn×Ô³ý26£¬Ö±µ½ÆäÎª0ÎªÖ¹¡£Ê±¼ä¸´ÔÓ¶ÈÎªO(logn)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(1)*/
+	///@brief	å°†intåž‹æ­£æ•´æ•°è½¬æ¢æˆäºŒåå…­è¿›åˆ¶æ•´æ•°:A, B, C, ..., Z, AA, AB, ...
+	///@param	n	åè¿›åˆ¶æ•´æ•°
+	///@return	è¿”å›žäºŒåå…­è¿›åˆ¶æ•°å­—ç¬¦ä¸²
+	/* @note	å¯¹åè¿›åˆ¶æ•°nå…ˆè‡ªå‡1ï¼Œç„¶åŽä¸æ–­çš„æ¨¡26ï¼Œæ‰€å¾—+'A'å°±æ˜¯æŸä¸€ä½ï¼Œç„¶åŽç”¨nè‡ªé™¤26ï¼Œç›´åˆ°å…¶ä¸º0ä¸ºæ­¢ã€‚æ—¶é—´å¤æ‚åº¦ä¸ºO(logn)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(1)*/
 	string convertToTitle(int n) {
 		string s;
 		while (n > 0)
