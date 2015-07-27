@@ -24,7 +24,7 @@ public:
 	///@param	cost	从当前加油站到下一个加油站的花费
 	///@return	返回能够完成环路的加油站编号
 	/* @note	先计算出当前加油站和从这个加油站到下一站的花费之差，如果为负，则不用考虑为起点。然后对有可能的加油站进行遍历。时间复杂度为O(n^2)，空间复杂度为O(n)。OJ报TLE。*/
-	int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+	int canCompleteCircuit_Time_O_n2(vector<int>& gas, vector<int>& cost) {
 		vector<int> possible_station;
 		for (int i = 0; i != gas.size(); i++)
 		{
@@ -37,6 +37,37 @@ public:
 			if (isComplete(i, gas, cost))	return i;
 		}
 		return -1;
+	}
+
+	///@brief	计算出能够完成环路的起始加油站
+	///@param	gas	加油站的汽油
+	///@param	cost	从当前加油站到下一个加油站的花费
+	///@return	返回能够完成环路的加油站编号，如果没有则返回-1.
+	/* @note	如果当前站的花费减去油量比目前所有的油量还多，则该站点与之前的站点都不可能是起点。只可能是后面的站点。如果完成一次遍历，
+				剩余油量大于零，则说明该起点能够完成环行。否则返回-1.时间复杂度为O(n)，空间复杂度为O(1)。*/
+	int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+		int total_gas = 0;
+		int total_cost = 0;
+		for (int i = 0; i != gas.size(); i++)
+		{
+			total_gas += gas[i];
+			total_cost += cost[i];
+		}
+		if (total_cost > total_gas)	return -1;
+
+		int start = 0;	//起点
+		int rest_gas = 0;	//	剩余油量
+		for (int i = 0; i != gas.size(); i++)
+		{
+			if (rest_gas < 0)
+			{
+				start = i;
+				rest_gas = 0;
+			}
+			rest_gas += gas[i] - cost[i];
+		}
+		if (rest_gas < 0)	return -1;
+		return start;
 	}
 
 private:
