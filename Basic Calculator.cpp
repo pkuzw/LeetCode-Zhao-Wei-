@@ -13,8 +13,8 @@ Some examples:
 "(1+(4+5+2)-3)+(6+8)" = 23
 */
 ///@author	zhaowei
-///@date	2015.07.26
-///@version	1.0
+///@date	2015.07.27
+///@version	1.1
 
 #include <stack>
 #include <string>
@@ -30,16 +30,16 @@ public:
 	///@param	s	算术字符串
 	///@return	返回它的值
 	/* @note	通过栈来保存括号。从左向右扫描字符串，如果遇到空白符，舍弃；如果遇到左括号、数字和加减号，入栈；如果遇到右括号，弹栈直到
-				遇到第一个左括号。将这个封闭括号中的算术表达式计算出来再压回栈中。
+				遇到第一个左括号。将这个封闭括号中的算术表达式计算出来再压回栈中。持续压栈直到最后。最后再清栈。
 				期间如果遇到符号为加减号，那么计算它俩边的数字。
 				支持负数。
 				时间复杂度为O(n)，空间复杂度为O(n)。*/
 	int calculate(string s) {
 		if (s.empty())	return 0;
-		s = "(" + s + ")";
+
 		int rslt = 0;
 		stack<char> stk;
-//		s = "(" + s + ")";
+
 		for (int i = 0; i != s.length(); i++)
 		{
 			if (s[i] == ' ' && i < s.length()-1)	
@@ -50,50 +50,51 @@ public:
 
 			if (s[i] == ')' || i == s.length()-1)
 			{
-				string stmp;
-				while (!stk.empty())
+				if (s[i] == ' ')	break;
+				
+				string stmp;				
+				while (!stk.empty() && stk.top() != '(')
 				{
 					char c = stk.top();
 					stk.pop();
+					stmp += c;						
+				}	
+				if (!stk.empty())
+					stk.pop();
 
-					if (c != '(')
-						stmp += c;						
-					
-					if (stk.empty() || c == '(')
+				reverse(stmp.begin(), stmp.end());	//	将逆序的字符串反过来
+				string rtmp = simpleCalculator(stmp);
+				stmp.clear();
+
+				for (int j = 0; j != rtmp.length(); j++)
+				{
+					if (j == 0 && rtmp[j] == '-')
 					{
-						reverse(stmp.begin(), stmp.end());	//	将逆序的字符串反过来
-						string rtmp = simpleCalculator(stmp);
-						stmp.clear();
-
-						if (stk.empty())
-						{
-							rslt = strToInt(rtmp);
-							break;
+						if (!stk.empty() && stk.top() == '+')
+						{	
+							stk.top() = '-';
+							continue;
 						}
-
-						for (int j = 0; j != rtmp.length(); j++)
-						{
-							if (j == 0 && rtmp[j] == '-')
-							{
-								if (stk.top() == '+')
-								{	
-									stk.top() = '-';
-									continue;
-								}
-								if (stk.top() == '-')
-								{	
-									stk.top() = '+';
-									continue;
-								}								
-							}
-							stk.push(rtmp[j]);
-						}
+						if (!stk.empty() && stk.top() == '-')
+						{	
+							stk.top() = '+';
+							continue;
+						}								
 					}
+					stk.push(rtmp[j]);
 				}
-				string ltmp = intToStr(rslt);
-				for (int i = 0; i != ltmp.length(); i++)
-					stk.push(ltmp[i]);
 			}
+		}
+		if (!stk.empty())
+		{
+			string r;
+			while (!stk.empty())
+			{
+				r += stk.top();
+				stk.pop();
+			}
+			reverse(r.begin(), r.end());
+			rslt = strToInt(simpleCalculator(r));
 		}
 		return rslt;
 		
@@ -105,45 +106,35 @@ private:
 	///@return	返回它的计算结果
 	string simpleCalculator(string s)
 	{
-		int start = 0;			//	数字的起始下标
-		int	end = s.length()-1;	//	数字的终止下标
+		vector<string> numbers;
 		int n1 = 0;
 		int n2 = 0;
 		char sign = ' ';
+		
+		string num;
 		for (int i = 0; i != s.length(); i++)
 		{
-			if (s[i] == '+' || s[i] == '-')
+			if (i > 0 && (s[i] == '+' || s[i] == '-'))
 			{
-				end = i-1;
-				if (sign != ' ')
-				{
-					n2 = strToInt(s.substr(start, end-start+1));
-					n1 = (sign == '+') ? n1 + n2 : n1 - n2;
-					start = i+1;
-					sign = s[i];
-				}
-				else
-				{
-					sign = s[i];					
-					n1 = strToInt(s.substr(start, end-start+1));
-					start = i+1;
-				}				
+				numbers.push_back(num);
+				num.clear();
 			}
-			if (i == s.length()-1)
-			{
-				n2 = strToInt(s.substr(start, end-start+1));
-				if (sign == '+' || sign == ' ')
-					n1 = n1+n2;
-				if (sign == '-')
-					n1 = n1-n2;				
-			}
+			num += s[i];	
 		}
-		return intToStr(n1);
+		numbers.push_back(num);
+
+		int rslt = 0;
+		for (int i = 0; i != numbers.size(); i++)
+		{
+			int a = strToInt(numbers[i]);
+			rslt += a;
+		}
+		return intToStr(rslt);			
 	}
 
 	///@brief	将字符串转换成整数
 	///@param	s	字符串
-	///@return	返回对应的正整数
+	///@return	返回对应的整数。支持负数，和带'+'的正数
 	int strToInt(string s)
 	{	
 		int indx = 0;	//	去除掉两边的空白字符
@@ -161,6 +152,11 @@ private:
 		{
 			s = s.substr(1, s.length()-1);
 			flg = true;
+		}
+		else if (s[0] == '+')
+		{
+			s = s.substr(1, s.length()-1);
+			flg = false;
 		}
 		
 		int num = 0;
@@ -188,7 +184,8 @@ private:
 	///@return	返回它对应的字符串
 	string intToStr(int n)
 	{
-		if (n == 0)	return "0";
+		if (n == 0)			return "0";
+		if (n == INT_MIN)	return "-2147483648";
 		string s;
 		bool flg = false;
 		if (n < 0)
@@ -232,9 +229,12 @@ int main()
 	"(1+(4+5+2)-3)+(6+8)" = 23
 
 	(103-(102+(6500-(7007+1-(1001-302)))))
-	*/
-	string s = "2-4-(8+2-6+(8+4-(1)+8-10))";
 
+	2-4-(8+2-6+(8+4-(1)+8- 10  ) )      
+	*/
+	
+	string s = "1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10""1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10";
+	//"1+2+3-10-11";
 	Solution slt;
 	int rslt = slt.calculate(s);
 	cout << rslt << endl;
