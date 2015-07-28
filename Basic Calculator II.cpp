@@ -25,6 +25,34 @@ using namespace std;
 
 class Solution {
 public:
+	///@brief	能够处理分母为0的简洁版，AC
+	int calculate(string s) {
+		int res = 0, d = 0;
+		char sign = '+';
+		stack<int> nums;
+		for (int i = 0; i < s.size(); ++i) {
+			if (s[i] >= '0') {
+				d = d * 10 + s[i] - '0';
+			}
+			if ((s[i] < '0' && s[i] != ' ') || i == s.size() - 1) {
+				if (sign == '+') nums.push(d);
+				if (sign == '-') nums.push(-d);
+				if (sign == '*' || sign == '/') {
+					int tmp = sign == '*' ? nums.top() * d : nums.top() / d;
+					nums.pop();
+					nums.push(tmp);
+				}
+				sign = s[i];
+				d = 0;
+			} 
+		}
+		while (!nums.empty()) {
+			res += nums.top();
+			nums.pop();
+		}
+		return res;
+	}
+
 	///@brief	计算简单算术表达式
 	///@param	s	字符串
 	///@return	返回它计算结果。
@@ -32,7 +60,7 @@ public:
 				如果遇到乘号和除号，则弹出两边的栈顶元素进行运算，并将结果压入临时栈，然后继续弹原始栈，直到其为空。这时候临时栈中就是只有加减号的
 				算术表达式。然后再弹栈进行运算。在计算中间结果的时候用两个栈。第一个栈是原始的算术表达式，第二栈用来存放没有遇到*或/之前的算术表达式。
 				时间复杂度为O(n)，空间复杂度为O(n)。没有处理分母有可能为0的情况，OJ报RE。*/
-	int calculate(string s) {
+	int calculate_WA(string s) {
 		if (s.empty())	return 0;
 
 		vector<string> str_nums;	//	原始栈
