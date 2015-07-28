@@ -42,6 +42,6 @@ int main()
 {
 	int n = 100;
 	Solution slt;
-	int rslt = slt.countPrimes(n);
+	bool rslt = slt.countPrimes(n);
 	return 0;
 }
