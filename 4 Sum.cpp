@@ -26,17 +26,47 @@ A solution set is:
 ///@version 2.0
 ///@note	
 
+///@date	2015.07.29
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
 #include <cstdlib>
+#include <set>
 
 using namespace std;
 
 class Solution
 {
 public:
+	///@brief	成功AC，时间复杂度为O(n^3)
+	vector<vector<int> > fourSum(vector<int> &nums, int target) {
+		set<vector<int> > res;
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i < int(nums.size() - 3); ++i) {
+			for (int j = i + 1; j < int(nums.size() - 2); ++j) {
+				int left = j + 1, right = nums.size() - 1;
+				while (left < right) {
+					int sum = nums[i] + nums[j] + nums[left] + nums[right];
+					if (sum == target) {
+						vector<int> out;
+						out.push_back(nums[i]);
+						out.push_back(nums[j]);
+						out.push_back(nums[left]);
+						out.push_back(nums[right]);
+						res.insert(out);
+						++left; --right;
+					} else if (sum < target) ++left;
+					else --right;
+				}
+			}
+		}
+		return vector<vector<int> > (res.begin(), res.end());
+	}
+
+
 	///@brief	求4个数之和为指定值的所有组合
 	///@param	nums	待处理的数组
 	///@return	返回所有可能的组合，在每一个4元组答案中按照非降序排列元素
@@ -290,7 +320,7 @@ public:
 				我们可以认为哈希map中key对应的链表长度为常数，那么算法总的复杂度为O（n^2）
 				同样报TLE
 	*/
-	vector<vector<int> > fourSum(vector<int> &num, int target) {
+	vector<vector<int> > fourSum_tle4(vector<int> &num, int target) {
 		int n = num.size();
 		vector<vector<int> > res;
 		unordered_map<int, vector<pair<int, int> > >pairs;
