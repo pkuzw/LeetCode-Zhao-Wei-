@@ -26,7 +26,7 @@ using namespace std;
 class Solution {
 public:
 	///@brief	能够处理分母为0的简洁版，AC
-	int calculate(string s) {
+	int calculate_simple(string s) {
 		int res = 0, d = 0;
 		char sign = '+';
 		stack<int> nums;
@@ -59,12 +59,11 @@ public:
 	/* @note	先将算术表达式中多于的空格清除，然后转化成字符串的形式压入原始栈。然后从原始栈栈顶开始弹出字符串，如果遇到数字、加号、减号压入临时栈，
 				如果遇到乘号和除号，则弹出两边的栈顶元素进行运算，并将结果压入临时栈，然后继续弹原始栈，直到其为空。这时候临时栈中就是只有加减号的
 				算术表达式。然后再弹栈进行运算。在计算中间结果的时候用两个栈。第一个栈是原始的算术表达式，第二栈用来存放没有遇到*或/之前的算术表达式。
-				时间复杂度为O(n)，空间复杂度为O(n)。没有处理分母有可能为0的情况，OJ报RE。*/
-	int calculate_WA(string s) {
+				时间复杂度为O(n)，空间复杂度为O(n)。*/
+	int calculate(string s) {
 		if (s.empty())	return 0;
 
-		vector<string> str_nums;	//	原始栈
-		bool flg = true;	//	是否是连除，这样写有问题。
+		stack<string> str_nums;	//	原始栈
 
 		//	转换掉多于空格并压入原始栈
 		vector<int> op_indx;
@@ -79,62 +78,63 @@ public:
 		{
 			if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/')
 			{
-				if (s[i] != '/')	flg = false;
 				op_indx.push_back(i);
 			}
 		}
 
-		int start = 0;
+		int end = s.length()-1;
 		string str_num;
-		for (int i = 0; i != op_indx.size(); i++)
+		for (int i = op_indx.size()-1; i >= 0; i--)
 		{
-			str_num = s.substr(start, op_indx[i]-start);
-			start = op_indx[i] + 1;
-			str_nums.push_back(str_num);			
-			str_nums.push_back(s.substr(op_indx[i], 1));
+			str_num = s.substr(op_indx[i]+1, end-op_indx[i]);
+			end = op_indx[i] - 1;
+			str_nums.push(str_num);			
+			str_nums.push(s.substr(op_indx[i], 1));
 		}
-		str_num = s.substr(start, s.length()-start);
-		str_nums.push_back(str_num);
-		if (flg)	reverse(str_nums.begin(), str_nums.end());	//	防止"100000000/1/2/3/4/5/6/7/8/9/10"这样的情况溢出
+		str_num = s.substr(0, end+1);
+		str_nums.push(str_num);
 
 		int rslt = 0;
-		vector<string> tmp;
+		stack<string> tmp;
 		while (!str_nums.empty())	//	先算乘除
 		{	
-			string tp = str_nums.back();
-			str_nums.pop_back();
+			string tp = str_nums.top();
+			str_nums.pop();
 			if (tp != "*" && tp != "/") 
 			{
-				tmp.push_back(tp);
+				tmp.push(tp);
 			}
 			else 
 			{
-				int n = 0;
-				if (flg)
-					n = tp == "*" ?  stringToInt(tmp.back()) * stringToInt(str_nums.back()) : stringToInt(tmp.back()) / stringToInt(str_nums.back());
-				else
-					n = tp == "*" ?  stringToInt(str_nums.back()) * stringToInt(tmp.back()) : stringToInt(str_nums.back()) / stringToInt(tmp.back());
-				str_nums.pop_back();
-				tmp.pop_back();
-				tmp.push_back(intToString(n));
+				int n = tp == "*" ?  stringToInt(tmp.top()) * stringToInt(str_nums.top()) : stringToInt(tmp.top()) / stringToInt(str_nums.top());
+				str_nums.pop();
+				tmp.pop();
+				str_nums.push(intToString(n));
 			}
 		}
 
-		while (!tmp.empty())	//	再算加减
+		while (!tmp.empty())	//	tmp的算术表达式是逆序，要把它颠倒回去
 		{
-			string tp = tmp.back();
-			tmp.pop_back();
+			str_nums.push(tmp.top());
+			tmp.pop();
+		}
+
+
+		while (!str_nums.empty())	//	再算加减
+		{
+			string tp = str_nums.top();
+			str_nums.pop();
 			if (tp != "+" && tp != "-")
-				str_nums.push_back(tp);
+				tmp.push(tp);
 			else
 			{
-				rslt = tp == "+" ? stringToInt(str_nums.back()) + stringToInt(tmp.back()): stringToInt(str_nums.back()) - stringToInt(tmp.back());
-				tmp.pop_back();
-				str_nums.pop_back();
-				str_nums.push_back(intToString(rslt));
+				rslt = tp == "+" ? stringToInt(tmp.top()) + stringToInt(str_nums.top()): stringToInt(tmp.top()) - stringToInt(str_nums.top());
+				tmp.pop();
+				str_nums.pop();
+				str_nums.push(intToString(rslt));
 			}
 		}
-		return stringToInt(str_nums.back());
+		return stringToInt(tmp.top());
 	}
 
 private:
@@ -197,8 +197,10 @@ int main()
 	3+5 / 2 - 8 * 9
 	1-1+1
 	100000000/1/2/3/4/5/6/7/8/9/10
+	1787+2136/3/2*2
+	1-1+1
 	*/
-	string s = "1787+2136/3/2*2";
+	string s = "100000000/1/2/3/4/5/6/7/8/9/10";
 	Solution slt;
 	int rslt = slt.calculate(s);
 	return 0;
