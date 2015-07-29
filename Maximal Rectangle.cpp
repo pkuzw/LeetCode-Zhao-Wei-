@@ -116,7 +116,7 @@ public:
 	///@param	matrix	二维矩阵
 	///@return	返回全部都是1的矩形的面积
 	///@note	利用"Largest Rectangle in Histogram"中O(n)的算法，将二维矩阵中的每一行看做直方图的横坐标，纵坐标是该元素所在位置上方
-	//			连续出现的'1'的数目，通过动归O(n^2)的时间获得。总的时间复杂度为O(n^2)，因为一共有n行，每行调用的算法时间复杂度为O(n)，
+	//			连续出现的'1'的数目，通过动规O(n^2)的时间获得。总的时间复杂度为O(n^2)，因为一共有n行，每行调用的算法时间复杂度为O(n)，
 	//			一共就是O(n^2)。空间复杂度为O(n^2)
 	int maximalRectangle(vector<vector<char>>& matrix)
 	{
