@@ -27,13 +27,78 @@ using namespace std;
 
 class Solution {
 public:
+	///@brief	前缀树节点前缀树的每个节点下面有26个子节点，相当于26个字母
+	struct TrieNode {
+		TrieNode *child[26];
+		string str;
+		TrieNode() : str("") 
+		{
+			for (int a = 0; a != 26; a++) 
+				child[a] = NULL;
+		}
+	};
+
+	///@brief	前缀树
+	struct Trie {
+		TrieNode *root;
+
+		Trie() : root(new TrieNode()) {}
+
+		///@brief	在前缀树中插入一个节点
+		void insert(string s) {
+			TrieNode *p = root;
+			for (int a = 0; a < s.length(); a++) 
+			{
+				int i = s[a] - 'a';
+				if (!p->child[i]) p->child[i] = new TrieNode();
+				p = p->child[i];
+			}
+			p->str = s;
+		}
+	};
+
+	///@brief	利用前缀树提高算法的效率。
+	vector<string> findWords(vector<vector<char> >& board, vector<string>& words) {
+		vector<string> res;
+		if (words.empty() || board.empty() || board[0].empty()) return res;
+		vector<vector<bool> > visit(board.size(), vector<bool>(board[0].size(), false));
+		Trie T;
+		for (int a = 0; a != words.size(); a++)
+			T.insert(words[a]);
+
+		for (int i = 0; i < board.size(); ++i) {
+			for (int j = 0; j < board[i].size(); ++j) {
+				if (T.root->child[board[i][j] - 'a']) {
+					search(board, T.root->child[board[i][j] - 'a'], i, j, visit, res);
+				}
+			}
+		}
+		return res;
+	}
+private:
+	void search(vector<vector<char> > &board, TrieNode *p, int i, int j, vector<vector<bool> > &visit, vector<string> &res) { 
+		if (!p->str.empty()) {
+			res.push_back(p->str);
+			p->str.clear();
+		}
+		int d[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+		visit[i][j] = true;
+		for (int a = 0; a < 4; a++) {
+			int nx = d[a][0] + i, ny = d[a][1] + j;
+			if (nx >= 0 && nx < board.size() && ny >= 0 && ny < board[0].size() && !visit[nx][ny] && p->child[board[nx][ny] - 'a']) {
+				search(board, p->child[board[nx][ny] - 'a'], nx, ny, visit, res);
+			}
+		}
+		visit[i][j] = false;
+	}
+
 	///@brief	在二维矩阵中找到所有可能的词典中的单词
 	///@param	board	二维字符矩阵
 	///@param	words	词典
 	///@return	返回在二维矩阵中存才的单词
 	/* @note	因为在之前"Word Search"中有算法判断一个单词是否在矩阵中，那么遍历一遍词典，先去掉其中可能重复的单词，然后
 				对于其中每一个可能的单词在矩阵中找一遍就行。OJ报TLE*/
-	vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+	vector<string> findWords_Tle(vector<vector<char>>& board, vector<string>& words) {
 		vector<string> rslt;
 		unordered_set<string> hash_table;
 		for (int i = 0; i != words.size(); i++)	//	去除词典中的重复单词
