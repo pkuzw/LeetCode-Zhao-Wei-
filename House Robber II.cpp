@@ -1,4 +1,4 @@
-///@file	House Robber II
+ï»¿///@file	House Robber II
 /*
 After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
 
@@ -14,11 +14,11 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	¼ÆËã½Ù·ËÇÀ½Ù»·×°·¿ÎİµÄ×î´ó½ğ¶î
-	///@param	nums	·¿Îİ½ğ¶î
-	///@return	·µ»Ø×î´óÇÀ½Ù½ğ¶î
-	///@note	ÀûÓÃ"House Robber"ÖĞµÄËã·¨£¬½«»·×°·¿Îİ¸Ä³ÉÏß×´ÅÅÁĞµÄ£¬·Ö±ğÈ¥µôµÚÒ»¸öÎİ×ÓºÍ×îºóÒ»¸öÎİ×ÓÀ´¼ÆËã×î´ó½ğ¶î£¬È»ºóÈ¡Æä×î´óÖµ¼´¿É¡£
-	//			Ê±¼ä¸´ÔÓ¶ÈÎªO(n)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(n)¡£
+	///@brief	è®¡ç®—åŠ«åŒªæŠ¢åŠ«ç¯è£…æˆ¿å±‹çš„æœ€å¤§é‡‘é¢
+	///@param	nums	æˆ¿å±‹é‡‘é¢
+	///@return	è¿”å›æœ€å¤§æŠ¢åŠ«é‡‘é¢
+	///@note	åˆ©ç”¨"House Robber"ä¸­çš„ç®—æ³•ï¼Œå°†ç¯è£…æˆ¿å±‹æ”¹æˆçº¿çŠ¶æ’åˆ—çš„ï¼Œåˆ†åˆ«å»æ‰ç¬¬ä¸€ä¸ªå±‹å­å’Œæœ€åä¸€ä¸ªå±‹å­æ¥è®¡ç®—æœ€å¤§é‡‘é¢ï¼Œç„¶åå–å…¶æœ€å¤§å€¼å³å¯ã€‚
+	//			æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(n)ã€‚
 	int rob(vector<int>& nums) {
 		if (nums.empty())		return 0;
 		if (nums.size() == 1)	return nums[0];
@@ -32,11 +32,11 @@ public:
 	}
 
 private:
-	///@brief	¼ÆËã½Ù·ËÄÜ¹»ÇÀ½ÙµÄ×î´ó½ğ¶î
-	///@param	Ã¿¼ÒµÄ½ğ¶î
-	///@return	·µ»Ø×î´óÇÀ½Ù½ğ¶î
-	/* @note	¶¯Ì¬¹æ»®£ºÉèdp[i]±íÊ¾ÇÀÇ°i¼ÒµÄ×î´ó½ğ¶î¡£³õÊ¼Ìõ¼şdp[0] = nums[0]£¬dp[1] = max(nums[0], nums[1])¡£µİÍÆ¹ØÏµÊ½Îª
-				dp[i] = max(dp[i-2]+nums[i], dp[i-1])¡£Ê±¼ä¸´ÔÓ¶ÈÎªO(n)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(n)¡£*/
+	///@brief	è®¡ç®—åŠ«åŒªèƒ½å¤ŸæŠ¢åŠ«çš„æœ€å¤§é‡‘é¢
+	///@param	æ¯å®¶çš„é‡‘é¢
+	///@return	è¿”å›æœ€å¤§æŠ¢åŠ«é‡‘é¢
+	/* @note	åŠ¨æ€è§„åˆ’ï¼šè®¾dp[i]è¡¨ç¤ºæŠ¢å‰iå®¶çš„æœ€å¤§é‡‘é¢ã€‚åˆå§‹æ¡ä»¶dp[0] = nums[0]ï¼Œdp[1] = max(nums[0], nums[1])ã€‚é€’æ¨å…³ç³»å¼ä¸º
+				dp[i] = max(dp[i-2]+nums[i], dp[i-1])ã€‚æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(n)ã€‚*/
 	int rob_line(vector<int>& nums) {
 		if (nums.empty())		return 0;
 		if (nums.size() == 1)	return nums[0];
