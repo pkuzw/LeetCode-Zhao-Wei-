@@ -37,13 +37,11 @@ public:
 private:
 	struct myObj
 	{
-		bool operator() (int a, int b)
+		bool operator() (const int& a, const int& b)
 		{
 			string s1 = to_string(static_cast<long long>(a));
 			string s2 = to_string(static_cast<long long>(b));
-			string sum1 = s1 + s2;
-			string sum2 = s2 + s1;
-			return sum1 > sum2;
+			return s1 + s2 > s2 + s1;
 		}
 	}myCmp;
 };
@@ -54,8 +52,8 @@ int main()
 	nums.push_back(0);
 	nums.push_back(0);
  	nums.push_back(3);
-// 	nums.push_back(5);
-// 	nums.push_back(9);
+ 	nums.push_back(5);
+ 	nums.push_back(9);
 
 	Solution slt;
 	string rslt = slt.largestNumber(nums);
