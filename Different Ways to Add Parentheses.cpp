@@ -33,7 +33,7 @@ Output: [-34, -14, -10, -10, 10]
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个算术表达式，计算各种插入括号后可能的值
 	///@param	input	算术表达式
@@ -78,6 +78,47 @@ private:
 		if (rslt.empty())	//	如果只有一个数字，没有运算符
 			rslt.push_back(stoi(input));
 		hash_table[input] = rslt;	//	添加到哈希表中
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	vector<int> diffWaysToCompute(string input) {
+		unordered_map<string, vector<int>> hash_table;
+		return diffRecur(input, hash_table);
+	}
+
+private:
+	vector<int> diffRecur(string input, unordered_map<string, vector<int>>& hash_table)
+	{
+		vector<int> rslt;
+
+		for (int i = 0; i != input.size(); i++)
+		{
+			if (input[i] == '+' || input[i] == '-' || input[i] == '*')
+			{
+				string l = input.substr(0, i);
+				string r = input.substr(i+1);
+
+				vector<int> rslt1 = (hash_table.find(l) != hash_table.end()) ? hash_table[l] : diffRecur(l, hash_table);
+				vector<int> rslt2 = (hash_table.find(r) != hash_table.end()) ? hash_table[r] : diffRecur(r, hash_table);
+				
+				for (int j = 0; j != rslt1.size(); j++)
+				{
+					for (int k = 0; k != rslt2.size(); k++)
+					{
+						if (input[i] == '+')	rslt.push_back(rslt1[j] + rslt2[k]);
+						else if (input[i] == '-')	rslt.push_back(rslt1[j] - rslt2[k]);
+						else if (input[i] == '*')	rslt.push_back(rslt1[j] * rslt2[k]);
+					}
+				}
+			}
+		}
+
+		if (rslt.empty())
+			rslt.push_back(stoi(input));
+		hash_table[input] = rslt;
 		return rslt;
 	}
 };
