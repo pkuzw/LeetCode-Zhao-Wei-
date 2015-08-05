@@ -13,12 +13,16 @@ You may assume the string contains only lowercase alphabets.
 ///@date	2015.08.03
 ///@version	1.0
 
+///@author	zhaowei
+///@date	2015.08.05
+///@version	2.0
+
 #include <string>
 #include <unordered_map>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断两个字符串是否是变形字符串关系
 	///@param	s, t	字符串
@@ -43,10 +47,28 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool isAnagram(string s, string t) {
+		if (s.size() != t.size())	return false;
+		
+		unordered_map<char, int> hash_table;
+		for (int i = 0; i != s.size(); i++)
+			hash_table[s[i]]++;
+
+		for (int i = 0; i != t.size(); i++)
+		{
+			if (hash_table.find(t[i]) == hash_table.end() || hash_table[t[i]] == 0)	return false;
+			hash_table[t[i]]--;
+		}
+		return true;
+	}
+};
+
 int main()
 {
-	string s = "cat";
-	string t = "rat";
+	string s = "anagram";
+	string t = "nagrama";
 	Solution slt;
 	bool rslt = slt.isAnagram(s, t);
 	return 0;
