@@ -31,7 +31,7 @@ Could you solve it in linear time?
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算最大窗口值
 	///@param	nums	数组
@@ -58,6 +58,27 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+		vector<int> rslt;
+		deque<int> deq;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (!deq.empty() && i - deq.front() >= k)
+				deq.pop_front();
+			while (!deq.empty() && nums[i] > nums[deq.back()])
+				deq.pop_back();
+
+			deq.push_back(i);
+
+			if (i >= k-1)
+				rslt.push_back(nums[deq.front()]);
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	vector<int> nums;
@@ -65,7 +86,7 @@ int main()
 	for (int i = 0; i != 8; i++)	nums.push_back(n[i]);
 
 	Solution slt;
-	slt.maxSlidingWindow(nums, 3);
+	vector<int> rslt = slt.maxSlidingWindow(nums, 3);
 
 	return 0;
 }
