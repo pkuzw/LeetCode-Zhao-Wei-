@@ -38,7 +38,8 @@ public:
 	///@param	p	子节点p
 	///@param	q	子节点q
 	///@return	返回p和q在二叉树中的最低公共祖先节点
-	/* @note	如果某个节点就是p或q，则该节点就是它的最低公共祖先；如果某个节点的左右子树各含有p或q，那么该节点就是它们的最低公共祖先，否则就是它的左子树或者右子树。递归的向下遍历。
+	/* @note	如果某个节点就是p或q，则该节点就是它的最低公共祖先；如果某个节点的左右子树各含有p或q，那么该节点就是它们的最低公共祖先，
+				否则就是它的左子树或者右子树。递归的向下遍历。
 				时间复杂度为O(n)，空间复杂度为O(1)。*/
 	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 		if (root == nullptr || p == nullptr || q == nullptr)	
@@ -64,7 +65,17 @@ public:
 class Solution {
 public:
 	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+		if (!root || !p || !q)	return nullptr;
 
+		if (root == p || root == q)	return root;
+		
+		TreeNode* lsub = lowestCommonAncestor(root->left, p, q);
+		TreeNode* rsub = lowestCommonAncestor(root->right, p, q);
+
+		if (lsub && rsub)		return root;
+		else if (lsub && !rsub)	return lsub;
+		else if (!lsub && rsub)	return rsub;
+		else return nullptr;
 	}
 };
 
