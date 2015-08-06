@@ -25,12 +25,16 @@ Given target = 20, return false.
 ///@date	2015.07.26
 ///@version	1.0
 
+///@author	zhaowei
+///@date	2015.08.06
+///@version	2.0
+
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个int型二维数组，其中每一行和每一列都按照从左往右，从上往下的顺序升序排列，在其中寻找指定值
 	///@param	matrix	二维矩阵
@@ -104,6 +108,18 @@ private:
 			}
 			return binarySearch(ivec, p, q-1, val, flg);
 		}
+	}
+};
+
+class Solution {
+public:
+	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+		for (int i = 0; i != matrix.size(); i++)
+		{
+			if (binary_search(matrix[i].begin(), matrix[i].end(), target))
+				return true;
+		}
+		return false;
 	}
 };
 
