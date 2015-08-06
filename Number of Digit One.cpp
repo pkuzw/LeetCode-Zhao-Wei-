@@ -10,9 +10,11 @@ Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.06
+///@version	2.0
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算比n小的所有正整数中出现的'1'的个数。
 	///@param	n	正整数n
@@ -49,6 +51,20 @@ public:
 			ones += ((a + 8) / 10 * m) + (a % 10 == 1) * (b + 1);
 		}
 		return ones;
+	}
+};
+
+class Solution {
+public:
+	int countDigitOne(int n) {
+		int rslt = 0;
+		for (long long m = 1; m <= n; m *= 10)
+		{
+			int a = n / m;
+			int b = n % m;
+			rslt += (a + 8) / 10 * m + (a % 10 == 1) * (b + 1);
+		}
+		return rslt;
 	}
 };
 
