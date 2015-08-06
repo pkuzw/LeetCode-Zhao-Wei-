@@ -7,7 +7,7 @@ Given an integer, write a function to determine if it is a power of two.
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.0
+///@version	2.1
 
 #include <iostream>
 #include <vector>
@@ -47,6 +47,12 @@ public:
 			if (power_n[i] == n)	return true;
 		}
 		return false;
+	}
+
+	///@brief	 2的正整数次幂减1与本身相与得0
+	bool isPowerOfTwo_v2_1(int n)
+	{
+		return (n > 0) && (!(n & (n-1)));
 	}
 };
 
