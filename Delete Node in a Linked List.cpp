@@ -20,7 +20,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	只给定一个链表的某个节点，删除该节点
 	///@param	链表结点
@@ -39,6 +39,14 @@ public:
 			node = node->next;
 			//memset(node, NULL, sizeof(ListNode*));
 		return;
+	}
+};
+
+class Solution {
+public:
+	void deleteNode(ListNode* node) {
+		node->val = node->next->val;
+		node->next = node->next->next;
 	}
 };
 
