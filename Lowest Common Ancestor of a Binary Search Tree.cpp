@@ -18,6 +18,9 @@ For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another exa
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.06
+///@version	2.0
+
 #include <iostream>
 
 using namespace std;
@@ -29,7 +32,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {};
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	找一个二叉搜索树的两个节点的最低公共祖先节点
 	///@param	root	根节点
@@ -49,6 +52,30 @@ public:
 
 		return lsub ? lsub : rsub;			
 	}	
+};
+
+class Solution {
+public:
+	TreeNode* lowestCommonAncestor_recur(TreeNode* root, TreeNode* p, TreeNode* q) {
+		if (!root)	return nullptr;
+
+		if (root->val < min(p->val, q->val))		return lowestCommonAncestor(root->right, p, q);
+		else if (root->val > max(p->val, q->val)) return lowestCommonAncestor(root->left, p, q);
+		else return root;
+	}
+
+	TreeNode* lowestCommonAncestor_iter(TreeNode* root, TreeNode* p, TreeNode* q)
+	{
+		if (!root)	return nullptr;
+
+		while (true)
+		{
+			if (root->val < min(p->val, q->val))		root = root->right;
+			else if (root->val > max(p->val, q->val))	root = root->left;
+			else	break;
+		}
+		return root;
+	}
 };
 
 int main()
