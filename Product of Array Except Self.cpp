@@ -13,6 +13,8 @@ Could you solve it with constant space complexity? (Note: The output array does 
 ///@date	2015.07.26
 ///@version	1.0
 
+///@date	2015.08.06
+///@version	2.0
 #include <vector>
 
 using namespace std;

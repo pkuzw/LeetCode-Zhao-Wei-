@@ -25,6 +25,9 @@ Could you solve it in linear time?
 ///@date	2015.08.02
 ///@version	1.0
 
+///@date	2015.08.06
+///@version	2.0
+
 #include <vector>
 #include <deque>
 #include <algorithm>

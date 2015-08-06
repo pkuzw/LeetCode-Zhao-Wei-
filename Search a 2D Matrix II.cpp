@@ -25,7 +25,6 @@ Given target = 20, return false.
 ///@date	2015.07.26
 ///@version	1.0
 
-///@author	zhaowei
 ///@date	2015.08.06
 ///@version	2.0
 

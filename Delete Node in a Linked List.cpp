@@ -10,6 +10,9 @@ should become 1 -> 2 -> 4 after calling your function.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.06
+///@version	2.0
+
 #include <iostream>
 
 using namespace std;
