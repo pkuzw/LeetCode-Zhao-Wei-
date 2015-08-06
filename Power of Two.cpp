@@ -6,13 +6,16 @@ Given an integer, write a function to determine if it is a power of two.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.06
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	判断一个数n是否是2的幂
 	///@param	n	整数
@@ -30,8 +33,26 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool isPowerOfTwo(int n) {
+		int power_n[31] = {1};
+		for (int i = 0; i < 31; i++)
+		{
+			power_n[i] = 1 << i;
+		}
+
+		for (int i = 30; i >= 0; i--)
+		{
+			if (power_n[i] == n)	return true;
+		}
+		return false;
+	}
+};
+
 int main()
 {
 	Solution slt;
-	bool rslt = slt.isPowerOfTwo(1025);
+	bool rslt = slt.isPowerOfTwo(1024);
+	return 0;
 }
