@@ -8,11 +8,14 @@ The algorithm should run in linear time and in O(1) space.
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.07
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	找出一个数组中出现次数超过n/3的所有元素
 	///@param	nums	数组
@@ -65,12 +68,64 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<int> majorityElement(vector<int>& nums) {
+		int a = 0;
+		int b = 0;
+		int a_cnt = 0;
+		int b_cnt = 0;
+		vector<int> rslt;
+
+		if (nums.empty())	return rslt;
+
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (nums[i] == nums[a])
+			{
+				a_cnt++;
+			}
+			else if (nums[i] == nums[b])
+			{
+				b_cnt++;
+			}
+			else if (!a_cnt)
+			{
+				a = i;
+				a_cnt = 1;
+			}
+			else if (!b_cnt)
+			{
+				b = i;
+				b_cnt = 1;
+			}
+			else
+			{
+				a_cnt--;
+				b_cnt--;
+			}
+		}
+
+			a_cnt = 0;
+			b_cnt = 0;
+			for (int i = 0; i != nums.size(); i++)
+			{
+				if (nums[i] == nums[a])			a_cnt++;
+				else if (nums[i] == nums[b])	b_cnt++;
+			}
+
+			if (a_cnt > nums.size() / 3)	rslt.push_back(nums[a]);
+			if (b_cnt > nums.size() / 3)	rslt.push_back(nums[b]);
+			return rslt;		
+	}
+};
+
 int main()
 {
 	vector<int> nums;
 	nums.push_back(1);
-	nums.push_back(1);
-	nums.push_back(3);
+	nums.push_back(2);
+//	nums.push_back(3);
 
 	Solution slt;
 	vector<int> rslt = slt.majorityElement(nums);
