@@ -12,8 +12,12 @@ What if the BST is modified (insert/delete operations) often and you need to fin
 ///@date	2015.07.26
 ///@version	1.0
 
+///@date	2015.08.07
+///@version	2.0
+
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -24,7 +28,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {};
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算二叉搜索树中的第k小的数
 	///@param	root	根节点
@@ -53,6 +57,31 @@ public:
 	}
 
 	vector<int> in_order;	//	存放中序遍历的序列
+};
+
+class Solution
+{
+public:
+	int kthSmallest(TreeNode* root, int k) {
+		int cnt = 0;
+		TreeNode* p = root;
+		stack<TreeNode*> stk;
+
+		while (p || !stk.empty())
+		{
+			while (p)
+			{
+				stk.push(p);
+				p = p->left;
+			}
+			p = stk.top();
+			stk.pop();
+			cnt++;
+			if (cnt == k)	return p->val;
+			p = p->right;
+		}
+		return 0;
+	}
 };
 
 int main()
