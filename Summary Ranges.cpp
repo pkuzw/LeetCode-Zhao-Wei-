@@ -8,12 +8,15 @@ For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.07
+///@version	2.1
+
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一组已经排好序的数组，计算它的连续整数范围
 	///@param	nums	排好序的数组
@@ -94,11 +97,43 @@ private:
 	}
 };
 
+class Solution {
+public:
+	vector<string> summaryRanges(vector<int>& nums) {
+		vector<string> rslt;
+		if (nums.empty())	return rslt;
+
+		int start = 0, end = 0;
+		string s;
+		for (int i = 0; i < nums.size()-1; i++)
+		{
+			if (nums[i] == nums[i+1]-1)	end++;
+			else
+			{
+				if (end == start)	s = to_string(static_cast<long long>(nums[i]));									
+				else				s = to_string(static_cast<long long>(nums[start])) + "->" + to_string(static_cast<long long>(nums[end]));
+				
+				rslt.push_back(s);
+				start = i+1;
+				end = i+1;
+			}
+		}
+
+		if (end == start)	s = to_string(static_cast<long long>(nums[start]));									
+		else				s = to_string(static_cast<long long>(nums[start])) + "->" + to_string(static_cast<long long>(nums[end]));
+
+		rslt.push_back(s);		
+		return rslt;
+	}
+};
+
 int main()
 {
-	int n[3] = {-2147483648, -2147483647, 2147483647};
+	int n[3] = {-2147483648, 2147483645, 2147483647};
 	vector<int> nums;
 	for (int i = 0; i != 3; i++)	nums.push_back(n[i]);
+
+//	nums.push_back(1);
 
 	Solution slt;
 	vector<string> rslt = slt.summaryRanges(nums);
