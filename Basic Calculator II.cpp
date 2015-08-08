@@ -16,6 +16,9 @@ Some examples:
 ///@date	2015.07.29
 ///@version	1.0
 
+///@date	2015.08.08
+///@version	2.0
+
 #include <stack>
 #include <vector>
 #include <string>
@@ -23,7 +26,7 @@ Some examples:
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	能够处理分母为0的简洁版，AC
 	int calculate_simple(string s) {
@@ -185,6 +188,13 @@ private:
 			n /= 10;
 		}
 		return sign == -1 ? "-" + s : s;
+	}
+};
+
+class Solution {
+public:
+	int calculate(string s) {
+
 	}
 };
 
