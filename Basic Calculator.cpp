@@ -16,6 +16,9 @@ Some examples:
 ///@date	2015.07.27
 ///@version	1.1
 
+///@date	2015.08.09
+///@version	2.0
+
 #include <stack>
 #include <string>
 #include <vector>
@@ -24,7 +27,7 @@ Some examples:
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	实现一个简单的计算器：给定的字符串中包含数字、加减号、括号()和空格符。假设输入都是有效的。
 	///@param	s	算术字符串
@@ -221,6 +224,39 @@ private:
 	}
 };
 
+class Solution {
+public:
+	int calculate(string s) {
+		if (s.empty())	return 0;
+
+		int rslt = 0;
+		stack<int> stk;	//	符号栈
+		stk.push(1);
+		stk.push(1);	//	初始的符号栈中要有两个'+'，这样在第一个数字被弹出后，还可以有一个符号与遇到的第一个符合进行计算
+
+		for (int i = 0; i != s.size(); i++)
+		{
+			if (s[i] >= '0')
+			{
+				int d = 0;
+				while (i < s.size() && s[i] >= '0')	//	要将下标的检验条件放在前边，否则会runtime error
+				{
+					d = d * 10 + s[i] - '0';
+					i++;
+				}
+				rslt += stk.top() * d;
+				stk.pop();
+				i--;
+			}
+			else if (s[i] == ')')	//	一个括号完毕，要将它之前的那个符号弹出，不要影响到后面的符号
+				stk.pop();
+			else if (s[i] != ' ')
+				stk.push(stk.top() * (s[i] == '-' ? -1 : 1));	//	栈顶元素就是当前数字的符号
+		}
+		return rslt;
+	}	
+};
+
 int main()
 {
 	/*
@@ -232,8 +268,8 @@ int main()
 
 	2-4-(8+2-6+(8+4-(1)+8- 10  ) )      
 	*/
-	
-	string s = "1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10""1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10";
+	//"1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10 = -15"
+	string s = "1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10";
 	//"1+2+3-10-11";
 	Solution slt;
 	int rslt = slt.calculate(s);
