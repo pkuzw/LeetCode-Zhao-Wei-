@@ -16,7 +16,7 @@ Some examples:
 ///@date	2015.07.29
 ///@version	1.0
 
-///@date	2015.08.08
+///@date	2015.08.09
 ///@version	2.0
 
 #include <stack>
@@ -194,7 +194,47 @@ private:
 class Solution {
 public:
 	int calculate(string s) {
+		stack<int> stk;
+		int rslt = 0;
+		int d = 0;
+		char sign = '+';
 
+		if (s.empty())	return rslt;
+
+		for (int i = 0; i != s.size(); i++)
+		{		
+			if (s[i] >= '0' && s[i] <= '9')
+				d = d*10 + s[i]-'0';
+			
+			if ((s[i] < '0' && s[i] != ' ') || i == s.size()-1)	//	第一个判断加上不是' '是不要单独判空格符，以免最后一个字符是空格符时无法将最后一个数字计算入栈；第二个判断条件是为了将最后一个数字也压入栈
+			{
+				if (sign == '+')		
+					stk.push(d);		
+				else if (sign == '-')
+					stk.push(-d);
+				else if (sign == '*')
+				{
+					int tmp = stk.top() * d;
+					stk.pop();
+					stk.push(tmp);
+				}
+				else if (sign == '/')
+				{
+					int tmp = stk.top() / d;
+					stk.pop();
+					stk.push(tmp);
+				}
+				d = 0;
+				sign = s[i];
+			}
+		}
+
+		while (!stk.empty())
+		{
+			rslt += stk.top();
+			stk.pop();
+		}
+		return rslt;
 	}
 };
 
