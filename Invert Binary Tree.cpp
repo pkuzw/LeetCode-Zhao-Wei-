@@ -22,6 +22,11 @@ Google: 90% of our engineers use the software you wrote (Homebrew), but you can�
 ///@date	2015.07.24
 ///@version	1.0
 
+///@date	2015.08.09
+///@version	2.0
+#include <algorithm>
+using namespace std;
+
 struct TreeNode {
 	int val;
 	TreeNode *left;
@@ -29,7 +34,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	翻转一棵二叉树
 	///@param	root	二叉树的根节点
@@ -59,6 +64,17 @@ private:
 			invertTree_Recur(root->right);
 
 		return;
+	}
+};
+
+class Solution {
+public:
+	TreeNode* invertTree(TreeNode* root) {
+		if (!root)	return root;
+		swap(root->left, root->right);
+		invertTree(root->left);		
+		invertTree(root->right);
+		return root;
 	}
 };
 
