@@ -8,13 +8,16 @@ Assume that the total area is never beyond the maximum possible value of int.
 */
 ///@author	zhaowei
 ///@date	2015.07.28
-///#version	1.0
+///@version	1.0
+
+///@date	2015.08.09
+///@version	2.0
 
 #include <vector>
 #include <algorithm>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算两个矩形的总面积
 	///@param	A,B,C,D,E,F,G,H	四对坐标，分别表示两个矩形的左下角和右上角
@@ -62,9 +65,26 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+		if (A >= G || B >= H || C <= E || D <= F)	return (C-A)*(D-B) + (G-E)*(H-F);	//	相离的情况
+		
+		//	相交的情况：两个矩形面积之和减去重复面积。重复面积等于左下端点的较大值和右上端点的较小值。
+		int x_left = (A > E) ? A : E;
+		int x_right = (C < G) ? C : G;
+		int y_bottom = (B > F) ? B : F;
+		int y_ceil = (D < H) ? D : H;
+		return (C - A) * (D - B) + (G - E) * (H - F) - (x_right - x_left) * (y_ceil - y_bottom);
+	}
+};
+
 int main()
 {
 	Solution slt;
 	int rslt = slt.computeArea(-3,0,3,4,0,-1,9,2);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.computeArea(-3,0,3,4,0,-1,9,2);
 	return 0;
 }
