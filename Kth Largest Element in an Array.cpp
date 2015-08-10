@@ -9,12 +9,15 @@
 ///@date	2015.08.04
 ///@version	1.0
 
+///@date	2015.08.10
+///@version	2.0
+
 #include <algorithm>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	找到第k大的元素
 	///@param	nums	数组
@@ -24,6 +27,14 @@ public:
 	int findKthLargest(vector<int>& nums, int k) {
 		sort(nums.begin(), nums.end(), greater<int>());
 		return nums[k-1];
+	}
+};
+
+class Solution {
+public:
+	int findKthLargest(vector<int>& nums, int k) {
+		sort(nums.begin(), nums.end());
+		return nums[nums.size() - k];
 	}
 };
 
