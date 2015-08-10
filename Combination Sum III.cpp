@@ -25,11 +25,14 @@ Output:
 ///@author	zhaowei
 ///@date	2015.07.30
 ///@version	1.0
+
+///@date	2015.08.10
+///@version	2.0
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	从1到9个数中选择k个数，使其和为n。求所有的组合。注意：所有组合应该升序排列，每个数只能选择一次。
 	///@param	k	组合大小
@@ -72,10 +75,48 @@ private:
 	vector<vector<int>> rslt;	//	结果数组
 };
 
+class Solution {
+public:
+	vector<vector<int>> combinationSum3(int k, int n) {
+		vector<int> candidates;
+		for (int i = 1; i <= 9; i++)
+			candidates.push_back(i);
+
+		vector<int> comb;
+
+		combine(k, n, comb, candidates, 0);
+		return rslt;
+	}
+
+private:
+	void combine(int k, int n, vector<int>& comb, const vector<int>& candidates, int start)
+	{
+		if (k == 0 && n == 0)
+		{
+			rslt.push_back(comb);
+			return;
+		}
+
+		while(start < 9 && candidates[start] <= n)
+		{
+			comb.push_back(candidates[start]);
+			combine(k-1, n-candidates[start], comb, candidates, start+1);
+			comb.pop_back();
+			start++;
+		}
+	}
+
+	vector<vector<int>> rslt;
+};
+
 int main()
 {
 	int k = 5, n = 30; 
+	
 	Solution slt;
 	vector<vector<int>> rslt = slt.combinationSum3(k, n);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.combinationSum3(k, n);
 	return 0;
 }
