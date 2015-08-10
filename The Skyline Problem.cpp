@@ -21,19 +21,23 @@ There must be no consecutive horizontal lines of equal height in the output skyl
 ///@date	2015.07.30
 ///@version	1.0
 
+///@date	2015.08.10
+///@version	2.0
+
 #include <vector>
 #include <set>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算一组大楼的天际线
 	///@param	buildings	一幢楼由一个三元组表示<L, R, H>，左边界，右边界和高度值
 	///@return	返回大楼的轮廓线
-	/* @note	扫描法。先将大楼的高度和左右端点拆分成不同的两个二元组，然后对这些点按照x值进行排序，如果遇到左端点，就进入保存有每个端点高度值的multiset，否则
-				就在multiset中删除该元素。然后再看当前multiset中的最大值是否与原先的最大值相同，如果不同就将一个端点压入结果数组。时间复杂度为O(nlogn)，空间复杂度为O(n)。*/
+	/* @note	扫描法。先将大楼的高度和左右端点拆分成不同的两个二元组，然后对这些点按照x值进行排序，如果遇到左端点，就进入保存有
+				每个端点高度值的multiset，否则就在multiset中删除该元素。然后再看当前multiset中的最大值是否与原先的最大值相同，
+				如果不同就将一个端点压入结果数组。时间复杂度为O(nlogn)，空间复杂度为O(n)。*/
 	vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
 		vector<pair<int, int>> rslt;
 		vector<pair<int, int>> point;
@@ -52,7 +56,7 @@ public:
 		int pre_max = 0;	//	之前的最大高度
 		for (int i = 0; i != point.size(); i++)
 		{
-			if (point[i].second < 0)		height.insert(-point[i].second);	//	压入左端点高度值
+			if (point[i].second < 0)	height.insert(-point[i].second);	//	压入左端点高度值
 			else						height.erase(height.find(point[i].second));	//	删除右端点高度值
 
 			cur_max = *height.rbegin();
@@ -64,6 +68,56 @@ public:
 		}
 		return rslt;
 	}
+};
+
+/*
+1. 用multiset来代表一个最大堆的数据结构，其比priority的优势是能够删除指定的节点，multiset自身在插入值的时候也会维持key的有序性；
+2. 先将输入的数据拆分成不同的点，然后对点按照先x后y的顺序来进行排序。这里有一个小的技巧，对于左端点都将其高度设置为负值，右端点设置为正值；
+3. 然后从左往右开始遍历这些端点，如果是左端点，就进入multiset，如果是右端点就在multiset中删除该点；
+4. 继而查看当前最大堆中的最大值是否和前一个最大高度相同，如果不同则说明出现了拐点，将当前点的横坐标与当前最大高度作为拐点压入结果数组，并更新前一个最大高度；
+5. 如果有需求输出大楼轮廓的线段前后端点，那么就在上面算法的基础上，在每一个点后面插入前一个点的纵坐标加上后一个点的横坐标即可。
+*/
+class Solution {
+public:
+	vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
+		vector<pair<int, int>> rslt;
+		vector<pair<int, int>> points;
+		multiset<int> height;	//multiset自身在插入值的时候也会维持key的有序性
+		height.insert(0);
+
+		for (int i = 0; i != buildings.size(); i++)
+		{
+			points.push_back(make_pair(buildings[i][0], -buildings[i][2]));
+			points.push_back(make_pair(buildings[i][1], buildings[i][2]));
+		}
+
+		sort(points.begin(), points.end(), myCmp);
+		int cur_height = 0;
+		int pre_height = 0;
+
+		for (int i = 0; i != points.size(); i++)
+		{
+			if (points[i].second < 0)	height.insert(-points[i].second);
+			else						height.erase(height.find(points[i].second));
+
+			cur_height = *height.rbegin();
+			if (cur_height != pre_height)
+			{
+				rslt.push_back(make_pair(points[i].first, cur_height));
+				pre_height = cur_height;
+			}
+		}
+		return rslt;
+	}
+
+private:
+	struct myClass {
+		bool operator () (const pair<int, int>& a, const pair<int, int>& b)
+		{
+			if (a.first != b.first)	return a.first < b.first;
+			return a.second < b.second;
+		}
+	}myCmp;
 };
 
 int main()
@@ -101,6 +155,9 @@ int main()
 	line.clear();
 
 	Solution slt;
-	slt.getSkyline(buildings);
+	vector<pair<int, int>> rslt = slt.getSkyline(buildings);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.getSkyline(buildings);
 	return 0;
 }
