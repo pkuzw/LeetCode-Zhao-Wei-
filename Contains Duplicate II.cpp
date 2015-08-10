@@ -8,12 +8,15 @@ in the array such that nums[i] = nums[j] and the difference between i and j is a
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.10
+///@version	2.0
+
 #include <unordered_map>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个数组和整数k，判断数组中是否存在重复的元素且这两个重复元素的下标距离之差不超过k
 	///@param	nums	数组
@@ -41,6 +44,23 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool containsNearbyDuplicate(vector<int>& nums, int k) {
+		unordered_map<int, int> ht;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (ht.find(nums[i]) == ht.end())	ht[nums[i]] = i;
+			else
+			{
+				if (i - ht[nums[i]] <= k)		return true;
+				ht[nums[i]] = i;
+			}
+		}
+		return false;
+	}
+};
+
 int main()
 {
 	int n[10] = {1,2,3,4,5,2,4,5,6,2};
@@ -49,6 +69,9 @@ int main()
 		nums.push_back(n[i]);
 
 	Solution slt;
-	bool rslt = slt.containsNearbyDuplicate(nums, 0);
+	bool rslt = slt.containsNearbyDuplicate(nums, 2);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.containsNearbyDuplicate(nums, 2);
 	return 0;
 }
