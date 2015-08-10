@@ -8,11 +8,14 @@ Given a list of non-negative integers representing the amount of money of each h
 ///@date	2015.08.02
 ///@version	1.0
 
+///@date	2015.8.10
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算劫匪抢劫环装房屋的最大金额
 	///@param	nums	房屋金额
@@ -50,6 +53,37 @@ private:
 			dp[i] = max(nums[i]+dp[i-2], dp[i-1]);
 		}
 
+		return dp.back();
+	}
+};
+
+class Solution {
+public:
+	int rob(vector<int>& nums) {
+		if (nums.size() == 1)	return nums[0];
+		if (nums.empty())		return 0;
+
+		vector<int> rooms_without_first(++nums.begin(), nums.end());
+		vector<int> rooms_without_last(nums.begin(), --nums.end());
+		int money1 = rob_I(rooms_without_first);
+		int money2 = rob_I(rooms_without_last);
+
+		return max(money1, money2);
+	}
+
+private:
+	int rob_I(vector<int>& nums)
+	{
+		if (nums.empty())		return 0;
+		if (nums.size() == 1)	return nums[0];
+
+		vector<int> dp(nums.size(), 0);	//	抢劫前n家的最大金额
+		dp[0] = nums[0];
+		dp[1] = max(nums[0], nums[1]);
+		for (int i = 2; i != nums.size(); i++)
+		{
+			dp[i] = max(dp[i-2] + nums[i], dp[i-1]);
+		}
 		return dp.back();
 	}
 };
