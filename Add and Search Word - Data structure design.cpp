@@ -18,6 +18,12 @@ search("b..") -> true
 Note:
 You may assume that all words are consist of lowercase letters a-z.
 */
+///@author	zhaowei
+///@date	2015.08.03
+///@version	1.0
+
+///@date	2015.08.10
+///@version	2.0
 
 #include <string>
 using namespace std;
@@ -26,10 +32,10 @@ using namespace std;
 ///@note	每一个节点，除了根节点，都有26个子节点，对应26个字母，另外还有一个标志是否到达此处时构成了一个单词的标志位。
 class TrieNode {
 public:
-	TrieNode* child[26];
 	bool isWord;
-	// Initialize your data structure here.	
-	TrieNode() : isWord(false)
+	TrieNode* child[26];
+
+	TrieNode () : isWord(false)
 	{
 		for (int i = 0; i != 26; i++)
 			child[i] = nullptr;
@@ -37,9 +43,9 @@ public:
 };
 
 ///@brief	字典类，实际上就是前缀树类。利用前缀树的属性来存储单词。
-class WordDictionary {
+class WordDictionary_v1 {
 public:
-	WordDictionary()
+	WordDictionary_v1()
 	{
 		root = new TrieNode;
 	}
@@ -91,18 +97,69 @@ private:
 // wordDictionary.addWord("word");
 // wordDictionary.search("pattern");
 
+class WordDictionary {
+public:
+	// Constructor
+	WordDictionary ()
+	{
+		root = new TrieNode();
+	}
+
+	// Adds a word into the data structure.
+	void addWord(string word) {
+		TrieNode* p = root;
+		for (int i = 0; i != word.size(); i++)
+		{
+			int ch = word[i] - 'a';
+			if (!p->child[ch])
+			{
+				p->child[ch] = new TrieNode();				
+			}
+			p = p->child[ch];
+		}
+		p->isWord = true;
+	}
+
+	// Returns if the word is in the data structure. A word could
+	// contain the dot character '.' to represent any one letter.
+	bool search(string word) {
+		return searchRecur(word, root, 0);
+	}
+
+	bool searchRecur(string word, TrieNode* tnode, int indx)
+	{
+		if (indx == word.size())	return tnode->isWord;
+		if (word[indx] == '.')
+		{
+			for (int j = 0; j != 26; j++)
+			{
+				if (tnode->child[j] && searchRecur(word, tnode->child[j], indx+1))
+					return true;
+			}
+			return false;
+		}
+		else
+		{
+			int ch = word[indx] - 'a';
+			return (tnode->child[ch] && searchRecur(word, tnode->child[ch], indx+1));
+		}
+
+	}
+private:
+	TrieNode* root;
+};
+
 int main()
 {
+	bool rslt = false;
 	WordDictionary* dict = new WordDictionary;
-	dict->addWord("mad");
- 	dict->addWord("bad");
- 	dict->addWord("dad");
 	dict->addWord("a");
-
-	bool rslt = dict->search(".");
- 	rslt = dict->search("bad");
- 	rslt = dict->search(".ad");
- 	rslt = dict->search("b..");
-
+ 	dict->addWord("a");
+	rslt = dict->search(".");
+ 	rslt = dict->search("a");
+	rslt = dict->search("aa");
+	rslt = dict->search("a");
+	rslt = dict->search(".a");
+	rslt = dict->search("a.");
 	return 0;
 }
