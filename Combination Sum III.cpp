@@ -83,7 +83,6 @@ public:
 			candidates.push_back(i);
 
 		vector<int> comb;
-
 		combine(k, n, comb, candidates, 0);
 		return rslt;
 	}
