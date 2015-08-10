@@ -10,11 +10,14 @@ every element is distinct.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.10
+///@version	2.0
+
 #include <unordered_set>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断一个数组中每个元素是否只出现了一次
 	///@param	nums	数组
@@ -28,6 +31,19 @@ public:
 				hash_table.insert(nums[i]);			
 			else
 				return true;
+		}
+		return false;
+	}
+};
+
+class Solution {
+public:
+	bool containsDuplicate(vector<int>& nums) {
+		unordered_set<int> ht;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (ht.find(nums[i]) == ht.end())	ht.insert(nums[i]);
+			else	return true;
 		}
 		return false;
 	}
