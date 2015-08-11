@@ -6,6 +6,9 @@ Implement a trie with insert, search, and startsWith methods.
 ///@date	2015.08.03
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <string>
 
 using namespace std;
@@ -25,6 +28,59 @@ public:
 };
 
 ///@brief	前缀树类
+ class Trie_v1 {
+ public:
+ 	Trie_v1() {
+ 		root = new TrieNode();
+ 	}
+ 
+ 	// Inserts a word into the trie.
+ 	void insert(string word) {
+ 		TrieNode* p = root;
+ 		for (int i = 0; i != word.size(); i++)
+ 		{
+ 			int ch = word[i] - 'a';
+ 			if (!p->child[ch])	
+ 				p->child[ch] = new TrieNode();
+ 			p = p->child[ch];
+ 		}
+ 		p->isWord = true;
+ 	}
+ 
+ 	// Returns if the word is in the trie.
+ 	bool search(string word) {
+ 		TrieNode* p = root;
+ 		for (int i = 0; i != word.size(); i++)
+ 		{
+ 			int ch = word[i] - 'a';
+ 			if (!p->child[ch])	return false;
+ 			p = p->child[ch];
+ 		}
+ 		return p->isWord;
+ 	}
+ 
+ 	// Returns if there is any word in the trie
+ 	// that starts with the given prefix.
+ 	bool startsWith(string prefix) {
+ 		TrieNode* p = root;
+ 		for (int i = 0; i != prefix.size(); i++)
+ 		{
+ 			int ch = prefix[i] - 'a';
+ 			if (!p->child[ch])	return false;
+ 			p = p->child[ch];
+ 		}
+ 		return true;
+ 	}
+ 
+ private:
+ 	TrieNode* root;
+ };
+
+// Your Trie object will be instantiated and called as such:
+// Trie trie;
+// trie.insert("somestring");
+// trie.search("key");
+
 class Trie {
 public:
 	Trie() {
@@ -37,7 +93,7 @@ public:
 		for (int i = 0; i != word.size(); i++)
 		{
 			int ch = word[i] - 'a';
-			if (!p->child[ch])	
+			if (p->child[ch] == nullptr)
 				p->child[ch] = new TrieNode();
 			p = p->child[ch];
 		}
@@ -47,38 +103,46 @@ public:
 	// Returns if the word is in the trie.
 	bool search(string word) {
 		TrieNode* p = root;
-		for (int i = 0; i != word.size(); i++)
-		{
-			int ch = word[i] - 'a';
-			if (!p->child[ch])	return false;
-			p = p->child[ch];
-		}
-		return p->isWord;
+		return searchRecur(word, 0, p);
+	}
+
+	bool searchRecur(const string& word, int i, TrieNode* p)
+	{
+		if (i == word.size())	return p->isWord;
+
+		int ch = word[i] - 'a';
+		return (p->child[ch] && searchRecur(word, i+1, p->child[ch]));
 	}
 
 	// Returns if there is any word in the trie
 	// that starts with the given prefix.
 	bool startsWith(string prefix) {
 		TrieNode* p = root;
-		for (int i = 0; i != prefix.size(); i++)
+		return prefixRecur(prefix, 0, p);
+	}
+
+	bool prefixRecur(const string& prefix, int i, TrieNode* p)
+	{
+		if (i == prefix.size())
 		{
-			int ch = prefix[i] - 'a';
-			if (!p->child[ch])	return false;
-			p = p->child[ch];
+			if (p->isWord)	return true;
+			for (int i = 0; i != 26; i++)
+			{
+				if (p->child[i])		return true;
+			}
+			return false;
 		}
-		return true;
+
+		int ch = prefix[i] - 'a';
+		return (p->child[ch] && prefixRecur(prefix, i+1, p->child[ch]));
 	}
 
 private:
 	TrieNode* root;
 };
 
-// Your Trie object will be instantiated and called as such:
-// Trie trie;
-// trie.insert("somestring");
-// trie.search("key");
-
 int main()
 {
+
 	return 0;
 }
