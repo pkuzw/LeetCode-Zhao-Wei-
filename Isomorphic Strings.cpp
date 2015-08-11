@@ -4,7 +4,9 @@ Given two strings s and t, determine if they are isomorphic.
 
 Two strings are isomorphic if the characters in s can be replaced to get t.
 
-All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.
+All occurrences of a character must be replaced with another character while preserving the order of characters.
+
+No two characters may map to the same character but a character may map to itself.
 
 For example,
 Given "egg", "add", return true.
@@ -20,12 +22,15 @@ You may assume both s and t have the same length.
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <unordered_map>
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定两个等长字符串，判断它们能否互相转换，转换时要求每个字符只能对应为另一种字符，包括它自己
 	///@param	s, t	两个字符串
@@ -65,12 +70,50 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool isIsomorphic(string s, string t) {
+		if (s.size() != t.size())	return false;
+
+		unordered_map<char, char> ht1, ht2;
+		bool flg1 = true, flg2 = true;
+
+		for (int i = 0; i != s.size(); i++)
+		{
+			if (ht1.find(s[i]) != ht1.end())
+			{
+				if (t[i] != ht1[s[i]])	flg1 = false;
+			}
+			else
+			{
+				ht1[s[i]] = t[i];
+			}
+		}
+
+		for (int i = 0; i != t.size(); i++)
+		{
+			if (ht2.find(t[i]) != ht2.end())
+			{
+				if (s[i] != ht2[t[i]])	flg2 = false;
+			}
+			else
+			{
+				ht2[t[i]] = s[i];
+			}
+		}
+		return flg1 && flg2;
+	}
+};
+
 int main()
 {
-	string s = "ab";
-	string t = "ab";
+	string s = "aab";
+	string t = "aaa";
 
 	Solution slt;
 	bool rslt = slt.isIsomorphic(s, t);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.isIsomorphic(s, t);
 	return 0;
 }
