@@ -2,7 +2,13 @@
 /*
 Write an algorithm to determine if a number is "happy".
 
-A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+A happy number is a number defined by the following process: Starting with any positive integer, 
+
+replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 
+
+(where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends 
+
+in 1 are happy numbers.
 
 Example: 19 is a happy number
 
@@ -16,12 +22,15 @@ Example: 19 is a happy number
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <vector>
 #include <unordered_set>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断一个数能否通过将各位平方后求和，迭代的最后结果是1
 	///@param	n	整数
@@ -49,10 +58,40 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool isHappy(int n) {
+		unordered_set<int> ht;
+		int k = n;
+		while (1)
+		{
+			vector<int> digits;
+			while (k)
+			{
+				digits.push_back(k % 10);
+				k /= 10;
+			}
+			int sum = 0;
+			for (int i = 0; i != digits.size(); i++)
+			{
+				sum += digits[i] * digits[i];
+			}
+			if (sum == 1)	break;
+			if (ht.find(sum) != ht.end())	return false;
+			ht.insert(sum);
+			k = sum;
+		}
+		return true;
+	}
+};
+
 int main()
 {
-	int n = 1;
+	int n = 263;
+	Solution_v1 slt_v1;
+	bool rslt = slt_v1.isHappy(n);
+
 	Solution slt;
-	bool rslt = slt.isHappy(n);
+	rslt = slt.isHappy(n);
 	return 0;
 }
