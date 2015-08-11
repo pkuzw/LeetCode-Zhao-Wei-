@@ -11,11 +11,14 @@ If this function is called many times, how would you optimize it?
 ///@date	2015.07.24
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <cstdint>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将一个十进制uint32_t数转换成二进制，然后计算出它的二进制逆序的十进制数
 	///@param	n	十进制整数
@@ -43,6 +46,32 @@ public:
 			reverse_uint32 += binary_cnt[31-i]*cnt[i];
 		}
 		return reverse_uint32;
+	}
+};
+
+class Solution {
+public:
+	uint32_t reverseBits(uint32_t n) {
+		vector<uint32_t> pow_of_2;
+		for (int i = 0; i <= 31; i++)
+			pow_of_2.push_back(1 << i);
+
+		vector<bool> rec(32, false);
+		for (int i = 31; i >= 0; i--)
+		{
+			if (n >= pow_of_2[i])
+			{
+				n -= pow_of_2[i];
+				rec[i] = true;
+			}
+		}
+
+		uint32_t rslt = 0;
+		for (int i = 0; i <= 31; i++)
+		{
+			rslt += rec[i] ? pow_of_2[31 - i] : 0;
+		}
+		return rslt;
 	}
 };
 
