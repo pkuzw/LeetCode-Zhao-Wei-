@@ -19,13 +19,16 @@ Return ["eat","oath"].
 ///@date	2015.07.30
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <vector>
 #include <string>
 #include <unordered_set>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	前缀树节点前缀树的每个节点下面有26个子节点，相当于26个字母
 	struct TrieNode {
@@ -75,11 +78,12 @@ public:
 		}
 		return res;
 	}
+
 private:
 	void search(vector<vector<char> > &board, TrieNode *p, int i, int j, vector<vector<bool> > &visit, vector<string> &res) { 
 		if (!p->str.empty()) {
 			res.push_back(p->str);
-			p->str.clear();
+			p->str.clear();	//	词典中的单词如果找到了，就不必再找。将前缀树中的单词删除
 		}
 		int d[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 		visit[i][j] = true;
@@ -91,7 +95,10 @@ private:
 		}
 		visit[i][j] = false;
 	}
+};
 
+class Solution_tle {
+public:
 	///@brief	在二维矩阵中找到所有可能的词典中的单词
 	///@param	board	二维字符矩阵
 	///@param	words	词典
@@ -208,7 +215,99 @@ private:
 
 	int width;	//	矩阵的宽
 	int height;	//	矩阵的高
+};
 
+/*
+1. 用trie来保存词典；用深搜来查找单词；
+2. trieNode的isWord标志位改成了word，直接标出来到这个节点有哪个单词，便于压入结果数组；
+3. 在深搜时，要注意保证数组的下标都是有效值。
+*/
+class TrieNode {
+public:
+	TrieNode* child[26];
+	string word;
+
+	///@brief	constructor
+	TrieNode ()
+	{
+		for (int i = 0; i != 26; i++)
+			child[i] = nullptr;
+	}
+};
+
+class Trie {
+public:
+	///@brief	constructor
+	Trie ()
+	{
+		root = new TrieNode();
+	}
+
+	///@brief	insert one word
+	void insert(string word)
+	{
+		TrieNode* p = root;
+		for (int i = 0; i != word.size(); i++)
+		{
+			int ch = word[i] - 'a';
+			if (!p->child[ch])
+				p->child[ch] = new TrieNode();
+			p = p->child[ch];
+		}
+		p->word = word;
+	}	
+
+	TrieNode* root;
+};
+
+class Solution {
+public:
+	vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+		vector<string> rslt;
+		if (board.empty() || board[0].empty() || words.empty())	return rslt;
+		row = board.size();
+		col = board[0].size();
+
+		vector<vector<bool>> visited(row, vector<bool>(col, false));
+
+		Trie* trie = new Trie;
+		for (int i = 0; i != words.size(); i++)
+			trie->insert(words[i]);
+		
+		for (int i = 0; i != row; i++)
+		{
+			for (int j = 0; j != col; j++)
+			{
+				TrieNode* p = trie->root;
+				if (p->child[board[i][j] - 'a'])	
+					dfs(board, i, j, p->child[board[i][j] - 'a'], rslt, visited);
+			}
+		}
+		return rslt;
+	}
+private:
+	int row, col;
+
+	void dfs(vector<vector<char>>& board, int i, int j, TrieNode* p, vector<string>& rslt, vector<vector<bool>>& visited)
+	{
+		if (i < 0 || i >= row)		return;
+		if (j < 0 || j >= col)		return;
+		if (visited[i][j] || !p)	return;
+
+		if (!p->word.empty())
+		{
+			rslt.push_back(p->word);
+			p->word.clear();
+		}
+		
+		visited[i][j] = true;
+		//	凡是对于数组的访问，一定要保证下标是有效的
+		if (i + 1 < row)	dfs(board, i + 1, j, p->child[board[i + 1][j] - 'a'], rslt, visited);
+		if (i - 1 >= 0)		dfs(board, i - 1, j, p->child[board[i - 1][j] - 'a'], rslt, visited);
+		if (j + 1 < col)	dfs(board, i, j + 1, p->child[board[i][j + 1] - 'a'], rslt, visited);
+		if (j - 1 >= 0)		dfs(board, i, j - 1, p->child[board[i][j - 1] - 'a'], rslt, visited);
+		visited[i][j] = false;	// 因为不同的单词可以利用多次同一个字母，所以在递归后将visited标志位重置
+	}
 };
 
 int main()
@@ -259,16 +358,16 @@ int main()
 	words.push_back("pea");
 	words.push_back("eat");
 	words.push_back("rain");
-
-
-	words.push_back("pea");
-	words.push_back("eat");
-
-	words.push_back("pea");
-	words.push_back("eat");
-
-	words.push_back("pea");
-	words.push_back("eat");
+// 
+// 
+// 	words.push_back("pea");
+// 	words.push_back("eat");
+// 
+// 	words.push_back("pea");
+// 	words.push_back("eat");
+// 
+// 	words.push_back("pea");
+// 	words.push_back("eat");
 
 	Solution slt;
 	vector<string> rslt = slt.findWords(board, words);
