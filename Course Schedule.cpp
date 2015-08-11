@@ -14,12 +14,19 @@ There are a total of 2 courses to take. To take course 1 you should have finishe
 2, [[1,0],[0,1]]
 There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
 */
+///@author	zhaowei
+///@date	2015.08.03
+///@version	1.0
+
+///@date	2015.08.11
+///@version 2.0
+
 #include <vector>
 #include <queue>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断能否完成这些课程
 	///@param	numCourses		课程数目
@@ -64,7 +71,56 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+		vector<vector<int>> grp(numCourses, vector<int>(0));
+		vector<int> pre_cnt(numCourses, 0);
+
+		for (int i = 0; i != prerequisites.size(); i++)
+		{
+			grp[prerequisites[i].second].push_back(prerequisites[i].first);
+			pre_cnt[prerequisites[i].first]++;
+		}
+
+		queue<int> que;
+		for (int i = 0; i != numCourses; i++)
+		{
+			if (pre_cnt[i] == 0)	que.push(i);
+		}
+
+		while (!que.empty())
+		{
+			int frt = que.front();
+			que.pop();
+
+			for (int i = 0; i != grp[frt].size(); i++)
+			{
+				pre_cnt[grp[frt][i]]--;
+				if (pre_cnt[grp[frt][i]] == 0)	que.push(grp[frt][i]);
+			}
+		}
+
+		for (int i = 0; i != numCourses; i++)
+		{
+			if (pre_cnt[i])	return false;
+		}
+		return true;
+	}
+};
+
 int main()
 {
+	vector<pair<int, int>> prerequisites;
+	prerequisites.push_back(make_pair(1, 0));
+	prerequisites.push_back(make_pair(2, 1));
+	prerequisites.push_back(make_pair(3, 2));
+	prerequisites.push_back(make_pair(0, 2));
+
+	Solution slt;
+	bool rslt = slt.canFinish(4, prerequisites);
+
+	Solution_v1 slt_v1;
+	rslt = slt.canFinish(4, prerequisites);
 	return 0;
 }
