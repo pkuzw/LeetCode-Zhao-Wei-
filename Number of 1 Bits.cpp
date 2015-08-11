@@ -2,18 +2,21 @@
 /*
 Write a function that takes an unsigned integer and returns the number of ’1' bits it has (also known as the Hamming weight).
 
-For example, the 32-bit integer ’11' has binary representation 00000000000000000000000000001011, so the function should return 3.
+For example, the 32-bit integer '11' has binary representation 00000000000000000000000000001011, so the function should return 3.
 */
 ///@author	zhaowei
 ///@date	2015.07.24
 ///@version	1.0
+
+///@date	2015.08.11
+///@version	2.0
 
 #include <cstdint>	//	uint32_t
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	统计一个unsigned int的二进制表示中有多少个'1'
 	///@param	n	十进制的unsigned int参数
@@ -35,6 +38,26 @@ public:
 			}
 		}
 		return num_of_1;
+	}
+};
+
+class Solution {
+public:
+	int hammingWeight(uint32_t n) {
+		vector<uint32_t> pow_of_2;
+		for (int i = 0; i <= 31; i++)
+			pow_of_2.push_back(1 << i);
+
+		int bit_1_cnt = 0;
+		for (int i = pow_of_2.size()-1; i >= 0; i--)
+		{
+			if (n >= pow_of_2[i])
+			{
+				n -= pow_of_2[i];
+				bit_1_cnt++;
+			}
+		}
+		return bit_1_cnt;
 	}
 };
 
