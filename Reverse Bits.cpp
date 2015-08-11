@@ -49,7 +49,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	uint32_t reverseBits(uint32_t n) {
 		vector<uint32_t> pow_of_2;
@@ -70,6 +70,23 @@ public:
 		for (int i = 0; i <= 31; i++)
 		{
 			rslt += rec[i] ? pow_of_2[31 - i] : 0;
+		}
+		return rslt;
+	}
+};
+
+/*
+位操作。只需要将当前数字的二进制表示从右至左析取出来，然后添加到新数字的末端即可
+*/
+class Solution {
+public:
+	uint32_t reverseBits(uint32_t n) {
+		uint32_t rslt = 0;
+		for (int i = 0; i <= 31; i++)
+		{
+			if (n & 1 == 1)	rslt = (rslt << 1) + 1;
+			else			rslt <<= 1;
+			n >>= 1;
 		}
 		return rslt;
 	}
