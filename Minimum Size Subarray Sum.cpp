@@ -9,11 +9,14 @@ the subarray [4,3] has the minimal length under the problem constraint.
 ///@date	2015.08.04
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算最短子串和不小于指定值的长度
 	///@param	s	指定值
@@ -43,6 +46,31 @@ public:
 	}
 };
 
+/*
+设置左右两个指针，先将右值针选定到能够使得和大于等于s的位置，然后将左指针尽可能的向右移动，然后记录下满足条件的最短距离；
+然后继续移动右值针，直到到达右边界，期间只要能够使得范围内的数之和大于等于指定值就停止移动，并开始移动左指针。
+最后输出这个过程中记录的最小范围。
+*/
+class Solution {
+public:
+	int minSubArrayLen(int s, vector<int>& nums) {
+		int l = 0, r = 0;
+		int rslt = INT_MAX;
+		int sum = 0;
+
+		while (r < nums.size())
+		{
+			sum += nums[r++];
+			while (sum >= s)
+			{
+				sum -= nums[l++];
+				rslt = min(rslt, r-l+1);
+			}
+		}
+		return rslt == INT_MAX ? 0 : rslt;
+	}
+};
+
 int main()
 {
 	vector<int> nums;	//2,3,1,2,4,3
@@ -54,5 +82,8 @@ int main()
 	nums.push_back(3);
 	Solution slt;
 	int rslt = slt.minSubArrayLen(10, nums);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.minSubArrayLen(10, nums);
 	return 0;
 }
