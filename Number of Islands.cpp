@@ -1,6 +1,10 @@
 ﻿///@file	Number of Islands
 /*
-Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. 
+
+You may assume all four edges of the grid are all surrounded by water.
 
 Example 1:
 
@@ -24,10 +28,13 @@ Answer: 3
 ///@date	2015.08.04
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算岛屿个数
 	///@param	grid	地图：1为陆地，0为海洋
@@ -73,6 +80,46 @@ private:
 	}
 };
 
+class Solution {
+public:
+	int numIslands(vector<vector<char>>& grid) {
+		if (grid.empty())	return 0;
+		row = grid.size();
+		col = grid[0].size();
+		vector<vector<bool>> visited(row, vector<bool>(col, false));
+
+		int islands_cnt = 0;
+		for (int i = 0; i != row; i++)
+		{
+			for (int j = 0; j != col; j++)
+			{
+				if (!visited[i][j] && grid[i][j] == '1')
+				{
+					dfs(grid, i, j, visited);
+					islands_cnt++;
+				}
+			}
+		}
+		return islands_cnt;
+	}
+
+private:
+	void dfs(vector<vector<char>>& grid, int i, int j, vector<vector<bool>>& visited)
+	{
+		if (i < 0 || i >= row)	return;
+		if (j < 0 || j >= col)	return;
+		if (visited[i][j] || grid[i][j] == '0')	return;
+
+		visited[i][j] = true;
+		dfs(grid, i + 1, j, visited);
+		dfs(grid, i - 1, j, visited);
+		dfs(grid, i, j + 1, visited);
+		dfs(grid, i, j - 1, visited);
+	}
+
+	int row, col;
+};
+
 int main()
 {
 	vector<vector<char>> grid;
@@ -111,6 +158,9 @@ int main()
 
 	Solution slt;
 	int rslt = slt.numIslands(grid);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.numIslands(grid);
 	return 0;
 }
 /*
