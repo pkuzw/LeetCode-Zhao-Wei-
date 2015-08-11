@@ -9,11 +9,14 @@ A linked list can be reversed either iteratively or recursively. Could you imple
 */
 ///@author	zhaowei
 ///@date	2015.07.20
-///@versio	1.0
+///@version	1.0
 
 ///@author	zhaowei
 ///@date	2015.07.21
-///@versio	1.1
+///@version	1.1
+
+///@date	2015.08.11
+///@version	2.0
 
 #include <iostream>
 #include <stack>
@@ -26,7 +29,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	翻转一个单链表
 	///@param	head	链表表头
@@ -102,14 +105,41 @@ public:
 	}
 };
 
+/*
+用两个临时变量来保存当前节点的后一个节点和当前节点的后一个节点的后一个节点。在翻转前，对只有0个或1个节点的情形直接返回头结点；然后处理普遍的
+情形。如果有两个以上的节点，先将头结点指向空指针，然后以当前节点的后继节点是否为空来进行循环的判定条件，将后继节点的指针指向当前节点，然后
+依次后移当前节点和后继节点，对于后继节点的后继节点，再后移时要判断一下其是否有后继节点。最后退出循环后返回当前节点作为翻转后的头节点。
+*/
+class Solution {
+public:
+	ListNode* reverseList(ListNode* head) {
+		if (!head || !head->next)	return head;
+
+		ListNode* indx = head;
+		ListNode* indx_next = indx->next;
+		ListNode* indx_next_next = indx_next->next;
+		indx->next = nullptr;
+
+		while (indx_next)
+		{
+			indx_next->next = indx;
+			indx = indx_next;
+			indx_next = indx_next_next;
+			if (indx_next_next)
+				indx_next_next = indx_next_next->next;
+		}
+		return indx;
+	}
+};
+
 int main()
 {
-	Solution slt;
+	Solution_v1 slt_v1;
 	ListNode* head = new ListNode(1);
- 	slt.insertNode(head, 2);
- 	slt.insertNode(head, 3);
- 	slt.insertNode(head, 4);
- 	slt.insertNode(head, 5);
+ 	slt_v1.insertNode(head, 2);
+ 	slt_v1.insertNode(head, 3);
+ 	slt_v1.insertNode(head, 4);
+ 	slt_v1.insertNode(head, 5);
 
 	ListNode* display = head;
 	cout << "Before: ";
@@ -121,7 +151,10 @@ int main()
 	}
 	cout << endl;
 
-	head = slt.reverseList_Space_O_1(display);
+	head = slt_v1.reverseList_Space_O_1(display);
+
+	Solution slt;
+	ListNode* rslt = slt.reverseList(head);
 
 	cout << "After: ";
 	while (head != nullptr)
