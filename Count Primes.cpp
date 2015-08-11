@@ -6,10 +6,13 @@ Count the number of prime numbers less than a non-negative number, n.
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.11
+///@version	2.0
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算从1到n-1的素数个数
 	///@param	n	范围上限
@@ -38,10 +41,35 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int countPrimes(int n) {
+		vector<bool> candidates(n+1, true);
+		float tmp = n;
+		int x = sqrt(tmp);
+		for (int i = 2; i <= x; i++)
+		{
+			for (int j = 2; i * j < n; j++)
+			{
+				candidates[i * j] = false;
+			}
+		}
+
+		int cnt = 0;
+		for (int i = 2; i < n; i++)
+			if (candidates[i])	cnt++;
+
+		return cnt;
+	}
+};
+
 int main()
 {
-	int n = 100;
+	int n = 12000;
+	Solution_v1 slt_v1;
+	int rslt = slt_v1.countPrimes(n);
+
 	Solution slt;
-	bool rslt = slt.countPrimes(n);
+	rslt = slt.countPrimes(n);
 	return 0;
 }
