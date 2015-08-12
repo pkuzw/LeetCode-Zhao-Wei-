@@ -1,4 +1,4 @@
-///@file	Reverse Words in a String II
+ï»¿///@file	Reverse Words in a String II
 /*
 Given an input string, reverse the string word by word. A word is defined as a sequence of non-space characters.
 
@@ -22,10 +22,10 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	½«×Ö·û´®ÖĞµÄµ¥´Ê·´×ª¹ıÀ´
-	///@param	s	×Ö·û´®
-	///@return	ÎŞ
-	///@note	ÏÈ±éÀúÒ»±ßÊı×é£¬¼ÇÂ¼ÏÂ¿Õ¸ñµÄÎ»ÖÃ£¬È»ºóÀûÓÃreverseº¯Êı½«µ¥´ÊÖğ¸ö·­×ª¡£Ê±¼ä¸´ÔÓ¶ÈÎªO(n)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(1)¡£
+	///@brief	å°†å­—ç¬¦ä¸²ä¸­çš„å•è¯åè½¬è¿‡æ¥
+	///@param	s	å­—ç¬¦ä¸²
+	///@return	æ— 
+	///@note	å…ˆéå†ä¸€è¾¹æ•°ç»„ï¼Œè®°å½•ä¸‹ç©ºæ ¼çš„ä½ç½®ï¼Œç„¶ååˆ©ç”¨reverseå‡½æ•°å°†å•è¯é€ä¸ªç¿»è½¬ã€‚æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(1)ã€‚
 	void reverseWords(string &s) {		
 		vector<int> sp;
 		for (int i = 0; i != s.size(); i++)
