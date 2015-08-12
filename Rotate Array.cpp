@@ -66,18 +66,12 @@ public:
 class Solution {
 public:
 	void rotate(vector<int>& nums, int k) {
-		if (k % nums.size() == 0)	return;
+		k %= nums.size();
+		if (!k)	return;
 
-		while (k--)
-		{
-			int tmp = nums.front();
-			for (int i = 1; i != nums.size(); i++)
-			{
-				nums[i-1] = nums[i];
-			}
-			nums.pop_back();
-			nums.push_back(tmp);
-		}
+		reverse(nums.begin(), nums.end());
+		reverse(nums.begin(), nums.begin() + k);
+		reverse(nums.begin() + k, nums.end());
 	}
 };
 
@@ -88,6 +82,6 @@ int main()
 		nums.push_back(i);
 
 	Solution slt;
-	slt.rotate(nums, 13);
+	slt.rotate(nums, 3);
 	return 0;
 }
