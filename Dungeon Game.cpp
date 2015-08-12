@@ -18,10 +18,14 @@ Any room can contain threats or power-ups, even the first room the knight enters
 ///@author	zhaowei
 ///@date	2015.08.01
 ///@version	1.0
+
+///@date	2015.08.12
+///@version	2.0
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算到达右下角的最小HP
 	///@param	dungeon	二维矩阵地图
@@ -52,7 +56,50 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int calculateMinimumHP(vector<vector<int>>& dungeon) {
+		if (dungeon.empty())	return 1;
+		int row = dungeon.size();
+		int col = dungeon[0].size();
+		vector<vector<int>> dp(row, vector<int>(col, 0));
+		dp[row-1][col-1] = max(1, 1 - dungeon[row-1][col-1]);
+		for (int i = row - 2; i >= 0; i--)
+			dp[i][col-1] = max(1, dp[i+1][col-1] - dungeon[i][col-1]);
+		for (int i = col - 2; i >= 0; i--)
+			dp[row-1][i] = max(1, dp[row-1][i+1] - dungeon[row-1][i]);
+		for (int i = row - 2; i >= 0; i--)
+			for (int j = col - 2; j >= 0; j--)
+				dp[i][j] = max(1, min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j]);
+		return dp[0][0];
+	}
+};
+
 int main()
 {
+	vector<vector<int>> dungeon;
+	vector<int> line;
+	line.push_back(-2);
+	line.push_back(-3);
+	line.push_back(3);
+	dungeon.push_back(line);
+	line.clear();
+
+	line.push_back(-5);
+	line.push_back(-10);
+	line.push_back(1);
+	dungeon.push_back(line);
+	line.clear();
+
+	line.push_back(10);
+	line.push_back(30);
+	line.push_back(-5);
+	dungeon.push_back(line);
+	line.clear();
+
+	Solution slt;
+	Solution_v1 slt_v1;
+	int hp = slt.calculateMinimumHP(dungeon);
+	hp = slt_v1.calculateMinimumHP(dungeon);
 	return 0;
 }
