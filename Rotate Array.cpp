@@ -63,6 +63,23 @@ public:
 	}
 };
 
+class Solution {
+public:
+	void rotate(vector<int>& nums, int k) {
+		if (k % nums.size() == 0)	return;
+
+		while (k--)
+		{
+			int tmp = nums.front();
+			for (int i = 1; i != nums.size(); i++)
+			{
+				nums[i-1] = nums[i];
+			}
+			nums.pop_back();
+			nums.push_back(tmp);
+		}
+	}
+};
 
 int main()
 {
