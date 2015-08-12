@@ -10,13 +10,16 @@ Note: The result may be very large, so you need to return a string instead of an
 ///@date	2015.08.04
 ///@version	1.0
 
+///@date	2015.08.12
+///@version	2.0
+
 #include <string>
 #include <algorithm>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一组非负正数，把它们组合起来，找出最大的组合数
 	///@param	nums	数组
@@ -46,14 +49,39 @@ private:
 	}myCmp;
 };
 
+/*
+精华在于自定义的比较函数。将两个整数转换成字符串，然后利用字符串之和的比较规则来定义排序规则，真是妙！
+*/
+class Solution {
+public:
+	string largestNumber(vector<int>& nums) {
+		string rslt;
+		sort(nums.begin(), nums.end(), myCmp);
+		if (!nums.front())	return "0";
+		for (int i = 0; i != nums.size(); i++)
+			rslt += to_string(static_cast<long long>(nums[i]));
+		return rslt;
+	}
+
+private:
+	struct myClass{
+		bool operator() (const int& a, const int& b)
+		{
+			string s1 = to_string(static_cast<long long>(a));
+			string s2 = to_string(static_cast<long long>(b));
+			return s1 + s2 > s2 + s1;
+		}
+	}myCmp;
+};
+
 int main()
 {
 	vector<int> nums;
 	nums.push_back(0);
 	nums.push_back(0);
- 	nums.push_back(3);
- 	nums.push_back(5);
- 	nums.push_back(9);
+ 	nums.push_back(0);
+ 	nums.push_back(0);
+ 	nums.push_back(0);
 
 	Solution slt;
 	string rslt = slt.largestNumber(nums);
