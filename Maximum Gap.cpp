@@ -11,12 +11,16 @@ You may assume all elements in the array are non-negative integers and fit in th
 ///@author	zhaowei
 ///@date	2015.07.30
 ///@version	1.0
+
+///@date	2015.08.13
+///@version	2.0
+
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一组乱序的数组，找出排好序后两个相邻元素的最大差值。要求时间复杂度为O(n)，空间复杂度为O(n)
 	///@param	nums	数组
@@ -68,11 +72,55 @@ public:
 	}
 };
 
+/*
+桶排序。桶的容量 = （最大值 - 最小值） / 元素数 + 1；桶的数目 = (最大值 - 最小值) / 桶容量 + 1。排好序的元素的最大差值为相邻两个桶的
+后桶最小值减去前桶最大值的最大差值。
+*/
+class Solution {
+public:
+	int maximumGap(vector<int>& nums) {
+		if (nums.size() < 2)	return 0;
+		int max_num = INT_MIN;
+		int min_num = INT_MAX;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (nums[i] > max_num)	max_num = nums[i];
+			if (nums[i] < min_num)	min_num = nums[i];
+		}
+
+		unsigned bucket_capacity = (max_num - min_num) / nums.size() + 1;
+		unsigned bucket_num = (max_num - min_num) / bucket_capacity + 1;
+		vector<int>max_bucket(bucket_num, INT_MIN);
+		vector<int>min_bucket(bucket_num, INT_MAX);
+
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (nums[i] > max_bucket[(nums[i] - min_num) / bucket_capacity])	
+				max_bucket[(nums[i] - min_num) / bucket_capacity] = nums[i];
+			if (nums[i] < min_bucket[(nums[i] - min_num) / bucket_capacity])
+				min_bucket[(nums[i] - min_num) / bucket_capacity] = nums[i];			
+		}
+
+		int max_gap = INT_MIN;
+		int j = 0;
+		for (int i = 1; i != bucket_num; i++)
+		{
+			if (min_bucket[i] == INT_MAX || max_bucket[j] == INT_MIN)	continue;
+			if (min_bucket[i] - max_bucket[j] > max_gap)
+			{
+				max_gap = min_bucket[i] - max_bucket[j];				
+			}
+			j = i;
+		}
+		return max_gap;
+	}
+};
+
 int main()
 {
 	vector<int> nums;
-	int n[] = {1, 10000000};
-	for (int i = 0; i != 2; i++)
+	int n[] = {3, 6, 9, 1};
+	for (int i = 0; i != 4; i++)
 		nums.push_back(n[i]);
 
 	Solution slt;
