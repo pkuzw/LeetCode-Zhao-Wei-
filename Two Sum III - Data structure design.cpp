@@ -20,21 +20,17 @@ using namespace std;
 class TwoSum {
 public:
 	void add(int number) {		
-			ht[number]++;
+		ht[number]++;
 	}
 
 	bool find(int value) {
-		for (unordered_map<int, int>::iterator i = ht.begin(); i != ht.end(); i++)
+		for (unordered_map<int, int>::iterator it = ht.begin(); it != ht.end(); it++)
 		{
-			i->second--;
-			if (ht.find(value - i->first) == ht.end() || !ht[value - i->first])
-			{
-				i->second++;
-				continue;
-			}
-			else if (ht[value - i->first])
-			{
-				i->second++;
+			int i = it->first;
+			int j = value - it->first;
+			if ((i == j && it->second > 1) || 
+				(i != j && ht.find(j) != ht.end()))
+			{			
 				return true;
 			}		
 		}
