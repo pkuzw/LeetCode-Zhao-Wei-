@@ -16,13 +16,16 @@ For example:
 ///@date	2015.07.26
 ///@version	1.0
 
+///@date	2015.08.13
+///@version	2.0
+
 #include <string>
 #include <vector>
 #include <cmath>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将int型正整数转换成二十六进制整数:A, B, C, ..., Z, AA, AB, ...
 	///@param	n	十进制整数
@@ -39,8 +42,21 @@ public:
 		}
 		return s;
 	}
+};
 
-
+class Solution {
+public:
+	string convertToTitle(int n) {
+		string rslt;
+		while (n)
+		{
+			n--;
+			int i = n % 26;
+			rslt = char('A' + i) + rslt;
+			n /= 26;
+		}
+		return rslt;
+	}
 };
 
 int main()
