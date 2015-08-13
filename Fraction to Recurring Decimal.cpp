@@ -14,6 +14,9 @@ Given numerator = 2, denominator = 3, return "0.(6)".
 ///@date	2015.08.02
 ///@version	1.0
 
+///@date	2015.08.13
+///@version	2.0
+
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -21,7 +24,7 @@ Given numerator = 2, denominator = 3, return "0.(6)".
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将分数转换成小数
 	///@param	numerator	分子
@@ -61,11 +64,59 @@ public:
 	}
 };
 
+class Solution {
+public:
+	string fractionToDecimal(int numerator, int denominator) {
+		if (!denominator)	return "";
+		if (!numerator)		return "0";
+
+		int sign_n = (numerator < 0) ? -1 : 1;
+		int sign_d = (denominator < 0) ? -1 : 1;
+		long long num = abs((long long)numerator);	//	将除数和被除数都转换成正数，便于后续处理
+		long long den = abs((long long)denominator);//	这里要将int型转换成long long型变量，否则遇到INT_MIN，就会溢出
+		long long out = num / den;
+		long long rem = num % den;
+
+		string rslt = to_string(out);
+		if (sign_d * sign_n == -1)	rslt = "-" + rslt;
+		if (!rem)	return rslt;
+
+		rslt += ".";
+		unordered_map<long long, int> ht;	//	记录循环部分的起始下标
+		string s;
+		int pos = 0;
+		while (rem)
+		{
+			if (ht.find(rem) != ht.end())
+			{
+				s.insert(ht[rem], "(");
+				s += ")";
+				return rslt + s;
+			}
+			else
+			{
+				s += to_string(rem * 10 / den);
+				ht[rem] = pos;
+				rem = rem * 10 % den;
+				pos++;
+			}
+		}
+		return rslt + s;
+	}
+};
+
 int main()
 {
 	double a, b;
-	a = 4;
-	b = 17;
+	a = -1;
+	b = -2147483648;
 	cout << a/b << endl;
+
+	Solution_v1 slt_v1;
+	string rslt = slt_v1.fractionToDecimal(-1, INT_MIN);
+
+	Solution slt;
+	rslt = slt.fractionToDecimal(-1, INT_MIN);
+
 	return 0;
 }
