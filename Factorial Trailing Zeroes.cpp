@@ -8,11 +8,14 @@ Note: Your solution should be in logarithmic time complexity.
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.13
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算n!的末尾的0的数目
 	///@param	n	正整数
@@ -30,10 +33,26 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int trailingZeroes(int n) {
+		int rslt = 0;
+		while (n)
+		{
+			rslt += n / 5;
+			n /= 5;
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	int n = 150;
 	Solution slt;
 	int rslt = slt.trailingZeroes(n);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.trailingZeroes(n);
 	return 0;
 }
