@@ -15,12 +15,16 @@ Here is an example of version numbers ordering:
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.13
+///@version	2.0
+
 #include <vector>
 #include <string>
+#include <queue>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	比较两个版本号的大小
 	///@param	version1, version2	版本号
@@ -90,6 +94,54 @@ private:
 			num += int(s[i]-'0')*dec[s.length()-i-1];
 		}
 		return num;
+	}
+};
+
+class Solution {
+public:
+	int compareVersion(string version1, string version2) {
+		queue<int> v1 = parse(version1);
+		queue<int> v2 = parse(version2);
+
+		if (v1.size() < v2.size())
+		{
+			while (v1.size() != v2.size())
+				v1.push(0);
+		}
+		else if (v1.size() > v2.size())
+		{
+			while (v1.size() != v2.size())
+				v2.push(0);
+		}
+		while (!v1.empty())
+		{
+			int t1 = v1.front();
+			int t2 = v2.front();
+			v1.pop();
+			v2.pop();
+			if (t1 < t2)		return -1;
+			else if (t1 > t2)	return 1;			
+		}
+		return 0;
+	}
+
+	queue<int> parse(string s)
+	{
+		queue<int> que;
+		vector<int> dot;
+		for (int i = 0; i != s.size(); i++)
+			if (s[i] == '.')	dot.push_back(i);
+		if (dot.empty())
+		{
+			que.push(stoi(s));
+			return que;
+		}
+
+		que.push(stoi(s.substr(0, dot.front())));
+		for (int i = 0; i != dot.size()-1; i++)
+			que.push(stoi(s.substr(dot[i]+1, dot[i+1]-dot[i]-1)));
+		que.push(stoi(s.substr(dot.back()+1)));
+		return que;
 	}
 };
 
