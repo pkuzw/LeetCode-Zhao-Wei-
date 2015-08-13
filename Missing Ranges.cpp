@@ -22,7 +22,7 @@ public:
 	///@return	返回缺失的数组范围
 	///@note	枚举法。利用左右两个指针来标定缺失的范围。从下限开始枚举，如果没有遇到已经存在的元素，则继续向后，直到遇到存在的元素，停止移动并转换为字符串压入结果数组；然后继续
 	//			向后枚举直到上限。时间复杂度为O(k)，k为数组长度，空间复杂度为O(1)。	
-	vector<string> findMissingRanges_tle(vector<int>& nums, int lower, int upper) {
+	vector<string> findMissingRanges(vector<int>& nums, int lower, int upper) {
 		vector<string> rslt;
 		if (nums.empty())	//	处理数组为空的情形
 		{
@@ -76,6 +76,6 @@ int main()
  	for (int i = 0; i != 10; i++)
  		nums.push_back(n[i]);
 	Solution slt;
-	vector<string> rslt = slt.findMissingRanges_tle(nums, -1000000000, 1000000000);
+	vector<string> rslt = slt.findMissingRanges(nums, -1000000000, 1000000000);
 	return 0;
 }
