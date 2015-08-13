@@ -16,13 +16,16 @@ For example:
 ///@date	2015.07.26
 ///@version	1.0
 
+///@date	2015.08.13
+///@version	2.0
+
 #include <string>
 #include <vector>
 #include <cmath>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将二十六进制整数:A, B, C, ..., Z, AA, AB转换成十进制整型变量
 	///@param	s	二十六进制整数
@@ -53,11 +56,36 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int titleToNumber(string s) {
+		vector<int> pow_of_26;
+		double k = 0;
+		while (1)
+		{
+			double l = pow(26, k);
+			k = k + 1;
+			if (l > INT_MAX)	break;
+			pow_of_26.push_back(int(l));
+		}
+		int rslt = 0;
+		if (s.empty())	return rslt;
+
+		int j = 0;
+		for (int i = s.size()-1; i >= 0; i--)
+			rslt += (s[i] - 'A' + 1) * pow_of_26[j++];
+		
+		return rslt;
+	}
+};
+
 int main()
 {
-	string s = "ZZZZZZ";
+	string s = "BA";
 	Solution slt;
-
 	int n = slt.titleToNumber(s);
+
+	Solution_v1 slt_v1;
+	n = slt_v1.titleToNumber(s);
 	return 0;
 }
