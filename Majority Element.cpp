@@ -8,12 +8,15 @@ You may assume that the array is non-empty and the majority element always exist
 ///@date	2015.07.26
 ///@version	1.0
 
+///@date	2015.08.13
+///@version	2.0
+
 #include <iostream>
 #include <unordered_map>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	如果数组中某个元素的出现次数大于等于一半，找到这个元素
 	///@param	nums	数组
@@ -35,9 +38,35 @@ public:
 	}
 };
 
+/*
+majority vote algorithm. 投票法能够找出一个数组中出现次数超过一半的元素。它的做法是将初始元素作为众数，然后开始遍历数组。在遍历数组的过程中，
+如果遇到和当前众数相同的元素，则计数器自增1，否则自减1；如果计数器已经到0，则将众数改变为当前元素，并修改计数器值。
+*/
+class Solution {
+public:
+	int majorityElement(vector<int>& nums) {
+		int a = 0;
+		int cnt = 0;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (nums[a] == nums[i])	cnt++;			
+			else
+			{
+				if (!cnt)
+				{
+					a = i;
+					cnt++;
+				}
+				else	cnt--;							
+			}
+		}
+		return nums[a];
+	}
+};
+
 int main()
 {
-	int n[10] = {1,1,1,1,1,1,2,3,4,5};
+	int n[10] = {1,1,1,1,2,2,2,2,2,5};
 	vector<int> nums;
 	for (int i = 0; i != 10; i++)
 		nums.push_back(n[i]);
