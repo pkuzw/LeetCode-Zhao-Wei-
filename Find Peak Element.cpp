@@ -60,9 +60,9 @@ public:
 
 int main()
 {
-	int n[3] = {1,2,3};
+	int n[7] = {1,2,3,5,6,4,2};
 	vector<int> nums;
-	for (int i = 0; i != 3; i++)
+	for (int i = 0; i != 7; i++)
 		nums.push_back(n[i]);
 	Solution slt;
 	int rslt = slt.findPeakElement(nums);
