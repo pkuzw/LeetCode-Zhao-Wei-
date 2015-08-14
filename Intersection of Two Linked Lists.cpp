@@ -23,6 +23,9 @@ Your code should preferably run in O(n) time and use only O(1) memory.
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.14
+///@version	2.0
+
 #include <vector>
 #include <iostream>
 
@@ -34,7 +37,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算两个链表融合的节点
 	///@param	headA	链表A
@@ -81,6 +84,44 @@ public:
 
 		return indxA;
     }
+};
+
+class Solution {
+public:
+	ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+		int lenA = 0, lenB = 0;
+		ListNode* indxA = headA, *indxB = headB;
+		while (indxA)
+		{
+			lenA++;
+			indxA = indxA->next;
+		}
+		while (indxB)
+		{
+			lenB++;
+			indxB = indxB->next;
+		}
+
+		indxA = headA;
+		indxB = headB;
+		if (lenA > lenB)
+		{
+			for (int i = 0; i != lenA - lenB; i++)
+				indxA = indxA->next;
+		}
+		else if (lenB > lenA)
+		{
+			for (int i = 0; i != lenB - lenA; i++)
+				indxB = indxB->next;
+		}
+
+		while (indxA != indxB)
+		{
+			indxA = indxA->next;
+			indxB = indxB->next;
+		}
+		return indxA;
+	}
 };
 
 int main()
