@@ -14,6 +14,10 @@ using namespace std;
 
 class Solution {
 public:
+	///@brief	计算最多只有两个不同字符组成的字符串的最大长度
+	///@param	s	字符串
+	///@return	返回字符串的最大长度
+	///@note	用左右指针l和r标定包含两个不同字符的字符串的最左边界和最右边界。遍历字符串即可。时间复杂度为O(n)，空间复杂度为O(1)。
 	int lengthOfLongestSubstringTwoDistinct(string s) {
 		if (s.size() < 3)	return s.size();	// 长度小于3的字符串，最多包含2个差异字符的长度为其本身长度		
 		int l = 0, r = 2;	//	左右指针，用于标定最多只有两个不同字符的字符串
@@ -32,15 +36,17 @@ public:
 			if (s[r] != a && s[r] != b)
 			{
 				rslt = max(rslt, r-l);
-				l++;
-				if (s[l] != a)	a = s[l];
+				while (s[l] == a)
+					l++;
+				a = s[l];
 			}
 			else
 			{
 				if (r != len-1)
 				{
-					r++;
-					if (s[r] != b)	b = s[r];
+					b = s[r];
+					while (s[r] == b)
+						r++;					
 				}			
 			}
 		}
