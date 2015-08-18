@@ -12,11 +12,14 @@ You may assume no duplicate exists in the array.
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.18
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	在一个已经排好序但部分翻转的数组中查找最小值
 	///@param	nums	数组
@@ -37,6 +40,22 @@ public:
 			else					r = m;
 		}
 
+		return (nums[l] < nums[r]) ? nums[l] : nums[r];
+	}
+};
+
+class Solution {
+public:
+	int findMin(vector<int>& nums) {
+		if (nums.size() == 1)	return nums[0];
+		int l = 0, r = nums.size()-1;
+		if (nums[l] < nums[r])	return nums[l];
+		while (l < r-1)
+		{
+			int m = (l + r) / 2;
+			if (nums[l] < nums[m])	l = m;
+			else r = m;
+		}
 		return (nums[l] < nums[r]) ? nums[l] : nums[r];
 	}
 };
