@@ -11,6 +11,9 @@ getMin() -- Retrieve the minimum element in the stack.
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.18
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -19,14 +22,14 @@ using namespace std;
 
 ///@brief	设计一个能支持检索最小元素的栈结构
 ///@note	用优先队列priority_queue来保存最小元素，这样在压入或弹出元素后就能维护住最小元素
-class MinStack {
+class MinStack_v1 {
 public:
-	MinStack()
+	MinStack_v1()
 	{
 		min_indx = INT_MAX;
 	}
 
-	~MinStack()
+	~MinStack_v1()
 	{
 		s.clear();
 	}
@@ -60,6 +63,30 @@ private:
 	vector<int> s;
 	int min_indx;
 	priority_queue<int, vector<int>, greater<int>> heap;
+};
+
+class MinStack {
+public:
+	void push(int x) {
+		stk.push_back(x);
+		heap.push(x);
+	}
+
+	void pop() {
+		if (stk.back() == heap.top())	heap.pop();
+		stk.pop_back();
+	}
+
+	int top() {
+		return stk.back();
+	}
+
+	int getMin() {
+		return heap.top();
+	}
+private:
+	priority_queue<int, vector<int>, greater<int>> heap;
+	vector<int> stk;
 };
 
 int main()
