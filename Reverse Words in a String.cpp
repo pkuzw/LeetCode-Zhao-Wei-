@@ -20,13 +20,16 @@ Reduce them to a single space in the reversed string.
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.18
+///@version	2.0
+
 #include <string>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	翻转字符串中的每个单词。
 	///@param	s	字符串
@@ -88,6 +91,30 @@ private:
 		for (int i = s.length()-1; i >= 0 && s[i] == ' '; i--)//去掉尾部空白符
 			space_cnt++;		
 		s = s.substr(0, s.length()-space_cnt);
+	}
+};
+
+///@note	先除去多余的空格，然后将每个单词按照相间1个空格的间距排列，然后将单个的单词反转，最后将整个的句子进行反转。
+//			i标记出遍历的数组下标到达了哪个位置；j表示单词结束的下标；k表示单词开始的下标；word_cnt表示单词的数目。时间复杂度为O(n)，空间复杂度为O(1)。
+class Solution {
+public:
+	void reverseWords(string &s)
+	{
+		int i = 0, j = 0, k = 0, word_cnt = 0;
+		while (1)
+		{
+			while (i < s.size() && s[i] == ' ')
+				i++;
+			if (i == s.size())	break;
+			if (word_cnt)	s[j++] = ' ';
+			k = j;
+			while (i < s.size() && s[i] != ' ')
+				s[j++] = s[i++];
+			reverse(s.begin() + k, s.begin() + j);
+			word_cnt++;
+		}
+		s.resize(j);
+		reverse(s.begin(), s.end());
 	}
 };
 
