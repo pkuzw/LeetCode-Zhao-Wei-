@@ -8,19 +8,23 @@ the contiguous subarray [2,3] has the largest product = 6.
 ///@author	zhaowei
 ///@date	2015.08.04
 ///@version	1.0
+
+///@date	2015.08.18
+///@version	2.0
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算整数型数组最大的连续子串乘积
 	///@param	nums	数组
 	///@return	返回最大的连续子串乘积
-	/* @note	动态规划：dp_max[i]表示包含nums[i]的连续元素的最大值，dp_min[i]表示包含nums[i]的连续元素的最小值。初始条件是dp_max[0] = nums[0]，
+	/* @note	动态规划：dp_max[i]表示包含nums[i]的连续元素的最大值，dp_min[i]表示包含nums[i]的连续元素的最小值。
+				初始条件是dp_max[0] = nums[0]，
 				dp_min[0] = nums[0]，递推关系式为dp_max[i] = max(nums[i], nums[i]*dp_max[i-1], nums[i]*dp_min[i-1])，
-				dp_min[i] = min(nums[i], nums[i]*dp_max[i-1], nums[i]*dp_min[i-1])。在求最大值的同时计算最小值是因为负数的最小值乘以负数
-				就会转化成正数。时间复杂度为O(n)，空间复杂度为O(1)。*/
+				dp_min[i] = min(nums[i], nums[i]*dp_max[i-1], nums[i]*dp_min[i-1])。在求最大值的同时计算最小值是因为负数的最小值
+				乘以负数就会转化成正数。时间复杂度为O(n)，空间复杂度为O(1)。*/
 	int maxProduct(vector<int>& nums) {
 		int dp_max = nums[0], dp_min = nums[0];
 		int rslt = nums[0];
@@ -30,6 +34,24 @@ public:
 			dp_max = max(max(nums[i], dp_max*nums[i]), dp_min*nums[i]);
 			dp_min = min(min(nums[i], tmp*nums[i]), dp_min*nums[i]);
 			rslt = max(dp_max, rslt);
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	int maxProduct(vector<int>& nums) {
+		vector<int> dp_max(nums.size(), INT_MIN);
+		vector<int> dp_min(nums.size(), INT_MAX);
+		dp_max[0] = nums[0];
+		dp_min[0] = nums[0];
+		int rslt = max(INT_MIN, dp_max[0]);
+		for (int i = 1; i != nums.size(); i++)
+		{
+			dp_max[i] = max(nums[i], max(nums[i] * dp_max[i-1], nums[i] * dp_min[i-1]));
+			dp_min[i] = min(nums[i], min(nums[i] * dp_max[i-1], nums[i] * dp_min[i-1]));
+			rslt = max(rslt, dp_max[i]);
 		}
 		return rslt;
 	}
