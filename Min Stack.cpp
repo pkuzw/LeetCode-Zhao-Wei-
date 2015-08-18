@@ -12,11 +12,12 @@ getMin() -- Retrieve the minimum element in the stack.
 ///@version	1.0
 
 ///@date	2015.08.18
-///@version	2.0
+///@version	2.1
 
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -65,7 +66,7 @@ private:
 	priority_queue<int, vector<int>, greater<int>> heap;
 };
 
-class MinStack {
+class MinStack_2 {
 public:
 	void push(int x) {
 		stk.push_back(x);
@@ -89,20 +90,56 @@ private:
 	vector<int> stk;
 };
 
+///@brief	利用两个栈来保存数据，其中一个是正常压入的数据；另一个是当前的最小值
+class MinStack {
+public:
+	void push(int x) {
+		stk.push(x);
+		if (min_stk.empty() || x <= min_stk.top())
+			min_stk.push(x);
+	}
+
+	void pop() {
+		if (stk.top() == min_stk.top())
+			min_stk.pop();
+		if (!stk.empty())
+			stk.pop();		
+	}
+
+	int top() {
+		if (!stk.empty())	return stk.top();
+	}
+
+	int getMin() {
+		if (!min_stk.empty())	return min_stk.top();
+	}
+private:
+	stack<int> stk;
+	stack<int> min_stk;
+};
+
 int main()
 {
+	/*push(2147483646),push(2147483646),push(2147483647),top,pop,getMin,pop,getMin,pop,push(2147483647),
+	top,getMin,push(-2147483648),top,getMin,pop,getMin*/
 	MinStack ms;
-    ms.push(2);
-	ms.push(0);
-	ms.push(3);
-	ms.push(0);
-	int m = ms.getMin();
+    ms.push(2147483646);
+	ms.push(2147483646);
+	ms.push(2147483647);
+	ms.top();
 	ms.pop();
-	m = ms.getMin();
+	ms.getMin();
 	ms.pop();
-	m = ms.getMin();
+	ms.getMin();
 	ms.pop();
-	m = ms.getMin();
+	ms.push(2147483647);
+	ms.top();
+	ms.getMin();
+	ms.push(-2147483648);
+	ms.top();
+	ms.getMin();
+	ms.pop();
+	ms.getMin();	
 		
 	return 0;
 }
