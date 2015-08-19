@@ -4,6 +4,8 @@
 ///@date	2015.08.03
 ///@version	1.0
 
+///@date	2015.08.19
+///@version	2.0
 #include <iostream>
 using namespace std;
 
@@ -13,7 +15,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	对链表进行O(nlogn)的排序，空间复杂度为O(1)。用归并排序实现。
 	///@param	head	头节点
@@ -65,6 +67,48 @@ private:
 		if (head1)	cur->next = head1;
 		if (head2)	cur->next = head2;
 
+		return rslt->next;
+	}
+};
+
+class Solution {
+public:
+	ListNode* sortList(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* fast = head, *slow = head;
+		while (fast->next && fast->next->next)
+		{
+			fast = fast->next->next;
+			slow = slow->next;
+		}
+		fast = slow->next;
+		slow->next = nullptr;
+		slow = head;
+
+		fast = sortList(fast);
+		slow = sortList(slow);
+		merge(fast, slow);
+	}
+private:
+	ListNode* merge(ListNode* a, ListNode* b)
+	{
+		ListNode* rslt = new ListNode(INT_MIN);
+		ListNode* cur = rslt;
+		while (a && b)
+		{
+			if (a->val < b->val)
+			{
+				cur->next = a;
+				a = a->next;
+			}
+			else
+			{
+				cur->next = b;
+				b = b->next;
+			}
+			cur = cur->next;
+		}
+		cur->next = a ? a : b;
 		return rslt->next;
 	}
 };
