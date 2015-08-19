@@ -12,6 +12,9 @@ Some examples:
 ///@date	2015.08.04
 ///@version	1.0
 
+///@date	2015.08.19
+///@version	2.0
+
 #include <iostream>
 #include <stack>
 #include <string>
@@ -19,7 +22,7 @@ Some examples:
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算逆波兰表达式的值
 	///@param	tokens	字符串数组：数字字符，或者+,-,*,/
@@ -71,6 +74,53 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int evalRPN(vector<string>& tokens) {
+		if (tokens.size() == 1)	return stoi(tokens.front());
+		
+		stack<int> stk;
+		for (int i = 0; i != tokens.size(); i++)
+		{
+			if (tokens[i] != "+" && tokens[i] != "-" && tokens[i] != "*" && tokens[i] != "/")
+				stk.push(stoi(tokens[i]));
+			else if (tokens[i] == "+")
+			{
+				int a = stk.top();
+				stk.pop();
+				int b = stk.top();
+				stk.pop();
+				stk.push(a + b);			
+			}
+			else if (tokens[i] == "-")
+			{
+				int a = stk.top();
+				stk.pop();
+				int b = stk.top();
+				stk.pop();
+				stk.push(b - a);			
+			}
+			else if (tokens[i] == "*")
+			{
+				int a = stk.top();
+				stk.pop();
+				int b = stk.top();
+				stk.pop();
+				stk.push(a * b);			
+			}
+			else
+			{
+				int a = stk.top();
+				stk.pop();
+				int b = stk.top();
+				stk.pop();
+				stk.push(b / a);			
+			}
+		}
+		return stk.top();
+	}
+};
+
 int main()
 {
 	/*
@@ -78,11 +128,11 @@ int main()
 	["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
 	*/
 	vector<string> tokens;
-	tokens.push_back("-2");
-	tokens.push_back("1");
+	tokens.push_back("4");
+	tokens.push_back("13");
+	tokens.push_back("5");
+	tokens.push_back("/");
 	tokens.push_back("+");
-	tokens.push_back("3");
-	tokens.push_back("*");
 	Solution slt;
 	int rslt = slt.evalRPN(tokens);
 	return 0;
