@@ -6,6 +6,9 @@ Given n points on a 2D plane, find the maximum number of points that lie on the 
 ///@date	2015.08.02
 ///@version	1.0
 
+///@date	2015.08.19
+///@version	2.0
+
 #include <vector>
 #include <unordered_map>
 using namespace std;
@@ -17,7 +20,7 @@ struct Point {
 	Point(int a, int b) : x(a), y(b) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一组点集，计算最大的共线的点数
 	///@param	points	点集
@@ -53,6 +56,30 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	int maxPoints(vector<Point>& points) {
+		unordered_map<float, int> ht;
+		int rslt = 0;
+		for (int i = 0; i != points.size(); i++)
+		{
+			int dup = 1;
+			ht.clear();
+			ht[INT_MIN] = 0;
+			for (int j = 0; j != points.size(); j++)
+			{
+				if (i == j)	continue;
+				if (points[i].x == points[j].x && points[i].y == points[j].y)	dup++;
+				else if (points[i].x == points[j].x && points[i].x != points[j].y)	ht[INT_MAX]++;
+				else	ht[float(points[i].y - points[j].y) / float(points[i].x - points[j].x)]++;				
+			}
+			for (unordered_map<float, int>::iterator iter = ht.begin(); iter != ht.end(); iter++)
+				rslt = max(rslt, iter->second + dup);
+		}
+		return rslt;
+	}
 };
 
 int main()
