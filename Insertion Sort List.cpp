@@ -6,6 +6,9 @@ Sort a linked list using insertion sort.
 ///@date	2015.08.03
 ///@version 1.0
 
+///@date	2015.08.19
+///@version	2.0
+
 #include <iostream>
 
 using namespace std;
@@ -16,7 +19,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	插入法排序
 	///@param	head	链表首节点
@@ -38,6 +41,28 @@ public:
 			head = next;
 		}
 		return res->next;
+	}
+};
+
+class Solution {
+public:
+	ListNode* insertionSortList(ListNode* head) {
+		if (!head || !head->next)	return head;
+
+		ListNode* rslt = new ListNode(INT_MIN);		//	这里必须要设置成最小值，以保证第一次插入的数肯定在rslt之后
+		ListNode* indx = head;
+		
+		while (indx)
+		{
+			ListNode* indx_next = indx->next;
+			ListNode* cur = rslt;	//	每次循环都要重置cur值
+			while (cur->next && cur->next->val <= indx->val)
+				cur = cur->next;
+			indx->next = cur->next;
+			cur->next = indx;
+			indx = indx_next;
+		}
+		return rslt->next;
 	}
 };
 
