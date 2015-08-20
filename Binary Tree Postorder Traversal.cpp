@@ -18,9 +18,10 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@version	1.0
 
 ///@date	2015.08.20
-///@version	2.0
+///@version	2.1
 
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -64,13 +65,14 @@ private:
 class Solution {
 public:
 	vector<int> postorderTraversal(TreeNode* root) {
-		postorderTraversal_Recur(root);
-		return rslt;
+		//postorderTraversal_Recur(root);
+		return postorderTraversal_Iter(root);
 	}
 
 private:
 	vector<int> rslt;
 
+	///@brief	递归版后序遍历
 	void postorderTraversal_Recur(TreeNode* root)
 	{
 		if (!root)	return;
@@ -78,6 +80,31 @@ private:
 		if (root->left)		postorderTraversal_Recur(root->left);
 		if (root->right)		postorderTraversal_Recur(root->right);
 		rslt.push_back(root->val); 
+	}
+
+	///@brief	迭代版后序遍历
+	vector<int> postorderTraversal_Iter(TreeNode* root)
+	{
+		if (!root)	return rslt;
+		stack<TreeNode*> stk;
+		stk.push(root);
+		TreeNode* visited = root;
+		while (!stk.empty())
+		{
+			TreeNode* node = stk.top();
+			if ((!node->left && !node->right) || node->left == visited || node->right == visited)	//	如果没有孩子，或者孩子节点已经被访问过，则输出
+			{
+				rslt.push_back(node->val);
+				stk.pop();
+				visited = node;
+			}
+			else
+			{
+				if (node->right)		stk.push(node->right);	//	应该是先右后左，这样在弹出的时候是先处理左孩子，再处理右孩子
+				if (node->left)		stk.push(node->left);	
+			}
+		}
+		return rslt;
 	}
 };
 int main()
