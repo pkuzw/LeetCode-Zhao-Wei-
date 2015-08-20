@@ -19,9 +19,10 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@version	1.0
 
 ///@date	2015.08.20
-///@version	2.0
+///@version	2.1
 
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -66,17 +67,38 @@ private:
 class Solution {
 public:
 	vector<int> preorderTraversal(TreeNode* root) {
-		preorderTraversal_Recur(root);
-		return rslt;
+// 		preorderTraversal_Recur(root);
+// 		return rslt;
+		return preorderTraversal_Iter(root);
 	}
+
 private:
 	vector<int> rslt;
+	///@brief	递归版前序遍历
 	void preorderTraversal_Recur(TreeNode* root)
 	{
 		if (!root)	return;
 		rslt.push_back(root->val);
 		if (root->left)		preorderTraversal_Recur(root->left);
 		if (root->right)		preorderTraversal_Recur(root->right);
+	}
+
+	///@brief	迭代版前序遍历
+	vector<int> preorderTraversal_Iter(TreeNode* root)
+	{
+		if (!root)	return rslt;
+		stack<TreeNode*> stk;
+		stk.push(root);
+		while (!stk.empty())
+		{
+			TreeNode* node = stk.top();
+			rslt.push_back(node->val);
+			stk.pop();
+
+			if (node->right)stk.push(node->right);
+			if (node->left)	stk.push(node->left);
+		}
+		return rslt;
 	}
 };
 
