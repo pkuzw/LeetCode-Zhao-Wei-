@@ -19,8 +19,12 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.20
+///@version	2.1
+
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -31,7 +35,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	中序遍历二叉树
 	///@param	root	二叉树
@@ -66,6 +70,48 @@ private:
 	vector<int> rslt;	//	记录结果
 };
 
+class Solution {
+public:
+	vector<int> inorderTraversal(TreeNode* root) {
+ 		inorderTraversal_Recur(root);
+ 		return rslt;
+//		return inorderTraversal_Iter(root);
+	}
+
+private:
+	vector<int> rslt;
+	///@brief	递归版中序遍历
+	void inorderTraversal_Recur(TreeNode* root)
+	{
+		if (!root)	return;
+		if (root->left)	inorderTraversal_Recur(root->left);
+		rslt.push_back(root->val);
+		if (root->right)inorderTraversal_Recur(root->right);
+	}
+
+	///@brief	迭代版中序遍历
+	vector<int> inorderTraversal_Iter(TreeNode* root)
+	{
+		if (!root)	return rslt;
+		stack<TreeNode*> stk;
+		TreeNode* node = root;
+
+		while (node || !stk.empty())
+		{
+			while (node)
+			{
+				stk.push(node);
+				node = node->left;
+			}
+			node = stk.top();
+			stk.pop();
+			rslt.push_back(node->val);			
+			node = node->right;
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -83,8 +129,11 @@ int main()
 	n2->left = n5;
 	n2->right = n6;
 
+	Solution_v1 slt_v1;
+	vector<int> rslt = slt_v1.inorderTraversal(root);
+
 	Solution slt;
-	vector<int> rslt = slt.inorderTraversal(root);
+	rslt = slt.inorderTraversal(root);
 	for (int i = 0; i != rslt.size(); i++)
 	{
 		cout << rslt[i] << ' ';
