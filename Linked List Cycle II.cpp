@@ -5,6 +5,13 @@ Given a linked list, return the node where the cycle begins. If there is no cycl
 Follow up:
 Can you solve it without using extra space?
 */
+///@author	zhaowei
+///@date	2015.08.03
+///@version	1.0
+
+///@date	2015.08.20
+///@version	2.0
+
 #include <iostream>
 using namespace std;
 
@@ -14,7 +21,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
  
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	检查一个链表是否有环
 	///@param	head	头指针
@@ -48,6 +55,32 @@ public:
 		else
 			return nullptr;	//	不存在环
     }
+};
+
+class Solution {
+public:
+	ListNode *detectCycle(ListNode *head) {
+		if (!head || !head->next)	return nullptr;
+		ListNode *fast = head, *slow = head;
+		while (fast && fast->next)
+		{
+			fast = fast->next->next;
+			slow = slow->next;
+			if (slow == fast)	break;
+		}
+		if (slow == fast)
+		{
+			slow = head;
+			while (slow != fast)
+			{
+				slow = slow->next;
+				fast = fast->next;
+			}
+			return slow;
+		}
+		else
+			return nullptr;
+	}
 };
 
 int main()
