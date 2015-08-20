@@ -9,6 +9,9 @@ Can you solve it without using extra space?
 ///@date	2015.07.27
 ///@version	1.0
 
+///@date	2015.08.20
+///@version	2.0
+
 #include <iostream>
 
 using namespace std;
@@ -19,7 +22,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断一个单链表是否有环
 	///@param	head	链表头节点
@@ -43,6 +46,22 @@ public:
 				return false;
 		}
 		return true;
+	}
+};
+
+class Solution {
+public:
+	bool hasCycle(ListNode *head) {
+		if (!head || !head->next)	return false;
+
+		ListNode *fast = head, *slow = head;
+		while (fast && fast->next)
+		{
+			fast = fast->next->next;
+			slow = slow->next;
+			if (fast == slow)	return true;
+		}
+		return false;
 	}
 };
 
