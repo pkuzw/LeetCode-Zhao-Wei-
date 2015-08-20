@@ -9,6 +9,9 @@ set(key, value) - Set or insert the value if the key is not already present. Whe
 ///@date	2015.07.30
 ///@versio	1.0
 
+///@date	2015.08.20
+///@version	2.0
+
 #include <unordered_map>
 #include <list>
 
@@ -27,7 +30,7 @@ using namespace std;
 插入节点时，如果cache的size达到了上限，则删除尾部节点，同时要在hash表中删除对应的项。新节点都插入链表头部。    
 */
 
-class LRUCache{
+class LRUCache_v1{
 private:
 	struct CacheNode
 	{
@@ -42,7 +45,7 @@ private:
 
 public:
 	///@brief	设置缓存大小
-	LRUCache(int capacity) {
+	LRUCache_v1(int capacity) {
 		size = capacity;
 	}
 
@@ -59,6 +62,7 @@ public:
 		}
 	}
 
+	///@brief	设置LRU中的值
 	void set(int key, int value) {
 		if(cacheMap.find(key) == cacheMap.end())
 		{
@@ -78,6 +82,57 @@ public:
 			cacheMap[key] = cacheList.begin();
 		}
 	}
+};
+
+class LRUCache{
+public:
+	LRUCache(int capacity) {
+		size = capacity;
+	}
+
+	int get(int key) {
+		if (cache_map.find(key) == cache_map.end())	return -1;
+		cache_list.splice(cache_list.begin(), cache_list, cache_map[key]);
+		cache_map[key] = cache_list.begin();
+		return cache_map[key]->val;
+	}
+
+	void set(int key, int value) {
+		if (cache_map.find(key) == cache_map.end())
+		{			
+			if (size == cache_list.size())
+			{
+				cache_map.erase(cache_map.find(cache_list.back().key));
+				cache_list.pop_back();				
+			}
+			CacheNode new_node(key, value);
+			cache_list.push_front(new_node);
+			cache_map[key] = cache_list.begin();
+
+		}
+		else
+		{
+			cache_map[key]->val = value;
+			cache_list.splice(cache_list.begin(), cache_list, cache_map[key]);
+			cache_map[key] = cache_list.begin();
+		}
+	}
+
+private:
+	struct CacheNode
+	{
+		int key;
+		int val;
+		CacheNode (int k, int v)
+		{
+			key = k;
+			val = v;
+		}
+	};
+
+	int size;
+	list<CacheNode> cache_list;
+	unordered_map<int, list<CacheNode>::iterator> cache_map;
 };
 
 int main()
