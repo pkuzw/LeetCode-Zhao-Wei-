@@ -12,6 +12,9 @@ Given {1,2,3,4}, reorder it to {1,4,2,3}.
 ///@date	2015.08.03
 ///@version	1.0
 
+////@date	2015.08.20
+///@version	2.0
+
 #include <iostream>
 
 struct ListNode {
@@ -20,7 +23,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	修改链表的顺序。将原来的n1, n2, n3, ..., nn改变为n1, nn, n2, nn-1, n3, nn-2...
 	///@param	head	链表首节点
@@ -138,6 +141,56 @@ private:
 				after_indx = after_indx->next;			
 		}
 		return pre_indx;
+	}
+};
+
+class Solution {
+public:
+	void reorderList(ListNode* head) {
+		if (!head || !head->next)	return;
+		ListNode* fast = head, *slow = head;
+		while (fast->next && fast->next->next)
+		{
+			slow = slow->next;
+			fast = fast->next->next;
+		}
+		fast = slow->next;
+		slow->next = nullptr;
+		slow = head;
+		fast = reverseList(fast);
+
+		while (fast)
+		{
+			ListNode* fast_next = fast->next;
+			ListNode* slow_next = slow->next;			
+
+			slow->next = fast;
+			fast->next = slow_next;
+
+			slow = slow_next;
+			fast = fast_next;
+		}
+	}
+
+private:
+	ListNode* reverseList(ListNode* head)
+	{
+		if (!head || !head->next)	return head;
+
+		ListNode* indx = head;
+		ListNode* indx_next = head->next;
+		ListNode* indx_next_next = head->next->next;
+		
+		indx->next = nullptr;
+		while (indx_next)
+		{
+			indx_next->next = indx;
+			indx = indx_next;
+			indx_next = indx_next_next;
+			if (indx_next_next)
+				indx_next_next = indx_next_next->next;
+		}
+		return indx;
 	}
 };
 
