@@ -17,6 +17,9 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@date	2015.07.24
 ///@version	1.0
 
+///@date	2015.08.20
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
@@ -28,7 +31,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	后序遍历二叉树
 	///@param	root	二叉树树根
@@ -58,6 +61,25 @@ private:
 	vector<int> post_seq;	//	后序遍历的节点数组
 };
 
+class Solution {
+public:
+	vector<int> postorderTraversal(TreeNode* root) {
+		postorderTraversal_Recur(root);
+		return rslt;
+	}
+
+private:
+	vector<int> rslt;
+
+	void postorderTraversal_Recur(TreeNode* root)
+	{
+		if (!root)	return;
+
+		if (root->left)		postorderTraversal_Recur(root->left);
+		if (root->right)		postorderTraversal_Recur(root->right);
+		rslt.push_back(root->val); 
+	}
+};
 int main()
 {
 	TreeNode* n[20];
