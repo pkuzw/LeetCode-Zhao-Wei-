@@ -6,6 +6,9 @@ Clone an undirected graph. Each node in the graph contains a label and a list of
 ///@date	2015.08.03
 ///@version	1.0
 
+///@date	2015.08.21
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -17,14 +20,14 @@ struct UndirectedGraphNode {
 	UndirectedGraphNode(int x) : label(x) {};
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	拷贝一个无向图
 	///@param	node	无向图的一个节点
 	///@return	返回拷贝后的无向图的某个节点
 	/* @note	图的所有算法都跟遍历算法有关。这道题考察的是图的遍历算法。既可以用DFS，也可以用BFS。DFS既可以用递归实现，也可以用栈实现，
-				BFS在实现的时候要用到队列。这里我们用递归的DFS来实现图的遍历。因为图中的每个节点的label值不一样，所以可以用unordered_map来
-				保存不同的值对应的拷贝节点的指针。时间复杂度为O(V+E)，空间复杂度为O(V+E).*/
+				BFS在实现的时候要用到队列。这里我们用递归的DFS来实现图的遍历。因为图中的每个节点的label值不一样，
+				所以可以用unordered_map来保存不同的值对应的拷贝节点的指针。时间复杂度为O(V+E)，空间复杂度为O(V+E).*/
     UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
         unordered_map<int, UndirectedGraphNode*> hash_table;
 		return cloneGraph_Recur(node, hash_table);
@@ -46,6 +49,28 @@ private:
 		{
 			new_node->neighbors.push_back(cloneGraph_Recur(node->neighbors[i], hash_table));	//	DFS，递归
 		}
+		return new_node;
+	}
+};
+
+///@note	图遍历算法的DFS递归实现。利用hash table来保存已经遍历过的元素。
+class Solution {
+public:
+	UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+		if (!node)	return nullptr;
+		unordered_map<int, UndirectedGraphNode*> ht;
+		return cloneGraph_DFS(node, ht);
+	}
+private:
+	UndirectedGraphNode* cloneGraph_DFS(UndirectedGraphNode* node, unordered_map<int, UndirectedGraphNode*>& ht)
+	{
+		if (!node)	return nullptr;
+		if (ht.find(node->label) != ht.end())	return ht[node->label];
+
+		UndirectedGraphNode* new_node = new UndirectedGraphNode(node->label);
+		ht[node->label] = new_node;
+		for (int i = 0; i != node->neighbors.size(); i++)
+			new_node->neighbors.push_back(cloneGraph_DFS(node->neighbors[i], ht));		
 		return new_node;
 	}
 };
