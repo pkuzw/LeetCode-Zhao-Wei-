@@ -9,8 +9,8 @@ X X X X
 X O O X
 X X O X
 X O X X
-After running your function, the board should be:
 
+After running your function, the board should be:
 X X X X
 X X X X
 X X X X
@@ -20,11 +20,15 @@ X O X X
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.21
+///@version	2.0
+
 #include <vector>
 #include <queue>
 using namespace std;
 
-class Solution {
+///@note	dfs的迭代版
+class Solution_v1 {
 public:
 	struct Node	//	记录棋盘上的格子节点
 	{
@@ -110,32 +114,62 @@ public:
 	}
 };
 
+///@note	dfs的递归版.从棋盘的四边开始寻找'O'字符，然后dfs递归向上下左右找是否有相邻的'O'，都将它们与改变成'*'，这样能与中间的不与边界
+//			相连的'O'区别开。然后再遍历矩阵，找到剩余的'O'，将它们改成'X'，原本的'*'恢复成'O'。
+class Solution {
+public:
+	void solve(vector<vector<char>>& board) {
+		for (int i = 0; i != board.size(); i++)
+			for (int j = 0; j != board[i].size(); j++)
+			{
+				if ((i == 0 || i == board.size()-1 || j == 0 || j == board[i].size()-1) && board[i][j] == 'O')
+					dfs(board, i, j);
+			}
+	
+		for (int i = 0; i != board.size(); i++)
+			for (int j = 0; j != board[i].size(); j++)
+			{
+				if (board[i][j] == 'O')	board[i][j] = 'X';
+				if (board[i][j] == '*')	board[i][j] = 'O';
+			}
+	}
+private:
+	void dfs(vector<vector<char>>& board, int i, int j)
+	{
+		board[i][j] = '*';
+		if (i > 0 && board[i-1][j] == 'O')					dfs(board, i-1, j);
+		if (i < board.size()-1 && board[i+1][j] == 'O')		dfs(board, i+1, j);
+		if (j > 1 && board[i][j-1] == 'O')					dfs(board, i, j-1);	//	注意：这里是 j > 1 而不是 j > 0，否则会报Runtime error
+		if (j < board[i].size()-1 && board[i][j+1] == 'O')	dfs(board, i, j+1);		
+	}
+};
+
 int main()
 {
 	vector<char> line(2, 'O');
 	vector<vector<char>> board(2, line);
 	
-
+	board.clear();
 	line.clear();
-// 	line.push_back('X');
-// 	line.push_back('O');
-// 	line.push_back('O');
-// 	line.push_back('X');
-// 	board.push_back(line);
-// 
-// 	line.clear();
-// 	line.push_back('X');
-// 	line.push_back('X');
-// 	line.push_back('O');
-// 	line.push_back('X');
-// 	board.push_back(line);
-// 
-// 	line.clear();
-// 	line.push_back('O');
-// 	line.push_back('X');
-// 	line.push_back('X');
-// 	line.push_back('X');
-// 	board.push_back(line);
+ 	line.push_back('X');
+ 	line.push_back('O');
+ 	line.push_back('O');
+ 	line.push_back('X');
+ 	board.push_back(line);
+ 
+ 	line.clear();
+ 	line.push_back('X');
+ 	line.push_back('X');
+ 	line.push_back('O');
+ 	line.push_back('X');
+ 	board.push_back(line);
+ 
+ 	line.clear();
+ 	line.push_back('X');
+ 	line.push_back('X');
+ 	line.push_back('X');
+ 	line.push_back('X');
+ 	board.push_back(line);
 
 	Solution slt;
 	slt.solve(board);
