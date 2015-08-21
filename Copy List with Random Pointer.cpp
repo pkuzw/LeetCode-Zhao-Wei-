@@ -9,10 +9,12 @@ Return a deep copy of the list.
 ///@author	zhaowei
 ///@date	2015.07.30
 ///@version	1.0
+
+///@date	2015.08.21
+///@version	2.0
+
 #include <iostream>
-
 using namespace std;
-
 
 struct RandomListNode {
 	int label;
@@ -20,7 +22,7 @@ struct RandomListNode {
 	RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	构建一个新的链表，使得其与原链表一致
 	///@param	head	原链表的首节点
@@ -62,6 +64,42 @@ public:
 		}
 		return new_head;
     }
+};
+
+class Solution {
+public:
+	RandomListNode *copyRandomList(RandomListNode *head) {
+		if (!head)	return nullptr;
+
+		RandomListNode* indx = head;
+		RandomListNode* indx_next = head->next;
+		while (indx)
+		{
+			RandomListNode* new_node = new RandomListNode(indx->label);
+			indx->next = new_node;
+			new_node->next = indx_next;
+			indx = indx_next;
+			indx_next = indx_next ? indx_next->next : nullptr;
+		}
+		indx = head;		
+		while (indx)
+		{
+			RandomListNode* new_node = indx->next;
+			new_node->random = indx->random ? indx->random->next : nullptr;
+			indx = indx->next->next;
+			new_node = new_node->next ? new_node->next->next : nullptr;
+		}
+		indx = head;
+		RandomListNode* new_head = head->next;
+		indx_next = head->next;
+		while (indx_next)
+		{
+			indx->next = indx_next->next;
+			indx = indx_next;
+			indx_next = indx_next ? indx_next->next : nullptr;
+		}
+		return new_head;
+	}
 };
 
 int main()
