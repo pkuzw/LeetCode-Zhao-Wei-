@@ -13,6 +13,9 @@ The solution is guaranteed to be unique.
 ///@date	2015.07.28
 ///@version	1.0
 
+///@date	2015.08.21
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
@@ -23,7 +26,8 @@ public:
 	///@param	gas	加油站的汽油
 	///@param	cost	从当前加油站到下一个加油站的花费
 	///@return	返回能够完成环路的加油站编号
-	/* @note	先计算出当前加油站和从这个加油站到下一站的花费之差，如果为负，则不用考虑为起点。然后对有可能的加油站进行遍历。时间复杂度为O(n^2)，空间复杂度为O(n)。OJ报TLE。*/
+	/* @note	先计算出当前加油站和从这个加油站到下一站的花费之差，如果为负，则不用考虑为起点。然后对有可能的加油站进行遍历。
+				时间复杂度为O(n^2)，空间复杂度为O(n)。OJ报TLE。*/
 	int canCompleteCircuit_Time_O_n2(vector<int>& gas, vector<int>& cost) {
 		vector<int> possible_station;
 		for (int i = 0; i != gas.size(); i++)
@@ -53,7 +57,7 @@ public:
 			total_gas += gas[i];
 			total_cost += cost[i];
 		}
-		if (total_cost > total_gas)	return -1;
+		if (total_cost > total_gas)	return -1;	//	这里保证了油料是足够环行一圈的
 
 		int start = 0;	//起点
 		int rest_gas = 0;	//	剩余油量
@@ -98,6 +102,33 @@ private:
 		}
 		if (rest_gas < 0)	return false;
 		return true;
+	}
+};
+
+class Solution {
+public:
+	int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+		int total_cost = 0;
+		int total_gas = 0;
+		for (int i = 0; i != gas.size(); i++)
+		{
+			total_gas += gas[i];
+			total_cost += cost[i];
+		}
+		if (total_cost > total_gas)	return -1;
+		int rest_gas = 0;
+		int start = 0;
+		for (int i = 0; i != gas.size(); i++)
+		{			
+			if (rest_gas < 0)
+			{
+				start = i;
+				rest_gas = 0;
+			}
+			rest_gas += gas[i] - cost[i];
+		}
+		if (rest_gas < 0)	return -1;
+		return start;
 	}
 };
 
