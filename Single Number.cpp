@@ -9,11 +9,14 @@ Your algorithm should have a linear runtime complexity. Could you implement it w
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.21
+///@version	2.0
+
 #include <unordered_map>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	如果一个数组中每个元素都出现了两遍，只有一个元素例外。找出这个元素。
 	///@param	nums	数组
@@ -42,12 +45,22 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int singleNumber(vector<int>& nums) {
+		int rslt = nums[0];
+		for (int i = 1; i != nums.size(); i++)
+			rslt ^= nums[i];
+		return rslt;
+	}
+};
+
 int main()
 {
 	int n[7] = {1,1,2,2,3,3,4};
 	vector<int> nums;
-// 	for (int i = 0; i != 7; i++)
-// 		nums.push_back(n[i]);
+ 	for (int i = 0; i != 7; i++)
+ 		nums.push_back(n[i]);
 
 	Solution slt;
 	int rslt = slt.singleNumber(nums);
