@@ -139,7 +139,7 @@ private:
 		board[i][j] = '*';
 		if (i > 0 && board[i-1][j] == 'O')					dfs(board, i-1, j);
 		if (i < board.size()-1 && board[i+1][j] == 'O')		dfs(board, i+1, j);
-		if (j > 1 && board[i][j-1] == 'O')					dfs(board, i, j-1);	//	注意：这里是 j > 1 而不是 j > 0，否则会报Runtime error
+		if (j > 1 && board[i][j-1] == 'O')					dfs(board, i, j-1);	//	注意：这里是 j > 1 而不是 j > 0，否则会报Runtime error.因为当数据量很大时，栈空间会被消耗光。
 		if (j < board[i].size()-1 && board[i][j+1] == 'O')	dfs(board, i, j+1);		
 	}
 };
