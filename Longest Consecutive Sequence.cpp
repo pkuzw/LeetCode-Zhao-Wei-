@@ -12,12 +12,15 @@ Your algorithm should run in O(n) complexity.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <vector>
 #include <unordered_set>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算最长连续整数
 	///@param	nums	整数数组
@@ -111,8 +114,8 @@ public:
 	///@brief	计算最长连续整数
 	///@param	nums	整数数组
 	///@return	返回数组的最长连续整数
-	/* @note	利用哈希表。先将所有的整数映射到哈希表上，然后逐个遍历，在哈希表上向前向后查找是否存在相邻元素，如果存在，那么计数器自增1。否则
-				删除在该哈希表上的元素。时间复杂度为O(n)，空间复杂度为O(n)*/
+	/* @note	利用哈希表。先将所有的整数映射到哈希表上，然后逐个遍历，在哈希表上向前向后查找是否存在相邻元素，如果存在，那么计数器自增1。
+				否则	删除在该哈希表上的元素。时间复杂度为O(n)，空间复杂度为O(n)*/
 	int longestConsecutive(vector<int>& nums) {
 		unordered_set<int> hash_table;	//	初始化哈希表
 		for (int i = 0; i != nums.size(); i++)
@@ -146,6 +149,41 @@ public:
 				if (max_len < len_cnt)	max_len = len_cnt;
 				len_cnt = 0;	//	恢复初始值
 			}
+		}
+		return max_len;
+	}
+};
+
+///@note	利用哈希表保存现有的元素，每当找到一个元素就在哈希表中删除，这样能够减少重复计算。
+class Solution {
+public:
+	int longestConsecutive(vector<int>& nums) {
+		unordered_set<int> ht(nums.begin(), nums.end());
+		int max_len = INT_MIN, len = 0;
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (ht.find(nums[i]) != ht.end())
+			{
+				ht.erase(nums[i]);
+				len++;
+
+				int j = nums[i] + 1;
+				while (ht.find(j) != ht.end())
+				{
+					ht.erase(j);
+					len++;
+					j++;
+				}
+				j = nums[i] - 1;
+				while (ht.find(j) != ht.end())
+				{
+					ht.erase(j);
+					len++;
+					j--;
+				}
+				max_len = max(max_len, len);
+				len = 0;
+			}			
 		}
 		return max_len;
 	}
