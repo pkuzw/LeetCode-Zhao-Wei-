@@ -23,6 +23,9 @@ All words contain only lowercase alphabetic characters.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -31,7 +34,7 @@ All words contain only lowercase alphabetic characters.
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	typedef unordered_set<string>::iterator HashIter;	//	哈希表迭代器
 
@@ -41,9 +44,10 @@ public:
 	///@param	dict	词典
 	///@return	返回所有可能的单词转换路径
 	/* @note	利用BFS的思想来解题。将初始单词看做树的根节点，然后逐个变换单词中的字符，查着词典中是否有合适的单词与之相同。
-				如果有，则将该单词记录下来，放入队列。它的父节点作为其前驱记录在pre_path中，便于后面重构路径。如果找到了一个合适的路径，则
-				不必继续向后找，因为再向后找不可能比当前的转换步骤更少。此时直接退出循环。其中pre_path是unordered_map<string, vector<string>>
-				类型，用来存放每个单词的前驱单词；hash_table是unordered_set<string>类型，记录已经寻找过哪些单词，不用再找。
+				如果有，则将该单词记录下来，放入队列。它的父节点作为其前驱记录在pre_path中，便于后面重构路径。如果找到了一个合适的路径，
+				则不必继续向后找，因为再向后找不可能比当前的转换步骤更少。此时直接退出循环。
+				其中pre_path是unordered_map<string, vector<string>>类型，用来存放每个单词的前驱单词；
+				hash_table是unordered_set<string>类型，记录已经寻找过哪些单词，不用再找。
 				时间复杂度为O(n)，空间复杂度为O(n)。*/
 	vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {		
 		queue<string> que;
@@ -78,7 +82,10 @@ public:
 							pre_path[str].push_back(str_copy);
 							//保证bfs时插入队列的元素不存在重复
 							if(hash_table.find(str) == hash_table.end())
-							{que.push(str); hash_table.insert(str);}
+							{
+								que.push(str); 
+								hash_table.insert(str);
+							}
 						}
 					}
 					str[i] = tmp;
@@ -133,6 +140,93 @@ private:
 			tmpres.pop_back();
 		}
 		return;
+	}
+};
+
+/* @note	BFS. 队列用来保存宽度搜索的单词节点；
+			哈希表用来保存已经有哪些节点已经搜索过，不必再次搜索，相当于剪枝；
+			前驱路径表用来重构路径。
+*/
+class Solution {
+public:	
+	vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
+		queue<string> que;
+		que.push(start);
+		que.push("");
+		bool has_found = false;
+		unordered_map<string, vector<string>> pre_path;
+		unordered_set<string> ht;
+		while (!que.empty())
+		{
+			string frt = que.front();
+			string cpy = frt;
+			que.pop();
+			if (frt != "")
+			{
+				string tmp = frt;
+				for (int i = 0; i != frt.size(); i++)
+				{
+					for (char j = 'a'; j <= 'z'; j++)
+					{
+						if (frt[i] == j)	continue;
+						frt[i] = j;
+						if (frt == end)
+						{
+							has_found = true;
+							pre_path[frt].push_back(cpy);
+							goto END;
+						}
+
+						if (dict.find(frt) != dict.end())
+						{
+							pre_path[frt].push_back(cpy);
+							if (ht.find(frt) == ht.end())
+							{
+								que.push(frt);
+								ht.insert(frt);
+							}
+						}
+					}
+					frt = tmp;
+				}
+			}
+			else
+			{
+				if (!que.empty())
+				{
+					if (has_found)	break;
+					for (unordered_set<string>::iterator iter = ht.begin(); iter != ht.end(); iter++)
+						dict.erase(*iter);
+					ht.clear();
+					que.push("");
+				}
+			}
+			END:;
+		}
+		vector<vector<string>> rslt;
+		vector<string> tmp_rslt;
+		if (pre_path.find(end) == pre_path.end())	return rslt;
+		tmp_rslt.push_back(end);
+		constructPath(rslt, tmp_rslt, pre_path, start, end);
+		return rslt;
+	}
+private:
+	void constructPath(vector<vector<string>>& rslt, vector<string>& tmp_rslt, unordered_map<string, vector<string>>& pre_path, string start, string end)
+	{
+		if (start == end)
+		{
+			reverse(tmp_rslt.begin(), tmp_rslt.end());
+			rslt.push_back(tmp_rslt);
+			reverse(tmp_rslt.begin(), tmp_rslt.end());
+			return;
+		}
+		vector<string>& pre = pre_path[end];
+		for (int i = 0; i != pre.size(); i++)
+		{
+			tmp_rslt.push_back(pre[i]);
+			constructPath(rslt, tmp_rslt, pre_path, start, pre[i]);
+			tmp_rslt.pop_back();
+		}
 	}
 };
 
