@@ -24,6 +24,9 @@ All words contain only lowercase alphabetic characters.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <string>
 #include <vector>
 #include <queue>
@@ -31,7 +34,7 @@ All words contain only lowercase alphabetic characters.
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算将一个单词转换成另一个单词所用的步数
 	///@param	beginWord	起始单词
@@ -83,6 +86,53 @@ public:
 			}
 		}
 		return 0;	//	如果没有找到能够转换的路径，返回0
+	}
+};
+
+///@note	BFS.将每个单词看做k叉树的一个节点，相差一个字母的单词是该节点的孩子节点。层与层之间通过特殊字符串隔开。每找到一个后继单词，要
+//			在词典中将它删去，以避免出现死循环。
+class Solution {
+public:
+	int ladderLength(string beginWord, string endWord, unordered_set<string>& wordDict) {
+		if (beginWord == endWord)	return 1;
+		int cnt = 1;
+		queue<string> que;
+		que.push(beginWord);
+		que.push("");
+		while (!que.empty())
+		{
+			string frt = que.front();
+			que.pop();
+			if (frt != "")
+			{
+				string tmp = frt;
+				for (int i = 0; i != frt.size(); i++)
+				{
+					for (char j = 'a'; j <= 'z'; j++)
+					{
+						if (frt[i] == j)	continue;
+						frt[i] = j;
+
+						if (frt == endWord)	return cnt + 1;
+						if (wordDict.find(frt) != wordDict.end())
+						{
+							wordDict.erase(frt);
+							que.push(frt);
+						}
+					}
+					frt = tmp;
+				}
+			}
+			else
+			{
+				if (!que.empty())
+				{
+					que.push("");
+					cnt++;
+				}
+			}
+		}
+		return 0;
 	}
 };
 
