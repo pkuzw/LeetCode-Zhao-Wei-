@@ -14,7 +14,7 @@ design an algorithm to find the maximum profit.
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算最多只能有一次股票交易的最大利润
 	///@param	prices	股票每一天的价格
@@ -40,6 +40,21 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int maxProfit(vector<int>& prices) {
+		if (prices.size() < 2)	return 0;
+		vector<int> dp(prices.size(), 0);
+		for (int i = 1; i != prices.size(); i++)
+			dp[i] = (prices[i] > prices[i-1]) ? dp[i-1] + (prices[i] - prices[i-1]) : (prices[i-1] - prices[i] > dp[i-1] ? 0 : dp[i-1] + prices[i] - prices[i-1]);
+
+		int max_profit = 0;
+		for (int i = 0; i != prices.size(); i++)
+			max_profit = max(max_profit, dp[i]);
+		return max_profit;
+	}
+};
+
 int main()
 {
 	vector<int> prices;
@@ -53,5 +68,8 @@ int main()
 
 	Solution slt;
 	int r = slt.maxProfit(prices);
+
+	Solution_v1 slt_v1;
+	int r1 = slt_v1.maxProfit(prices);
 	return 0;
 }
