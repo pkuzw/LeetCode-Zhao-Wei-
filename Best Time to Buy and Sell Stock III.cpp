@@ -11,11 +11,14 @@ You may not engage in multiple transactions at the same time (ie, you must sell 
 ///@date	2015.07.24
 ///@version	1.1
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	如果最多只能进行2次交易，计算最大收益
 	///@param	prices	股价数组
@@ -115,6 +118,25 @@ private:
 	}
 };
 
+class Solution {
+public:
+	int maxProfit(vector<int>& prices) {
+		if (prices.size() < 2)	return 0;
+		vector<vector<int>> dp_local(prices.size(), vector<int>(3, 0));	//	dp_local[i][j]表示在第i天进行第j次交易的最大利润
+		vector<vector<int>> dp_global(prices.size(), vector<int>(3, 0));//	dp_global[i][j]表示在前i天进行j次交易的最大利润
+		for (int i = 1; i != prices.size(); i++)
+		{
+			int diff = prices[i] - prices[i-1];
+			for (int j = 1; j <= 2; j++)
+			{
+				dp_local[i][j] = max(dp_local[i-1][j] + diff, dp_global[i-1][j-1] + max(diff, 0));	//	先算local，再算global
+				dp_global[i][j] = max(dp_local[i][j], dp_global[i-1][j]);				
+			}
+		}
+		return dp_global[prices.size()-1][2];
+	}
+};
+
 int main()
 {
 	vector<int> prices;
@@ -122,9 +144,11 @@ int main()
 	for (int i = 0; i != 10; i++)
 		prices.push_back(n[i]);
 
+	Solution_v1 slt_v1;
+	int r = slt_v1.maxProfit_Time_O_n(prices);
+	int s = slt_v1.maxProfit_Time_O_n2(prices);
 	Solution slt;
-	int r = slt.maxProfit_Time_O_n(prices);
-	int s = slt.maxProfit_Time_O_n2(prices);
+	int t = slt.maxProfit(prices);
 
 	return 0;
 }
