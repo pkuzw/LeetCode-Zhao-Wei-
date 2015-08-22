@@ -17,6 +17,9 @@ Return 6.
 ///@date	2015.07.25
 ///@version	1.0
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
@@ -28,13 +31,15 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算二叉树中两个节点之间的最大路径和，起点和终点可以是任意节点
 	///@param	root	根节点
 	///@return	返回最大路径和
-	/* @note	如果以某点p为起点的最大路径和sum(p) = max(p, p+sum(p->left), p+sum(p->right))，那么以该点为中间节点的最大路径和为sum(p->left)+sum(p->right)+p。
-				故包含某点的最大路径和max_sum(p) = max(sum(p), sum(p->left)+sum(p->right)+p)。然后利用二叉树的后序遍历即可找到最大路径和。时间复杂度为O(n)，空间复杂度为O(n)。 */
+	/* @note	如果以某点p为起点的最大路径和sum(p) = max(p, p+sum(p->left), p+sum(p->right))，
+				那么以该点为中间节点的最大路径和为sum(p->left)+sum(p->right)+p。
+				故包含某点的最大路径和max_sum(p) = max(sum(p), sum(p->left)+sum(p->right)+p)。
+				然后利用二叉树的后序遍历即可找到最大路径和。时间复杂度为O(n)，空间复杂度为O(n)。 */
 	int maxPathSum(TreeNode *root)
 	{
 		if (root == nullptr)	return 0;
@@ -65,6 +70,33 @@ public:
 			ms_path = max(this_ms_path, left_path + right_path + root->val);
 
 		return this_ms_path;
+	}
+};
+
+///@note	在二叉树中，起始和终结点如果任意的话，那么对于每一个节点，可以分成两种情况，一种是以它为路径的起点，另一种是以它为路径的中间点。
+//			如果某点是路径的起点，那么该路径的最大值应该为sum(p) = max(p, p + max(sum(p->left), sum(p->right)))；
+//			如果以某点为路径的中间点，那么该路径的最大值应该为sum'(p) = p + sum(p->left) + sum(p->right)；
+//			那么为了找到树中的最大路径，应该通过后序遍历树中的所有点，将最大值作为引用传入后续的递归参数，然后递归函数每次计算的是以该节点
+//			为起点的最大路径值，并更新最大路径值。
+class Solution {
+public:
+	int maxPathSum(TreeNode* root) {
+		if (!root)	return 0;
+		int max_path = INT_MIN;
+		postorderTraversal(root, max_path);
+		return max_path;
+	}
+private:
+	int postorderTraversal(TreeNode* root, int& max_path)
+	{
+		int left_path = 0;
+		int right_path = 0;
+		if (root->left)		left_path = postorderTraversal(root->left, max_path);
+		if (root->right)		right_path = postorderTraversal(root->right, max_path);
+		int start_path = max(max(left_path, right_path) + root->val, root->val);
+		int pass_path = left_path + root->val + right_path;
+		max_path = max(max(start_path, pass_path), max_path);
+		return start_path;
 	}
 };
 
