@@ -15,10 +15,13 @@ The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
 ///@date	2015.07.24
 ///@version	1.0
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个三角形，找到从顶点到底层的最小和路径
 	///@param	triangle	三角形
@@ -74,6 +77,19 @@ public:
 	}
 };
 
+///@note	动态规划。自底向上。
+class Solution {
+public:
+	int minimumTotal(vector<vector<int>>& triangle) {
+		if (triangle.empty())	return 0;
+		vector<int> dp(triangle.back().begin(), triangle.back().end());	//	dp[i]表示表示某一层第i个元素的最小路径和
+		for (int i = triangle.size()-2; i >= 0; i--)
+			for (int j = 0; j != triangle[i].size(); j++)
+				dp[j] = triangle[i][j] + min(dp[j], dp[j+1]);
+		return dp[0];
+	}
+};
+
 int main()
 {
 	vector<vector<int>> triangle;
@@ -109,5 +125,8 @@ int main()
 
 	Solution slt;
 	int rslt = slt.minimumTotal(triangle);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.minimumTotal(triangle);
 	return 0;
 }
