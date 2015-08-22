@@ -11,11 +11,14 @@ However, you may not engage in multiple transactions at the same time (ie, you m
 ///@date	2015.07.24
 ///@version	1.0
 
+///@date	2015.08.22
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算多次股票交易的最大利润
 	///@param	prices	股票每一天的价格
@@ -55,6 +58,35 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int maxProfit(vector<int>& prices) {
+		if (prices.size() < 2)	return 0;
+		int start = 0, end = 0;
+		bool flg = true;	//false: 递减区间，true: 递增区间
+		int max_profit = 0;
+		for (int i = 0; i != prices.size()-1; i++)
+		{
+			if (prices[i+1] > prices[i])
+			{
+				if (!flg)	start = i;
+				flg = true;
+				if (i == prices.size()-2)	max_profit += prices[i+1] - prices[start];
+			}
+			else
+			{
+				if (flg)
+				{
+					end = i;
+					max_profit += prices[end] - prices[start];
+				}
+				flg = false;
+			}
+		}
+		return max_profit;
+	}
+};
+
 int main()
 {
 	int n[13] = {1,9,6,9,9,1,7,1,1,5,9,9,9};
@@ -64,5 +96,8 @@ int main()
 
 	Solution slt;
 	int r = slt.maxProfit(prices);
+
+	Solution_v1 slt_v1;
+	r = slt_v1.maxProfit(prices);
 	return 0;
 }
