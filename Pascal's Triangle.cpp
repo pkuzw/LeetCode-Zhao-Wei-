@@ -17,11 +17,14 @@ Return
 ///@date	2015.07.23
 ///@versio	1.0
 
+///@date	2015.08.023
+///@version	2.0
+
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	生成杨辉三角
 	///@param	n	行数
@@ -50,9 +53,29 @@ private:
 	vector<vector<int>> pascal_tri;
 };
 
+class Solution {
+public:
+	vector<vector<int>> generate(int numRows) {
+		vector<vector<int>> pascal_triangle;
+		if (numRows < 0)	return pascal_triangle;
+		vector<int> line(1, 1);
+		
+		for (int i = 0; i != numRows; i++)
+		{
+			pascal_triangle.push_back(line);
+			line.insert(line.begin(), 0);
+			line.push_back(0);
+			for (int j = 0; j != line.size()-1; j++)
+				line[j] += line[j+1];
+			line.pop_back();
+		}
+		return pascal_triangle;
+	}
+};
+
 int main()
 {
-	int n = 0;
+	int n = 5;
 	Solution slt;
 	vector<vector<int>> rslt = slt.generate(n);
 	return 0;
