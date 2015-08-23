@@ -18,13 +18,17 @@ Could you optimize your algorithm to use only O(k) extra space?
 */
 ///@author	zhaowei
 ///@date	2015.07.23
-///@versio	1.1
+///@version	1.1
+
+///@date	2015.08.23
+///@version	2.0
 
 #include <vector>
+#include <deque>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	生成杨辉三角的第k行
 	///@param	rowIndex	行号
@@ -47,9 +51,25 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<int> getRow(int rowIndex) {
+		vector<int> pascal_triangle(1, 1);
+		for (int i = 0; i != rowIndex; i++)
+		{
+			pascal_triangle.insert(pascal_triangle.begin(), 0);
+			pascal_triangle.push_back(0);
+			for (int j = 0; j != pascal_triangle.size()-1; j++)
+				pascal_triangle[j] = pascal_triangle[j] + pascal_triangle[j+1];
+			pascal_triangle.pop_back();
+		}
+		return pascal_triangle;
+	}
+};
+
 int main()
 {
-	int n = 5;
+	int n = 3;
 	Solution slt;
 	vector<int> rslt = slt.getRow(n);
 	return 0;
