@@ -17,6 +17,9 @@ Given the below binary tree and sum = 22,
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -30,7 +33,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断二叉树中是否存在一条从根节点到叶节点的路径，路径上的各节点之和为指定值
 	///@param	root	根节点
@@ -52,6 +55,17 @@ public:
 				if (hasPathSum(root->right, sum-root->val))
 					return true;			
 		}		
+		return false;
+	}
+};
+
+class Solution {
+public:
+	bool hasPathSum(TreeNode* root, int sum) {
+		if (!root)	return false;
+		if (root->val == sum && !root->left && !root->right)		return true;
+		if (root->left && hasPathSum(root->left, sum - root->val))	return true;
+		if (root->right && hasPathSum(root->right, sum - root->val))return true;
 		return false;
 	}
 };
