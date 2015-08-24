@@ -27,6 +27,9 @@ The flattened tree should look like:
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 
@@ -39,7 +42,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将二叉树转换成每个节点只有右孩子的链表。链表的顺序按照二叉树先序排列。
 	///@param	root	根节点
@@ -93,6 +96,41 @@ private:
 	}
 
 	TreeNode* first_leaf;	//	记录先序遍历时第一个叶节点
+};
+
+class Solution {
+public:
+	void flatten(TreeNode* root) {
+		preorderTraversal(root);
+		reverse(root);
+	}
+private:
+	void preorderTraversal(TreeNode* root)
+	{
+		if (!root)	return;
+		first_leaf = root;
+		if (!root->left && !root->right)		first_leaf = root;
+	
+		if (root->left)	preorderTraversal(root->left);
+		if (root->right)
+		{
+			first_leaf->left = root->right;
+			preorderTraversal(root->right);	
+			root->right = nullptr;
+		}
+	}
+	void reverse(TreeNode* root)
+	{
+		if (!root)	return;
+		if (root->left)
+		{
+			root->right = root->left;
+			reverse(root->left);
+			root->left = nullptr;
+		}
+	}
+
+	TreeNode* first_leaf;
 };
 
 int main()
