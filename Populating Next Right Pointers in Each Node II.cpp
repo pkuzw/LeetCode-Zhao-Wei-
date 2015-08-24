@@ -41,6 +41,9 @@ After calling your function, the tree should look like:
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <queue>
 using namespace std;
 
@@ -51,7 +54,7 @@ struct TreeLinkNode {
 	TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将二叉树中的各个节点横向连接起来
 	///@root	根节点
@@ -83,6 +86,49 @@ public:
 			}
 		}
 		return;
+	}
+};
+
+class Solution {
+public:
+	///@note	空间复杂度为O(1)
+	void connect(TreeLinkNode *root) {
+		if (!root)	return;
+		TreeLinkNode* left_most = root;
+		while (left_most)
+		{
+			TreeLinkNode* p = left_most;
+			while (p && !p->left && !p->right) p = p->next;
+			if (!p)	return;
+			left_most = p->left ? p->left : p->right;
+			TreeLinkNode* cur = left_most;
+			while (p)
+			{
+				if (cur == p->left)
+				{
+					if (p->right)
+					{
+						cur->next = p->right;
+						cur = cur->next;
+					}
+					p = p->next;
+				}
+				else if (cur == p->right)
+				{
+					p = p->next;
+				}
+				else
+				{
+					if (!p->left && !p->right)
+					{
+						p = p->next;
+						continue;
+					}
+					cur->next = p->left ? p->left : p->right;
+					cur = cur->next;
+				}
+			}
+		}
 	}
 };
 
