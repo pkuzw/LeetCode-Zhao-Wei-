@@ -11,7 +11,7 @@ differ by more than 1.
 ///@version	1.0
 
 ///@date	2015.08.24
-///@version	2.0
+///@version	2.1
 
 #include <iostream>
 #include <vector>
@@ -96,7 +96,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	bool isBalanced(TreeNode* root) {		
 		return checkDepth(root) == -1 ? false : true;
@@ -111,6 +111,22 @@ private:
 		int diff = abs(left - right);
 		if (diff > 1)	return -1;
 		else			return 1 + max(left, right);
+	}
+};
+
+class Solution {
+public:
+	bool isBalanced(TreeNode* root) {
+		if (!root)	return true;
+		if (abs(depth(root->left) - depth(root->right)) > 1)		return false;
+		return isBalanced(root->left) && isBalanced(root->right);
+	}
+private:
+	///@brief	计算以某个节点为根的子树深度
+	int depth(TreeNode* root)
+	{
+		if (!root)	return 0;
+		return 1 + max(depth(root->left), depth(root->right));
 	}
 };
 
