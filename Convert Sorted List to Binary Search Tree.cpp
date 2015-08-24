@@ -88,7 +88,7 @@ private:
 			mid = mid->next;		
 		TreeNode* root = new TreeNode(mid->val);
 		root->left = convert(head, len/2);
-		root->right = convert(head, (len-1)/2);
+		root->right = convert(mid->next, (len-1)/2);
 		return root;
 	}
 };
