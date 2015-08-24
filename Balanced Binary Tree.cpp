@@ -10,6 +10,9 @@ differ by more than 1.
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -23,7 +26,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 	
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断一个二叉树是否是平衡二叉树。平衡二叉树的定义是对于树中的任何一个节点，它的子树深度均不会相差超过1
 	///@param	root	根节点
@@ -90,6 +93,24 @@ private:
 			}
 		}
 		return maximum;
+	}
+};
+
+class Solution {
+public:
+	bool isBalanced(TreeNode* root) {		
+		return checkDepth(root) == -1 ? false : true;
+	}
+private:
+	///@brief	计算以某节点的根的左右子树最大深度，如果左右子数不平衡，则返回-1，否则返回真实最大深度
+	int checkDepth(TreeNode* root){
+		if (!root)	return 0;
+		int left = checkDepth(root->left);		
+		int right = checkDepth(root->right);
+		if (left == -1 || right == -1)	return -1;
+		int diff = abs(left - right);
+		if (diff > 1)	return -1;
+		else			return 1 + max(left, right);
 	}
 };
 
