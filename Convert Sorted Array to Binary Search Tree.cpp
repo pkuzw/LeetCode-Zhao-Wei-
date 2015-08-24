@@ -6,6 +6,9 @@ Given an array where elements are sorted in ascending order, convert it to a hei
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -19,7 +22,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个已经按照升序排好序的数组，用它构建出一个高度平衡的二叉搜索树
 	///@param	nums	数组
@@ -45,6 +48,23 @@ private:
 		root->left = sortedArrayToBST_Recur(nums, start, mid);
 		root->right = sortedArrayToBST_Recur(nums, mid+1, end);
 
+		return root;
+	}
+};
+
+class Solution {
+public:
+	TreeNode* sortedArrayToBST(vector<int>& nums) {
+		return convert(nums, 0, nums.size());
+	}
+private:
+	TreeNode* convert(vector<int>& nums, int i, int j)
+	{
+		if (i == j)	return nullptr;
+		int k = (i + j) / 2;
+		TreeNode* root = new TreeNode(nums[k]);
+		root->left = convert(nums, i, k);
+		root->right = convert(nums, k+1, j);
 		return root;
 	}
 };
