@@ -8,6 +8,9 @@ The minimum depth is the number of nodes along the shortest path from the root n
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -21,7 +24,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算一棵二叉树中叶子节点到根节点的最短距离
 	///@param	root
@@ -59,6 +62,39 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int minDepth(TreeNode* root) {
+		if (!root)	return 0;
+		queue<TreeNode*> que;
+		que.push(root);
+		que.push(nullptr);
+		int dpth = 1;
+		while (!que.empty())
+		{
+			TreeNode* n = que.front();
+			que.pop();
+			if (n)
+			{				
+				if (!n->left && !n->right)	return dpth;
+				else
+				{
+					if (n->left)		que.push(n->left);
+					if (n->right)	que.push(n->right);
+				}
+			}
+			else
+			{
+				if (!que.empty())
+				{
+					que.push(nullptr);
+					dpth++;
+				}
+			}
+		}
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -80,5 +116,8 @@ int main()
 	n[11]->left = n[12];
 	Solution slt;
 	int rslt = slt.minDepth(root);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.minDepth(root);
 	return 0;
 }
