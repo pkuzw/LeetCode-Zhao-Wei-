@@ -33,9 +33,11 @@ After calling your function, the tree should look like:
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <queue>
 using namespace std;
-
 
 struct TreeLinkNode {
 	int val;
@@ -43,7 +45,7 @@ struct TreeLinkNode {
 	TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将二叉树中的各个节点横向连接起来
 	///@root	根节点
@@ -75,6 +77,33 @@ public:
 			}
 		}
 		return;
+	}
+};
+
+class Solution {
+public:
+	///@note	时间复杂度为O(n)，空间复杂度为O(1)
+	void connect(TreeLinkNode *root) {
+		if (!root)	return;
+		TreeLinkNode* left_most = root;
+		while (left_most)
+		{
+			TreeLinkNode* parent = left_most;
+			if (!parent->left)	return;
+			left_most = parent->left;
+			TreeLinkNode* cur = left_most;
+			while (parent)
+			{
+				if (cur == parent->left)
+				{
+					cur->next = parent->right;					
+					parent = parent->next;
+				}
+				else
+					cur->next = parent->left;				
+				cur = cur->next;
+			}
+		}
 	}
 };
 
