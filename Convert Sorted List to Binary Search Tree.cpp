@@ -4,9 +4,11 @@
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
 struct ListNode {
@@ -15,8 +17,6 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-
-
 struct TreeNode {
 	int val;
 	TreeNode *left;
@@ -24,7 +24,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将已经排好序的链表转换成高度平衡的BST树
 	///@param	head	链表表头
@@ -66,6 +66,33 @@ private:
 	}
 };
 
+class Solution {
+public:
+	TreeNode* sortedListToBST(ListNode* head) {
+		int len = 0;
+		ListNode* indx = head;
+		while (indx)
+		{
+			indx = indx->next;
+			len++;
+		}
+		return convert(head, len);
+	}
+private:
+	TreeNode* convert(ListNode* head, int len)
+	{
+		if (!len)	return nullptr;
+		int m = len / 2;
+		ListNode* mid = head;
+		while (m--)
+			mid = mid->next;		
+		TreeNode* root = new TreeNode(mid->val);
+		root->left = convert(head, len/2);
+		root->right = convert(head, (len-1)/2);
+		return root;
+	}
+};
+
 int main()
 {
 	ListNode* head = new ListNode(0);
@@ -80,8 +107,8 @@ int main()
 	}
 	
 	head = ln[0];
-// 	head->val = 2;
-// 	head->next = nullptr;
+	head->next->next = nullptr;
+	head->next->val = 3;
 
 	Solution slt;
 	TreeNode *root = slt.sortedListToBST(head);
