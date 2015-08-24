@@ -21,6 +21,9 @@ return
 ///@date	2015.07.23
 ///@version	1.0
 
+///@date	2015.08.24
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
@@ -33,7 +36,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	在二叉树中计算出每一条节点和为指定值的路径
 	///@param	root	根节点
@@ -72,6 +75,26 @@ private:
 	vector<vector<int>> paths;
 };
 
+class Solution {
+public:
+	vector<vector<int>> pathSum(TreeNode* root, int sum) {
+		vector<int> path;
+		pathRecur(root, sum, path);
+		return rslt;
+	}
+private:
+	vector<vector<int>> rslt;
+	void pathRecur(TreeNode* root, int sum, vector<int>& path)
+	{
+		if (!root)	return;
+		path.push_back(root->val);
+		if (root->val == sum && !root->left && !root->right)		rslt.push_back(path);
+		if (root->left)		pathRecur(root->left, sum - root->val, path);
+		if (root->right)		pathRecur(root->right, sum- root->val, path);
+		path.pop_back();
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -92,6 +115,9 @@ int main()
 	n[2]->right = n[5];
 	n[3]->left = n[6];
 	n[4]->left = n[8];
+
+	Solution_v1 slt_v1;
+	vector<vector<int>> rslt1 = slt_v1.pathSum(root, -1);
 	Solution slt;
 	vector<vector<int>> rslt = slt.pathSum(root, -1);
 	return 0;
