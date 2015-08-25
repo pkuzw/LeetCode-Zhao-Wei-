@@ -8,6 +8,9 @@ Two binary trees are considered equal if they are structurally identical and the
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
@@ -20,7 +23,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 	 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断两棵二叉树是否一样
 	///@param	p	第一棵树
@@ -138,6 +141,15 @@ private:
 	}
 };
 
+class Solution {
+public:
+	bool isSameTree(TreeNode* p, TreeNode* q) {
+		if (!p && !q)	return true;
+		if ((!p && q) || (p && !q) || (p->val != q->val))	return false;
+		return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+	}
+};
+
 int main()
 {
 	TreeNode *r1 = nullptr;
@@ -148,5 +160,8 @@ int main()
 
 	Solution slt;
 	cout << slt.isSameTree(r1, r2) << endl;
+
+	Solution_v1 slt_v1;
+	cout << slt_v1.isSameTree(r1, r2) << endl;
 	return 0;
 }
