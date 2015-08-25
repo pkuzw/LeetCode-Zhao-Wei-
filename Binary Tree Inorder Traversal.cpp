@@ -22,6 +22,9 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@date	2015.08.20
 ///@version	2.1
 
+///@date	2015.08.25
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -70,7 +73,7 @@ private:
 	vector<int> rslt;	//	记录结果
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	vector<int> inorderTraversal(TreeNode* root) {
  		inorderTraversal_Recur(root);
@@ -112,6 +115,43 @@ private:
 	}
 };
 
+class Solution {
+public:
+	///@brief	Morris中序遍历
+	///@note	时间复杂度为O(n)，空间复杂度为O(1)
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> rslt;
+		if (!root)	return rslt;
+		TreeNode* cur = root;
+		TreeNode* pre = root;
+		while (cur)
+		{
+			if (!cur->left)
+			{
+				rslt.push_back(cur->val);	//	当前指针在移向右孩子之前要进行输出
+				cur = cur->right;
+			}
+			else
+			{
+				pre = cur->left;
+				while (pre->right && pre->right != cur)	pre = pre->right;
+				if (!pre->right)
+				{
+					pre->right = cur;
+					cur = cur->left;
+				}
+				else
+				{
+					pre->right = nullptr;
+					rslt.push_back(cur->val);	//	当前指针在移向右孩子之前要进行输出
+					cur = cur->right;
+				}
+			}
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -128,16 +168,15 @@ int main()
 	n1->right = n4;
 	n2->left = n5;
 	n2->right = n6;
-
-	Solution_v1 slt_v1;
-	vector<int> rslt = slt_v1.inorderTraversal(root);
+// 
+// 	Solution_v1 slt_v1;
+// 	vector<int> rslt = slt_v1.inorderTraversal(root);
+// 
+// 	Solution slt_v2;
+// 	rslt = slt_v2.inorderTraversal(root);
 
 	Solution slt;
-	rslt = slt.inorderTraversal(root);
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		cout << rslt[i] << ' ';
-	}
-	cout << endl;
+	vector<int>	rslt = slt.inorderTraversal(root);
+
 	return 0;
 }
