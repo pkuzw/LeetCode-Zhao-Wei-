@@ -8,6 +8,9 @@ The maximum depth is the number of nodes along the longest path from the root no
 ///@date	2015.07.22
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -21,7 +24,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算二叉树的最大深度
 	///@param	root	树根节点
@@ -57,6 +60,14 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int maxDepth(TreeNode* root) {
+		if (!root)	return 0;
+		return 1 + max(maxDepth(root->left), maxDepth(root->right));
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -78,5 +89,8 @@ int main()
 	n[11]->left = n[12];
 	Solution slt;
 	int rslt = slt.maxDepth(root);
+
+	Solution_v1 slt_v1;
+	rslt = slt_v1.maxDepth(root);
 	return 0;
 }
