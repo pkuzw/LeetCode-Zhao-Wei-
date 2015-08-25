@@ -9,6 +9,9 @@ You may assume that duplicates do not exist in the tree.
 ///@date	2015.07.22
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <vector>
 #include <algorithm>	//	find
 #include <iostream>
@@ -22,7 +25,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	已知二叉树的后序序列和中序序列，构建二叉树。假设二叉树中元素均不重复	
 	///@param	inorder		中序序列
@@ -79,12 +82,32 @@ private:
 	}
 };
 
+class Solution {
+public:
+	TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+		return buildRecur(inorder, 0, inorder.size()-1, postorder, 0, postorder.size()-1);
+	}
+private:
+	TreeNode* buildRecur(vector<int>& inorder, int ileft, int iright, vector<int>& postorder, int pleft, int pright)
+	{
+		if (ileft > iright || pleft > pright)	return nullptr;
+		TreeNode* node = new TreeNode(postorder[pright]);
+		int i = 0;
+		for (i = ileft; i != inorder.size(); i++)
+			if (inorder[i] == postorder[pright])	break;		
+		
+		node->left = buildRecur(inorder, ileft, i - 1, postorder, pleft, pleft + i - ileft - 1);
+		node->right = buildRecur(inorder, i + 1, iright, postorder, pleft + i - ileft, pright - 1);
+		return node;
+	}
+};
+
 int main()
 {
 	vector<int> preorder, inorder, postorder;
 	int preodr[7] = {1,2,4,5,3,6,7};	//	
-	int postodr[7] = {4,6,7,3,5,2,1};// 4,5,2,6,7,3,1    4,6,7,3,5,2,1
-	int inodr[7] = {1,4,2,6,3,7,5};	//	4,2,5,1,6,3,7    1,4,2,6,3,7,5
+	int postodr[7] = {4,5,2,6,7,3,1};//{4,6,7,3,5,2,1};//     4,6,7,3,5,2,1
+	int inodr[7] = {4,2,5,1,6,3,7};//{1,4,2,6,3,7,5};	//	    1,4,2,6,3,7,5
 	for (int i = 0; i != 7; i++)
 	{
 		preorder.push_back(preodr[i]);
