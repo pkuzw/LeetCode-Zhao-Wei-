@@ -110,25 +110,47 @@ private:
 class Solution {
 public:
 	vector<string> restoreIpAddresses(string s) {
+		vector<string> rslt;
+		restoreRecur(s, "", 4, rslt);
+		return rslt;
+	}
+private:
+	///@param	s		剩余的IP字符串
+	///@param	ip		已经组成的IP地址
+	///@param	k	剩余的段数
+	///@param	rslt	结果数组
+	void restoreRecur(string s, string ip, int k, vector<string>& rslt)
+	{
+		if (k == 0)		
+		{
+			if (s.empty())	rslt.push_back(ip);					
+		}
+		else
+		{
+			for (int i = 1; i <= 3; i++)
+			{
+				if (i <= s.size() && isValid(s.substr(0, i)))
+				{
+					if (k == 1)	restoreRecur(s.substr(i), ip + s.substr(0, i), k-1, rslt);				
+					else		restoreRecur(s.substr(i), ip + s.substr(0, i) + ".", k-1, rslt);
+				}
+			}
+		}
+	}
 
+	bool isValid(string s)
+	{
+		if (s.empty() || s.size() > 3 || (s.size() > 1 && s[0] == '0'))	return false;
+		int n = stoi(s);
+		return n >= 0 && n <= 255;
 	}
 };
 
 int main()
 {
-	string s;
-	while (cin >> s)
-	{
-		if (s == "break")
-		{
-			break;
-		}
-		Solution slt;
-		vector<string> rslt = slt.restoreIpAddresses(s);
-		for (int i = 0; i != rslt.size(); i++)
-		{
-			cout << rslt[i] << endl;
-		}
-	}
+	string s = "25525511135";
+	Solution slt;
+	vector<string> rslt = slt.restoreIpAddresses(s);
+	
 	return 0;
 }
