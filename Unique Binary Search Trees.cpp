@@ -15,6 +15,9 @@ Given n = 3, there are a total of 5 unique BST's.
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -26,7 +29,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定正整数n，计算所有可能的的二叉搜索树(BST)总数，它的每个节点都选自[1, n]。
 	///@param	n	正整数n
@@ -47,6 +50,19 @@ public:
 				dp[i] += dp[j]*dp[i-j-1];
 			}
 		}
+		return dp[n];
+	}
+};
+
+class Solution {
+public:
+	int numTrees(int n) {
+		vector<int> dp(n+1, 0);
+		dp[0] = 1;
+		dp[1] = 1;
+		for (int i = 2; i <= n; i++)
+			for (int j = 0; j != i; j++)
+				dp[i] += dp[j] * dp[i-j-1];
 		return dp[n];
 	}
 };
