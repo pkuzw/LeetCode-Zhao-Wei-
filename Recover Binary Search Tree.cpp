@@ -1,5 +1,4 @@
-﻿
-///@file	Recover Binary Search Tree
+﻿///@file	Recover Binary Search Tree
 /*
 Two elements of a binary search tree (BST) are swapped by mistake.
 
@@ -12,8 +11,12 @@ A solution using O(n) space is pretty straight forward. Could you devise a const
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.1
+
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -24,7 +27,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
  
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	恢复被交换过的BST树
 	///@param	root	根节点
@@ -111,6 +114,33 @@ private:
 	}
 
 	TreeNode *node;	//	找到指定值的节点
+};
+
+/*
+1. 利用中序遍历，将节点和节点值保存下来；
+2. 对节点值进行排序；
+3. 将排好序的节点值赋值回去。
+*/
+class Solution {
+public:
+	void recoverTree(TreeNode* root) {
+		inorderTraversal(root);
+		sort(vals.begin(), vals.end());
+		for (int i = 0; i != nodes.size(); i++)
+			nodes[i]->val = vals[i];
+	}
+private:
+	void inorderTraversal(TreeNode* root)
+	{
+		if (!root)	return;
+		if (root->left)	inorderTraversal(root->left);
+		vals.push_back(root->val);
+		nodes.push_back(root);
+		if (root->right)	inorderTraversal(root->right);
+	}
+
+	vector<int> vals;
+	vector<TreeNode*> nodes;
 };
 
 int main()
