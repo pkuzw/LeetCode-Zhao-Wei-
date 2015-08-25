@@ -14,13 +14,16 @@ When s3 = "aadbbbaccc", return false.
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	递归判断某个字符串是否是两个字符串交叉生成的
 	///@param	s1	字符串1
@@ -42,8 +45,10 @@ public:
 	///@param	s3	字符串3
 	///@param	end3	字符串3的最后一个字符下标
 	///@return	如果两个字符串可以交叉生成该字符串，则返回true；否则返回false
-	/*/@note	用dp[i][j]表示s1[0..i-1]和s2[0..j-1]能够交叉组成s3[0..i+j-1]，初始条件是dp[0][i] = (s2[i-1] == s3[i-1]) ? true : false;
-				dp[i][0] = (s1[i-1] == s3[i-1]) ?　true : false. 递推关系式是dp[i][j] = ((dp[i][j-1] && s2[j-1] == s3[i+j-1]) || (dp[i-1][j] && s1[i-1] == s3[i+j-1])) ? true : false.
+	/*/@note	用dp[i][j]表示s1[0..i-1]和s2[0..j-1]能够交叉组成s3[0..i+j-1]，
+				初始条件是dp[0][i] = (s2[0..i-1] == s3[0..i-1]) ? true : false;
+				dp[i][0] = (s1[0..i-1] == s3[0..i-1]) ?　true : false.
+				递推关系式是dp[i][j] = ((dp[i][j-1] && s2[j-1] == s3[i+j-1]) || (dp[i-1][j] && s1[i-1] == s3[i+j-1])) ? true : false.
 				时间复杂度为O(n^2)，空间复杂度为O(n^2)。
 	*/
 	bool isInterleave(string s1, string s2, string s3) {
@@ -109,6 +114,23 @@ private:
 			return true;
 		
 		return false;
+	}
+};
+
+class Solution {
+public:
+	bool isInterleave(string s1, string s2, string s3) {
+		int len1 = s1.size(), len2 = s2.size(), len3 = s3.size();
+		if (len1 + len2 != len3)	return false;
+		vector<vector<bool>> dp(len1 + 1, vector<bool>(len2 + 1, false));
+		for (int i = 0; i != len1+1; i++)
+			dp[i][0] = (s1.substr(0, i) == s3.substr(0, i)) ? true : false;
+		for (int j = 0; j != len2+1; j++)
+			dp[0][j] = (s2.substr(0, j) == s3.substr(0, j)) ? true : false;
+		for (int i = 1; i != len1+1; i++)
+			for (int j = 1; j != len2+1; j++)
+				dp[i][j] = (dp[i][j-1] && s2[j-1] == s3[i+j-1]) || (dp[i-1][j] && s1[i-1] == s3[i+j-1]) ? true : false;
+		return dp[len1][len2];
 	}
 };
 
