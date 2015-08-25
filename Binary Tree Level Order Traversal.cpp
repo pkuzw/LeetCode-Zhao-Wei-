@@ -20,6 +20,9 @@ return its level order traversal as:
 ///@date	2015.07.22
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -33,7 +36,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///brief	宽度优先遍历二叉树
 	///@param	root	根节点
@@ -79,6 +82,36 @@ public:
 
 private:
 	vector<vector<int>> level_order_seq;
+};
+
+class Solution {
+public:
+	vector<vector<int>> levelOrder(TreeNode* root) {
+		vector<vector<int>> rslt;
+		vector<int> level;
+		if (!root)	return rslt;
+		queue<TreeNode*> que;
+		que.push(root);
+		que.push(nullptr);
+		while (!que.empty())
+		{
+			TreeNode* n = que.front();
+			que.pop();
+			if (n)
+			{
+				level.push_back(n->val);
+				if (n->left)		que.push(n->left);
+				if (n->right)	que.push(n->right);
+			}
+			else
+			{
+				if (!que.empty())	que.push(nullptr);
+				rslt.push_back(level);
+				level.clear();
+			}
+		}
+		return rslt;
+	}
 };
 
 int main()
