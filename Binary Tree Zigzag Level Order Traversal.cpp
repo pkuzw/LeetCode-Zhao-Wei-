@@ -20,6 +20,9 @@ return its zigzag level order traversal as:
 ///@date	2015.07.22
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -34,7 +37,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	按照之字形方向宽度优先遍历二叉树
 	///@param	root	根节点
@@ -86,6 +89,43 @@ public:
 
 private:
 	vector<vector<int>> zigzag_seq;
+};
+
+class Solution {
+public:
+	vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+		vector<vector<int>> rslt;
+		if (!root)	return rslt;
+		queue<TreeNode*> que;
+		que.push(root);
+		que.push(nullptr);
+		bool flg = false;
+		vector<int> level;
+		while (!que.empty())
+		{
+			TreeNode* n = que.front();
+			que.pop();			
+			if (n)
+			{
+				level.push_back(n->val);
+				if (n->left)		que.push(n->left);
+				if (n->right)	que.push(n->right);
+			}
+			else
+			{
+				if (flg)
+				{
+					reverse(level.begin(), level.end());
+					flg = false;
+				}
+				else	flg = true;
+				rslt.push_back(level);
+				level.clear();
+				if (!que.empty())	que.push(nullptr);
+			}
+		}
+		return rslt;
+	}	
 };
 
 int main()
