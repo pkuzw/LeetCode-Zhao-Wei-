@@ -121,7 +121,7 @@ private:
 2. 对节点值进行排序；
 3. 将排好序的节点值赋值回去。
 */
-class Solution {
+class Solution_v2 {
 public:
 	void recoverTree(TreeNode* root) {
 		inorderTraversal(root);
@@ -142,6 +142,58 @@ private:
 	vector<int> vals;
 	vector<TreeNode*> nodes;
 };
+
+/*
+1. 设置一个first指针指向第一个异常节点，一个second指针指向第二个异常值节点，一个parent指针指向当前节点的前一个节点
+2. 利用Morris中序遍历，如果遍历到了第一个异常值，如果first为空，则将其赋予first，当前节点为second。遍历完后，如果first和
+   seconde节点都不为空，那么交换二者即可。
+3. 这样空间复杂度为O(1)。
+*/
+class Solution {
+public:
+	void recoverTree(TreeNode* root) {
+		TreeNode* cur = root;
+		TreeNode* pre = root;
+		TreeNode* first = nullptr, *second = nullptr, *parent = nullptr;
+		while (cur)
+		{
+			if (!cur->left)	
+			{
+				if (parent && parent->val > cur->val)
+				{
+					if (!first)	first = parent;
+					second = cur;
+				}
+				parent = cur;
+				cur = cur->right;
+			}
+			else
+			{
+				pre = cur->left;
+				while (pre->right && pre->right != cur)
+					pre = pre->right;
+				if (!pre->right)
+				{
+					pre->right = cur;
+					cur = cur->left;
+				}
+				else
+				{
+					pre->right = nullptr;
+					if (parent->val > cur->val)
+					{
+						if (!first)	first = parent;
+						second = cur;
+					}
+					parent = cur;
+					cur = cur->right;
+				}				
+			}
+		}
+		if (first && second)	swap(first->val, second->val);
+	}
+};
+
 
 int main()
 {
