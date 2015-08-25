@@ -12,6 +12,9 @@ Both the left and right subtrees must also be binary search trees.
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
@@ -24,7 +27,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断二叉搜索树是否合法
 	///@param	node	树节点
@@ -59,7 +62,20 @@ private:
 		
 		return false;
 	}
+};
 
+class Solution {
+public:
+	bool isValidBST(TreeNode* root) {		
+		return validBstRecur(root, LONG_MAX, LONG_MIN);
+	}
+private:
+	bool validBstRecur(TreeNode* root, long max_, long min_)
+	{
+		if (!root)	return true;
+		if (root->val >= max_ || root->val <= min_)	return false;
+		return validBstRecur(root->left, root->val, min_) && validBstRecur(root->right, max_, root->val);
+	}
 };
 
 int main()
