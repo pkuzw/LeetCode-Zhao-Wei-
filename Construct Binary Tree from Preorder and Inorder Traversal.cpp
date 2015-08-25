@@ -103,6 +103,7 @@ private:
 		return node;
 	}
 };
+
 int main()
 {
 	vector<int> preorder, inorder;
