@@ -20,6 +20,8 @@ But the following is not:
 ///@date	2015.07.22
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -33,7 +35,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断一个二叉树是否以根节点为轴镜面对称
 	///@param	root	根节点
@@ -113,6 +115,21 @@ private:
 	vector<vector<int>> level_order_seq;
 };
 
+class Solution {
+public:
+	bool isSymmetric(TreeNode* root) {
+		if (!root)	return true;
+		return symRecur(root->left, root->right);
+	}
+private:
+	bool symRecur(TreeNode* left, TreeNode* right)
+	{
+		if (!left && !right)	return true;
+		if ((left && !right) || (!left && right) || (left->val != right->val))	return false;
+		return symRecur(left->left, right->right) && symRecur(left->right, right->left);
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -122,12 +139,12 @@ int main()
 		n[i] = new TreeNode(i);
 	}
 	root->left = n[2];
-// 	root->right = n[3];
-// 	root->right->val = 2;
-// 	root->left->right = n[5];
-// 	root->left->right->val = 3;
-// 	root->right->right = n[7];
-// 	root->right->right->val = 3;
+ 	root->right = n[3];
+ 	root->right->val = 2;
+ 	root->left->right = n[5];
+ 	root->left->right->val = 3;
+ 	root->right->right = n[7];
+ 	root->right->right->val = 3;
 
 	Solution slt;
 	cout << slt.isSymmetric(root);
