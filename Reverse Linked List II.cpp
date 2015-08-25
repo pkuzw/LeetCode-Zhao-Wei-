@@ -14,11 +14,14 @@ Given m, n satisfy the following condition:
 
 ///@author	zhaowei
 ///@date	2015.07.20
-///@versio	1.0
+///@version	1.0
 
 ///@author	zhaowei
 ///@date	2015.07.21
-///@versio	2.0
+///@version	1.1
+
+///@date	2015.08.25
+///@version	2.0
 
 #include <iostream>
 #include <stack>
@@ -31,7 +34,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个链表，在O(1)的空间复杂度，O(n)的时间复杂度的限制下反转指定范围的节点
 	///@param	head	链表表头
@@ -214,14 +217,59 @@ private:
 	}
 };
 
+/*
+1. 在链表表头处添加一个表头节点，以防起始翻转下标为首节点时无法找到起始遍历下标；
+2. 主要的翻转代码还是利用两个后续指针依次进行翻转；
+3. 用一个指针保存开始翻转的节点，该节点是翻转后的尾结点；
+4. 时间复杂度为O(k)，空间复杂度为O(1)。
+*/
+class Solution {
+public:
+	ListNode* reverseBetween(ListNode* head, int m, int n) {
+		if (!head || !head->next || m >= n)	return head;
+		ListNode* pre_head = new ListNode(INT_MAX);
+		pre_head->next = head;
+		ListNode* indx = head;		
+		int i = 1;
+		while (i < m)
+		{
+			indx = indx->next;			
+			i++;
+		}
+		ListNode* indx_next = indx->next;
+		ListNode* indx_next_next = indx_next;
+		indx->next = nullptr;
+		ListNode* r_tail = indx;
+		while (i < n)
+		{
+			if (indx_next)	indx_next_next = indx_next->next;
+			indx_next->next = indx;
+			indx = indx_next;
+			indx_next =  indx_next ? indx_next_next : indx_next;
+			
+			i++;
+		}
+		ListNode* pre = pre_head;
+		int j = 1;
+		while (j < m)
+		{
+			pre = pre->next;
+			j++;
+		}
+		pre->next = indx;
+		r_tail->next = indx_next;
+		return pre_head->next;
+	}
+};
+
 int main()
 {
-	Solution slt;
+	Solution_v1 slt_v1;
 	ListNode* head = new ListNode(1);
- 	slt.insertNode(head, 2);
- 	slt.insertNode(head, 3);
- 	slt.insertNode(head, 4);
- 	slt.insertNode(head, 5);
+ 	slt_v1.insertNode(head, 2);
+//  	slt_v1.insertNode(head, 3);
+//  	slt_v1.insertNode(head, 4);
+//  	slt_v1.insertNode(head, 5);
 
 	ListNode* display = head;
 	cout << "Before: ";
@@ -235,7 +283,11 @@ int main()
 
 //	head = slt.reverseList(display);
 
-	head = slt.reverseBetween_Space_O_1(display, 1, 2);
+	
+//	head = slt_v1.reverseBetween_Space_O_1(display, 1, 2);
+	
+	Solution slt;
+	ListNode* rslt = slt.reverseBetween(display, 1, 2);
 	cout << "After: ";
 	while (head != nullptr)
 	{
