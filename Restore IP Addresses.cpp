@@ -11,13 +11,16 @@ return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
 ///@date	2015.07.21
 ///@version	1.0
 
+///@date	2015.08.25
+///@version	2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个由数字组成的字符串，对其按照IP地址的格式对其进行划分，得到所有可能的IP地址
 	///@param	s	字符串
@@ -101,6 +104,13 @@ private:
 			return false;
 		}
 		return true;
+	}
+};
+
+class Solution {
+public:
+	vector<string> restoreIpAddresses(string s) {
+
 	}
 };
 
