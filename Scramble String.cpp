@@ -41,6 +41,9 @@ Given two strings s1 and s2 of the same length, determine if s2 is a scrambled s
 ///@date	2015.07.20
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -48,7 +51,7 @@ Given two strings s1 and s2 of the same length, determine if s2 is a scrambled s
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	当一个字符串被用二叉树表示时，交换二叉树同一个父节点下的叶节点所得到的新字符串我们称之为Scramble String，现在给定两个字符串，
 	//			写一个函数判定这两个字符串是否是scramble string
@@ -111,8 +114,10 @@ private:
 	///@param	s1	字符串1
 	///@param   s2	字符串2
 	///@return  如果这两个字符串是scramble string的话返回true；否则返回false
-	/* @note	维护一个三维数组来dp[k][i][j]保存字符串s1[i..i+k]与字符串s2[j..j+k]是否为scramble string。初始条件为dp[1][i][j] = (s1[i] == s2[j]) ? true : false，
-				dp[k][i][j] = ((dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]))。时间复杂度为O(n^4)，空间复杂度为O(n^3)。
+	/* @note	维护一个三维数组来dp[k][i][j]保存字符串s1[i..i+k]与字符串s2[j..j+k]是否为scramble string。
+				初始条件为dp[1][i][j] = (s1[i] == s2[j]) ? true : false，
+				dp[k][i][j] = ((dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]))。
+				时间复杂度为O(n^4)，空间复杂度为O(n^3)。
 	*/
 	bool isScramble_DP(string &s1, string &s2)
 	{
@@ -155,6 +160,27 @@ private:
 			}
 		}
 		return dp[len][0][0];		
+	}
+};
+
+/*
+dp[k][i][j]表示s1[i..i+k-1]是否与s2[j, j+k-1]为scramble string
+*/
+class Solution {
+public:
+	bool isScramble(string s1, string s2) {
+		if (s1.size() != s2.size())	return false;
+		const int len = s1.size();
+		vector<vector<vector<bool>>> dp(len+1, vector<vector<bool>>(len, vector<bool>(len, false)));
+		for (int i = 0; i != len; i++)
+			for (int j = 0; j != len; j++)
+				dp[1][i][j] = (s1[i] == s2[j]) ? true : false;
+		for (int k = 2; k != len+1; k++)
+			for (int i = 0; i != len-k+1; i++)
+				for (int j = 0; j != len-k+1; j++)
+					for (int l = 1; l != k && !dp[l][i][j]; l++)
+						dp[k][i][j] = (dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]);
+		return dp[len][0][0];
 	}
 };
 
