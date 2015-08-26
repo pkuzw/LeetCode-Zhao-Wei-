@@ -10,6 +10,10 @@ Given 1->1->1->2->3, return 2->3.
 ///@date	2015.07.14
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
+#include <deque>
 #include <iostream>
 
 using namespace std;
@@ -20,7 +24,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	删除已经排好序的链表中的重复节点
 	///@param	head	链表表头
@@ -82,25 +86,68 @@ public:
 	}
 };
 
+class Solution {
+public:
+	ListNode* deleteDuplicates(ListNode* head) {
+		if (!head || !head->next)	return head;
+		deque<ListNode*> que;
+		ListNode* indx = head;		
+		while (indx)
+		{
+			if (que.empty() || indx->val != que.back()->val)		que.push_back(indx);
+			else
+			{
+				bool flg = false;	//	是否为重复元素
+				while (indx && indx->val == que.back()->val)		//	在使用指针时要注意判定其是否有效
+				{
+					flg = true;
+					indx = indx->next;
+				}
+				if (flg)
+				{
+					que.pop_back();
+					continue;
+				}
+			}
+			indx = indx->next;
+		}
+		if (que.empty())	return nullptr;
+
+		ListNode* rslt = que.front();
+		while (!que.empty())
+		{
+			indx = que.front();
+			que.pop_front();
+			indx->next = que.empty() ? nullptr : que.front();
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	ListNode* head = new ListNode(1);
-	Solution slt;	
+	Solution_v1 slt;	
 	slt.insertNode(head, 1);
-	slt.insertNode(head, 2);
-	slt.insertNode(head, 2);
-	slt.insertNode(head, 2);
-	slt.insertNode(head, 3);
-	slt.insertNode(head, 4);
-	slt.insertNode(head, 4);
-	slt.insertNode(head, 5);
-	for (int i = 6; i <= 9; i++)
-	{
-		slt.insertNode(head, i);
-		slt.insertNode(head, i);
-	}
-	slt.insertNode(head, 10);
-	slt.insertNode(head, 11);
+// 	slt.insertNode(head, 2);
+// 	slt.insertNode(head, 2);
+// 	slt.insertNode(head, 2);
+// 	slt.insertNode(head, 3);
+// 	slt.insertNode(head, 4);
+// 	slt.insertNode(head, 4);
+// 	slt.insertNode(head, 5);
+// 	for (int i = 6; i <= 9; i++)
+// 	{
+// 		slt.insertNode(head, i);
+// 		slt.insertNode(head, i);
+// 		slt.insertNode(head, i);
+// 	}
+// 	slt.insertNode(head, 10);
+// 	slt.insertNode(head, 11);
+
+	//v2
+	Solution slt_v2;
+	ListNode* rslt = slt_v2.deleteDuplicates(head);
 
 	ListNode* display = head;
 	cout << "Before delete: ";
