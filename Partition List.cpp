@@ -12,7 +12,11 @@ return 1->2->2->4->3->5.
 ///@date	2015.07.15
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -22,7 +26,7 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	在链表中根据指定值将链表改变为指定值左侧的元素均小于指定值，右侧的元素均不小于指定值。左右两侧的元素顺序要保持不变
 	///@param	head	链表头
@@ -77,37 +81,55 @@ public:
 	}
 };
 
+//@note	利用队列来维护大于等于x值和小于x值的两部分，然后再将它们依次弹出。
+class Solution {
+public:
+	ListNode* partition(ListNode* head, int x) {
+		if (!head || !head->next)	return head;
+		queue<ListNode*> que1, que2;
+		ListNode* indx = head;
+		while (indx)
+		{
+			if (indx->val < x)	que1.push(indx);
+			else				que2.push(indx);
+			indx = indx->next;
+		}
+		ListNode* new_head = que1.empty() ? que2.front() : que1.front();
+		que1.empty() ? que2.pop() : que1.pop();
+		indx = new_head;
+		while (!que1.empty())
+		{
+			indx->next = que1.front();
+			que1.pop();
+			indx = indx->next;
+		}
+		while (!que2.empty())
+		{
+
+			indx->next = que2.front();
+			que2.pop();
+			indx = indx->next;
+		}
+		indx->next = nullptr;
+		return new_head;
+	}
+};
+
 int main()
 {
-	Solution slt;
+	Solution_v1 slt_v1;
 	ListNode* head = new ListNode(1);
-	slt.insertNode(head, 4);
-	slt.insertNode(head, 3);
-	slt.insertNode(head, 2);
-	slt.insertNode(head, 5);
-	slt.insertNode(head, 2);
+	slt_v1.insertNode(head, 1);
+// 	slt_v1.insertNode(head, 3);
+// 	slt_v1.insertNode(head, 2);
+// 	slt_v1.insertNode(head, 5);
+// 	slt_v1.insertNode(head, 2);
 
-	
+// 	
+// 	ListNode* rslt = slt_v1.partition(head);
+	Solution slt;	
 	ListNode* display = head;
-	cout << "Before: ";
-	while (head != nullptr)
-	{
-		cout << head->val;
-		cout << ' ';
-		head = head->next;
-	}
-	cout << endl;
-
-
-	head = slt.partition(display, 5);
-	cout << "After: ";
-	while (head != nullptr)
-	{
-		cout << head->val;
-		cout << ' ';
-		head = head->next;
-	}
-	cout << endl;
+	head = slt.partition(display, 0);
 
 	return 0;
 }
