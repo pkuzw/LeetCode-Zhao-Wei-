@@ -178,7 +178,7 @@ public:
 		for (int k = 2; k != len+1; k++)
 			for (int i = 0; i != len-k+1; i++)
 				for (int j = 0; j != len-k+1; j++)
-					for (int l = 1; l != k && !dp[l][i][j]; l++)
+					for (int l = 1; l != k && !dp[k][i][j]; l++)
 						dp[k][i][j] = (dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]);
 		return dp[len][0][0];
 	}
