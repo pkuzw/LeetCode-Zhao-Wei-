@@ -21,13 +21,16 @@ word = "ABCB", -> returns false.
 ///@date	2015.07.18
 ///@version	1.2
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <vector>
 #include <string>
 #include <iostream>
 
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	判断在二维字符矩阵中是否存在指定单词
@@ -355,45 +358,68 @@ private:
 	int height;	//	矩阵的高
 };
 
+///@note	dfs
+class Solution {
+public:
+	bool exist(vector<vector<char>>& board, string word) {
+		if (word.empty())	return true;		
+		if (!word.empty() && board.empty())	return false;
+		int m = board.size();
+		int n = board[0].size();	
+		vector<vector<bool>> visited(m, vector<bool>(n, false));
+		for (int i = 0; i != m; i++)
+			for (int j = 0; j != n; j++)							
+				if (dfs(board, word, visited, i, j, 0))	return true;			
+		return false;
+	}
+
+	bool dfs(vector<vector<char>>& board, string& word, vector<vector<bool>>& visited, int i, int j, int k)
+	{
+		if (k == word.size())	return true;
+		if (!visited[i][j] && board[i][j] == word[k])
+		{
+			k++;
+			visited[i][j] = true;
+			if (i > 0 && dfs(board, word, visited, i-1, j, k))					return true;
+			if (i < board.size()-1 && dfs(board, word, visited, i+1, j, k))		return true;
+			if (j > 0 && dfs(board, word, visited, i, j-1, k))					return true;
+			if (j < board[0].size()-1 && dfs(board, word, visited, i, j+1, k))	return true;
+			visited[i][j] = false;
+		}
+		return k == word.size() ? true : false;
+	}
+};
+
 int main()
 {
 	vector<vector<char>> board;
 	vector<char> cvec;
 	cvec.push_back('A');
-	cvec.push_back('B');
-	cvec.push_back('C');
-	cvec.push_back('E');
+// 	cvec.push_back('B');
+// 	cvec.push_back('C');
+// 	cvec.push_back('E');
 	board.push_back(cvec);
 	cvec.clear();
+// 
+// 	cvec.push_back('S');
+// 	cvec.push_back('F');
+// 	cvec.push_back('C');
+// 	cvec.push_back('S');
+// 	board.push_back(cvec);
+// 	cvec.clear();
+// 
+// 	cvec.push_back('A');
+// 	cvec.push_back('D');
+// 	cvec.push_back('E');
+// 	cvec.push_back('E');
+// 	board.push_back(cvec);
+// 	cvec.clear();
 
-	cvec.push_back('S');
-	cvec.push_back('F');
-	cvec.push_back('C');
-	cvec.push_back('S');
-	board.push_back(cvec);
-	cvec.clear();
+	//ESECCEDFBASA	true
+	//ASFBCCED	true
 
-	cvec.push_back('A');
-	cvec.push_back('D');
-	cvec.push_back('E');
-	cvec.push_back('E');
-	board.push_back(cvec);
-	cvec.clear();
-
-	//ESECCEDFBASA
-	//ASFBCCED
-
-	for (int i = 0; i != 3; i++)
-	{
-		for (int j = 0; j != 4; j++)
-		{
-			cout << board[i][j] << ' ';
-		}
-		cout << endl;
-	}
 	Solution slt;
-	string word;
-	while (cin >> word)
-		cout << slt.exist(board, word) << endl;
+	string word("A");
+	bool rslt = slt.exist(board, word);
 	return 0;
 }
