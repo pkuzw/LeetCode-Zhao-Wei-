@@ -14,6 +14,9 @@ If there are multiple such windows, you are guaranteed that there will always be
 */
 ///@author	zhaowei
 ///@date	2015.07.18
+///@version	1.1
+
+///@date	2015.08.26
 ///@version	2.0
 
 #include <iostream>
@@ -26,7 +29,7 @@ If there are multiple such windows, you are guaranteed that there will always be
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算字符串s包含字符串t的最小子串
 	///@param	s	字符串s
@@ -173,15 +176,48 @@ private:
 	unordered_map<char, int> char_app;		//	在t字符串中字符的出现次数	
 };
 
+class Solution {
+public:
+	string minWindow(string s, string t) {
+		if (s.size() < t.size())	return "";
+		unordered_map<char, int> ht;
+		for (int i = 0; i != t.size(); i++)
+		{
+			if (ht.find(t[i]) != ht.end())	ht[t[i]]++;
+			else ht[t[i]] = 1;
+		}
+		int left = 0, cnt = 0, min_len = s.size()+1;
+		string rslt;
+		for (int right = 0; right != s.size(); right++)
+		{
+			if (ht.find(s[right]) != ht.end())
+			{
+				ht[s[right]]--;
+				if (ht[s[right]] >= 0)	cnt++;
+				while (cnt == t.size())
+				{
+					if (right - left + 1 < min_len)
+					{
+						min_len = right - left + 1;
+						rslt = s.substr(left, min_len);							 
+					}
+					if (ht.find(s[left]) != ht.end())
+					{
+						ht[s[left]]++;
+						if (ht[s[left]] > 0) cnt--;
+					}
+					++left;
+				}
+			}		
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
-	string s, t;
-	
-	while (cin >> s >> t)
-	{
-		Solution slt;
-		cout << slt.minWindow(s, t) << endl;
-		cout << endl;
-	}
+	string s = "A", t = "A";
+	Solution slt;
+	string rslt = slt.minWindow(s, t);
 	return 0;
 }
