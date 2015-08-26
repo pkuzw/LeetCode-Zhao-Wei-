@@ -2,7 +2,8 @@
 /*
 The gray code is a binary numeral system where two successive values differ in only one bit.
 
-Given a non-negative integer n representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.
+Given a non-negative integer n representing the total number of bits in the code, print the sequence of gray code. 
+A gray code sequence must begin with 0.
 
 For example, given n = 2, return [0,1,3,2]. Its gray code sequence is:
 
@@ -21,12 +22,14 @@ For now, the judge is able to judge based on one instance of gray code sequence.
 ///@date	2015.07.20
 ///@version	1.3
 
+///@date	2015.08.26
+///@version	2.0
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算0到n的格雷码数组。格雷码数组的定义是二进制表示的整数数组，其第一个数是0，后面的任意连续两个数互相之间只相差一个bit位。
 	///@param	n	格雷码的位数
@@ -91,22 +94,54 @@ private:
 	vector<vector<int>> binary_gray_codes;	//	二进制格雷码序列
 };
 
+/*
+格雷码从二进制转换过来可以通过右移一位与自己异或得到；或者是镜面对称向下添加，然后前半部分首部加0，后半部分首部加1得到
+*/
+class Solution {
+public:
+	vector<int> grayCode(int n) {
+		int k = 1 << n;
+		vector<int> grays(k, 0);
+		for (int i = 0; i != k; i++)
+			grays[i] = (i >> 1) ^ i;
+		return grays;
+	}
+
+	vector<int> grayCodeMirror(int n)
+	{		
+		int k = 1 << n;
+		vector<int> grays(k, 0);
+		if (!n)	return grays;
+		
+		grays[0] = 0;
+		grays[1] = 1;
+		if (n == 1)	return grays;
+
+		for (int i = 1; i != n; i++)
+		{
+			int j = 1 << i;
+			for (int p = j; p < j*2; p++)
+			{
+				int q = 2*j - p - 1;
+				grays[p] = grays[q];
+			}
+			for (int p = 0; p < j; p++)
+				grays[p] |= (0 << i);
+			for (int p = j; p < 2*j; p++)
+				grays[p] |= (1 << i);
+		}
+		return grays;
+	}
+};
+
 int main()
 {
-	int n = 0;
+	int n = 6;
 	Solution slt;
+	vector<int> rslt = slt.grayCodeMirror(n);
+	rslt = slt.grayCode(n);
 
-	cout << "input n: ";
-	while (cin >> n)
-	{
-		vector<int> rslt = slt.grayCode(n);
-
-		for (int i = 0; i != rslt.size(); i++)
-		{
-			cout << rslt[i] << ' ';
-		}
-		cout << endl;
-		cout << "input n: ";
-	}
+	Solution_v1 slt_v1;
+	rslt = slt_v1.grayCode(n);
 	return 0;
 }
