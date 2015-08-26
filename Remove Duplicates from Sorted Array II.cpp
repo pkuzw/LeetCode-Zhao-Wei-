@@ -9,12 +9,18 @@ Given sorted array nums = [1,1,1,2,2,3],
 Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. 
 It doesn't matter what you leave beyond the new length.
 */
+///@author	zhaowei
+///@date	2015.07.15
+///@version	1.0
+
+///@date	2015.08.26
+///@version	2.0
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	在一个已经排好序的数组中，如果只允许同一个元素出现两次，生成新数组并计算新数组的长度
 	///@param	nums	已经排好序的数组
@@ -65,24 +71,43 @@ private:
 	}
 };
 
+class Solution {
+public:
+	int removeDuplicates(vector<int>& nums) {
+		if (nums.empty())	return 0;
+		int rslt = 0;
+		vector<int> tmp;
+		int i = 0, j = 0;
+		for (i = 0; i < nums.size(); i = j)
+		{
+			int cnt = 0;
+			j = i;
+			while (j < nums.size() && nums[j] == nums[i])
+			{
+				if (cnt < 2)	tmp.push_back(nums[j]);
+				cnt++;
+				j++;
+			}
+			rslt += cnt > 2 ? 2 : cnt;
+		}	
+		nums = tmp;
+		return rslt;
+	}
+};
+
 int main()
 {
 	Solution slt;
 	vector<int> test;
  	test.push_back(1);
  	test.push_back(2);
-// 	test.push_back(2);
-// 	test.push_back(3);
-//   	test.push_back(3);
-// 	test.push_back(4);
-// 	test.push_back(4);
-// 	test.push_back(4);
+	test.push_back(2);
+	test.push_back(3);
+	test.push_back(3);
+	test.push_back(4);
+	test.push_back(4);
+	test.push_back(4);
 	int new_len = slt.removeDuplicates(test);
-	cout << new_len << endl;
-	for (int i = 0; i != new_len; i++)
-	{
-		cout << test[i] << ' ';
-	}
-	cout << endl;
+
 	return 0;
 }
