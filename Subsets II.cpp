@@ -21,13 +21,16 @@ If nums = [1,2,2], a solution is:
 ///@date	2015.07.20
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个包含有重复元素的数组，计算其所有可能的子集，要求不能有重复子集
 	///@param	nums	含有重复元素的数组
@@ -79,6 +82,35 @@ private:
 	vector<int> combination;	//	一个子集
 };
 
+class Solution {
+public:
+	vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+		sort(nums.begin(), nums.end());
+		vector<vector<int>> rslt;
+		vector<int> combination;
+		for (int i = 0; i <= nums.size(); i++)
+			getCombinations(nums, nums.size(), i, combination, rslt);
+		return rslt;
+	}
+private:
+	void getCombinations(vector<int> nums, int n, int k, vector<int>& combination, vector<vector<int>>& rslt)
+	{
+		if (!k)
+		{
+			rslt.push_back(combination);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++)
+		{
+			if (i == 0 || nums[i] != nums[i-1])	combination.push_back(nums[i]);
+			else continue;
+			vector<int> new_nums(nums.begin()+i+1, nums.end());
+			getCombinations(new_nums, n-1, k-1, combination, rslt);
+			combination.pop_back();
+		}
+	}
+};
+
 int main()
 {
 	vector<int> nums;
@@ -91,13 +123,8 @@ int main()
 
 	Solution slt;
 	vector<vector<int>> rslt = slt.subsetsWithDup(nums);
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		for (int j = 0; j != rslt[i].size(); j++)
-		{
-			cout << rslt[i][j] << ' ';
-		}
-		cout << endl;
-	}
+	
+	Solution_v1 slt_v1;
+	rslt = slt_v1.subsetsWithDup(nums);
 	return 0;
 }
