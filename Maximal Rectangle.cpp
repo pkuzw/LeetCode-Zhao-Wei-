@@ -195,7 +195,7 @@ private:
 		return max_area;
 	}
 };
-
+//@note	建立三个一维数组，分别保存当前行的1的左边界，1的右边界的后一个元素下标和1的高度。
 class Solution {
 public:
 	int maximalRectangle(vector<vector<char>>& matrix) {
