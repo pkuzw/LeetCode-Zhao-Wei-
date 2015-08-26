@@ -19,12 +19,15 @@ Write a function to determine if a given target is in the array.
 ///@date	2015.07.18
 ///@version	1.2
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	查找已排序数组中是否存在某元素（默认为升序）
 	///@param	nums	数组
@@ -74,6 +77,30 @@ public:
 			}
 			else
 				l++;	//	如果中间值恰好等于首部元素，则更新左边界，以使中间值下标变化
+		}
+		return false;
+	}
+};
+
+class Solution {
+public:
+	bool search(vector<int>& nums, int target) {
+		int l = 0, r = nums.size() - 1;
+		while (l <= r)
+		{
+			int m = (l + r) / 2;
+			if (nums[m] == target)	return true;
+			if (nums[l] < nums[m])
+			{
+				if (target < nums[m] && target >= nums[l])	r = m - 1;
+				else	l = m + 1;
+			}
+			else if (nums[l] > nums[m])
+			{
+				if (target <= nums[r] && target > nums[m])	l = m + 1;
+				else r = m - 1;
+			}
+			else	l++;
 		}
 		return false;
 	}
