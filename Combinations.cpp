@@ -18,12 +18,15 @@ If n = 4 and k = 2, a solution is:
 ///@date	2015.07.13
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算C(n, k)
 	///@param	n	候选元素数目
@@ -68,19 +71,41 @@ private:
 	}
 };
 
-int main()
-{
-	int n, k;
-	while (cin >> n >> k){
-		Solution slt;
-		vector<vector<int>> rslt = slt.combine(n, k);
-		cout << rslt.size() << endl;
-		for (int i = 0; i != rslt.size(); i++)
+class Solution {
+public:
+	vector<vector<int>> combine(int n, int k) {
+		vector<vector<int>> rslt;
+		vector<int> combination;
+		vector<int> nums;
+		for (int i = 0; i != n; i++)
+			nums.push_back(i+1);		
+		getCombination(nums, rslt, combination, n, k);
+		return rslt;
+	}
+private:
+	void getCombination(vector<int> nums, vector<vector<int>>& rslt, vector<int>& combination, int n, int k)
+	{
+		if (!k)
 		{
-			for (int j = 0; j != rslt[i].size(); j++)
-				cout << rslt[i][j] << ' ';
-			cout << endl;
+			rslt.push_back(combination);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++)
+		{
+			combination.push_back(nums[i]);
+			vector<int> new_nums(nums.begin()+i+1, nums.end());
+			getCombination(new_nums, rslt, combination, n-1, k-1);
+			combination.pop_back();
 		}
 	}
+};
+
+int main()
+{
+	int n = 5, k = 2;
+
+	Solution slt;
+	vector<vector<int>> rslt = slt.combine(n, k);
+
 	return 0;
 }
