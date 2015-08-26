@@ -15,6 +15,9 @@ The number of ways decoding "12" is 2.
 */
 ///@author	zhaowei
 ///@date	2015.07.20
+///@version	1.1
+
+///@date	2015.08.26
 ///@version	2.0
 
 #include <iostream>
@@ -23,7 +26,7 @@ The number of ways decoding "12" is 2.
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个数字串，其中数字是按照1->A, 2->B, ..., 26->Z的顺序来进行对应的，计算该数字串有多少种解码方法
 	///@param	s	数字串
@@ -47,7 +50,7 @@ public:
 	///@return	返回总的解码方法数
 	/* @note	动态归划：用dp[i]表示字符串s[0..i-1]能够解码的方法数。初始条件dp[0] = 1, dp[1] = (s[0] == '0') ? 0 : 1，递推方程为
 				dp[i] = (s[i-1] <= '9' && s[i-1] > '0') ? dp[i-1] : 0) + 
-				((s[i-2] == '2' && s[i-1] <= '6' && s[i-1] >= '0') || (s[i-1] == '1')) ? dp[i-2] : 0.
+				((s[i-2] == '2' && s[i-1] <= '6' && s[i-1] >= '0') || (s[i-2] == '1')) ? dp[i-2] : 0.
 				时间复杂度为O(n)，空间复杂度为O(n)。	
 	*/
 	int numDecodings_DP(string s) {
@@ -68,7 +71,7 @@ public:
 			else 
 				dp[i] = 0;	//	出现无法匹配的'0'，直接置为0
 
-			if ((s[i-2] == '2' && s[i-1] <= '6') || (s[i-2] == '1'))	//	再判前两个元素			
+			if ((s[i-2] == '2' && s[i-1] <= '6' && s[i-1] >= '0') || (s[i-2] == '1'))	//	再判前两个元素			
 				dp[i] += dp[i-2];			
 		}
 		return dp.back();
@@ -129,12 +132,25 @@ private:
 	}
 };
 
+class Solution {
+public:
+	int numDecodings(string s) {
+		if (s.empty())	return 0;
+		vector<int> dp(s.size()+1, 0);
+		dp[0] = 1;
+		dp[1] = s[0] == '0' ? 0 : 1;
+		for (int i = 2; i != s.size()+1; i++)		
+			dp[i] = (s[i-1] == '0' ? 0 : dp[i-1]) + (((s[i-2] == '2' && s[i-1] <= '6' && s[i-1] >= '0') || s[i-2] == '1') ? dp[i-2] : 0);		
+		return dp[s.size()];
+	}
+};
+
 int main()
 {
 	string s = "9371597631128776948387197132267188677349946742344217846154932859125134924241649584251978418763151253";//3981312
+	Solution_v1 slt_v1;
+	int rslt = slt_v1.numDecodings_DP(s);
 	Solution slt;
-	cout << slt.numDecodings_DP(s);
-	cout << ' ' << slt.numDecodings_Recur(s);
-	cout << endl;
+	rslt = slt.numDecodings(s);
 	return 0;
 }
