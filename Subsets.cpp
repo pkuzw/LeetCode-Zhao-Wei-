@@ -23,13 +23,16 @@ If nums = [1,2,3], a solution is:
 ///@date	2015.07.14
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定数组，计算其所有可能的子集
 	///@param	nums	数组
@@ -71,6 +74,34 @@ private:
 	}
 };
 
+class Solution {
+public:
+	vector<vector<int>> subsets(vector<int>& nums) {
+		vector<vector<int>> rslt;
+		vector<int> combination;
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i <= nums.size(); i++)
+			getCombinations(nums, rslt, combination, nums.size(), i);
+		return rslt;
+	}
+private:
+	void getCombinations(vector<int>& nums, vector<vector<int>>& rslt, vector<int>& combination, int n, int k)
+	{
+		if (!k)
+		{
+			rslt.push_back(combination);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++)
+		{
+			combination.push_back(nums[i]);
+			vector<int> new_nums(nums.begin()+i+1, nums.end());
+			getCombinations(new_nums, rslt, combination, n-1, k-1);
+			combination.pop_back();
+		}
+	}
+};
+
 int main()
 {
 	vector<int> nums;
@@ -78,19 +109,10 @@ int main()
 	nums.push_back(2);
 	nums.push_back(3);
 	nums.push_back(4);
-	nums.clear();
-	Solution slt;
-	
-	vector<vector<int>> rslt = slt.subsets(nums);
-	cout << "Subsets' number: " << rslt.size() << endl;
-	cout << "Subsets: " << endl;
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		for (int j = 0; j != rslt[i].size(); j++)
-		{
-			cout << rslt[i][j] << ' ';
-		}
-		cout << endl;
-	}
+	Solution_v1 slt_v1;
+	vector<vector<int>> rslt = slt_v1.subsets(nums);
+
+	Solution slt;	
+	rslt = slt.subsets(nums);
 	return 0;
 }
