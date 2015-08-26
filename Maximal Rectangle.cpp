@@ -6,19 +6,22 @@ Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle con
 ///@date	2015.07.19
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <stack>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个二进制的二维矩阵，计算最大的全部都是1的矩形面积
 	///@param	matrix	二维矩阵
 	///@return	返回全部都是1的矩形的面积
 	/* @note
-	枚举+剪枝+动归：最简单的想法是枚举出所有矩形的大小（O(n^2)）和不同的位置（O(n^2)），时间复杂度为O(n^4)。
+	枚举+剪枝+动规：最简单的想法是枚举出所有矩形的大小（O(n^2)）和不同的位置（O(n^2)），时间复杂度为O(n^4)。
 	以(0,0)为矩形的左上角为例：
 
 	1 1 1 1 0 0
@@ -190,6 +193,47 @@ private:
 			}
 		}
 		return max_area;
+	}
+};
+
+class Solution {
+public:
+	int maximalRectangle(vector<vector<char>>& matrix) {
+		if (matrix.empty())	return 0;
+		int m = matrix.size();
+		int n = matrix[0].size();
+		vector<int> height(n, 0);	//matrix[i][j]处的连续1高度
+		vector<int> left(n, 0);		//第matrix[i]行的1的起始下标，默认为0
+		vector<int> right(n, n);	//第matrix[i]行的最后一个1的下一个下标，默认为列数
+		int rslt = INT_MIN;
+		for (int i = 0; i != m; i++)
+		{
+			int cur_left = 0;	//	当前1的左边界
+			int cur_right = n;	//	当前1的右边界的下一个下标
+			for (int j = 0; j != n; j++)			
+				height[j] = matrix[i][j] == '1' ? height[j] + 1 : 0;
+			for (int j = 0; j != n; j++)
+			{
+				if (matrix[i][j] == '1')	left[j] = max(left[j], cur_left);
+				else
+				{
+					left[j] = 0;
+					cur_left = j + 1;
+				}
+			}	
+			for (int j = n - 1; j >= 0; j--)
+			{
+				if (matrix[i][j] == '1')	right[j] = min(right[j], cur_right);
+				else
+				{
+					right[j] = n;
+					cur_right = j;
+				}
+			}
+			for (int j = 0; j != n; j++)
+				rslt = max(rslt, (right[j] - left[j]) * height[j]);
+		}
+		return rslt;
 	}
 };
 
