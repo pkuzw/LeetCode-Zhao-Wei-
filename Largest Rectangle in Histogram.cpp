@@ -1,6 +1,7 @@
 ﻿///@file	Largest Rectangle in Histogram
 /*
-Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
+Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, 
+find the area of largest rectangle in the histogram.
 
 For example,
 Given height = [2,1,5,6,2,3],
@@ -10,13 +11,16 @@ return 10.
 ///@date	2015.7.15
 ///@version	1.0
 
+///@date	2015.08.26
+///@version	2.0
+
 #include <vector>
 #include <iostream>
 #include <stack>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算直方图最大的矩形面积
 	///@param	height	直方图的高度数组
@@ -39,7 +43,7 @@ public:
 	///@param	height	直方图的高度数组
 	///@return	返回最大矩形的面积
 	///@note	通过维护一个栈，来保存连续递增的圆柱的下标，当遇到比上一个柱子小的柱子时，弹栈并计算栈中柱子的面积。
-	//			如果栈为空，则计算当前柱子高度与当前下标的乘积。每次计算前要在末尾加上一个0，用来最后清栈。要不然就在最后清一次栈。
+	//			如果栈为空，则计算当前柱子高度与当前下标的乘积。计算前要在输入数据末尾加上一个0，用来最后清栈。要不然就在最后清一次栈。
 	//			时间复杂度为O(n)，空间复杂度为O(n)。
 	int largestRectangleArea_time_O_n(vector<int>& height) {
 		stack<int> stck;	//	保存柱子下标的栈
@@ -89,6 +93,27 @@ private:
 	}
 };
 
+class Solution {
+public:
+	int largestRectangleArea(vector<int>& height) {
+		height.push_back(0);
+		stack<int> s;
+		int i = 0;
+		int rslt = 0;
+		while (i < height.size())
+		{
+			if (s.empty() || height[s.top()] <= height[i])	s.push(i++);
+			else
+			{
+				int tp = s.top();
+				s.pop();
+				rslt = max(rslt, height[tp] * (s.empty() ? i : i - 1 - s.top()));
+			}
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	vector<int> histogram;
@@ -104,8 +129,10 @@ int main()
  	histogram.push_back(2);
  	histogram.push_back(5);
 
+	Solution_v1 slt_v1;
+	int rslt = slt_v1.largestRectangleArea_time_O_n(histogram);
+	rslt = slt_v1.largestRectangleArea_time_O_n2(histogram);
 	Solution slt;
-	cout << slt.largestRectangleArea_time_O_n(histogram) << endl;
-	cout << slt.largestRectangleArea_time_O_n2(histogram) << endl;
+	rslt = slt.largestRectangleArea(histogram);
 	return 0;
 }
