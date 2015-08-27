@@ -9,12 +9,15 @@ Here, we will use the integers 0, 1, and 2 to represent the color red, white, an
 ///@date	2015.07.13
 ///@version 1.1
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	对数组nums进行排序
 	///@param	nums	数组
@@ -99,6 +102,22 @@ private:
 	}
 };
 
+/*
+1. 用两个指针标记出红色气球的起始下标和蓝色气球的终止下标。然后从首尾向中间遍历。只需要遍历一次数组，时间复杂度为O(n)，空间复杂度为O(1)。
+*/
+class Solution {
+public:
+	void sortColors(vector<int>& nums) {
+		int red = 0;
+		int blue = nums.size() - 1;
+		for (int i = red; i <= blue; i++)
+		{
+			if (nums[i] == 0)	swap(nums[red++], nums[i]);
+			else if (nums[i] == 2)	swap(nums[blue--], nums[i--]);
+		}
+	}
+};
+
 int main()
 {
 	vector<int> test;
@@ -108,12 +127,10 @@ int main()
 		test.push_back(1);
 		test.push_back(2);
 	}
+// 	Solution_v1 slt_v1;
+// 	slt_v1.sortColors(test);
 	Solution slt;
 	slt.sortColors(test);
-	for (int i = 0; i != test.size(); i++)
-	{
-		cout << test[i] << " ";
-	}
-	cout << endl;
+	
 	return 0;
 }
