@@ -8,11 +8,14 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
 ///@date	2015.07.10
 ///@version	1.0
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算到达梯子顶端的方法数
 	///@param	n	梯子格数
@@ -45,6 +48,18 @@ public:
 			k++;
 		}
 		return climbing_numbers[n];
+	}
+};
+
+class Solution {
+public:
+	int climbStairs(int n) {
+		vector<int> dp(n+1);
+		dp[0] = 1;
+		dp[1] = 1;
+		for (int i = 2; i != n + 1; i++)
+			dp[i] = dp[i-1] + dp[i-2];
+		return dp[n];
 	}
 };
 
