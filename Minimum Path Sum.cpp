@@ -9,12 +9,15 @@ Note: You can only move either down or right at any point in time.
 ///@date	2015.07.09
 ///@version 1.1
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个二维矩阵，计算从左上角到右下角和最小的路径
 	///@param	grid	二维矩阵
@@ -76,10 +79,27 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int minPathSum(vector<vector<int>>& grid) {
+		if (grid.empty())	return 0;
+		int row = grid.size();
+		int col = grid[0].size();
+		vector<vector<int>> dp(row, vector<int>(col, 0));
+		dp[0][0] = grid[0][0];
+		for (int j = 1; j != col; j++)	dp[0][j] = grid[0][j] + dp[0][j-1];
+		for (int i = 1; i != row; i++)	dp[i][0] = grid[i][0] + dp[i-1][0];
+		for (int i = 1; i != row; i++)
+			for (int j = 1; j != col; j++)
+				dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
+		return dp[row-1][col-1];
+	}
+};
+
 int main()
 {
 	vector<vector<int>> grid;
-	Solution slt;
+	Solution_v1 slt_v1;
 	
 	vector<int> line;
 	line.push_back(1);
@@ -113,6 +133,8 @@ int main()
 	line.push_back(1);
 	grid.push_back(line);
 	
-	int minPath = slt.minPathSum_saveSpace(grid);
-	cout << minPath << endl;
+	int minPath = slt_v1.minPathSum_saveSpace(grid);
+	Solution slt;
+	int rslt = slt.minPathSum(grid);
+	return 0;
 }
