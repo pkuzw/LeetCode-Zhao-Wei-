@@ -11,12 +11,15 @@ Return "100".
 ///@date	2015.07.08
 ///@version	1.0
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算两个给定的二进制数的和
 	///@param	a	二进制加数1
@@ -62,6 +65,48 @@ public:
 			b = "1" + b;
 		}
 		return b;
+	}
+};
+
+class Solution {
+public:
+	string addBinary(string a, string b) {
+		int lenA = a.size(), lenB = b.size();
+		if (lenA < lenB)
+		{
+			swap(a, b);
+			int t = lenA;
+			lenA = lenB;
+			lenB = t;
+		}
+		b = string(lenA - lenB, '0') + b;
+		bool flg = false;
+		for (int i = lenA - 1; i >= 0; i--)
+		{
+			if (a[i] == '0' && b[i] == '0')
+			{
+				if (flg)
+				{
+					a[i] = '1';				
+					flg = false;
+				}
+			}
+			else if ((a[i] == '1' && b[i] == '0') || (a[i] == '0' && b[i] == '1'))
+			{
+				if (flg)	a[i] = '0';
+				else		a[i] = '1';
+			}
+			else
+			{
+				if (!flg)
+				{
+					a[i] = '0';
+					flg = true;
+				}
+			}
+		}
+		if (flg)	a = "1" + a;
+		return a;
 	}
 };
 
