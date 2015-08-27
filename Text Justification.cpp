@@ -24,13 +24,16 @@ Note: Each word is guaranteed not to exceed L in length.
 ///@date	2015.07.10
 ///@version	1.0
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个字符串数组和单行最大列数。计算出每一行文本的单词分布。
 	//			要求：1. 每个单词之间的空格数是一样的，如果需要添加的空格数不能够被单词数整除，则使左边的空格数多于右边的空格数；
@@ -39,8 +42,9 @@ public:
 	///@param	words		单词数组
 	///@param	maxWidth	单行最大列数
 	///@return	返回新生成的文本字符串数组，其中每一个元素是一行。
-	///@note	不考虑maxWidth < words[i]的情形。首先尝试尽可能多的在一行中放入单词，除了最后一个单词，每一个单词后面至少有一个空格，直到遇到无法完整放下的单词，
-	//			然后将额外需要补充的空格数均匀的放入每个单词后面，然后转入下一行。时间复杂度为O(k*n)，k为一行的单词数，空间复杂度为O(n)。
+	///@note	不考虑maxWidth < words[i]的情形。首先尝试尽可能多的在一行中放入单词，除了最后一个单词，每一个单词后面至少有一个空格，
+	//			直到遇到无法完整放下的单词，然后将额外需要补充的空格数均匀的放入每个单词后面，然后转入下一行。
+	//			时间复杂度为O(k*n)，k为一行的单词数，空间复杂度为O(n)。
 	vector<string> fullJustify(vector<string>& words, int maxWidth) {
 		int line_ch_nums = 0;
 		int line_words_cnt = 0;
@@ -121,20 +125,78 @@ private:
 	vector<string> rslt;
 };
 
+class Solution {
+public:
+	vector<string> fullJustify(vector<string>& words, int maxWidth) {
+		int ch_cnt = 0, word_cnt = 0;
+		vector<string> svec;
+		for (int i = 0; i != words.size(); i++)
+		{
+			if (ch_cnt + words[i].size() + word_cnt > maxWidth)
+			{
+				int extra_spc_cnt = maxWidth - ch_cnt - word_cnt + 1;
+				int j = 0;
+				while (extra_spc_cnt)
+				{
+					svec[j] += " ";
+					if (svec.size() > 1)
+					{
+						j++;
+						j %= svec.size()-1;
+					}
+					extra_spc_cnt--;
+				}
+				string s;
+				for (j = 0; j != svec.size(); j++)
+				{
+					if (j != svec.size() - 1)	svec[j] += " ";
+					s += svec[j];
+				}
+				rslt.push_back(s);
+				svec.clear();
+				word_cnt = 0;
+				ch_cnt = 0;
+				i--;
+			}
+			else
+			{
+				svec.push_back(words[i]);
+				ch_cnt += words[i].size();
+				word_cnt++;
+			}
+		}
+		string last_line = processLastLine(svec, maxWidth);
+		rslt.push_back(last_line);
+		return rslt;
+	}
+private:
+	vector<string> rslt;
+	string processLastLine(vector<string> svec, int maxWidth)
+	{
+		string s;
+		for (int i = 0; i != svec.size(); i++)
+		{
+			if (i != svec.size()-1)	svec[i] += " ";
+			s += svec[i];
+		}
+		s.append(maxWidth - s.size(), ' ');
+		return s;
+	}
+};
+
 int main()
 {
 	vector<string> text, words;
 	int len = 0;
-	string s;
-	while (cin >> s)	//this is an example of text justification. stop
-	{
-		if (s == "stop")
-		{
-			break;
-		}
-		words.push_back(s);
-	}
-	cin >> len;
+	words.push_back("this");
+	words.push_back("is");
+	words.push_back("an");
+	words.push_back("example");
+	words.push_back("of");
+	words.push_back("text");
+	words.push_back("justification.");	
+
+	len = 16;
 	Solution slt;
 	text = slt.fullJustify(words, len);
 	for (int i = 0; i != text.size(); i++)
