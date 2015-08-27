@@ -10,13 +10,16 @@ path = "/a/./b/../../c/", => "/c"
 ///@date	2015.07.12
 ///@version	1.1
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将给定的绝对路径进行简化
 	///@param	path	绝对路径
@@ -116,13 +119,36 @@ private:
 	}
 };
 
+class Solution {
+public:
+	string simplifyPath(string path) {
+		vector<string> svec;
+		int i = 0;
+		while (i < path.size())
+		{
+			while (i < path.size() && path[i] == '/')	i++;
+			if (i == path.size())	break;
+			int start = i;
+			while (i < path.size() && path[i] != '/')	i++;
+			string dir = path.substr(start, i - start);
+			if (dir == "..")
+			{
+				if (!svec.empty())	svec.pop_back();				
+			}
+			else if (dir != ".")	svec.push_back(dir);
+		}
+		string rslt;
+		for (int i = 0; i != svec.size(); i++)
+			rslt += "/" + svec[i];
+		if (rslt.empty())	rslt = "/";
+		return rslt;
+	}
+};
+
 int main()
 {
-	string path;
-	while (cin >> path)
-	{
-		Solution slt;
-		cout << slt.simplifyPath(path) << endl;
-	}
+	string path = "/a/./b/../../c/";
+	Solution slt;
+	string rslt = slt.simplifyPath(path);
 	return 0;
 }
