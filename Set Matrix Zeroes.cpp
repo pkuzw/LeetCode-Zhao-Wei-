@@ -6,12 +6,15 @@ Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do
 ///@date	2015.07.13
 ///@version	1.1
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个m*n的二维矩阵，将'0'所在行和列置为0
 	///@param	matrix	二维矩阵
@@ -176,6 +179,75 @@ public:
 	}
 };
 
+/*
+1. 用flg1和flg2分别来标记是否需要将第0行和第0列置零；
+2. 用第一行的1..n-1表示第1..n-1列是否需要置零；用第一列的1..n-1表示第1..n-1行是否需要置零；
+3. 空间复杂度为O(1)，时间复杂度为O(n^2)
+*/
+class Solution {
+public:
+	void setZeroes(vector<vector<int>>& matrix) {
+		if (matrix.empty())	return;
+		int row = matrix.size();
+		int col = matrix[0].size();
+
+		bool flg1 = false;	//	第一行是否需要置零
+		bool flg2 = false;	//	第一列是否需要置零
+		if (!matrix[0][0])
+		{
+			flg1 = true;
+			flg2 = true;
+		}
+		else
+		{
+			for (int i = 1; i != row; i++)
+			{
+				if (!matrix[i][0])
+				{
+					flg2 = true;
+					break;
+				}
+			}
+			for (int i = 1; i != col; i++)
+			{
+				if (!matrix[0][i])
+				{
+					flg1 = true;
+					break;
+				}
+			}
+		}
+		for (int i = 1; i != row; i++)
+		{
+			for (int j = 1; j != col; j++)
+			{
+				if (!matrix[i][j])
+				{
+					matrix[0][j] = 0;
+					matrix[i][0] = 0;
+				}
+			}
+		}
+		for (int i = 1; i != row; i++)
+			if (!matrix[i][0])			
+				for (int j = 1; j != col; j++)	
+					matrix[i][j] = 0;			
+		
+		for (int i = 1; i != col; i++)
+			if (!matrix[0][i])
+				for (int j = 1; j != row; j++)
+					matrix[j][i] = 0;
+
+		if (flg1 && flg2)
+		{
+			for (int i = 0; i != row; i++)	matrix[i][0] = 0;
+			for (int i = 0; i != col; i++)	matrix[0][i] = 0;
+		}
+		else if (flg1 && !flg2)	for (int i = 0; i != col; i++)	matrix[0][i] = 0;
+		else if (!flg1 && flg2)	for (int i = 0; i != row; i++)	matrix[i][0] = 0;
+	}
+};
+
 int main()
 {
 	vector<int> line;
@@ -208,41 +280,24 @@ int main()
 	line.push_back(1);
 	matrix.push_back(line);
 	
- 	matrix.clear();
- 	line.clear();
- 	line.push_back(0);
- 	line.push_back(0);
- 	line.push_back(1);
- 	matrix.push_back(line);
- 
- 
- 	line.clear();
- 	line.push_back(1);
- 	line.push_back(1);
- 	line.push_back(1);
- 	matrix.push_back(line);
+//  	matrix.clear();
+//  	line.clear();
+//  	line.push_back(0);
+//  	line.push_back(0);
+//  	line.push_back(1);
+//  	matrix.push_back(line);
+//  
+//  
+//  	line.clear();
+//  	line.push_back(1);
+//  	line.push_back(1);
+//  	line.push_back(1);
+//  	matrix.push_back(line);
 
-	for (int i = 0; i != matrix.size(); i++)
-	{
-		for (int j = 0; j != matrix[0].size(); j++)
-		{
-			cout << matrix[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
+//  	Solution_v1 slt_v1;
+//  	slt_v1.setZeroes_space_O_1(matrix);
 
 	Solution slt;
-	slt.setZeroes_space_O_1(matrix);
-
-	for (int i = 0; i != matrix.size(); i++)
-	{
-		for (int j = 0; j != matrix[0].size(); j++)
-		{
-			cout << matrix[i][j] << " ";
-		}
-		cout << endl;
-	}
-
+	slt.setZeroes(matrix);
 	return 0;
 }
