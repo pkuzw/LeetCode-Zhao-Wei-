@@ -6,14 +6,17 @@ The digits are stored such that the most significant digit is at the head of the
 */
 ///@author	zhaowei
 ///@date	2015.07.08
-///@version
+///@version	1.0
+
+///@date	2015.08.27
+///@version	2.0
 
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将保存为整型vector的非负整数加1
 	///@param	digits	非负整数
@@ -53,13 +56,38 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<int> plusOne(vector<int>& digits) {
+		bool flg = false;
+		digits.back()++;
+		if (digits.back() == 10)
+		{
+			digits.back() = 0;
+			flg = true;				 
+		}
+		for (int i = digits.size() - 2; i >= 0; i--)
+		{			
+			digits[i] = flg ? digits[i] + 1 : digits[i];
+			if (digits[i] == 10)
+			{
+				digits[i] = 0;
+				flg = true;
+			}
+			else	flg = false;			
+		}
+		if (flg)	digits.insert(digits.begin(), 1);
+		return digits;
+	}
+};
+
 int main()
 {
 	vector<int> sum;
 	vector<int> digits;
 	digits.push_back(9);
 	digits.push_back(9);
-	digits.push_back(8);
+	digits.push_back(9);
 
 	for (int i = 0; i != digits.size(); i++)
 	{
