@@ -19,13 +19,16 @@ Given target = 3, return true.
 ///@date	2015.07.13
 ///@version	1.1
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个m*n的二维矩阵，每一行按照升序排序，且每一列的首元素都大于上一列的尾元素。在其中查找给定值。
 	///@param	matrix	二维矩阵
@@ -122,6 +125,19 @@ private:
 	}
 };
 
+class Solution {
+public:
+	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+		if (matrix.empty())	return false;
+		int row = matrix.size();
+		int col = matrix[0].size();
+		vector<int> nums;
+		for (int i = 0; i != row; i++)
+			nums.insert(nums.end(), matrix[i].begin(), matrix[i].end());
+		return binary_search(nums.begin(), nums.end(), target);
+	}
+};
+
 int main()
 {
 	vector<int> line;
@@ -147,12 +163,14 @@ int main()
 	line.push_back(50);
 	matrix.push_back(line);
 
-	matrix.clear();
-	line.clear();
-	matrix.push_back(line);
-	matrix.push_back(line);
+// 	matrix.clear();
+// 	line.clear();
+// 	matrix.push_back(line);
+// 	matrix.push_back(line);
 
+	Solution_v1 slt_v1;
+	bool rslt_v1 = slt_v1.searchMatrix_space_O_1(matrix, 34);
 	Solution slt;
-	cout << slt.searchMatrix_space_O_1(matrix, 22) << endl;
+	bool rslt = slt.searchMatrix(matrix, 34);
 	return 0;
 }
