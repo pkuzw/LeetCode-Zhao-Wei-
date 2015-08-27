@@ -1,6 +1,7 @@
 ﻿///@file	Edit Distance
 /*
-Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)
+Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. 
+(each operation is counted as 1 step.)
 
 You have the following 3 operations permitted on a word:
 
@@ -12,13 +13,16 @@ c) Replace a character
 ///@date	2015.07.17
 ///@version	1.0
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定两个单词，将单词1转换成单词2，转换包括三种方法：1. 插入一个字符；2. 删除一个字符；3. 替换一个字符，计算需要的最少步数。
 	///@param	word1	单词1
@@ -63,14 +67,25 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int minDistance(string word1, string word2) {
+		vector<vector<int>> dp(word1.size()+1, vector<int>(word2.size()+1, 0));
+		for (int i = 0; i != word1.size()+1; i++)	dp[i][0] = i;
+		for (int j = 0; j != word2.size()+1; j++)	dp[0][j] = j;
+		for (int i = 1; i != word1.size()+1; i++)
+			for (int j = 1; j != word2.size()+1; j++)
+				dp[i][j] = word1[i-1] == word2[j-1] ? dp[i-1][j-1] : 1 + min(min(dp[i-1][j], dp[i][j-1]), dp[i-1][j-1]);
+		return dp[word1.size()][word2.size()];
+	}
+};
+
 int main()
 {
 	Solution slt;
-	string word1, word2;
-	while (cin >> word1 >> word2)
-	{
-		cout << slt.minDistance(word1, word2) << endl;
-		cout << endl;
-	}
+	string word1 = "jeep wrangler", word2 = "jeep compass";
+	Solution_v1 slt_v1;
+	int rslt = slt.minDistance(word1, word2);
+	rslt = slt_v1.minDistance(word1, word2);
 	return 0;
 }
