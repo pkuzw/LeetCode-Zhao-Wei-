@@ -8,11 +8,14 @@ Compute and return the square root of x.
 ///@date	2015.07.10
 ///@version	1.0
 
+///@date	2015.08.27
+///@version	2.0
+
 #include <iostream>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	求整型变量x的平方根
 	///@param	x	被开平方的非负整数
@@ -28,6 +31,24 @@ public:
 			rslt = (rslt + t)/2;
 		}
 		return rslt;
+	}
+};
+
+/*
+二分查找平方根。为了防止溢出，中间结果用long long型保存。
+*/
+class Solution {
+public:
+	int mySqrt(int x) {
+		long long left = 1, right = x / 2 + 1;
+		while (left <= right)
+		{
+			long long mid = (left + right ) / 2;
+			if (mid * mid == x)	return mid;
+			else if (mid * mid < x) left = mid + 1;
+			else right = mid - 1;
+		}
+		return right;
 	}
 };
 
