@@ -10,11 +10,14 @@ How many possible unique paths are there?
 ///@date	2015.07.08
 ///@version	1.0
 
+///@date	2015.08.28
+///@version	2.0
+
 #include <iostream>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个m*n的棋盘，计算从左上角出发，到右下角的路径数目。其间只能向右和向下移动。
 	///@param	m	行号
@@ -46,13 +49,35 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int uniquePaths(int m, int n) {
+		if (m * n == 1)	return 1;
+		int k = m + n - 2;
+		int p = m > n ? n - 1 : m - 1;
+		int t = p;
+		long long rslt = 1;
+		while (t--)
+		{
+			rslt *= k;
+			k--;
+		}
+		while (p)
+		{
+			rslt /= p;
+			p--;
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
-	int m, n;
+	int m = 10, n = 10;
 	Solution slt;
-	while (cin >> m >> n)
-	{
-		cout << slt.uniquePaths(m, n) << endl;
-	}
+	int rslt = slt.uniquePaths(m, n);
+	 
+	Solution_v1 slt_v1;
+	rslt = slt_v1.uniquePaths(m, n);
 	return 0;
 }
