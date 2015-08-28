@@ -20,11 +20,14 @@ The total number of unique paths is 2.
 ///@date	2015.07.09
 ///@version	1.1
 
+///@date	2015.08.28
+///@version	2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算有障碍物的路径总数
 	///@param	obstacleGrid	用二维数组表示障碍物分布，其中1为障碍物，0为通路
@@ -101,6 +104,25 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+		if (obstacleGrid.empty())	return 0;
+		int row = obstacleGrid.size();
+		int col = obstacleGrid[0].size();
+		if (obstacleGrid[0][0] == 1)	return 0;
+
+		vector<vector<int>> dp(row, vector<int>(col, 0));
+		dp[0][0] = 1 - obstacleGrid[0][0];
+		for (int i = 1; i != row; i++)	dp[i][0] = obstacleGrid[i][0] ? 0 : dp[i-1][0];
+		for (int j = 1; j != col; j++)	dp[0][j] = obstacleGrid[0][j] ? 0 : dp[0][j-1];
+		for (int i = 1; i != row; i++)
+			for (int j = 1; j != col; j++)
+				dp[i][j] = obstacleGrid[i][j] ? 0 : dp[i-1][j] + dp[i][j-1];
+		return dp[row-1][col-1];
+	}
+};
+
 int main()
 {
 	vector<vector<int>> obs;
@@ -114,7 +136,7 @@ int main()
 
 	line.clear();
 	line.push_back(0);
-	line.push_back(0);
+	line.push_back(1);
 	line.push_back(0);	
 	line.push_back(0);
 	line.push_back(0);	
@@ -124,7 +146,7 @@ int main()
 	line.push_back(0);
 	line.push_back(0);
 	line.push_back(0);
-	line.push_back(0);
+	line.push_back(1);
 	line.push_back(0);	
 	obs.push_back(line);
 
@@ -137,8 +159,9 @@ int main()
 	line.push_back(0);	
 	obs.push_back(line);
 
+	Solution_v1 slt_v1;
+	int rslt_v1 = slt_v1.uniquePathsWithObstacles_saveSpace(obs);
 	Solution slt;
-	cout << slt.uniquePathsWithObstacles_saveSpace(obs);
-	cout << endl;
+	int rslt = slt.uniquePathsWithObstacles(obs);
 	return 0;
 }
