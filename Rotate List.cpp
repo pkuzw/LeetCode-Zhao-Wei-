@@ -10,6 +10,9 @@ return 4->5->1->2->3->NULL.
 ///@date	2015.07.07
 ///@version	1.0
 
+///@date    2015.08.29
+///@version 2.0
+
 #include <iostream>
 
 using namespace std;
@@ -21,7 +24,7 @@ struct ListNode
 	ListNode(int x) : val(x), next(NULL) {}
 };
 	
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将一个链表向右移指定位数
 	///@param	head	链表头
@@ -92,9 +95,18 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        
+    }
+};
+
 int main()
 {
 	ListNode* l = new ListNode(1);
+    
+    Solution_v1 slt_v1;
 	
 	Solution slt;
 	for (int i = 2; i <= 5; i++)
