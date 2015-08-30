@@ -107,9 +107,10 @@ public:
             indx = indx->next;
         }
         k = k % len;
+        if (!k) return head;
         indx = head;
         int a = len - k;
-        while (a)
+        while (a > 1)
         {
             indx = indx->next;
             a--;
@@ -126,18 +127,21 @@ public:
 
 int main()
 {
-	ListNode* l = new ListNode(1);
     
     Solution_v1 slt_v1;
 	
 	Solution slt;
-	for (int i = 2; i <= 5; i++)
-	{
-		slt_v1.insertNode(l, i);
- 	}
+	
+    ListNode* n[5];
+    for (int i = 0; i != 5; i++)
+        n[i] = new ListNode(i+1);
+    for (int i = 0; i != 4; i++)
+        n[i]->next = n[i+1];
 
-	int k = 3;
-    slt.rotateRight(l, k);
+	int k = 1;
+    ListNode* l = n[0];
+
+    l = slt.rotateRight(l, k);
     
 	return 0;
 }
