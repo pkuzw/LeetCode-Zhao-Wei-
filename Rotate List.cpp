@@ -10,7 +10,7 @@ return 4->5->1->2->3->NULL.
 ///@date	2015.07.07
 ///@version	1.0
 
-///@date    2015.08.29
+///@date    2015.08.30
 ///@version 2.0
 
 #include <iostream>
@@ -98,7 +98,29 @@ public:
 class Solution {
 public:
     ListNode* rotateRight(ListNode* head, int k) {
-        
+        if (!k || !head || !head->next)   return head;
+        int len = 0;
+        ListNode* indx = head;
+        while (indx)
+        {
+            len++;
+            indx = indx->next;
+        }
+        k = k % len;
+        indx = head;
+        int a = len - k;
+        while (a)
+        {
+            indx = indx->next;
+            a--;
+        }
+        ListNode* b = indx->next;
+        indx->next = nullptr;
+        indx = b;
+        while (indx->next)
+            indx = indx->next;
+        indx->next = head;
+        return b;
     }
 };
 
@@ -111,18 +133,11 @@ int main()
 	Solution slt;
 	for (int i = 2; i <= 5; i++)
 	{
-		slt.insertNode(l, i);		
+		slt_v1.insertNode(l, i);
  	}
 
 	int k = 3;
-	ListNode* head = slt.rotateRight(l, k);
-
-	while (head != nullptr)
-	{
-		cout << head->val;
-		cout << ' ';
-		head = head->next;
-	}
-	cout << endl;
+    slt.rotateRight(l, k);
+    
 	return 0;
 }
