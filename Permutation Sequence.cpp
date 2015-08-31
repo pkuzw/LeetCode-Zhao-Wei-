@@ -19,6 +19,9 @@ Note: Given n will be between 1 and 9 inclusive.
 ///@date	2015.07.11
 ///@version	1.2
 
+///@date    2015.08.31
+///@version 2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -26,7 +29,7 @@ Note: Given n will be between 1 and 9 inclusive.
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算从1到n的全排列中的第k个排列
 	///@param	n	元素的数目
@@ -141,14 +144,29 @@ private:
 	}
 };
 
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        string s = "123456789";
+        s = s.substr(0, n);
+        vector<int> nums;
+        for (int i = 0; i != s.size(); i++)
+            nums.push_back(s[i]-'0');
+        while (k > 1)
+        {
+            next_permutation(nums.begin(), nums.end());
+            k--;
+        }
+        s.clear();
+        for (int i = 0; i != nums.size(); i++)
+            s += nums[i] + '0';
+        return s;
+    }
+};
+
 int main()
 {
 	Solution slt;
-	int n, k;
-	while (cin >> n >> k)
-	{
-		cout << "My  solution: " << slt.getPermutation(n, k) << endl;
-		cout << "Stl solution: " << slt.getPermutation_stl(n, k) << endl;
-	}
+    string s = slt.getPermutation(4, 17);
 	return 0;
 }
