@@ -148,19 +148,19 @@ class Solution {
 public:
     string getPermutation(int n, int k) {
         string s = "123456789";
-        s = s.substr(0, n);
-        vector<int> nums;
-        for (int i = 0; i != s.size(); i++)
-            nums.push_back(s[i]-'0');
-        while (k > 1)
+        vector<int> f(n, 1);
+        for (int i = 1; i < n; i++)
+            f[i] = f[i-1] * i;
+        k--;
+        string rslt;
+        for (int i = n-1; i >= 0; i--)
         {
-            next_permutation(nums.begin(), nums.end());
-            k--;
+            int j = k / f[i];
+            k %= f[i];
+            rslt.push_back(s[j]);
+            s.erase(j, 1);
         }
-        s.clear();
-        for (int i = 0; i != nums.size(); i++)
-            s += nums[i] + '0';
-        return s;
+        return rslt;
     }
 };
 
