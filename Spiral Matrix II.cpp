@@ -16,12 +16,15 @@ You should return the following matrix:
 ///@date	2015.07.07
 ///@version	1.0
 
+///@date    2015.09.01
+///@version 2.0
+
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定常数n，计算出从左上角开始，按照顺时针方向进行盘旋的n*n的二维矩阵，其中元素按照该顺序从1 - n^2
 	///@param	n	二维矩阵的大小
@@ -152,11 +155,33 @@ private:
 	vector<vector<bool>> visited;		//	标识二维数组，用于标定还有哪些位置可以走
 };
 
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> matrix(n, vector<int>(n, 1));
+        int val = 1;
+        int p = n;
+        for (int i = 0; i < n / 2; i++, p -= 2)
+        {
+            for (int col = i; col < i + p; col++)
+                matrix[i][col] = val++;
+            for (int row = i + 1; row < i + p; row++)
+                matrix[row][i + p - 1] = val++;
+            for (int col = i + p - 2; col >= i; col--)
+                matrix[i + p - 1][col] = val++;
+            for (int row = i + p - 2; row > i; row--)
+                matrix[row][i] = val++;
+        }
+        if (n % 2)  matrix[n / 2][n / 2] = val;
+        return matrix;
+    }
+};
+
 int main()
 {
 	vector<vector<int>> matrix;
 	Solution slt;
-	int n = 0;
+	int n = 5;
 	matrix = slt.generateMatrix(n);
 
 	for (int i = 0; i != n; i++)
