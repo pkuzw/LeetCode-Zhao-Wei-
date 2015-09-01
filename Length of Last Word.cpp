@@ -15,13 +15,16 @@ return 5.
 ///@date	2015.07.07
 ///@version	1.0
 
+///@date    2015.09.01
+///@version 2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个字符串，包含大小写字母和' '字符，计算最后一个单词的长度
 	///@param	s	字符串
@@ -45,6 +48,23 @@ public:
 		}
 		return cnt;
 	}
+};
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        if (s.empty())  return 0;
+        int cnt = 0;
+        int i = s.size() - 1;
+        while (s[i] == ' ')
+            i--;
+        while (i >= 0 && s[i] != ' ')
+        {
+            i--;
+            cnt++;
+        }
+        return cnt;
+    }
 };
 
 int main()
