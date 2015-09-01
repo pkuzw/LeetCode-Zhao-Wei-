@@ -15,11 +15,14 @@ A = [3,2,1,0,4], return false.
 ///@date	2015.07.06
 ///@version	1.0
 
+///@date    2015.09.01
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个整数数列，其中每个元素代表从该位置向前移动的最大距离，判断能否从初始元素到达最后一个元素
 	///@param	nums	整数数组
@@ -70,11 +73,28 @@ private:
 	}
 };
 
+/*
+动态规划：dp[i]表示第i个格子处的最大剩余步数。初始条件为dp[0] = 0，递推关系是为dp[i] = max(dp[i-1], nums[i-1]) - 1.
+*/
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        vector<int> dp(nums.size(), 0); //dp表示在第i个格子处的剩余最远步数
+        for (int i = 1; i != nums.size(); i++){
+            dp[i] = max(dp[i-1], nums[i-1]) - 1;
+        }
+        for (int i = 0; i != dp.size(); i++){
+            if (dp[i] < 0)  return false;
+        }
+        return true;
+    }
+};
+
 int main()
 {
 	vector<int> nums;
  	nums.push_back(1);
- 	nums.push_back(1);
+ 	nums.push_back(0);
  	nums.push_back(0);
 
 	Solution slt;
