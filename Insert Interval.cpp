@@ -16,6 +16,9 @@ This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 ///@date	2015.07.07
 ///@version	1.0
 
+///@date    2015.09.01
+///@version 2.0
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -30,7 +33,7 @@ struct Interval
 	Interval(int s, int e) : start(s), end(e) {}
 };
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	给定一组没有重叠区间的区间数组，然后插入一个区间，给出融合后的新区间数组
@@ -86,6 +89,30 @@ private:
 	vector<Interval> rslt;
 };
 
+class Solution {
+public:
+    vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+        if (intervals.empty()){
+            intervals.push_back(newInterval);
+            return intervals;
+        }
+        int overlap_cnt = 0;
+        int i = 0;
+        for (i = 0; i != intervals.size(); i++){
+            if (intervals[i].start > newInterval.end) break;
+            else if (intervals[i].end < newInterval.start)  continue;
+            else{
+                newInterval.start = min(newInterval.start, intervals[i].start);
+                newInterval.end = max(newInterval.end, intervals[i].end);
+                overlap_cnt++;
+            }
+        }
+        if (overlap_cnt)    intervals.erase(intervals.begin() + i - overlap_cnt, intervals.begin() + i);
+        intervals.insert(intervals.begin() + i - overlap_cnt, newInterval);
+        return intervals;
+    }
+};
+
 int main()
 {
 	vector<Interval> test;
@@ -96,10 +123,10 @@ int main()
 	a[2].start = 8; a[2].end = 10;
 	a[3].start = 15; a[3].end = 18;
 
-// 	for (int i = 0; i != 4; i++)
-// 	{
-// 		test.push_back(a[i]);
-// 	}
+ 	for (int i = 0; i != 4; i++)
+ 	{
+ 		test.push_back(a[i]);
+ 	}
 
 	Interval b(5, 9);
 
