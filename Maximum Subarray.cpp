@@ -9,11 +9,14 @@ the contiguous subarray [4,−1,2,1] has the largest sum = 6.
 ///@date	2015.07.06
 ///@version	1.0
 
+///@date    2015.09.03
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算整型数组的最大子段和
 	///@param	nums	整型数组
@@ -122,10 +125,24 @@ public:
 	}
 };
 
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        if (nums.empty())   return 0;
+        int tmp = nums[0];
+        int rslt = nums[0];
+        for (int i = 1; i != nums.size(); i++){
+            tmp = max(nums[i], tmp + nums[i]);
+            rslt = max(rslt, tmp);
+        }
+        return rslt;
+    }
+};
+
 int main()
 {
 	//-2 1 -3 4 -1 2 1 -5 4 99
-	Solution slt;
+	Solution_v1 slt_v1;
 	vector<int> nums;
 	int k;
 	while (cin >> k)
@@ -136,13 +153,13 @@ int main()
 		}
 		nums.push_back(k);
 	}
-	cout << slt.maxSubArrayDP(nums) << endl;
-	vector<int> subArr = slt.maxSubArrayRange(nums);
+	cout << slt_v1.maxSubArrayDP(nums) << endl;
+	vector<int> subArr = slt_v1.maxSubArrayRange(nums);
 	for (int i = 0; i != subArr.size(); i++)
 	{
 		cout << subArr[i] << ' ';
 	}
 	cout << endl;
-	cout << slt.maxSubArrayDC(nums) << endl;
+	cout << slt_v1.maxSubArrayDC(nums) << endl;
 	return 0;
 }
