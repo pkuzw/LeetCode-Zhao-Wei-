@@ -19,13 +19,16 @@
 ///@date	2015.06.18
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	计算和为目标值的所有可能组合
@@ -66,6 +69,28 @@ public:
 	}
 private:
 	vector<vector<int>> combinations;	//	所有可能的组合集合
+};
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> rslt;
+        vector<int> cmb;
+        sort(candidates.begin(), candidates.end());
+        dfs(rslt, cmb, candidates, 0, target);
+        return rslt;
+    }
+    
+    void dfs(vector<vector<int>>& rslt, vector<int>& cmb, vector<int>& candidates, int indx, int target){
+        if (!target)    rslt.push_back(cmb);
+        else{
+            for (int i = indx; i != candidates.size() && target >= candidates[i]; i++){
+                cmb.push_back(candidates[i]);
+                dfs(rslt, cmb, candidates, i, target - candidates[i]);
+                cmb.pop_back();
+            }
+        }
+    }
 };
 
 int main()
