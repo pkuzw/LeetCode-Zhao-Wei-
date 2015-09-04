@@ -27,12 +27,15 @@ There exist two distinct solutions to the 4-queens puzzle:
 ///@date	2015.07.04
 ///@version 1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <vector>
 #include <string>
 #include <iostream>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	给出n皇后问题的所有答案
@@ -205,6 +208,41 @@ private:
 	}
 
 	vector<vector<string>> rslt;	//	结果数组
+};
+
+class Solution {
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> rslt;
+        vector<int> pos(n, -1);
+        dfs(pos, 0, rslt);
+        return rslt;
+    }
+    
+    bool isValid(vector<int>& pos, int row, int col){
+        for (int i = 0; i != row; i++){
+            if (pos[i] == col || abs(row - i) == abs(col - pos[i])) return false;
+        }
+        return true;
+    }
+    
+    void dfs(vector<int>& pos, int row, vector<vector<string>>& rslt){
+        if (row == pos.size()){
+            vector<string> tmp(pos.size(), string(pos.size(), '.'));
+            for (int i = 0; i != pos.size(); i++)
+                tmp[i][pos[i]] = 'Q';
+            rslt.push_back(tmp);
+        }
+        else{
+            for (int i = 0; i != pos.size(); i++){
+                if (isValid(pos, row, i)){
+                    pos[row] = i;
+                    dfs(pos, row + 1, rslt);
+                    pos[row] = -1;
+                }
+            }
+        }
+    }
 };
 
 int main()
