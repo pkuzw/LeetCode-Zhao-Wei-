@@ -12,11 +12,14 @@
 ///@date	2015.06.20
 ///@versin	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	找到数组中第一个打破连续性的缺失正整数
@@ -59,11 +62,31 @@ public:
 	}
 };
 
+/*
+1. 将nums[i]中保存i+1，这样可以只用O(1)的空间。
+2. 如果nums[i] != i+1 && nums[i] > 0 && nums[i] <= n && nums[i] != nums[nums[i] - 1]，则将nums[i]与nums[nums[i] - 1]交换
+3. 这样遍历一边数组，第一个nums[i]不等于i + 1的元素就是缺失的正整数
+*/
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int i = 0;
+        while (i != nums.size()){
+            if (nums[i] != i + 1 && nums[i] > 0 && nums[i] <= nums.size() && nums[i] != nums[nums[i] - 1])
+                swap(nums[i], nums[nums[i] - 1]);
+            else i++;
+        }
+        for (int i = 0; i != nums.size(); i++)
+            if (nums[i] != i + 1)   return i + 1;
+        return nums.size() + 1;
+    }
+};
+
 int main()
 {
 	vector<int> ivec;
-//	ivec.push_back(0);
-
+	ivec.push_back(1);
+    ivec.push_back(2);
 	Solution slt;
 	int rslt = slt.firstMissingPositive(ivec);
 	cout << rslt << endl;
