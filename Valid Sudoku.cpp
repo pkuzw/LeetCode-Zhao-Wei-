@@ -11,12 +11,15 @@
 ///@date	2015.06.17
 ///@version	1.1
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	判断一个数独是否有效
@@ -86,6 +89,29 @@ public:
 		}
 		return true;
 	}
+};
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        if (board.empty() || board[0].empty())    return false;
+        int n = board.size();
+        vector<vector<bool>> row_flg(n, vector<bool>(n, false));
+        vector<vector<bool>> col_flg(n, vector<bool>(n, false));
+        vector<vector<bool>> cell_flg(n, vector<bool>(n, false));
+        for (int i = 0; i != n; i++){
+            for (int j = 0; j != n; j++){
+                if (board[i][j] >= '1' && board[i][j] <= '9'){
+                    int k = board[i][j] - '1';
+                    if (row_flg[i][k] || col_flg[k][j] || cell_flg[3 * (i / 3) + j / 3][k]) return false;
+                    row_flg[i][k] = true;
+                    col_flg[k][j] = true;
+                    cell_flg[3 * (i / 3) + j / 3][k] = true;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 int main()
