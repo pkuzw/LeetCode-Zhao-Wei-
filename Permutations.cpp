@@ -7,7 +7,10 @@
 */
 ///@author	zhaowei
 ///@date	2015.06.29
-///@version	2.0
+///@version	1.1
+
+///@date    2015.09.04
+///@version 2.0
 
 #include <iostream>
 #include <vector>
@@ -16,7 +19,7 @@
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定候选元素数组，计算所有可能的组合
 	///@param	nums	候选元素数组
@@ -130,6 +133,33 @@ private:
 	vector<vector<int>> rslt;	//	结果数组
 };
 
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums){
+        vector<vector<int>> rslt;
+        if (nums.empty())   return rslt;
+        vector<int> pmt;
+        dfs(rslt, pmt, nums);
+        return rslt;
+    }
+    
+    void dfs(vector<vector<int>>& rslt, vector<int>& pmt, vector<int> nums){
+        if (nums.empty())   rslt.push_back(pmt);
+        else{
+            int i = 0;
+            while (i != nums.size()){
+                vector<int> new_nums;
+                pmt.push_back(nums[i]);
+                for (int j = 0; j != nums.size(); j++)
+                    if (i != j) new_nums.push_back(nums[j]);
+                dfs(rslt, pmt, new_nums);
+                pmt.pop_back();
+                i++;
+            }
+        }
+    }
+};
+
 int main()
 {
 	Solution slt;
@@ -141,9 +171,9 @@ int main()
  	nums.push_back(2);
 	rslt = slt.permute(nums);
     
-    Solution slt2;
+    Solution_v1 slt_v1;
     vector<vector<int>> rslt2;
-    rslt2 = slt2.permuteUnique(nums);
+    rslt2 = slt_v1.permuteUnique(nums);
 
     cout << "显示不去重的所有组合：" << endl;
 	for (int i = 0; i != rslt.size(); i++)
