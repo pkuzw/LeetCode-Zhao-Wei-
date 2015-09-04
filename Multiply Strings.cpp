@@ -8,12 +8,16 @@
 ///@date	2015.06.20
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算两个由string表示的正整数乘积
 	///@param	num1	因子1
@@ -140,6 +144,31 @@ private:
 		}
 		return s.substr(i, s.size()-i);
 	}
+};
+
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        int n1 = num1.size(), n2 = num2.size();
+        int k = n1 + n2 - 2;
+        vector<int> v(n1 + n2, 0);
+        for (int i = 0; i != n1; i++)
+            for (int j = 0; j != n2; j++)
+                v[k - i - j] += (num1[i] - '0') * (num2[j] - '0');
+        int carry = 0;
+        for (int i = 0; i != n1 + n2; i++){
+            v[i] += carry;
+            carry = v[i] / 10;
+            v[i] %= 10;
+        }
+        
+        int l = n1 + n2 - 1;
+        while (!v[l])   l--;
+        if (l < 0)  return "0";
+        string rslt;
+        while (l >= 0)  rslt.push_back(v[l--] + '0');
+        return rslt;
+    }
 };
 
 int main()
