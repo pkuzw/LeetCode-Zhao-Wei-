@@ -11,11 +11,14 @@
 ///@date	2015.06.30
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将一个n*n的二维矩阵顺时针旋转90°
 	///@param	matrix	二维矩阵
@@ -97,6 +100,22 @@ public:
 	}
 };
 
+/*
+1. 将原矩阵转换成转置矩阵，然后将每行翻转即可。
+2. 空间复杂度为O(1)。
+*/
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        for (int i = 0; i != n; i ++){
+            for (int j = i + 1; j != n; j++)
+                swap(matrix[i][j], matrix[j][i]);
+            reverse(matrix[i].begin(), matrix[i].end());
+        }
+    }
+};
+
 int main()
 {
 	int len = 9;
@@ -120,8 +139,8 @@ int main()
 		cout << endl;
 	}
 	cout << endl;
-	Solution slt;
-	slt.rotate(matrix);
+	Solution_v1 slt_v1;
+	slt_v1.rotate(matrix);
 
 	for (int i = 0; i != len; i++)
 	{
@@ -144,7 +163,7 @@ int main()
 		matrix1.push_back(line);
 	}
 
-	slt.rotate2(matrix1);	
+	slt_v1.rotate2(matrix1);
 	for (int i = 0; i != len; i++)
 	{
 		for (int j = 0; j != len; j++)
@@ -153,5 +172,17 @@ int main()
 		}
 		cout << endl;
 	}
+    cout << endl;
+    
+    Solution slt;
+    slt.rotate(matrix1);
+    for (int i = 0; i != len; i++)
+    {
+        for (int j = 0; j != len; j++)
+        {
+            cout << matrix1[i][j] << ' ';
+        }
+        cout << endl;
+    }
 	return 0;
 }
