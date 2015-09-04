@@ -77,7 +77,7 @@ public:
     string countAndSay(int n) {
         string a = "1";
         if (n == 1) return a;
-        int j = 0;
+        int j = 1;
         while (j != n){
             string b;
             int cnt = 1;
