@@ -15,13 +15,16 @@
 ///@date	2015.06.23
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算到达数组最后一个下标的最小跳跃步数
 	///@param	nums	数组，其中每一个元素值非负，表示能从该下标跳跃的最远距离
@@ -86,6 +89,27 @@ public:
 		return max_indx;
 	}
 
+};
+
+/*
+cur: 能够到达的格子下标；
+pre: 到达cur之前的格子下标；
+i:   遍历在pre和cur之间能够跳跃的最大步数，能够到达的最远格子
+ */
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int cur = 0, pre = 0, i = 0, rslt = 0;
+        while (cur < nums.size() - 1){
+            pre = cur;
+            while (i <= pre){
+                cur = max(cur, nums[i] + i);
+                i++;
+            }
+            rslt++;
+        }
+        return rslt;
+    }
 };
 
 int main()
