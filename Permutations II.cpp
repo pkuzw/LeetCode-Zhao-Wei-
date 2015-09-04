@@ -12,6 +12,9 @@
 
 ///@author  zhaowei
 ///@date    2015.06.27
+///@version 1.1
+
+///@date    2015.09.04
 ///@version 2.0
 
 #include <iostream>
@@ -19,7 +22,7 @@
 #include <algorithm>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定候选元素数组，计算所有可能的组合。如果候选数组中有重复元素，需要排除掉重复的组合
 	///@param	nums	候选元素数组
@@ -80,6 +83,36 @@ private:
 	vector<vector<int>> rslt;	//	结果数组
 };
 
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> rslt;
+        if (nums.empty()) return rslt;
+        sort(nums.begin(), nums.end());
+        vector<int> p;
+        dfs(rslt, p, nums);
+        return rslt;
+    }
+    void dfs(vector<vector<int>>& rslt, vector<int>& p, vector<int> nums){
+        if (nums.empty()){
+            rslt.push_back(p);
+        }
+        else{
+            int i = 0;
+            while (i != nums.size()){
+                vector<int> new_nums;
+                p.push_back(nums[i]);
+                for (int j = 0; j != nums.size(); j++)
+                    if (i != j) new_nums.push_back(nums[j]);
+                dfs(rslt, p, new_nums);
+                p.pop_back();
+                i++;
+                while (i < nums.size() && nums[i] == nums[i-1]) i++;
+            }
+        }
+    }
+};
+
 int main()
 {
 	vector<int> test;
@@ -88,6 +121,17 @@ int main()
 	test.push_back(1);
     test.push_back(1);
 	Solution slt;
+    Solution_v1 slt_v1;
+    vector<vector<int>> rslt_v1 = slt_v1.permuteUnique(test);
+    for (int i = 0; i != rslt_v1.size(); i++)
+    {
+        for (int j = 0; j != rslt_v1[i].size(); j++)
+        {
+            cout << rslt_v1[i][j] << ' ';
+        }
+        cout << endl;
+    }
+    cout << endl;
 
 	vector<vector<int>> rslt = slt.permuteUnique(test);
 	for (int i = 0; i != rslt.size(); i++)
