@@ -8,13 +8,17 @@
 */
 ///@author	zhaowei
 ///@date	2015.06.20
+///@version 1.0
+
+///@date    2015.09.04
+///@version 2.0
 
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定高程值，计算其所能接收的雨水量。每个元素所表示的高程宽度为1
 	///@param	height	高程值数组
@@ -136,6 +140,30 @@ private:
 		}
 		return count;
 	}
+};
+
+///@note    dynamic programming
+/*
+两次遍历，第一遍从左至右，dp[i]表示i处左侧的最大值；第二遍从右至左，dp[i]表示i处右侧的最大值和其左侧的最大值之间的较小值。如果dp[i]与当前高度差为正，则将其累加进结果值。
+*/
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int mx = 0;
+        int rslt = 0;
+        vector<int> dp(height.size(), 0);
+        for (int i = 0; i != height.size(); i++){
+            dp[i] = mx;
+            mx = max(height[i], mx);
+        }
+        mx = 0;
+        for (int i = height.size() - 1; i >= 0; i--){
+            dp[i] = min(mx, dp[i]);
+            mx = max(mx, height[i]);
+            if (dp[i] - height[i] > 0)  rslt += dp[i] - height[i];
+        }
+        return rslt;
+    }
 };
 
 int main()
