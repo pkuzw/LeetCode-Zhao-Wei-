@@ -184,29 +184,35 @@ private:
 class Solution {
 public:
     int totalNQueens(int n) {
-        int res = 0;
+        int rslt = 0;
         vector<int> pos(n, -1);
-        totalNQueensDFS(pos, 0, res);
-        return res;
+        dfs(pos, 0, rslt);
+        return rslt;
     }
-    void totalNQueensDFS(vector<int> &pos, int row, int &res) {
-        int n = pos.size();
-        if (row == n) ++res;
-        else {
-            for (int col = 0; col < n; ++col) {
-                if (isValid(pos, row, col)) {
-                    pos[row] = col;
-                    totalNQueensDFS(pos, row + 1, res);
+    ///@brief   递归的检查合法的布局
+    ///@param   pos 已经存在的皇后
+    ///@param   row 当前行
+    ///@param   rslt    结果值
+    ///@return  无
+    void dfs(vector<int>& pos, int row, int& rslt){
+        if (row == pos.size())  rslt++;
+        else{
+            for (int i = 0; i != pos.size(); i++){
+                if (isValid(pos, row, i)){
+                    pos[row] = i;
+                    dfs(pos, row + 1, rslt);
                     pos[row] = -1;
                 }
             }
         }
     }
-    bool isValid(vector<int> &pos, int row, int col) {
-        for (int i = 0; i < row; ++i) {
-            if (col == pos[i] || abs(row - i) == abs(col - pos[i])) {
-                return false;
-            }
+    ///@brief   判定当前皇后是否合法
+    ///@param   pos 已经有的皇后。pos[i]表示第i行的第pos[i]列有皇后
+    ///@param   row, col    当前位置
+    ///@return  如果当前位置和pos数组不冲突，则返回true；否则返回false。
+    bool isValid(vector<int>& pos, int row, int col){
+        for (int i = 0; i != row; i++){
+            if (pos[i] == col || abs(row - i) == abs(col - pos[i])) return false;
         }
         return true;
     }
