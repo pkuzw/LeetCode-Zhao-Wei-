@@ -23,12 +23,15 @@
 ///@date	2015.06.23
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	对带有'*'和'?'两种通配符的字符串进行匹配
@@ -182,6 +185,33 @@ public:
 		}
 		return true;
 	}
+};
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int slen = s.length();
+        int plen = p.length();
+        int i = 0, j = 0;   //  i: s的当前下标；j: p的当前下标
+        int m = -1, n = -1;//   m: s对应p中'*'的下标；n: p中'*'的下标
+        while (i != slen){
+            if (s[i] == p[j] || p[j] == '?'){
+                i++;
+                j++;
+            }
+            else if (p[j] == '*'){
+                n = j++;
+                m = i;
+            }
+            else if (n >= 0){
+                j = n + 1;
+                i = ++m;
+            }
+            else return false;
+        }
+        while (p[j] == '*') j++;
+        return j == plen;
+    }
 };
 
 int main()
