@@ -4,10 +4,13 @@
 ///@date	2015.07.02
 ///@version 1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	实现计算浮点数的n次幂函数
 	///@param	x	底数
@@ -95,14 +98,30 @@ public:
 	}
 };
 
+class Solution {
+public:
+    double myPow(double x, int n) {
+        if (n < 0) return double(1 / pow_(x, -n));
+        return pow_(x, n);
+    }
+    double pow_(double x, int n){
+        if (!n) return 1;
+        double half = pow_(x, n / 2);
+        if (n % 2)  return x * half * half;
+        return half * half;
+    }
+};
+
 int main()
 {
 	int n;
 	double x;
 	Solution slt;
+    Solution_v1 slt_v1;
 	while (cin >> x >> n)
 	{
 		cout << slt.myPow(x, n) << endl;
+        cout << slt_v1.myPow(x, n) << endl;
 	}
 	return 0;
 }
