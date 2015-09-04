@@ -14,11 +14,14 @@
 ///@date	2015.06.18
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	计算第n个count&say序列元素
@@ -67,6 +70,37 @@ public:
 		}
 		return a;
 	}
+};
+
+class Solution {
+public:
+    string countAndSay(int n) {
+        string a = "1";
+        if (n == 1) return a;
+        int j = 0;
+        while (j != n){
+            string b;
+            int cnt = 1;
+            for (int i = 0; i != a.size(); i++){
+                if (i == a.size() - 1){
+                    b += char(cnt + '0');
+                    b += a[i];
+                    cnt = 1;
+                }
+                else{
+                    if (a[i] == a[i+1]) cnt++;
+                    else{
+                        b += char(cnt + '0');
+                        b += a[i];
+                        cnt = 1;
+                    }
+                }
+            }
+            a = b;
+            j++;
+        }
+        return a;
+    }
 };
 
 int main()
