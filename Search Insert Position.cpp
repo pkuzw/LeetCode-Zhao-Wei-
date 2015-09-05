@@ -14,12 +14,15 @@
 ///@date	2015.06.16
 ///@version	1.0
 
+///@date    2015.09.05
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
-
-class Solution
+/*
+class Solution_v1
 {
 public:
 	///@brief	在已经排好序的数组中查找目标元素。
@@ -89,6 +92,20 @@ public:
 		}
 	}
 };
+*/
+class Solution{
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int start = 0, end = nums.size() - 1;
+        while (start <= end){
+            int mid = start + ((end - start) >> 2); // 防止start + end / 2出现溢出
+            if (nums[mid] < target) start = mid + 1;
+            else if (nums[mid] > target) end = mid - 1;
+            else return mid;
+        }
+        return start;
+    }
+};
 
 int main()
 {
@@ -99,7 +116,7 @@ int main()
 	ivec.push_back(6);
 
 	Solution slt;
-	int input = 6;
+	int input = 2;
 
 	int rslt = slt.searchInsert(ivec, input);
 
