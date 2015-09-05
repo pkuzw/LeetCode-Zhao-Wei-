@@ -14,11 +14,14 @@
 ///@date	2015.06.16
 ///@version	1.0
 
+///@date    2015.09.05
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
-
-class Solution
+/*
+class Solution_v1
 {
 public:
 	///@brief	给定一个已经排好序的数组，查找其中元素的范围
@@ -168,6 +171,35 @@ public:
 				return i-1;						
 		}
 	}
+};
+*/
+
+/*
+1. 先找左边界，通过二分查找的改进，将目标值大于中间值的情形转到start = mid + 1，其余情况都是end = mid即可；
+2. 找到左边界后，将其固定住再找右边界，将目标值小于中间值的情形转到end = mid，其余情况是start = mid + 1。
+3. 时间复杂度为O(logn)
+*/
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> rslt(2, -1);
+        int start = 0, end = nums.size() - 1;
+        while (start < end){    // 找左边界
+            int mid = (start + end) / 2;
+            if (nums[mid] < target) start = mid + 1;
+            else    end = mid;
+        }
+        if (nums[start] != target)  return rslt;
+        rslt[0] = start;
+        end = nums.size();
+        while (start < end){    //  找右边界
+            int mid = (start + end) / 2;
+            if (nums[mid] > target) end = mid;
+            else    start = mid + 1;
+        }
+        rslt[1] = start - 1;
+        return rslt;
+    }
 };
 
 int main()
