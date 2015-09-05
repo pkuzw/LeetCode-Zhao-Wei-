@@ -10,12 +10,15 @@
 ///@date	2015.06.17
 ///@version	1.0
 
+///@date    2015.09.04
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	求解数独
@@ -111,6 +114,40 @@ public:
 			}
 		}
 	}
+};
+
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        if (board.empty())  return;
+        dfs(board, 0, 0);
+    }
+    
+    bool isValid(vector<vector<char>>& board, int row, int col){
+        for (int i = 0; i != 9; i++)
+            if (i != row && board[i][col] == board[row][col])   return false;
+        for (int j = 0; j != 9; j++)
+            if (j != col && board[row][j] == board[row][col])   return false;
+        for (int i = row / 3 * 3; i != row / 3 * 3 + 3; i++)
+            for (int j = col / 3 * 3; j != col / 3 * 3 + 3; j++)
+                if ((i != row || j != col) && board[i][j] == board[row][col])   return false;
+        return true;
+    }
+    
+    bool dfs(vector<vector<char>>& board, int row, int col){
+        if (row == 9) return true;
+        if (col == 9) return dfs(board, row + 1, 0);
+        if (board[row][col] == '.') {
+            for (int i = 1; i <= 9; i++) {
+                board[row][col] = (char)(i + '0');
+                if (isValid(board, row , col))
+                    if (dfs(board, row, col + 1)) return true;
+                board[row][col] = '.';
+            }
+        }
+        else    return dfs(board, row, col + 1);
+        return false;
+    }
 };
 
 int main()
