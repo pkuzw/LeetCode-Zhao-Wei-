@@ -15,6 +15,10 @@
 ///@date	2015.06.12
 ///@note	从最低位向最高位遍历，在后缀的k（k > 0)位中，如果倒数第k（1 < i <= k）位是这k个数中最大的，则需要将倒数第k+1位带入进来。
 //			将这k+1个数中大于倒数第k+1位的最小值放入第k+1位，然后将剩余的k个数按照升序依次排列。
+///@version 1.0
+
+///@date    2015.09.05
+///@version 2.0
 
 #include <iostream>
 #include <vector>
@@ -22,7 +26,7 @@
 using namespace std;
 
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	切换到数组升序的下一个排列
@@ -111,6 +115,26 @@ private:
 		}
 	}mycmp;
 	
+};
+
+/*
+通过观察发现，逆序找到第一个比前面一个数大的数字，然后在后面找到比前面这个数大的最小数，二者交换，然后将后面进行翻转即可。
+*/
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int i, j;
+        for (i = nums.size() - 2; i >= 0; i--){
+            if (nums[i] < nums[i+1]){
+                for (j = nums.size() - 1; j >= i; j--)
+                    if (nums[j] > nums[i]) break;
+                swap(nums[i], nums[j]);
+                reverse(nums.begin() + i + 1, nums.end());
+                return;
+            }
+        }
+        reverse(nums.begin(), nums.end());
+    }
 };
 
 int main()
