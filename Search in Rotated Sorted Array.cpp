@@ -10,13 +10,16 @@
 */
 ///@author	zhaowei
 ///@date	2015.06.15
+///@version 1.0
+
+///@date    2015.09.05
 ///@version 2.0
 
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	查找已排序数组中是否存在某元素（默认为升序）
 	///@param	nums	数组
@@ -170,9 +173,30 @@ private:
 	}	
 };
 
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        if (nums.empty())   return -1;
+        int start = 0, end = nums.size() - 1;
+        while (start <= end){
+            int mid = (start + end) / 2;
+            if (nums[mid] == target)    return mid;
+            else if (nums[mid] < nums[end]){
+                if (nums[mid] < target && target <= nums[end])  start = mid + 1;
+                else end = mid - 1;
+            }
+            else{
+                if (nums[mid] > target && target >= nums[start])    end = mid - 1;
+                else    start = mid + 1;
+            }
+        }
+        return -1;
+    }
+};
+
 int main()
 {
-	Solution slt;
+	Solution_v1 slt_v1;
 	for (int j = 1; j <= 10; j++)
 	{
 		vector<int> nums;
@@ -194,8 +218,10 @@ int main()
 		for (int i = 0; i < 12; i++)
 		{
 			int target = i;
-			cout << target << " " << slt.search(nums, target) << ' ' << slt.search_2(nums, target);
+			cout << target << " " << slt_v1.search(nums, target) << ' ' << slt_v1.search_2(nums, target);
 			cout << endl;
+            Solution slt;
+            cout << "v2: " << slt.search(nums, target) << endl;
 		}
 
 	}
