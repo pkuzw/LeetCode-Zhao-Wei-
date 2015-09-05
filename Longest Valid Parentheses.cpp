@@ -11,13 +11,16 @@
 ///@author	zhaowei
 ///@date	2015.06.13
 
+///@author  zhaowei
+///@date    2015.09.05
+
 #include <iostream>
 #include <string>
 #include <stack>
 
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	计算括号字符串中最长有效括号的长度
@@ -160,10 +163,32 @@ public:
 	}
 };
 
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        stack<int> stk;
+        int start = 0;
+        int rslt = 0;
+        for (int i = 0; i != s.size(); i++){
+            if (s[i] == '(')    stk.push(i);
+            else if (s[i] == ')'){
+                if (stk.empty())  start = i + 1;
+                else{
+                    stk.pop();
+                    rslt = stk.empty() ? max(rslt, i - start + 1) : max(rslt, i - stk.top());
+                }
+            }
+        }
+        return rslt;
+    }
+};
+
 int main()
 {
 	string s = "((()))())";
-	Solution slt;
-	cout << slt.longestValidParentheses_stack(s) << endl;
+	Solution_v1 slt_v1;
+	cout << slt_v1.longestValidParentheses_stack(s) << endl;
+    Solution slt;
+    cout << slt.longestValidParentheses(s) << endl;
 	return 0;
 }
