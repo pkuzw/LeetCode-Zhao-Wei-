@@ -5,10 +5,15 @@
 ///@author	zhaowei
 ///@date	2015.06.11
 ///@version	1.0
+
+///@author  zhaowei
+///@date    2015.09.06
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	不用乘法、除法和求模，计算两个整型变量的商
@@ -97,6 +102,29 @@ public:
 		return rslt;
 	}
 };
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if (divisor == 0 || (dividend == INT_MIN && divisor == -1)) return INT_MAX;
+        long m = labs(dividend), n = labs(divisor), res = 0;
+        long sign = ((dividend < 0) ^ (divisor < 0)) ? -1 : 1;
+        if (n == 1) return m * sign;
+        while (m >= n) {
+            long k = n;
+            int i = 0;
+            while (k <= m) {
+                m -= k;
+                k <<= 1;
+                res += 1 << i;
+                ++i;
+            }
+        }
+        return (res * sign);
+    }
+};
+
+
 
 int main()
 {
