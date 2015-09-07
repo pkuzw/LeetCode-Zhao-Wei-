@@ -3,6 +3,9 @@
 ///@date	2015.06.08
 ///@version	1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
@@ -13,7 +16,7 @@ struct ListNode
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	归并两个已排好序的链表
 	///@param	l1	链表1
@@ -108,11 +111,32 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+        ListNode *res = new ListNode(0);
+        ListNode *cur = res;
+        while(l1 && l2) {
+            if (l1->val < l2->val) {
+                cur->next = l1;
+                l1 = l1->next;
+            } else {
+                cur->next = l2;
+                l2 = l2->next;
+            }
+            cur = cur->next;
+        }
+        if (l1) cur->next = l1;
+        if (l2) cur->next = l2;
+        return res->next;
+    }
+};
+
 int main()
 {
 	ListNode* l1 = new ListNode(4);
 	ListNode* l2 = new ListNode(3);
- 	Solution slt;
+ 	Solution_v1 slt;
  	for (int i = 2; i <= 5; i++)
  	{
  		slt.insertNode(l1, i*3 - 1);
