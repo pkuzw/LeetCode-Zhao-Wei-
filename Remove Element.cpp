@@ -5,13 +5,17 @@
 ///@author	zhaowei
 ///@date	2015.06.11
 ///@version 1.0
+
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 
@@ -53,17 +57,27 @@ public:
 	}
 };
 
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int rslt = 0;
+        for (int i = 0; i != nums.size(); i++)
+            if (nums[i] != val) nums[rslt++] = nums[i];
+        return rslt;
+    }
+};
+
 int main()
 {
 	vector<int> ivec;
-// 	for (int i = 0; i < 10; i++)
-// 	{
-// 		for (int j = i; j < 10; j++)
-// 		{
-// 			ivec.push_back(10-i);
-// 		}
-// 	}
-//	ivec.push_back(2);
+ 	for (int i = 0; i < 10; i++)
+ 	{
+ 		for (int j = i; j < 10; j++)
+ 		{
+ 			ivec.push_back(10-i);
+ 		}
+ 	}
+	ivec.push_back(2);
 	Solution slt;
 	int newLength = slt.removeElement(ivec, 3);
 	for (int i = 0; i < newLength; i++)
