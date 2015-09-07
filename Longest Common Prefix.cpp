@@ -3,12 +3,15 @@
 ///@date	2015.06.03
 ///@version	1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	找出一组字符串的最长公共前缀
@@ -58,6 +61,21 @@ public:
 		}
 		return lcp;
 	}
+};
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        if (strs.size() == 0) return "";
+        for (int i = 0; i < strs[0].size(); ++i) {
+            for (int j = 0; j < strs.size() - 1; ++j) {
+                if (i >= strs[j].size() || strs[j][i] != strs[j + 1][i]) {
+                    return strs[j].substr(0, i);
+                }
+            }
+        }
+        return strs[0];
+    }
 };
 
 int main()
