@@ -20,11 +20,15 @@
 			isMatch("aab", "c*a*b") → true
 
 */
+
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	正则表达式匹配
@@ -176,6 +180,28 @@ public:
 		return isMatch(s_char, p_char+2);	// 匹配s和p+2
 	}
 };
+
+
+///@note    递归求解
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        if (p.empty()) return s.empty();
+        if (p.size() == 1) {
+            return (s.size() == 1 && (s[0] == p[0] || p[0] == '.'));
+        }
+        if (p[1] != '*') {
+            if (s.empty()) return false;
+            return (s[0] == p[0] || p[0] == '.') && isMatch(s.substr(1), p.substr(1));
+        }
+        while (!s.empty() && (s[0] == p[0] || p[0] == '.')) {
+            if (isMatch(s, p.substr(2))) return true;
+            s = s.substr(1);
+        }
+        return isMatch(s, p.substr(2));
+    }
+};
+
 
 int main()
 {
