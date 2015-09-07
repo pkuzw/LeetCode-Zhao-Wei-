@@ -11,11 +11,15 @@
 ///@date	2015.06.04
 ///@version	1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution
+/*
+class Solution_v1
 {
 public:
 	///@brief	计算和距离目标值最近的三元组
@@ -180,6 +184,29 @@ public:
 		}
 	}
 
+}; */
+
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int closest = nums[0] + nums[1] + nums[2];
+        int diff = abs(closest - target);
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size() - 2; ++i) {
+            int left = i + 1, right = nums.size() - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                int newDiff = abs(sum - target);
+                if (diff > newDiff) {
+                    diff = newDiff;
+                    closest = sum;
+                }
+                if (sum < target) ++left;
+                else --right;
+            }
+        }
+        return closest;
+    }
 };
 
 int main()
