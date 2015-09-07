@@ -15,11 +15,14 @@
 	@version	1.0
 */
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	移除已经排好序的数组中的重复元素
@@ -57,6 +60,17 @@ private:
 		a = b;
 		b = t;
 	}
+};
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.empty())   return 0;
+        int j = 0;
+        for (int i = 0; i != nums.size(); i++)
+            if (nums[i] != nums[j]) swap(nums[++j], nums[i]);
+        return j+1;
+    }
 };
 
 int main()
