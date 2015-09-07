@@ -4,10 +4,13 @@
 ///@version	1.0
 ///@note	使用int或者int会有可能不够长，造成除数溢出。对于溢出的情况，直接输出零；另外，就是将末尾为零的情形翻转后要进行舍去。
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将整数x反转输出
 	///@param	x	待反转的整数
@@ -100,6 +103,19 @@ public:
 		delete []rslt;
 		return r;
 	}
+};
+
+class Solution {
+public:
+    int reverse(int x) {
+        int res = 0;
+        while (x != 0) {
+            if (abs(res) > INT_MAX / 10) return 0;
+            res = res * 10 + x % 10;
+            x /= 10;
+        }
+        return res;
+    }
 };
 
 int main()
