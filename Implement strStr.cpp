@@ -8,11 +8,14 @@
 ///@date	2015.06.11
 ///@version	1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	寻找字符串中子串第一次出现的下标
@@ -64,10 +67,25 @@ private:
 	}
 };
 
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if (needle.empty()) return 0;
+        if (needle.size() > haystack.size())    return -1;
+        int i, j;
+        for (i = 0; i != haystack.size() - needle.size() + 1; i++){
+            for (j = 0; j != needle.size(); j++)
+                if (needle[j] != haystack[i+j]) break;
+            if (j == needle.size()) return i;
+        }
+        return -1;
+    }
+};
+
 int main()
 {
-	string s = "";
-	string n = "";
+	string s = "hello";
+	string n = "eh";
 	Solution slt;
 	cout <<slt.strStr(s, n) << endl;
 	return 0;
