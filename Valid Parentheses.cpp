@@ -9,12 +9,15 @@
 ///@version 1.0
 ///@note	通过观察和思考发现，有效括号对具有最内层的括号对一定是紧邻着的。
 //			先找到第一个挨在一起的括号对，将它舍去，然后接着找紧挨着的一对括号，直到能够将字符串删空为止，此时字符串为有效括号对；否则为无效的括号对。
+
+///@date    2015.09.07
+///@version 2.0
 #include <iostream>
 #include <string>
 #include <stack>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	判断字符串是否为有效括号对组成
@@ -48,6 +51,24 @@ public:
 		return false;	// 如果s没有在while循环内部清空，则返回false
 
 	}
+};
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> parentheses;
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == '(' || s[i] == '[' || s[i] == '{') parentheses.push(s[i]);
+            else {
+                if (parentheses.empty()) return false;
+                if (s[i] == ')' && parentheses.top() != '(') return false;
+                if (s[i] == ']' && parentheses.top() != '[') return false;
+                if (s[i] == '}' && parentheses.top() != '{') return false;
+                parentheses.pop();
+            }
+        }
+        return parentheses.empty();
+    }
 };
 
 int main()
