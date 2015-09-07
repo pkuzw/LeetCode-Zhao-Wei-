@@ -10,6 +10,10 @@
 */
 ///@author	zhaowei
 ///@date	2015.06.05
+///@version 1.0
+
+///@date    2015.09.07
+///@version 2.0
 
 #include <iostream>
 using namespace std;
@@ -20,7 +24,7 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}	// 构造函数参数列表只有1个，所以在初始化ListNode时应该带一个参数val
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	移除链表中距离尾结点n的节点
 	///@param	head	链表首指针
@@ -71,10 +75,26 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if (!head->next) return NULL;
+        ListNode *pre = head, *cur = head;
+        for (int i = 0; i < n; ++i) cur = cur->next;
+        if (!cur) return head->next;
+        while (cur->next) {
+            cur = cur->next;
+            pre = pre->next;
+        }
+        pre->next = pre->next->next;
+        return head;
+    }
+};
+
 int main()
 {
 	ListNode* head = new ListNode(1);
-	Solution slt;
+	Solution_v1 slt;
 	for (int i = 2; i <= 5; i++)
 	{
 		slt.insertNode(head, i);
