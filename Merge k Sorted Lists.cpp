@@ -5,6 +5,9 @@
 ///@version	1.0
 ///@note	利用归并排序的思想，时间复杂度为O(nklogk)；或者将每个子链表的首结点放入最小堆中，每次弹出堆顶和插入堆顶元素的后一节点，
 			时间复杂度也为O(nklongk)
+ 
+///@date    2015.09.07
+///@version 2.0
 */
 
 #include <vector>
@@ -19,7 +22,7 @@ struct ListNode
 	ListNode(int x) : val(x), next(nullptr) {}
 };
 
-class Solution
+class Solution_v1
 {
 private:
 	///@brief	最小堆的比较函数
@@ -89,12 +92,47 @@ public:
 	}
 };
 
+///@note    利用分治法求解
+class Solution {
+public:
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        if (lists.size() == 0) return NULL;
+        int n = lists.size();
+        while (n > 1) {
+            int k = (n + 1) / 2;
+            for (int i = 0; i < n / 2; ++i) {
+                lists[i] = mergeTwoLists(lists[i], lists[i + k]);
+            }
+            n = k;
+        }
+        return lists[0];
+    }
+    
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+        ListNode *head = new ListNode(-1);
+        ListNode *cur = head;
+        while (l1 && l2) {
+            if (l1->val < l2->val) {
+                cur->next = l1;
+                l1 = l1->next;
+            } else {
+                cur->next = l2;
+                l2 = l2->next;
+            }
+            cur = cur->next;
+        }
+        if (l1) cur->next = l1;
+        if (l2) cur->next = l2;
+        return head->next;
+    }
+};
+
 int main ()
 {
 	ListNode* l1 = new ListNode(4);
 	ListNode* l2 = new ListNode(3);
 	ListNode* l3 = new ListNode(10);
-	Solution slt;
+	Solution_v1 slt;
 	for (int i = 2; i <= 5; i++)
 	{
 		slt.insertNode(l1, i*3 - 1);
