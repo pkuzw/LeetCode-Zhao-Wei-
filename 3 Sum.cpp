@@ -13,13 +13,16 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 ///@date	2015.06.04
 ///@version 1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 
 using namespace std;
-
-class Solution
+/*
+class Solution_v1
 {
 public:
 	///@brief	求三个数之和为0的所有组合
@@ -29,7 +32,7 @@ public:
 	///@date	2015.06.05
 	/* @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到3个数和为0的组合。时间复杂度为
 				O(nlgn+n^2lgn)，空间复杂度是O(3n) 
-	*/
+	*//*
 	vector<vector<int>> threeSum(vector<int>& nums) {
 
 		QuickSort(nums, 0, nums.size()-1);	// 快排
@@ -199,7 +202,7 @@ public:
 	///@return	如果在数组中找到v值，则返回该值所在下标；否则返回-1
 	int BinarySearch(vector<int>& array_int, int p, int r, int v)
 	{
-		if(p > r)/* || v < array_int[p] || v > array_int[r])*/
+		if(p > r) //|| v < array_int[p] || v > array_int[r])
 			return -1;
 		int q = (p + r) / 2;
 		if(v == array_int[q])
@@ -209,6 +212,33 @@ public:
 		else 
 			BinarySearch(array_int, q+1, r, v);
 	}
+}; */
+
+class Solution {
+public:
+    vector<vector<int> > threeSum(vector<int>& nums) {
+        vector<vector<int> > res;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < int(nums.size() - 2); ++i) {
+            if (i == 0 || (i > 0 && nums[i] != nums[i - 1])) {
+                int left = i + 1, right = nums.size() - 1, sum = 0 - nums[i];
+                while (left < right) {
+                    if (nums[left] + nums[right] == sum) {
+                        vector<int> out;
+                        out.push_back(nums[i]);
+                        out.push_back(nums[left]);
+                        out.push_back(nums[right]);
+                        res.push_back(out);
+                        while (left < right && nums[left] == nums[left + 1]) ++left;
+                        while (left < right && nums[right] == nums[right - 1]) --right;
+                        ++left; --right;
+                    } else if (nums[left] + nums[right] < sum) ++left;
+                    else --right;
+                }
+            }
+        }
+        return res;
+    }
 };
 
 int main()
