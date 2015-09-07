@@ -29,6 +29,9 @@ A solution set is:
 ///@date	2015.07.29
 ///@version	3.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -37,8 +40,8 @@ A solution set is:
 #include <set>
 
 using namespace std;
-
-class Solution
+/*
+class Solution_v1
 {
 public:
 	///@brief	成功AC，时间复杂度为O(n^3)
@@ -72,9 +75,9 @@ public:
 	///@return	返回所有可能的组合，在每一个4元组答案中按照非降序排列元素
 	///@author	zhaowei
 	///@date	2015.06.06
-	/* @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到4个数和为指定值的组合。
-				时间复杂度为	O(nlgn+n^3lgn)，空间复杂度是O(3n) 
-	*/
+	// @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到4个数和为指定值的组合。
+	//			时间复杂度为	O(nlgn+n^3lgn)，空间复杂度是O(3n)
+	//
 	vector<vector<int>> fourSum_tle(vector<int>& nums, int target) {
 
 		QuickSort(nums, 0, nums.size()-1);	// 快排
@@ -211,7 +214,7 @@ public:
 	///@return	如果在数组中找到v值，则返回该值所在下标；否则返回-1
 	int BinarySearch(vector<int>& array_int, int p, int r, int v)
 	{
-		if(p > r)/* || v < array_int[p] || v > array_int[r])*/
+		if(p > r)  // || v < array_int[p] || v > array_int[r])
 			return -1;
 		int q = (p + r) / 2;
 		if(v == array_int[q])
@@ -308,7 +311,7 @@ public:
 
 	///@brief	求4个数之和为指定值的所有组合
 	///@author  zhaowei
-	///@date	2015.06.08
+	///@date	2015.06.08  */
 	/* @note	O（n^2）的算法，先对数组排序。先枚举出所有二个数的和存放在哈希map中，其中map的key对应的是二个数的和，因为多对元素求和可能是相同的值，
 				故哈希map的value是一个链表（下面的代码中用数组代替），链表每个节点存的是这两个数在数组的下标；这个预处理的时间复杂度是O（n^2）。
 				接着枚举第一个和第二个元素，假设分别为v1,v2, 然后在哈希map中查找和为target-v1-v2的所有二元对（在对应的链表中），查找的时间为O（1），
@@ -319,7 +322,7 @@ public:
 				一个加入的二元对是否重复即可），因为同一个链表中的二元对两个元素的和都是相同的，因此只要二元对的一个元素不同，则这个二元对就不同。
 				我们可以认为哈希map中key对应的链表长度为常数，那么算法总的复杂度为O（n^2）
 				同样报TLE
-	*/
+	*//*
 	vector<vector<int> > fourSum_tle4(vector<int> &num, int target) {
 		int n = num.size();
 		vector<vector<int> > res;
@@ -361,8 +364,33 @@ public:
 
 		return res;
 	}
-	
-
+}; */
+// O(n^3)
+class Solution {
+public:
+    vector<vector<int> > fourSum(vector<int> &nums, int target) {
+        set<vector<int> > res;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < int(nums.size() - 3); ++i) {
+            for (int j = i + 1; j < int(nums.size() - 2); ++j) {
+                int left = j + 1, right = nums.size() - 1;
+                while (left < right) {
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        vector<int> out;
+                        out.push_back(nums[i]);
+                        out.push_back(nums[j]);
+                        out.push_back(nums[left]);
+                        out.push_back(nums[right]);
+                        res.insert(out);
+                        ++left; --right;
+                    } else if (sum < target) ++left;
+                    else --right;
+                }
+            }
+        }
+        return vector<vector<int> > (res.begin(), res.end());
+    }
 };
 
 int main()
