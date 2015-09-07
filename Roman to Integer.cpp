@@ -3,11 +3,14 @@
 ///@date	2015.06.03
 ///@version 1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <string>
 #include <iostream>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	罗马数字转换成阿拉伯数字
@@ -69,6 +72,29 @@ public:
 		}
 		return rslt;
 	}
+};
+
+#include <map>
+class Solution {
+public:
+    int romanToInt(string s) {
+        int res = 0;
+        map<char, int> roman;
+        roman['M'] = 1000;
+        roman['D'] = 500;
+        roman['C'] = 100;
+        roman['L'] = 50;
+        roman['X'] = 10;
+        roman['V'] = 5;
+        roman['I'] = 1;
+        
+        for (int i = 0; i < s.size(); ++i) {
+            int val = roman[s[i]];
+            if (i == s.size() - 1 || roman[s[i+1]] <= roman[s[i]]) res += val;
+            else res -= val;
+        }
+        return res;
+    }
 };
 
 int main()
