@@ -2,12 +2,16 @@
 ///@note	因为木桶装水的量取决于最短的那块木板，所以我们要找的应该是矩形面积最大的两个点
 ///@author	zhaowei
 ///@date	2015.06.02
+///@version 1.0
+
+///@date    2015.09.07
+///@version 2.0
 
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	求最大矩形面积
@@ -36,6 +40,19 @@ public:
 		}
 		return rslt;
 	}
+};
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int res = 0, left = 0, right = height.size() - 1;
+        while (left < right) {
+            res = max(res, min(height[left], height[right]) * (right - left));
+            if (height[left] < height[right]) ++left;
+            else --right;
+        }
+        return res;
+    }
 };
 
 int main()
