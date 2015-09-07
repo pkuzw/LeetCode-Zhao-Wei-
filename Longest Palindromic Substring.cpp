@@ -4,11 +4,15 @@
 ///@date	2015.05.25
 ///@version 1.0
 ///@note	最简单的方法就是O(n^2)的复杂度枚举所有子串，然后再验证每一个子串是否是回文字符串（O(n)），总计O(n^3)，会超时。
+
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	枚举法
 	///@param	s	待处理的字符串
@@ -244,9 +248,37 @@ public:
 	}
 };
 
+#include <vector>
+///@Manacher Algorithm. time: O(n)
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string t ="$#";
+        for (int i = 0; i < s.size(); ++i) {
+            t += s[i];
+            t += '#';
+        }
+        vector<int> p(t.size(), 0);
+        int id = 0, mx = 0, resId = 0, resMx = 0;
+        for (int i = 0; i < t.size(); ++i) {
+            p[i] = mx > i ? min(p[2 * id - i], mx - i) : 1;
+            while (t[i + p[i]] == t[i - p[i]]) ++p[i];
+            if (mx < i + p[i]) {
+                mx = i + p[i];
+                id = i;
+            }
+            if (resMx < p[i]) {
+                resMx = p[i];
+                resId = i;
+            }
+        }
+        return s.substr((resId - resMx) / 2, resMx - 1);
+    }
+};
+
 int main()
 {
-	Solution slt;
+	Solution_v1 slt;
 	string s = "bb";
 	string pstr_bf = slt.longestPalindrome_BruteForce(s);
 	string pstr_dp = slt.longestPalindrome_DP(s);

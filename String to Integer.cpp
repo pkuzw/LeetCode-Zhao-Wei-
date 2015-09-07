@@ -138,8 +138,8 @@ public:
 
 class Solution {
 public:
-    int atoi(const char *str) {
-        if (!str) return 0;
+    int myAtoi(string str) {
+        if (str.empty()) return 0;
         int res = 0;
         int left = 0;
         bool isPositive = true;
@@ -158,6 +158,7 @@ public:
         }
         if(isPositive) return res;
         else return -res;
+
     }
 };
 
