@@ -8,13 +8,16 @@
 ///@author	zhaowei
 ///@date	2015.06.09
 ///@note	字符串的前i位中'('不少于')'就能保证其合法。
+ 
+///@date    2015.09.07
+///@version 2.0
 */
 #include <iostream>
 #include <vector>
 #include <string>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	给定括号对数，生成所有可能合法括号字符串
@@ -61,6 +64,23 @@ private:
 			str.pop_back();	//	将临时变量str中的右括号弹出，同上
 		}
 	}
+};
+
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        generateParenthesisDFS(n, n, "", res);
+        return res;
+    }
+    void generateParenthesisDFS(int left, int right, string out, vector<string> &res) {
+        if (left > right) return;
+        if (left == 0 && right == 0) res.push_back(out);
+        else {
+            if (left > 0) generateParenthesisDFS(left - 1, right, out + '(', res);
+            if (right > 0) generateParenthesisDFS(left, right - 1, out + ')', res);
+        }
+    }
 };
 
 int main()
