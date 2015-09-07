@@ -3,11 +3,14 @@
 ///@date	2015.05.28
 ///@version	1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	将string类型的字符串转换成int型
@@ -133,6 +136,31 @@ public:
 
 };
 
+class Solution {
+public:
+    int atoi(const char *str) {
+        if (!str) return 0;
+        int res = 0;
+        int left = 0;
+        bool isPositive = true;
+        while (str[left] == ' ') ++left;
+        if (str[left] == '-' || str[left] == '+') {
+            if (str[left] == '-') isPositive = false;
+            ++left;
+        }
+        if (str[left] < '0' || str[left] >'9') return 0;
+        while (str[left] >= '0' && str[left] <= '9') {
+            if (res > INT_MAX / 10 || (res == INT_MAX / 10 && str[left] - '0' >= 8)) {
+                return isPositive ? INT_MAX : INT_MIN;
+            }
+            res = res * 10 + str[left] - '0';
+            ++left;
+        }
+        if(isPositive) return res;
+        else return -res;
+    }
+};
+
 int main()
 {
 	const char* s = "001 01";//"   2147483647stt";
@@ -142,7 +170,7 @@ int main()
 	string s1 = "2147483647";
 //	string s2 = "1";
 	//getline(cin, s1);
-	Solution slt;
+	Solution_v1 slt;
 
  	cout << slt.myAtoi(s1) << endl;
 // 	cout << slt.myAtoi(s2) << endl;
