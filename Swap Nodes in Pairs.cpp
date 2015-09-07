@@ -9,6 +9,9 @@
 ///@author	zhaowei
 ///@date	2015.06.10
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
@@ -19,7 +22,7 @@ struct ListNode
 	ListNode(int x) : val(x), next(nullptr) {};
 };
 
-class Solution {
+class Solution_v1 {
 public:
 
 	///@brief	交换链表中相邻的两个元素
@@ -91,11 +94,38 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (!head || !head->next) return head;
+        ListNode *dummy = new ListNode(-1);
+        dummy->next = head;
+        ListNode *pre = dummy, *cur = head, *next = head->next;
+        int i = 0;
+        while (cur) {
+            ++i;
+            if (i % 2 == 0) {
+                ListNode *last = cur->next;
+                cur->next = next;
+                last->next = pre->next;
+                pre->next = last;
+                pre = cur;
+                cur = next;
+                if (next) next = next->next;
+            } else {
+                if (next) next = next->next;
+                else break;
+            }
+        }
+        return dummy->next;
+    }
+};
+
 int main()
 {
 	ListNode* l1 = new ListNode(4);
 	//ListNode* l2 = new ListNode(3);
-	Solution slt;
+	Solution_v1 slt;
 	for (int i = 2; i <= 2; i++)
 	{
 		slt.insertNode(l1, i*3 - 1);
