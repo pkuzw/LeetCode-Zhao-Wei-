@@ -18,11 +18,14 @@ Output: index1=1, index2=2
 ///@date 2014.09.04
 ///@version 1.1
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
-class Solution 
+class Solution_v1
 {
 public:
 	///@brief 保存排序后元素的键值和原有下标
@@ -220,6 +223,28 @@ public:
 			}
 		}
 	}
+};
+
+#include <map>
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int> &numbers, int target) {
+        vector<int> res;
+        map<int, int> numMap;
+        for (int i = 0; i < numbers.size(); ++i) {
+            numMap[numbers[i]] = i;
+        }
+        for (int i = 0; i < numbers.size(); ++i) {
+            int tmp = target - numbers[i];
+            if (numMap.find(tmp) != numMap.end() && numMap[tmp] != i) {
+                res.push_back(i + 1);
+                res.push_back(numMap[tmp] + 1);
+                break;
+            }
+        }
+        return res;
+    }
 };
 
 int main()
