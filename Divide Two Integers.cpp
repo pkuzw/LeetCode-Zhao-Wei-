@@ -107,7 +107,7 @@ public:
 class Solution {
 public:
     int divide(int dividend, int divisor) {
-        if (divisor == 0 || (dividend == INT_MIN) && divisor == -1) return INT_MAX;
+        if (divisor == 0 || (dividend == INT_MIN && divisor == -1)) return INT_MAX;
         long m = labs(dividend), n = labs(divisor);
         long rslt = 0;
         long sign = ((dividend < 0) ^ (divisor < 0)) ? -1 : 1;
