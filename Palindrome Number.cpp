@@ -3,10 +3,13 @@
 ///@date	2015.05.31
 ///@version	1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	判断一个int型整数是否是回文数
@@ -67,6 +70,24 @@ public:
 		return true;
 	}
 };
+
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0) return false;
+        int div = 1;
+        while (x / div >= 10) div *= 10;
+        while (x > 0) {
+            int left = x / div;
+            int right = x % 10;
+            if (left != right) return false;
+            x = (x % div) / 10;
+            div /= 100;
+        }
+        return true;
+    }
+};
+
 int main()
 {
 	int x = 1;
