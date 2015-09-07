@@ -15,15 +15,18 @@
 ///@note	暴力枚举，提交后报Memory Limit Exceed
 
 ///@date	2015.06.08
-///@version 2.0
+///@version 1.1
 ///@note	将所有的字母组合看做一棵树，树的每一个非叶节点就是一个原先的数字，每一条边相当于上层节点对应的字母，利用深度优先遍历即可
+
+///@version 2015.09.07
+///@version 2.0
 
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	将电话键盘上的数字转换成字母
@@ -135,6 +138,29 @@ public:
 			dfs_tree(digits, cur+1, path+c, rslt);	//	递归遍历
 		}
 	}
+};
+
+// Recursion
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> res;
+        if (digits.empty()) return res;
+        string dict[] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        letterCombinationsDFS(digits, dict, 0, "", res);
+        return res;
+    }
+    void letterCombinationsDFS(string digits, string dict[], int level, string out, vector<string> &res) {
+        if (level == digits.size()) res.push_back(out);
+        else {
+            string str = dict[digits[level] - '2'];
+            for (int i = 0; i < str.size(); ++i) {
+                out.push_back(str[i]);
+                letterCombinationsDFS(digits, dict, level + 1, out, res);
+                out.pop_back();
+            }
+        }
+    }
 };
 
 int main()
