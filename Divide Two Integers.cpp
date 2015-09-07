@@ -122,7 +122,7 @@ public:
                 i++;
             }
         }
-        return rslt;
+        return rslt * sign;
     }
 };
 
