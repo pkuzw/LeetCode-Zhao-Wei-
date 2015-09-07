@@ -18,6 +18,9 @@
 ///@date	2015.06.10
 ///@version 1.0
 
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 using namespace std;
 
@@ -28,7 +31,7 @@ struct ListNode
 	ListNode(int x) : val(x), next(nullptr) {}
 };
 
-class Solution 
+class Solution_v1
 {
 public:
 	///@brief	将链表按照每组k个的长度在组内进行反转
@@ -130,12 +133,47 @@ private:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   翻转指定长度小组内的元素
+    ListNode *reverseKGroup(ListNode *head, int k) {
+        if (!head || k == 1) return head;
+        ListNode *dummy = new ListNode(-1);
+        ListNode *pre = dummy, *cur = head;
+        dummy->next = head;
+        int i = 0;
+        while (cur) {
+            ++i;
+            if (i % k == 0) {
+                pre = reverseOneGroup(pre, cur->next);
+                cur = pre->next;
+            } else {
+                cur = cur->next;
+            }
+        }
+        return dummy->next;
+    }
+    
+    ///@brief    翻转pre之后和next之前的元素
+    ListNode *reverseOneGroup(ListNode *pre, ListNode *next) {
+        ListNode *last = pre->next;
+        ListNode *cur = last->next;
+        while(cur != next) {
+            last->next = cur->next;
+            cur->next = pre->next;
+            pre->next = cur;
+            cur = last->next;
+        }
+        return last;
+    }
+};
+
 int main()
 {
 	ListNode* l2 = nullptr;
 	ListNode* l1 = new ListNode(1);
 	//ListNode* l2 = new ListNode(3);
-	Solution slt;
+	Solution_v1 slt;
 	for (int i = 2; i <= 7; i++)
 	{
 		slt.insertNode(l1, i);
