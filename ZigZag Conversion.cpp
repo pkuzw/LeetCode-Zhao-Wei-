@@ -2,11 +2,15 @@
 ///@author  zhaowei
 ///@date	2015.05.27
 ///@version	1.0
+
+///@date    2015.09.07
+///@version 2.0
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	将原本纵向阅读的之字形字符串转换成横向阅读的字符串
@@ -125,6 +129,24 @@ public:
 		return rstr;
 	}
 };
+
+class Solution {
+public:
+    string convert(string s, int nRows) {
+        if (nRows <= 1) return s;
+        string res = "";
+        int size = 2 * nRows - 2;
+        for (int i = 0; i < nRows; ++i) {
+            for (int j = i; j < s.size(); j += size) {
+                res += s[j];
+                int tmp = j + size - 2 * i;
+                if (i != 0 && i != nRows - 1 && tmp < s.size()) res += s[tmp];
+            }
+        }
+        return res;
+    }
+};
+
 int main()
 {
 	string t = "PAYPALISHIRING";
