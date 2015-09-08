@@ -34,11 +34,11 @@ public:
         int carry = 0;
         ListNode* i1 = l1, *i2 = l2;
         int len1 = 0, len2 = 0;
-        while (l1) {
+        while (i1) {
             i1 = i1->next;
             len1++;
         }
-        while (l2) {
+        while (i2) {
             i2 = i2->next;
             len2++;
         }
@@ -67,8 +67,9 @@ public:
             if (carry) {
                 ListNode* n = new ListNode(1);
                 i1->next = n;
-                return l1;
+                
             }
+            return l1;
         }
         else if (len1 > len2) {
             while (i2){
@@ -95,17 +96,53 @@ public:
                 else {
                     ListNode* n = new ListNode(1);
                     i1->next = n;
-                    return l1;
+                    
                 }
             }
+            return l1;
         }
         else {
-            
+            while (i1){
+                i2->val += i1->val;
+                if (carry)  i2->val++;
+                if (i2->val >= 10){
+                    i2->val %= 10;
+                    carry = 1;
+                }
+                else    carry = 0;
+                i1 = i1->next;
+                i2 = i2->next;
+            }
+            while (carry) {
+                if (i2->next) {
+                    i2->val++;
+                    if (i2->val >= 10) {
+                        i2->val %= 10;
+                        carry = 1;
+                    }
+                    else carry = 0;
+                    i2 = i2->next;
+                }
+                else {
+                    ListNode* n = new ListNode(1);
+                    i2->next = n;
+                    
+                }
+                
+            }
+            return l2;
         }
-        return i1;
     }
 };
 
 int main() {
+    ListNode* l1 = new ListNode(1);
+    
+    ListNode* n1 = new ListNode(8);
+    l1->next = n1;
+    
+    ListNode* l2 = new ListNode(0);
+    Solution slt;
+    ListNode* rslt = slt.addTwoNumbers(l1, l2);
     return 0;
 }
