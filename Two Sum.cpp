@@ -227,6 +227,8 @@ public:
 
 #include <map>
 
+///@brief   利用map<int, int>来保存数组中的元素和它对应的下标。先遍历一边数组，将它们装入map，然后再通过map本身O(logn)的查找时间
+//          来遍历每个元素对应的和为target的另一半。时间复杂度为O(nlogn)，空间复杂度为O(n)。
 class Solution {
 public:
     vector<int> twoSum(vector<int> &numbers, int target) {
