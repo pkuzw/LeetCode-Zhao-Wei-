@@ -94,9 +94,14 @@ public:
                     i1 = i1->next;
                 }
                 else {
-                    ListNode* n = new ListNode(1);
-                    i1->next = n;
-                    
+					if (carry)	i1->val++;
+					if (i1->val >= 10){
+						i1->val %= 10;
+						ListNode* n = new ListNode(1);
+						i1->next = n;
+						break;
+					}
+					else carry = 0;
                 }
             }
             return l1;
@@ -124,24 +129,29 @@ public:
                     i2 = i2->next;
                 }
                 else {
-                    ListNode* n = new ListNode(1);
-                    i2->next = n;
-                    
-                }
-                
+					if (carry)	i2->val++;
+					if (i2->val >= 10){
+						i2->val %= 10;
+						ListNode* n = new ListNode(1);
+						i2->next = n;
+						break;
+					}
+					else carry = 0;
+                }                
             }
             return l2;
         }
     }
 };
 
-int main() {
+int main() { 
     ListNode* l1 = new ListNode(1);
     
-    ListNode* n1 = new ListNode(8);
-    l1->next = n1;
+    ListNode* n1 = new ListNode(9);
+    //l1->next = n1;
     
-    ListNode* l2 = new ListNode(0);
+    ListNode* l2 = new ListNode(9);
+	l2->next = n1;
     Solution slt;
     ListNode* rslt = slt.addTwoNumbers(l1, l2);
     return 0;
