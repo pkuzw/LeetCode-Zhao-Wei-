@@ -13,7 +13,7 @@
  Output: 7 -> 0 -> 8
 */
 ///@author  zhaowei
-///@date    2015.09.08
+///@date    2015.09.09
 ///@version 1.0
 
 #include <stdio.h>
