@@ -6,6 +6,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.11
+///@version	2.1
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -132,24 +135,30 @@ public:
 
 class Solution {
 public:
+	///@brief	将原本的之字形字符串转换成横行输出
+	///@param	s	原来的之字形字符串
+	///@param	nRows	行数
+	///@return	返回成行输出的字符串
+	///@note	通过观察可知，当按行输出时，相邻的两个字符是按照之字形输出相差2*(nRows - 1)的距离。如果是非首行和非末行，则还要减去2倍
+	///			的行数。时间复杂度为O(n)，空间复杂度为O(n)。
     string convert(string s, int nRows) {
-        if (nRows <= 1) return s;
-        string res = "";
-        int size = 2 * nRows - 2;
-        for (int i = 0; i < nRows; ++i) {
-            for (int j = i; j < s.size(); j += size) {
-                res += s[j];
-                int tmp = j + size - 2 * i;
-                if (i != 0 && i != nRows - 1 && tmp < s.size()) res += s[tmp];
-            }
-        }
-        return res;
+		if (nRows <= 1)	return s;
+		int size = 2 * (nRows - 1);
+		string rslt = "";
+		for (int i = 0; i != nRows; i++) {
+			for (int j = i; j < s.size(); j += size) {
+				rslt += s[j];
+				int tmp = j + size - 2 * i;
+				if (tmp < s.size() && i != 0 && i != nRows - 1)	rslt += s[tmp];
+			}
+		}
+		return rslt;
     }
 };
 
 int main()
 {
-	string t = "PAYPALISHIRING";
+	string t = "PAYPALISHIRING";	// rslt = PAHNAPLSIIGYIR
 	int nrows = 3;
 	
 	Solution slt;
