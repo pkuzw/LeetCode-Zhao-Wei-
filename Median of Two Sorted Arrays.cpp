@@ -28,8 +28,8 @@ The overall run time complexity should be O(log (m+n)).
 ///@date 2014.09.24
 ///@version 1.2
 
-///@date    2015.09.07
-///@version 2.0
+///@date    2015.09.011
+///@version 2.1
 
 #include <iostream>
 #include <vector>
@@ -193,6 +193,12 @@ public:
 
 class Solution {
 public:
+	///@brief	找到已排好序的数组nums1和nums2的合并后的中位数
+	///@param	nums1, nums2	数组
+	///@return	返回数组nums1和nums2的合并后的中位数
+	/* @note	1. 如果nums1与nums2之和为奇数，则直接返回合并后的中位数；如果为偶数，则返回两个中位数的算术平均数。
+				2. 先实现两个已经排好序的数组的第k个元素，然后调用这个函数求中位数。
+	*/
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         int total = nums1.size() + nums2.size();
         if (total % 2 == 1) {
@@ -201,6 +207,21 @@ public:
             return (findKth(nums1, 0, nums2, 0, total / 2) + findKth(nums1, 0, nums2, 0, total / 2 + 1)) / 2;
         }
     }
+
+	///@brief	找到已排好序的数组nums1和nums2分别从第i个和第j个开始合并后的第k个元素
+	///@param	nums1, nums2	数组
+	///@param	i, j	数组1和数组2的起始下标
+	///@param	k		第k个元素
+	///@return	返回第k个元素
+	/* @note	1. 令nums1的数组剩余长度(nums1.size() - i)要比nums2的剩余长度(nums2.size() - j)更长。否则，就交换两个数组；
+				2. 如果nums1的可用长度为0（即nums1.size() - i == 0），则直接返回数组nums2的第k个元素即可；
+				3. 如果是找合并后的第一个元素，只需要比较两个数组的可用首元素即可；
+				4. 找到nums1中可用元素的中位数pa，同理可得nums2中的可用元素中位数pb；
+				5. 如果nums1[pa - 1] < nums2[pb - 1]，则nums1[0..pa-1]不可能大于合并后的第k个元素，故抛弃；
+				6. 同理，如果nums2[pb - 1] < nums1[pa - 1]，则nums2[0..pb-1]也应该抛弃；
+				7. 如果两者相同，则直接返回该值就好。
+				8. 时间复杂度为O(log(m+n))，空间复杂度为O(1)。
+	*/
     double findKth(vector<int> &nums1, int i, vector<int> &nums2, int j, int k) {
         if (nums1.size() - i > nums2.size() - j) return findKth(nums2, j, nums1, i, k);
         if (nums1.size() == i) return nums2[j + k - 1];
