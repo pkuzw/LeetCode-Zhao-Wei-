@@ -7,7 +7,11 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.12
+///@version	2.1
+
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Solution_v1 {
@@ -107,27 +111,46 @@ public:
 
 class Solution {
 public:
+	///@brief	将一个int型变量翻转
+	///@param	x	int型变量
+	///@return	返回翻转后的x
+	///@note	这里需要注意：由于int型变量的范围是-2147483648 ~ 2147483647，所以对于如果是10位的整数，末位为大于2的情形，翻转后肯定会越界。
+	//			所以在每次翻转累加前都要检查是否可能溢出，如果会溢出，则直接返回0.时间复杂度为O(logn)，空间复杂度为O(1)。
     int reverse(int x) {
-        int res = 0;
-        while (x != 0) {
-            if (abs(res) > INT_MAX / 10) return 0;
-            res = res * 10 + x % 10;
-            x /= 10;
-        }
-        return res;
+		int rslt = 0;
+		while (x) {
+			if (abs(rslt) > INT_MAX / 10)	return 0;
+			rslt = rslt * 10 + x % 10;
+			x /= 10;
+		}
+		return rslt;
     }
+
+	///@brief	将一个int型变量翻转
+	///@param	x	int型变量
+	///@return	翻转后的int型变量
+	///@note	利用string类中的reverse函数，先将int型变量转换成string型，然后调用reverse函数，最后再添加符号转换成int型变量
+	int reverse_str(int x) {
+		int sign = x < 0 ? -1 : 1;
+		string s = to_string(static_cast<long long>(abs(x)));
+		std::reverse(s.begin(), s.end());
+		if (s.size() >= 10 && s > "2147483647")	return 0;	//	防止溢出
+		int rslt = stoi(s);
+		rslt *= sign;
+		return rslt;
+	}
 };
 
 int main()
 {
 	Solution slt;
-	int x = -2147483412;
+	int x = 1534236469;
 	
 	cout << slt.reverse(x);
 	cout << endl;
+
+	cout << slt.reverse_str(x) << endl;
     
-    int a;
-    cin >> a;
-    
+	cout << -1 % 5 << endl;    
 	return 0;
 }
