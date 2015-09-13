@@ -75,7 +75,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	判断一个整型变量是否回文
 	///@param	x	整型变量
@@ -96,9 +96,35 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	判断一个整型变量是否回文
+	///@param	x	整型变量
+	///@return  如果该整型变量回文，则返回true；否则返回false
+	///@note	利用string函数的to_string函数和模版中的reverse函数，将原来的整型变量转换成字符串，再划成两半进行比较。时间复杂度O(n)，空间复杂度为O(n)。
+	bool isPalindrome(int x) {
+		if (x < 0)	return false;
+		string str = to_string(static_cast<long long>(x));
+		int len = str.size();
+		if (len == 1)	return true;
+		int half = len / 2;
+		string left, right;
+		if (len % 2) {
+			left = str.substr(0, half);
+			right = str.substr(half + 1, half);			
+		}
+		else {
+			left = str.substr(0, half);
+			right = str.substr(half, half);
+		}
+		reverse(right.begin(), right.end());
+		return left == right;
+	}
+};
+
 int main()
 {
-	int x = 123321;
+	int x = 12345321;
 	Solution slt;
 	bool rslt = slt.isPalindrome(x);
 	return 0;
