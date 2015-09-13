@@ -6,6 +6,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.13
+///@version	2.1
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -138,42 +141,44 @@ public:
 
 class Solution {
 public:
-    int myAtoi(string str) {
-        if (str.empty()) return 0;
-        int res = 0;
-        int left = 0;
-        bool isPositive = true;
-        while (str[left] == ' ') ++left;
-        if (str[left] == '-' || str[left] == '+') {
-            if (str[left] == '-') isPositive = false;
-            ++left;
-        }
-        if (str[left] < '0' || str[left] >'9') return 0;
-        while (str[left] >= '0' && str[left] <= '9') {
-            if (res > INT_MAX / 10 || (res == INT_MAX / 10 && str[left] - '0' >= 8)) {
-                return isPositive ? INT_MAX : INT_MIN;
-            }
-            res = res * 10 + str[left] - '0';
-            ++left;
-        }
-        if(isPositive) return res;
-        else return -res;
-
-    }
+	///@brief	实现将字符串变量转换为整型变量的函数
+	///@param	str	字符串
+	///@return	返回字符串对应的整型变量
+	///@note	注意处理符号和多余的空白符。对于越界的情况，返回距离实际值最近的int型边界值。
+	int myAtoi(string str) {
+		if (str.empty())	return 0;
+		int left = 0;
+		int rslt = 0;
+		bool isPositive = true;
+		while (str[left] == ' ')	left++;
+		if (str[left] == '-' || str[left] == '+') {
+			if (str[left] == '-')	isPositive = false;
+			left++;
+		}
+		if (str[left] < '0' || str[left] > '9')	return 0;	//	如果数字字符串的初始字符无效，则直接返回0
+		while (left < str.size() && str[left] <= '9' && str[left] >= '0') {	//	注意下标left不能超过str的长度
+			if (rslt > INT_MAX / 10 || (rslt == INT_MAX / 10 && str[left] >= '8')) {	//	如果数字超过了int表示的边界，则直接返回距离最近的边界值。另外，此处rslt处理的都是正数，符号由isPositive控制。
+				if (isPositive)	return INT_MAX;
+				else return INT_MIN;
+			}
+			rslt = rslt * 10 + str[left] - '0';
+			left++;
+		}
+		if (isPositive)	return rslt;
+		else return -rslt;
+	}
 };
 
 int main()
 {
-	const char* s = "001 01";//"   2147483647stt";
-	int n = atoi(s);
-	cout << n << endl;
-
-	string s1 = "2147483647";
+	string s1 = "2147483648";
 //	string s2 = "1";
 	//getline(cin, s1);
-	Solution_v1 slt;
+	Solution_v1 slt_v1;
 
- 	cout << slt.myAtoi(s1) << endl;
+	Solution slt;
+
+ 	int rslt = slt.myAtoi(s1);
 // 	cout << slt.myAtoi(s2) << endl;
 	return 0;
 }
