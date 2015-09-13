@@ -9,6 +9,9 @@
 ///@date	2015.09.13
 ///@version	2.1
 
+///@date	2015.09.13
+///@version	3.0
+
 #include <iostream>
 #include <string>
 using namespace std;
