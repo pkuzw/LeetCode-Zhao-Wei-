@@ -6,7 +6,11 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.13
+///@version	2.1
+
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Solution_v1
@@ -73,25 +77,29 @@ public:
 
 class Solution {
 public:
-    bool isPalindrome(int x) {
-        if (x < 0) return false;
-        int div = 1;
-        while (x / div >= 10) div *= 10;
-        while (x > 0) {
-            int left = x / div;
-            int right = x % 10;
-            if (left != right) return false;
-            x = (x % div) / 10;
-            div /= 100;
-        }
-        return true;
-    }
+	///@brief	判断一个整型变量是否回文
+	///@param	x	整型变量
+	///@return  如果该整型变量回文，则返回true；否则返回false
+	///@note	利用求模和除法运算来逐位比较。时间复杂度为O(n)，空间复杂度为O(1)。
+	bool isPalindrome(int x) {
+		if (x < 0)	return false;
+		int div = 1;
+		while (x / div >= 10)	div *= 10;
+		while (x) {
+			int left = x / div;	//	左半部分
+			int right = x % 10;	//	右半部分
+			if (left != right)	return false;
+			x = (x % div) / 10;	//	去掉首尾数字
+			div /= 100;			//	将div也要相应减少2位
+		}
+		return true;
+	}
 };
 
 int main()
 {
-	int x = 1;
+	int x = 123321;
 	Solution slt;
-	cout << slt.isPalindrome(x) << endl;
+	bool rslt = slt.isPalindrome(x);
 	return 0;
 }
