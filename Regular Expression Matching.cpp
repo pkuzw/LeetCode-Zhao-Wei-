@@ -24,8 +24,11 @@
 ///@date    2015.09.07
 ///@version 2.0
 
-///@date	2015.09.13
+///@date	2015.09.14
 ///@version	2.1
+
+///@date	2015.09.14
+///@version	3.0
 
 #include <iostream>
 #include <string>
@@ -186,23 +189,26 @@ public:
 
 
 ///@note    递归求解
-class Solution {
+class Solution_v2 {
 public:
-    bool isMatch(string s, string p) {
-        if (p.empty()) return s.empty();
-        if (p.size() == 1) {
-            return (s.size() == 1 && (s[0] == p[0] || p[0] == '.'));
-        }
-        if (p[1] != '*') {
-            if (s.empty()) return false;
-            return (s[0] == p[0] || p[0] == '.') && isMatch(s.substr(1), p.substr(1));
-        }
-        while (!s.empty() && (s[0] == p[0] || p[0] == '.')) {
-            if (isMatch(s, p.substr(2))) return true;
-            s = s.substr(1);
-        }
-        return isMatch(s, p.substr(2));
-    }
+	///@brief	通配符匹配
+	///@param	s	字符串
+	///@param	p	模板
+	///@return	如果s与p匹配，则返回true；否则返回false
+	///@note	p中的*可以表示0或多个前字符，.可以表示任意字符。
+	bool isMatch(string s, string p) {
+		if (p.empty())	return s.empty();
+		if (p.size() == 1)	return (s.size() == 1 && (s[0] == p[0] || p[0] == '.'));
+		if (p[1] != '*') {
+			if (s.empty())	return false;
+			return (s[0] == p[0] || p[0] == '.') && isMatch(s.substr(1), p.substr(1));
+		}
+		while (!s.empty() && (s[0] == p[0] || p[0] == '.')) {
+			if (isMatch(s, p.substr(2)))	return true;
+			s = s.substr(1);
+		}
+		return isMatch(s, p.substr(2));
+	}
 };
 
 
