@@ -32,6 +32,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 class Solution_v1
@@ -211,17 +212,55 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	通配符匹配
+	///@param	s	字符串
+	///@param	p	模板
+	///@return	如果s与p匹配，则返回true；否则返回false
+	///@note	动态规划。用dp[i][j]表示s[0..i-1]和p[0..j-1]是否匹配。则初始条件为dp[0][0] = true。递推关系式分两种情况讨论：
+	//			如果p[j-1] == '*'，那么如果它表示前一个字符出现0次，则dp[i][j] = dp[i][j-2]；
+	//			如果它表示前一个字符至少出现1次，则dp[i][j] = dp[i-1][j] && (s[i-1] == p[j-2] || p[j-2] == '.')；
+	//			如果p[j-1] != '*'，则dp[i][j] = dp[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.').
+	//			时间复杂度为O(n^2)，空间复杂度为O(n^2)。
+	bool isMatch(string s, string p) {
+		int m = s.size(), n = p.size();
+		vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+		dp[0][0] = true;
+		for (int i = 0; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (p[j-1] == '*')	
+					dp[i][j] = dp[i][j-2] || (i > 0 && (s[i-1] == p[j-2] || p[j-2] == '.') && dp[i-1][j]);
+				else
+					dp[i][j] = i > 0 && dp[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.');
+			}
+		}
+		return dp[m][n];
+	}
+
+	bool isMatch2(string s, string p) {
+		int m = s.length(), n = p.length(); 
+		vector<vector<bool> > dp(m + 1, vector<bool> (n + 1, false));
+		dp[0][0] = true;
+		for (int i = 0; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (p[j - 1] == '*') 
+					dp[i][j] = dp[i][j - 2] || (i > 0 && (s[i - 1] == p[j - 2] || p[j - 2] == '.') && dp[i - 1][j]);
+				else
+					dp[i][j] = i > 0 && dp[i - 1][j - 1] && (s[i - 1] == p[j - 1] || p[j - 1] == '.');
+			}
+		}
+		return dp[m][n];
+	}
+};
 
 int main()
 {
-	string s = "aab";
+	string s = "aa";
 
-	string p = ".*ab";
-	//while (cin >> s >> p)
-	//{
-		Solution slt;
-		cout << slt.isMatch(s, p) << endl;
-	//}
-	
+	string p = "a*";
+	Solution slt;
+	bool rslt2 = slt.isMatch2(s, p);
+	bool rslt = slt.isMatch(s, p);
 	return 0;
 }
