@@ -7,6 +7,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.14
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -44,14 +47,18 @@ public:
 
 class Solution {
 public:
+	///@brief	给定一组高度数组，计算所围成的最大矩形面积
+	///@param	height	高度数组
+	///@return	返回最大面积
+	///@note	贪心法。从两边向中间靠拢，每次计算移动一次的最大值
     int maxArea(vector<int>& height) {
-        int res = 0, left = 0, right = height.size() - 1;
-        while (left < right) {
-            res = max(res, min(height[left], height[right]) * (right - left));
-            if (height[left] < height[right]) ++left;
-            else --right;
-        }
-        return res;
+		int rslt = INT_MIN, l = 0, r = height.size() - 1;
+		while (l < r) {
+			rslt = max(rslt, min(height[l], height[r]) * (r - l));
+			if (height[l] < height[r])	l++;
+			else	r--;
+		}
+		return rslt;
     }
 };
 
