@@ -77,23 +77,26 @@ public:
 #include <map>
 class Solution {
 public:
+	///@brief	将罗马数字转换成10进制的int型变量
+	///@param	s	罗马数字字符串
+	///@return	返回十进制的阿拉伯数字
+	///@note	用一个map来映射不同的罗马数字和阿拉伯数字之间的关系，然后根据它们的前后关系来决定增减当前这么多的数。时间复杂度为O(n)，空间复杂度为O(logn)。
     int romanToInt(string s) {
-        int res = 0;
-        map<char, int> roman;
-        roman['M'] = 1000;
-        roman['D'] = 500;
-        roman['C'] = 100;
-        roman['L'] = 50;
-        roman['X'] = 10;
-        roman['V'] = 5;
-        roman['I'] = 1;
-        
-        for (int i = 0; i < s.size(); ++i) {
-            int val = roman[s[i]];
-            if (i == s.size() - 1 || roman[s[i+1]] <= roman[s[i]]) res += val;
-            else res -= val;
-        }
-        return res;
+		int rslt = 0;
+		map<char, int> roman;
+		roman['I'] = 1;
+		roman['V'] = 5;
+		roman['X'] = 10;
+		roman['L'] = 50;
+		roman['C'] = 100;
+		roman['D'] = 500;
+		roman['M'] = 1000;
+		for (int i = 0; i < s.size(); i++) {
+			int val = roman[s[i]];
+			if (i == s.size() - 1 || roman[s[i]] >= roman[s[i+1]])	rslt += val;
+			else rslt -= val;
+		}
+		return rslt;
     }
 };
 
@@ -101,12 +104,7 @@ int main()
 {
 	Solution slt;
 
-	string test;
-	while (cin >> test)
-	{
-		int num = slt.romanToInt(test);
-		cout << test << endl;
-	}
-
+	string test = "MVII";
+	int num = slt.romanToInt(test);
 	return 0;
 }
