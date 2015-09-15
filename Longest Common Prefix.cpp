@@ -65,11 +65,16 @@ public:
 
 class Solution {
 public:
+	///@brief	计算一组字符串的最长公共前缀
+	///@param	strs	字符串数组
+	///@return	返回最长公共前缀
+	///@ntoe	从这组字符串中任选一个作为比较对象（比如第一个字符串），如果遇到比它长的且前面都一样，则直接返回较短的字符串；如果遇到二者不一样的，
+	//			则返回截断后一致的部分即可。时间复杂度为O(mn)，其中m为公共前缀的长度，n为字符串数组的大小。空间复杂度为O(1)。
     string longestCommonPrefix(vector<string>& strs) {
-        if (strs.size() == 0) return "";
-        for (int i = 0; i < strs[0].size(); ++i) {
-            for (int j = 0; j < strs.size() - 1; ++j) {
-                if (i >= strs[j].size() || strs[j][i] != strs[j + 1][i]) {
+        if (strs.empty()) return "";
+        for (int i = 0; i < strs[0].size(); i++) {
+            for (int j = 0; j < strs.size() - 1; j++) {
+                if (i >= strs[j].size() || strs[j][i] != strs[j+1][i]) {
                     return strs[j].substr(0, i);
                 }
             }
