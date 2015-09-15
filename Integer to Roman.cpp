@@ -6,6 +6,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.15
+///@version	2.1
+
 #include <string>
 #include <iostream>
 using namespace std;
@@ -78,24 +81,31 @@ public:
 
 class Solution {
 public:
+	///@brief	将int型变量转换成罗马数字
+	///@param	num	十进制的阿拉伯数字，范围是1 - 3999
+	///@return	返回对应的罗马数字
+	///@note	罗马数字是逢5和10有改变，所以与1 - 3999之间的整数有关的罗马整数是1，5，10，50，100，500和1000，一共7个。
+	//			每个整数都可以划归成下列4中情况之一：1. 10的幂；2. 10的幂到5*10的幂-1之间；3. 5*10的幂到10的幂-1之间；4.10的幂-1.
+	//			时间复杂度为O(logn)，空间复杂度为O(1)。
     string intToRoman(int num) {
-        string res = "";
-        char roman[] = {'M', 'D', 'C', 'L', 'X', 'V', 'I'};
-        int value[] = {1000, 500, 100, 50, 10, 5, 1};
-        
-        for (int n = 0; n < 7; n += 2) {
-            int x = num / value[n];
-            if (x < 4) {
-                for (int i = 1; i <= x; ++i) res += roman[n];
-            } else if (x == 4) res = res + roman[n] + roman[n - 1];
-            else if (x > 4 && x < 9) {
-                res += roman[n - 1];
-                for (int i = 6; i <= x; ++i) res += roman[n];
-            }
-            else if (x == 9) res = res + roman[n] + roman[n - 2];
-            num %= value[n];
-        }
-        return res;
+		string rslt;
+		char roman[7] = {'M', 'D', 'C', 'L', 'X', 'V', 'I'};
+		int val[7] = {1000, 500, 100, 50, 10, 5, 1};
+
+		for (int i = 0; i < 7; i += 2) {
+			int x = num / val[i];
+			if (x < 4) {
+				for (int j = 1; j <= x; j++)	rslt += roman[i];
+			}
+			else if (x == 4)	rslt = rslt + roman[i] + roman[i-1];
+			else if (x < 9 && x > 4) {
+				rslt += roman[i-1];
+				for (int j = 6; j <= x; j++)	rslt += roman[i];
+			}
+			else if (x == 9)	rslt = rslt + roman[i] + roman[i-2];
+			num %= val[i];
+		}
+		return rslt;
     }
 };
 
@@ -103,13 +113,7 @@ int main()
 {
 	Solution slt;
 
-	int num = 10;
-	while (cin >> num)
-	{
-		string t = slt.intToRoman(num);
-		cout << t << endl;
-	}
-	
-
+	int num = 1006;
+	string t = slt.intToRoman(num);
 	return 0;
 }
