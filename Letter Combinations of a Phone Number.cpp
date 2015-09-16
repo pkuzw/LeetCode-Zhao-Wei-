@@ -140,27 +140,40 @@ public:
 	}
 };
 
-// Recursion
 class Solution {
 public:
-    vector<string> letterCombinations(string digits) {
-        vector<string> res;
-        if (digits.empty()) return res;
-        string dict[] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        letterCombinationsDFS(digits, dict, 0, "", res);
-        return res;
-    }
-    void letterCombinationsDFS(string digits, string dict[], int level, string out, vector<string> &res) {
-        if (level == digits.size()) res.push_back(out);
-        else {
-            string str = dict[digits[level] - '2'];
-            for (int i = 0; i < str.size(); ++i) {
-                out.push_back(str[i]);
-                letterCombinationsDFS(digits, dict, level + 1, out, res);
-                out.pop_back();
-            }
-        }
-    }
+	///@brief	计算电话号码所有可能的字符组合
+	///@param	digits	电话号码，由阿拉伯数字组成
+	///@return	返回其所对应的所有字符串
+	///@note	递归。利用dfs搜索所有可能的组合。时间复杂度为O(3^n)，空间复杂度为O(n)。
+	vector<string> letterCombinations(string digits) {
+		vector<string> rslt;
+		if (digits.empty())	return rslt;
+		vector<string> dict;	//	不处理'0'和'1'。
+		dict.push_back("abc");
+		dict.push_back("def");
+		dict.push_back("ghi");
+		dict.push_back("jkl");
+		dict.push_back("mno");
+		dict.push_back("pqrs");
+		dict.push_back("tuv");
+		dict.push_back("wxyz");
+		string out;
+		dfs(rslt, dict, digits, 0, out);
+		return rslt;
+	}
+
+	void dfs(vector<string>& rslt, vector<string>& dict, string& digits, int indx, string& out) {
+		if (indx == digits.size()) {
+			rslt.push_back(out);
+			return;
+		}
+		for (int i = 0; i != dict[digits[indx] - '2'].size(); i++) {
+			out.push_back(dict[digits[indx] - '2'][i]);
+			dfs(rslt, dict, digits, indx + 1, out);
+			out.pop_back();
+		}
+	}
 };
 
 int main()
