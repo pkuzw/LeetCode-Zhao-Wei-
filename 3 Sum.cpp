@@ -16,12 +16,16 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.16
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <algorithm>
 
 using namespace std;
-/*
+
 class Solution_v1
 {
 public:
@@ -32,7 +36,7 @@ public:
 	///@date	2015.06.05
 	/* @note	先通过快速排序将原有数组排序，然后将其转换成不包括重复元素的数组，再然后就是通过二分查找找到3个数和为0的组合。时间复杂度为
 				O(nlgn+n^2lgn)，空间复杂度是O(3n) 
-	*//*
+	*/
 	vector<vector<int>> threeSum(vector<int>& nums) {
 
 		QuickSort(nums, 0, nums.size()-1);	// 快排
@@ -212,33 +216,45 @@ public:
 		else 
 			BinarySearch(array_int, q+1, r, v);
 	}
-}; */
+}; 
 
 class Solution {
 public:
-    vector<vector<int> > threeSum(vector<int>& nums) {
-        vector<vector<int> > res;
-        sort(nums.begin(), nums.end());
-        for (int i = 0; i < int(nums.size() - 2); ++i) {
-            if (i == 0 || (i > 0 && nums[i] != nums[i - 1])) {
-                int left = i + 1, right = nums.size() - 1, sum = 0 - nums[i];
-                while (left < right) {
-                    if (nums[left] + nums[right] == sum) {
-                        vector<int> out;
-                        out.push_back(nums[i]);
-                        out.push_back(nums[left]);
-                        out.push_back(nums[right]);
-                        res.push_back(out);
-                        while (left < right && nums[left] == nums[left + 1]) ++left;
-                        while (left < right && nums[right] == nums[right - 1]) --right;
-                        ++left; --right;
-                    } else if (nums[left] + nums[right] < sum) ++left;
-                    else --right;
-                }
-            }
-        }
-        return res;
-    }
+	///@brief	给定一个数组，计算和为0的三元组
+	///@param	nums	数组
+	///@return	返回所有可能的三元组，三元组内按照非降序排序，三元组之间没有重复。
+	///@note	首先对数组进行排序，然后设置一个左指针和右值针，分别从两侧向中间进行遍历。如果遇到满足条件的元素，将它们压入结果数组。否则就
+	//			继续向中间遍历。
+	//			时间复杂度为O(n^2)，空间复杂度为O(1)。
+	vector<vector<int>> threeSum(vector<int>& nums) {		
+		vector<vector<int>>	rslt;
+		if (nums.size() < 3)	return rslt;
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i < nums.size() - 2; i++) {
+			if (i == 0 || (i > 0 && nums[i] != nums[i-1])) {
+				int sum = 0 - nums[i];
+				int left = i + 1, right = nums.size() - 1;
+				while (left < right) {
+					if (nums[left] + nums[right] == sum) {
+						vector<int> ivec;
+						ivec.push_back(nums[i]);
+						ivec.push_back(nums[left]);
+						ivec.push_back(nums[right]);
+						rslt.push_back(ivec);
+						while (left < right && nums[left] == nums[left+1])	left++;
+						while (right > left && nums[right] == nums[right-1])right--;
+						left++;
+						right--;
+					}
+					else if (nums[left] + nums[right] < sum)	left++;
+					else right--;
+					
+				}
+
+			}
+		}
+		return rslt;
+	}
 };
 
 int main()
@@ -268,7 +284,8 @@ int main()
 
 	Solution slt;
 	vector<vector<int>> ivvec;
-	ivvec = slt.threeSum(ivec2);
+	vector<int> ivec3;
+	ivvec = slt.threeSum(ivec3);
 	for (int i = 0; i < ivvec.size(); i++)
 	{
 		for (int j = 0; j < ivvec[i].size(); j++)
