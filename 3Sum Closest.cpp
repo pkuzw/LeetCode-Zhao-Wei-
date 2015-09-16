@@ -14,11 +14,15 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.16
+///@version	2.1
+
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-/*
+
 class Solution_v1
 {
 public:
@@ -184,41 +188,48 @@ public:
 		}
 	}
 
-}; */
+}; 
 
 class Solution {
 public:
+	///@brief	计算三元组之和距离指定值最近的和
+	///@param	nums	数组
+	///@param	target	目标值
+	///@return	返回距离指定值最近的和
+	///@note	此题与"3 Sum"类似，也是需要先对数组进行排序，然后利用左右指针向中间靠拢，在靠拢的过程中计算三元组之和与目标值的差值，如果遇到
+	//			较小的差值，则更新结果值，直到左右指针相遇即可。时间复杂度为O(n^2)，空间复杂度为O(1)。
     int threeSumClosest(vector<int>& nums, int target) {
-        int closest = nums[0] + nums[1] + nums[2];
-        int diff = abs(closest - target);
-        sort(nums.begin(), nums.end());
-        for (int i = 0; i < nums.size() - 2; ++i) {
-            int left = i + 1, right = nums.size() - 1;
-            while (left < right) {
-                int sum = nums[i] + nums[left] + nums[right];
-                int newDiff = abs(sum - target);
-                if (diff > newDiff) {
-                    diff = newDiff;
-                    closest = sum;
-                }
-                if (sum < target) ++left;
-                else --right;
-            }
-        }
-        return closest;
-    }
+		int rslt = nums[0] + nums[1] + nums[2];	//	初始值设为前三个元素之和
+		int diff = abs(rslt - target);
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i != nums.size() - 2; i++) {
+			int left = i + 1;
+			int right = nums.size() - 1;
+			while (left < right) {
+				int sum = nums[i] + nums[left] + nums[right];
+				int new_diff = abs(sum - target);
+				if (diff > new_diff) {
+					diff = new_diff;
+					rslt = sum;
+				}
+				if (sum < target) left++;
+				else right--;
+			}			
+		}
+		return rslt;
+	}
 };
 
 int main()
 {
 	vector<int> ivec;
-	ivec.push_back(-1);
-	ivec.push_back(2);
 	ivec.push_back(1);
-	ivec.push_back(-4);
+	ivec.push_back(1);
+	ivec.push_back(-1);
+	ivec.push_back(3);
 
 	Solution slt;
-	cout << slt.threeSumClosest(ivec, 5);
+	cout << slt.threeSumClosest(ivec, -1);
 	cout << endl;
 
 	return 0;
