@@ -1,4 +1,4 @@
-﻿/* @brief
+﻿/* @file
 
 Given an array S of n integers, are there elements a, b, c, and d in S such that a + b + c + d = target? 
 
@@ -23,14 +23,17 @@ A solution set is:
 //			时间复杂度为	O(nlgn+n^3lgn)，空间复杂度是O(3n).OJ报TLE
 
 ///@date	2015.06.08
-///@version 2.0
+///@version 1.1
 ///@note	
 
 ///@date	2015.07.29
-///@version	3.0
+///@version	1.2
 
 ///@date    2015.09.07
 ///@version 2.0
+
+///@date	2015.09.17
+///@version	2.1
 
 #include <iostream>
 #include <vector>
@@ -40,7 +43,7 @@ A solution set is:
 #include <set>
 
 using namespace std;
-/*
+
 class Solution_v1
 {
 public:
@@ -311,7 +314,7 @@ public:
 
 	///@brief	求4个数之和为指定值的所有组合
 	///@author  zhaowei
-	///@date	2015.06.08  */
+	///@date	2015.06.08  
 	/* @note	O（n^2）的算法，先对数组排序。先枚举出所有二个数的和存放在哈希map中，其中map的key对应的是二个数的和，因为多对元素求和可能是相同的值，
 				故哈希map的value是一个链表（下面的代码中用数组代替），链表每个节点存的是这两个数在数组的下标；这个预处理的时间复杂度是O（n^2）。
 				接着枚举第一个和第二个元素，假设分别为v1,v2, 然后在哈希map中查找和为target-v1-v2的所有二元对（在对应的链表中），查找的时间为O（1），
@@ -322,7 +325,7 @@ public:
 				一个加入的二元对是否重复即可），因为同一个链表中的二元对两个元素的和都是相同的，因此只要二元对的一个元素不同，则这个二元对就不同。
 				我们可以认为哈希map中key对应的链表长度为常数，那么算法总的复杂度为O（n^2）
 				同样报TLE
-	*//*
+	*/
 	vector<vector<int> > fourSum_tle4(vector<int> &num, int target) {
 		int n = num.size();
 		vector<vector<int> > res;
@@ -364,33 +367,71 @@ public:
 
 		return res;
 	}
-}; */
+}; 
+
 // O(n^3)
 class Solution {
 public:
-    vector<vector<int> > fourSum(vector<int> &nums, int target) {
-        set<vector<int> > res;
-        sort(nums.begin(), nums.end());
-        for (int i = 0; i < int(nums.size() - 3); ++i) {
-            for (int j = i + 1; j < int(nums.size() - 2); ++j) {
-                int left = j + 1, right = nums.size() - 1;
-                while (left < right) {
-                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
-                    if (sum == target) {
-                        vector<int> out;
-                        out.push_back(nums[i]);
-                        out.push_back(nums[j]);
-                        out.push_back(nums[left]);
-                        out.push_back(nums[right]);
-                        res.insert(out);
-                        ++left; --right;
-                    } else if (sum < target) ++left;
-                    else --right;
-                }
-            }
-        }
-        return vector<vector<int> > (res.begin(), res.end());
-    }
+	///@brief	计算给定数组中所有和为指定值的四元组
+	///@param	nums	数组
+	///@param	target	指定值
+	///@return	返回所有可能的四元组
+	///@note	利用set<vector<int>>来保存结果，这样能够避免重复元素的出现。在外层用两层循环来进行枚举，剩下的两个元素用左右两个指针从两侧向
+	//			中间收，直到找到指定值。时间复杂度为O(n^3)，空间复杂度为O(k)。k为结果数组的大小。
+    vector<vector<int>> fourSum(vector<int> &nums, int target) {
+		if (nums.size() < 4)	return vector<vector<int>>(0);
+		set<vector<int>> rslt;
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i != nums.size() - 3; i++) {
+			for (int j = i + 1; j != nums.size() - 2; j++) {
+				int left = j + 1, right = nums.size() - 1, sum = target - (nums[i] + nums[j]);
+				while (left < right) {
+					if (nums[left] + nums[right] == sum) {
+						vector<int> ivec;
+						ivec.push_back(nums[i]);
+						ivec.push_back(nums[j]);
+						ivec.push_back(nums[left]);
+						ivec.push_back(nums[right]);
+						rslt.insert(ivec);
+						left++;
+						right--;
+					}
+					else if (nums[left] + nums[right] < sum) left++;
+					else	right--;
+				}
+			}
+		}
+		vector<vector<int>> ret(rslt.begin(), rslt.end());
+		return ret;
+	}
+// 
+// 
+// 
+// 
+// 
+// 
+//         set<vector<int> > res;
+//         sort(nums.begin(), nums.end());
+//         for (int i = 0; i < int(nums.size() - 3); ++i) {
+//             for (int j = i + 1; j < int(nums.size() - 2); ++j) {
+//                 int left = j + 1, right = nums.size() - 1;
+//                 while (left < right) {
+//                     int sum = nums[i] + nums[j] + nums[left] + nums[right];
+//                     if (sum == target) {
+//                         vector<int> out;
+//                         out.push_back(nums[i]);
+//                         out.push_back(nums[j]);
+//                         out.push_back(nums[left]);
+//                         out.push_back(nums[right]);
+//                         res.insert(out);
+//                         ++left; --right;
+//                     } else if (sum < target) ++left;
+//                     else --right;
+//                 }
+//             }
+//         }
+//         return vector<vector<int> > (res.begin(), res.end());
+//     }
 };
 
 int main()
