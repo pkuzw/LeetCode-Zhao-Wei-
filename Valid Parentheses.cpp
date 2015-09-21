@@ -62,7 +62,7 @@ public:
 	///@param	s	括号字符串
 	///@return	如果字符串是合法的括号字符串，则返回true；否则返回false
 	///@note	利用栈来存放括号字符串，如果是左括号，则压栈；如果是右括号，看栈顶元素是否和该右括号匹配，如果不匹配则返回false；否则弹出栈顶元素，继续向后匹配。直到字符串结束。
-	//			
+	//			时间复杂度为O(n)，空间复杂度为O(n)。
     bool isValid(string s) {
 		stack<char> stk;
 		if (s.empty())	return true;
