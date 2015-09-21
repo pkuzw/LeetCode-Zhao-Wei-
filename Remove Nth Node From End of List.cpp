@@ -15,6 +15,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.21
+///@version	2.1
+
 #include <iostream>
 using namespace std;
 
@@ -77,17 +80,23 @@ public:
 
 class Solution {
 public:
+	///@brief	删除距离链表末尾n个节点的节点，要求只能遍历链表一遍
+	///@param	head	链表首指针
+	///@param	n		距离尾结点的距离（尾结点算作1）
+	///@return	返回链表首节点
+	///@note	如果只能遍历一遍，那么应该建立一个哨兵元素，该哨兵元素距离首节点的距离为n，当哨兵元素是链表尾节点时，就将遍历元素的后一个元素删除即可。时间复杂度为O(n)，空间复杂度为O(1)。
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        if (!head->next) return NULL;
-        ListNode *pre = head, *cur = head;
-        for (int i = 0; i < n; ++i) cur = cur->next;
-        if (!cur) return head->next;
-        while (cur->next) {
-            cur = cur->next;
-            pre = pre->next;
-        }
-        pre->next = pre->next->next;
-        return head;
+		if (!head || !head->next)		return nullptr;
+		ListNode* pre = head;	//	待删除元素的前驱节点
+		ListNode* cur = head;	//	哨兵节点
+		for (int i = 0; i != n; i++)	cur = cur->next;
+		if (!cur)	return head->next;
+		while (cur->next) {
+			cur = cur->next;
+			pre = pre->next;
+		}
+		pre->next = pre->next->next;
+		return head;
     }
 };
 
