@@ -11,6 +11,9 @@
  
 ///@date    2015.09.07
 ///@version 2.0
+
+///@date	2015.09.21
+///@version	2.1
 */
 #include <iostream>
 #include <vector>
@@ -68,19 +71,31 @@ private:
 
 class Solution {
 public:
-    vector<string> generateParenthesis(int n) {
-        vector<string> res;
-        generateParenthesisDFS(n, n, "", res);
-        return res;
-    }
-    void generateParenthesisDFS(int left, int right, string out, vector<string> &res) {
-        if (left > right) return;
-        if (left == 0 && right == 0) res.push_back(out);
-        else {
-            if (left > 0) generateParenthesisDFS(left - 1, right, out + '(', res);
-            if (right > 0) generateParenthesisDFS(left, right - 1, out + ')', res);
-        }
-    }
+	///@brief	构造n对括号所有可能的合法组合
+	///@param	n	括号的对数
+	///@return	返回所有可能的合法组合
+	///@note	递归法：所有的合法构造都要求剩余的右括号数目应该大于等于剩余的左括号数目。所以在递归时当剩余的左括号数目少于剩余的右括号数目时就不再继续递归。当剩余的左右括号数目
+	//			都等于0时，则将构造成的字符串压入结果数组。
+	vector<string> generateParenthesis(int n) {
+		vector<string> rslt;
+		helper(n, n, "", rslt);
+		return rslt;
+	}
+
+	///@brief	递归构造所有可能的合法括号字符串
+	///@param	left	剩余的左括号数目
+	///@param	right	剩余的右括号数目
+	///@param	out		一个合法的括号字符串
+	///@param	rslt	所有合法字符串的集合
+	///@return	无
+	void helper(int left, int right, string out, vector<string>& rslt) {
+		if (left > right)	return;
+		if (!(left || right))	rslt.push_back(out);
+		else {
+			if (left)	helper(left - 1, right, out + '(', rslt);
+			if (right)	helper(left, right - 1, out + ')', rslt);
+		}
+	}
 };
 
 int main()
