@@ -21,6 +21,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.22
+///@versin	2.1
+
 #include <iostream>
 using namespace std;
 
@@ -136,35 +139,45 @@ private:
 class Solution {
 public:
     ///@brief   翻转指定长度小组内的元素
+	///@param	head	链表首节点
+	///@param	k		翻转的小组长度
+	///@return	返回翻转后的链表首节点
+	///@note	需要设置一个首节点的前驱节点来返回翻转后的首节点；中间主要的计算部分依赖翻转函数来完成；通过设置一个计数器来计算是否满足到达小组的长度。
+	//			时间复杂度为O(n)，空间复杂度为O(1)。
     ListNode *reverseKGroup(ListNode *head, int k) {
-        if (!head || k == 1) return head;
-        ListNode *dummy = new ListNode(-1);
-        ListNode *pre = dummy, *cur = head;
-        dummy->next = head;
-        int i = 0;
-        while (cur) {
-            ++i;
-            if (i % k == 0) {
-                pre = reverseOneGroup(pre, cur->next);
-                cur = pre->next;
-            } else {
-                cur = cur->next;
-            }
-        }
-        return dummy->next;
+		if (!head || !head->next || k == 1)	return head;
+		ListNode* dummy = new ListNode(0);
+		dummy->next = head;
+		ListNode* pre = dummy;
+		ListNode* cur = head;
+		int i = 0;	//	计数器
+		while (cur) {
+			i++;
+			if (i % k)	
+				cur = cur->next;
+			else {
+				pre = reverseOneGroup(pre, cur->next);
+				cur = pre->next;
+			}
+		}
+		return dummy->next;
     }
     
-    ///@brief    翻转pre之后和next之前的元素
+    ///@brief   翻转pre之后和next之前的元素，即一个小组内的元素
+	///@param	pre		一个小组在未翻转之前的首元素的前驱节点
+	///@param	next	一个小组在未翻转之前的末元素的后继节点
+	///@return	返回翻转后的组内新尾结点
+	///@note	需要一个变量记录翻转后的新尾结点，还需要一个变量保存当前节点的前驱节点，另外一个变量遍历组内元素。时间复杂度为O(n)，空间复杂度为O(1)。
     ListNode *reverseOneGroup(ListNode *pre, ListNode *next) {
-        ListNode *last = pre->next;
-        ListNode *cur = last->next;
-        while(cur != next) {
-            last->next = cur->next;
-            cur->next = pre->next;
-            pre->next = cur;
-            cur = last->next;
-        }
-        return last;
+		ListNode* last = pre->next;	//	翻转后的新尾元素
+		ListNode* cur = last->next;	//	当前元素
+		while (cur != next) {
+			last->next = cur->next;	
+			cur->next = pre->next;
+			pre->next = cur;
+			cur = last->next;
+		}
+		return last;
     }
 };
 
@@ -173,14 +186,15 @@ int main()
 	ListNode* l2 = nullptr;
 	ListNode* l1 = new ListNode(1);
 	//ListNode* l2 = new ListNode(3);
-	Solution_v1 slt;
-	for (int i = 2; i <= 7; i++)
+	Solution_v1 slt_v1;
+	for (int i = 2; i <= 2; i++)
 	{
-		slt.insertNode(l1, i);
+		slt_v1.insertNode(l1, i);
 		//slt.insertNode(l2, i + 1);
 	}
 
-	int k = 3;
+	int k = 2;
+	Solution slt;
 	ListNode* head = slt.reverseKGroup(l1, k);
 
 	while (head != nullptr)
