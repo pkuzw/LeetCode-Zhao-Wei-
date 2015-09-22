@@ -8,6 +8,10 @@
  
 ///@date    2015.09.07
 ///@version 2.0
+
+///@date	2015.09.22
+///@version	2.1
+
 */
 
 #include <vector>
@@ -92,39 +96,48 @@ public:
 	}
 };
 
-///@note    利用分治法求解
 class Solution {
 public:
-    ListNode *mergeKLists(vector<ListNode *> &lists) {
-        if (lists.size() == 0) return NULL;
-        int n = lists.size();
-        while (n > 1) {
-            int k = (n + 1) / 2;
-            for (int i = 0; i < n / 2; ++i) {
-                lists[i] = mergeTwoLists(lists[i], lists[i + k]);
-            }
-            n = k;
-        }
-        return lists[0];
-    }
-    
-    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-        ListNode *head = new ListNode(-1);
-        ListNode *cur = head;
-        while (l1 && l2) {
-            if (l1->val < l2->val) {
-                cur->next = l1;
-                l1 = l1->next;
-            } else {
-                cur->next = l2;
-                l2 = l2->next;
-            }
-            cur = cur->next;
-        }
-        if (l1) cur->next = l1;
-        if (l2) cur->next = l2;
-        return head->next;
-    }
+	///@brief	归并k个已经排好序的链表
+	///@param	lists	链表数组
+	///@return	返回将k个已经排好序的链表合并后的链表表头
+	///@note	将链表数组一分为二，每次将前半部分的一个链表和后半部分的一个链表进行两两合并，直到只剩一个链表即为结果链表。如果有k条链表，每条链表上有n个节点，则
+	//			时间复杂度为O(knlogk)，空间复杂度为O(1)。
+	ListNode* mergeKLists(vector<ListNode*>& lists) {
+		if (lists.empty())	return nullptr;
+		int n = lists.size();
+		while (n > 1) {
+			int k = (n + 1) / 2;
+			for (int i = 0; i < n / 2; i++) 
+				lists[i] = mergeTwoLists(lists[i], lists[i + k]);	//	将前半部分的一个链表和后半部分的一个链表合并，二者距离为k
+			n = k;	//	合并后还剩余k个链表
+		}
+		return lists[0];
+	}
+
+	///@brief	归并两个已经排好序的链表
+	///@param	l1	链表1
+	///@param	l2	链表2
+	///@return	返回已经归并好的链表表头
+	///@note	逐一向后比较，将较小的节点添加为新链表的后继节点。然后将剩余的未比较的链表添加到尾部即可。如果链表的长度为n，则时间复杂度为O(n)，空间复杂度为O(1)。
+	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+		ListNode* rslt = new ListNode(-1);
+		ListNode* cur = rslt;
+		while (l1 && l2) {
+			if (l1->val < l2->val) {
+				cur->next = l1;
+				l1 = l1->next;
+			}
+			else {
+				cur->next = l2;
+				l2 = l2->next;
+			}
+			cur = cur->next;
+		}
+		if (!l1)	cur->next = l2;
+		else		cur->next = l1;
+		return rslt->next;
+	}
 };
 
 int main ()
