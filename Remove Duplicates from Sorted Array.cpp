@@ -18,6 +18,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.22
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -64,12 +67,21 @@ private:
 
 class Solution {
 public:
+	///@brief	删除已经排好序的数组中的重复元素
+	///@param	nums	排好序的数组
+	///@return	返回删除元素后的数组大小，并把新数组以引用形参传出
+	///@note	用一个下标标记应该交换的元素的位置，然后遍历数组。对于相同的元素，继续向后遍历，遇到不相同的元素，将其和之前的下标标记的元素互换，并让标记下标自增1.
+	//			时间复杂度为O(n)，空间复杂度为O(1)。
     int removeDuplicates(vector<int>& nums) {
-        if (nums.empty())   return 0;
-        int j = 0;
-        for (int i = 0; i != nums.size(); i++)
-            if (nums[i] != nums[j]) swap(nums[++j], nums[i]);
-        return j+1;
+		if (nums.empty())	return 0;
+		int j = 0;
+		for (int i = 0; i != nums.size(); i++) {
+			if (nums[i] != nums[j]) {
+				swap(nums[j + 1], nums[i]);
+				j++;
+			}
+		}
+		return j + 1;
     }
 };
 
