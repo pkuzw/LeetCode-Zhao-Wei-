@@ -9,6 +9,8 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.22
+///@version	2.1
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -59,11 +61,21 @@ public:
 
 class Solution {
 public:
+	///@brief	移除数组中的指定元素
+	///@param	nums	数组，元素未排序
+	///@param	val		指定值
+	///@return	返回新数组的长度
+	///@note	用一个变量保存新数组的长度，初始化为0。遍历数组，如果遇到和指定值相同的元素，则继续向后遍历，否则就将该元素赋值给新数组长度下标处，并将长度自增1.
+	//			时间复杂度为O(n)，空间复杂度为O(1)。
     int removeElement(vector<int>& nums, int val) {
-        int rslt = 0;
-        for (int i = 0; i != nums.size(); i++)
-            if (nums[i] != val) nums[rslt++] = nums[i];
-        return rslt;
+		int j = 0;
+		for (int i = 0; i != nums.size(); i++) {
+			if (nums[i] != val) {
+				nums[j] = nums[i];
+				j++;
+			}
+		}
+		return j;
     }
 };
 
@@ -72,14 +84,11 @@ int main()
 	vector<int> ivec;
  	for (int i = 0; i < 10; i++)
  	{
- 		for (int j = i; j < 10; j++)
- 		{
- 			ivec.push_back(10-i);
- 		}
+ 		for (int j = 0; j != 4; j++)
+			ivec.push_back(j);
  	}
-	ivec.push_back(2);
 	Solution slt;
-	int newLength = slt.removeElement(ivec, 3);
+	int newLength = slt.removeElement(ivec, 0);
 	for (int i = 0; i < newLength; i++)
 	{
 		cout << ivec[i] << ' ';
