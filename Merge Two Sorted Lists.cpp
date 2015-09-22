@@ -6,6 +6,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2015.09.22
+///@version	2.1
+
 #include <iostream>
 using namespace std;
 
@@ -113,22 +116,30 @@ public:
 
 class Solution {
 public:
+	///@brief	归并两个已经排好序的链表
+	///@param	l1	链表1
+	///@param	l2	链表2
+	///@return	返回已经排好序的链表表头
+	///@note	建立一个排好序的链表表头的前驱节点，然后从两个链表的表首互相向后比较，如果遇到较小的节点，就将结果链表节点的后继指针指向它。对于剩余的链表，接上已经比较完毕的
+	//			结果链表。时间复杂度为O(n)，空间复杂度为O(1)。
     ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-        ListNode *res = new ListNode(0);
-        ListNode *cur = res;
-        while(l1 && l2) {
-            if (l1->val < l2->val) {
-                cur->next = l1;
-                l1 = l1->next;
-            } else {
-                cur->next = l2;
-                l2 = l2->next;
-            }
-            cur = cur->next;
-        }
-        if (l1) cur->next = l1;
-        if (l2) cur->next = l2;
-        return res->next;
+		ListNode* rslt = new ListNode(0);
+		ListNode* cur = rslt;
+		while (l1 && l2) {
+			if (l1->val < l2->val) {
+				cur->next = l1;
+				cur = cur->next;
+				l1 = l1->next;
+			}
+			else {
+				cur->next = l2;
+				cur = cur->next;
+				l2 = l2->next;
+			}
+		}
+		if (!l1) cur->next = l2;
+		else	 cur->next = l1;
+		return rslt->next;
     }
 };
 
