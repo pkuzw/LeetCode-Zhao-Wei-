@@ -37,7 +37,7 @@ public:
 	//			首先，最简单的情形是"()"，此时最长长度为2；
 	//			其次，当子字符串的两端为"("和")"时，若中间的isValid[i+1][j-1]为true，则isValid[i][j]也为true。
 	//			最后，当字符串的左半部分为有效子串，右半部分也是有效子串时，其和一定为有效字串。
-	//			时间复杂度为O(n^3)，空间复杂度为O(n^2)
+	//			时间复杂度为O(n^3)，空间复杂度为O(n^2). 会超时，系统报TLE。
 	int longestValidParentheses_dp(string s) 
 	{
 		const int len = s.length();
@@ -182,45 +182,16 @@ public:
 		int rslt = 0;	//	最长有效子串长度
 		for (int i = 0; i != s.size(); i++) {
 			if (s[i] == '(')	stk.push(i);
-			//else {
 			else {
 				if (stk.empty())	start = i + 1;
 				else {
-					stk.pop();
-					rslt = stk.empty() ? max(rslt, i - start + 1) : max(rslt, i - stk.top());
-// 					if (stk.empty())	rslt = max(rslt, i - start + 1);
-// 					else				rslt = max(rslt, i - stk.top());
+					stk.pop();					
+ 					if (stk.empty())	rslt = max(rslt, i - start + 1);
+ 					else				rslt = max(rslt, i - stk.top());
 				}
 			}
 		}
 		return rslt;
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /* stack<int> stk;
-        int start = 0;
-        int rslt = 0;
-        for (int i = 0; i != s.size(); i++){
-            if (s[i] == '(')    stk.push(i);
-            else if (s[i] == ')'){
-                if (stk.empty())  start = i + 1;
-                else{
-                    stk.pop();
-                    rslt = stk.empty() ? max(rslt, i - start + 1) : max(rslt, i - stk.top());
-                }
-            }
-        }
-        return rslt;*/
     }
 };
 
