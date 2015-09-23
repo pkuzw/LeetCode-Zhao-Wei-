@@ -15,6 +15,9 @@
 ///@date    2015.09.05
 ///@version 2.0
 
+///@date	2015.09.23
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -175,23 +178,31 @@ private:
 
 class Solution {
 public:
+	///@brief	在一个翻转（轴值未知）的排好序的数组中查找一个元素
+	///@param	nums	数组
+	///@param	target	目标值
+	///@return	如果目标值存在，则返回其下标；否则返回-1
+	///@note	二分查找的变形。如果中间值小于末元素，则说明右半部分有序，如果中间值大于等于尾元素，则说明左半部分有序。迭代向中间查找。
+	//			这里需要额外注意一点：因为求中间元素时是int型的除法，会导致中间值有可能跟左值相同，所以在比较的时候如果以左边界为参考，需要分成三个分支语句，参考Solution_v1中的search_2；
+	//			如果是以右边界为参考，则只需要两个分支语句即可。
+	//			时间复杂度为O(logn)，空间复杂度为O(1)。
     int search(vector<int>& nums, int target) {
-        if (nums.empty())   return -1;
-        int start = 0, end = nums.size() - 1;
-        while (start <= end){
-            int mid = (start + end) / 2;
-            if (nums[mid] == target)    return mid;
-            else if (nums[mid] < nums[end]){
-                if (nums[mid] < target && target <= nums[end])  start = mid + 1;
-                else end = mid - 1;
-            }
-            else{
-                if (nums[mid] > target && target >= nums[start])    end = mid - 1;
-                else    start = mid + 1;
-            }
-        }
-        return -1;
-    }
+		if (nums.empty())	return -1;
+		int l = 0, r = nums.size() - 1;
+		while (l <= r) {
+			int mid = (l + r) / 2;
+			if (nums[mid] == target)	return mid;
+			else if (nums[mid] >= nums[r]) {
+				if (target >= nums[l] && target < nums[mid])	r = mid - 1;
+				else	l = mid + 1;
+			}
+			else {
+				if (target <= nums[r] && target > nums[mid])	l = mid + 1;
+				else	r = mid - 1;
+			}
+		}
+		return -1;
+	}
 };
 
 int main()
@@ -223,8 +234,12 @@ int main()
             Solution slt;
             cout << "v2: " << slt.search(nums, target) << endl;
 		}
-
 	}
+	vector<int> ivec;
+	ivec.push_back(3);
+	ivec.push_back(1);
+	Solution slt;
+	int r = slt.search(ivec, 1);
 	
 	return 0;
 }
