@@ -13,6 +13,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.09.23
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 
@@ -118,36 +121,52 @@ public:
 
 class Solution {
 public:
-    void solveSudoku(vector<vector<char>>& board) {
-        if (board.empty())  return;
-        dfs(board, 0, 0);
-    }
-    
-    bool isValid(vector<vector<char>>& board, int row, int col){
-        for (int i = 0; i != 9; i++)
-            if (i != row && board[i][col] == board[row][col])   return false;
-        for (int j = 0; j != 9; j++)
-            if (j != col && board[row][j] == board[row][col])   return false;
-        for (int i = row / 3 * 3; i != row / 3 * 3 + 3; i++)
-            for (int j = col / 3 * 3; j != col / 3 * 3 + 3; j++)
-                if ((i != row || j != col) && board[i][j] == board[row][col])   return false;
-        return true;
-    }
-    
-    bool dfs(vector<vector<char>>& board, int row, int col){
-        if (row == 9) return true;
-        if (col == 9) return dfs(board, row + 1, 0);
-        if (board[row][col] == '.') {
-            for (int i = 1; i <= 9; i++) {
-                board[row][col] = (char)(i + '0');
-                if (isValid(board, row , col))
-                    if (dfs(board, row, col + 1)) return true;
-                board[row][col] = '.';
-            }
-        }
-        else    return dfs(board, row, col + 1);
-        return false;
-    }
+	///@brief	计算数独的一个解。假设给定的数独有且只有一个解
+	///@param	board	数独
+	///@return	无
+	///@note	递归回溯法求解。从左上角开始，以先逐列再逐行尝试添加数字，对于'.'字符，每添加一个数字，就用验证函数检验一下数独是否合法。如果合法，则继续下一列的添加。如果不合法，则将该位置重置为'.'，
+	//			并尝试下一个数字。对于已经标记了数字的格子，则转向下一列。时间复杂度为O(2^n)，空间复杂度为O(1)。
+	void solveSudoku(vector<vector<char>>& board) {
+		if (board.empty() || board[0].empty())	return;
+		dfs(board, 0, 0);
+	}
+
+	///@brief	回溯递归求解数独
+	///@param	board	数独表
+	///@param	row		行号
+	///@param	col		列号
+	///@return	如果能够找到最后一行，则返回true，否则返回false。之所以是最后一行而不是最后一列，是因为深搜的顺序是按照先逐列再逐行的顺序。
+	bool dfs(vector<vector<char>>& board, int row, int col) {
+		if (row == 9)	return true;
+		if (col == 9)	return dfs(board, row + 1, 0);
+		if (board[row][col] == '.') {
+			for (int i = 1; i <= 9; i++) {
+				board[row][col] = '0' + i;
+				if (isValid(board, row, col)) {
+					if (dfs(board, row, col + 1))	return true;
+				}
+				board[row][col] = '.';
+			}
+		}
+		else	return dfs(board, row, col + 1);
+		return false;
+	}
+
+	///@brief	检验某个位置是否已经有同样的数字被填充
+	///@param	board	数独表
+	///@param	row		行号
+	///@param	col		列号
+	///@return	如果合法则返回true，否则返回false
+	bool isValid(vector<vector<char>>& board, int row, int col) {
+		for (int i = 0; i != 9; i++) 
+			if (i != row && board[i][col] == board[row][col])	return false;
+		for (int j = 0; j != 9; j++)
+			if (j != col && board[row][j] == board[row][col])	return false;
+		for (int i = 3 * (row / 3); i != 3 * (row / 3) + 3; i++)
+			for (int j = 3 * (col / 3); j != 3 * (col / 3) + 3; j++)
+				if (i != row && j != col && board[i][j] == board[row][col])	return false;
+		return true;
+	}
 };
 
 int main()
