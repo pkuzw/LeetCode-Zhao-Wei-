@@ -213,33 +213,6 @@ public:
 			if (j == words.size())	rslt.push_back(i);
 		}
 		return rslt;
-
-
-
-
-
-
-
-
-
-//         vector<int> rslt;
-//         if (s.empty() || words.empty()) return rslt;
-//         int n = words.size(), m = words[0].size();
-//         unordered_map<string, int> ht1;
-//         for (int i = 0; i != words.size(); i++)
-//             ht1[words[i]]++;
-//         for (int i = 0; i <= (int)s.size() - n * m; i++){
-//             unordered_map<string, int> ht2;
-//             int j = 0;
-//             for (j = 0; j < n; j++){
-//                 string t = s.substr(i + j * m, m);
-//                 if (ht1.find(t) == ht1.end())   break;
-//                 ht2[t]++;
-//                 if (ht2[t] > ht1[t])    break;
-//             }
-//             if (j == n) rslt.push_back(i);
-//         }
-//         return rslt;
     }
 };
 
