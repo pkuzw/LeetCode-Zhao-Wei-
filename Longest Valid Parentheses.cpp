@@ -10,9 +10,14 @@
 */
 ///@author	zhaowei
 ///@date	2015.06.13
+///@version	1.0
 
 ///@author  zhaowei
 ///@date    2015.09.05
+///@version	2.0
+
+///@date	2015.09.23
+///@version	2.1
 
 #include <iostream>
 #include <string>
@@ -125,7 +130,7 @@ public:
 			{
 				stk.push(i);
 			}
-			else				//	若当前元素为')'
+			else if (s[i] == ')')				//	若当前元素为')'
 			{
 				if (stk.top() == -1)	//	栈为空，入栈
 				{
@@ -165,8 +170,44 @@ public:
 
 class Solution {
 public:
+	///@brief	计算最长的合法括号字符串长度
+	///@param	s	字符串
+	///@return	返回最长有效括号字符串长度
+	///@note	利用栈来解。从前向后遍历字符串，如果当前字符是'('，则将当前元素下标入栈；如果当前字符是')'，则要看栈是否为空。如果栈不为空，那么就先弹栈，再更新结果值。如果弹栈后栈为空，说明最长
+	//			有效括号对长度为当前元素下标到起始下标这么长；如果弹栈后栈非空，则说明有效长度为当前元素下标到栈顶元素。如果当前元素为')'且栈为空，则将起始下标后移到当前元素的后一个。
+	//			时间复杂度为O(n)，空间复杂度为O(n)。
     int longestValidParentheses(string s) {
-        stack<int> stk;
+		stack<int> stk;
+		int start = 0;	//	起始下标
+		int rslt = 0;	//	最长有效子串长度
+		for (int i = 0; i != s.size(); i++) {
+			if (s[i] == '(')	stk.push(i);
+			//else {
+			else {
+				if (stk.empty())	start = i + 1;
+				else {
+					stk.pop();
+					rslt = stk.empty() ? max(rslt, i - start + 1) : max(rslt, i - stk.top());
+// 					if (stk.empty())	rslt = max(rslt, i - start + 1);
+// 					else				rslt = max(rslt, i - stk.top());
+				}
+			}
+		}
+		return rslt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+       /* stack<int> stk;
         int start = 0;
         int rslt = 0;
         for (int i = 0; i != s.size(); i++){
@@ -179,13 +220,13 @@ public:
                 }
             }
         }
-        return rslt;
+        return rslt;*/
     }
 };
 
 int main()
 {
-	string s = "((()))())";
+	string s = ")(()(()(((())(((((()()))((((()()(()()())())())()))()()()())(())()()(((()))))()((()))(((())()((()()())((())))(())))())((()())()()((()((())))))((()(((((()((()))(()()(())))((()))()))())";
 	Solution_v1 slt_v1;
 	cout << slt_v1.longestValidParentheses_stack(s) << endl;
     Solution slt;
