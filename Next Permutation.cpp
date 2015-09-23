@@ -122,18 +122,26 @@ private:
 */
 class Solution {
 public:
+	///@brief	计算给定数组的下一个字典序排列
+	///@param	nums	数组
+	///@return	无
+	///@note	通过观察发现，如果指定一个按照字典序给出的排列，那么它的下一个排列应该先倒着逆序从后往前找到第一个比前一个元素大的位置，这个前一个元素的位置我们标记为i，
+	//			然后再从i向后找到比i位置元素大的最小元素（因为i之后的所有元素都是降序的，所以逆着找到的第一个比i大的就是最小的），我们标记为j，然后交换i和j元素，
+	//			再将从i + 1开始到结束的所有元素翻转。对于已经是最后一种排列的情形，直接全部翻转即可。
+	//			时间复杂度为O(n^2)，空间复杂度为O(1)。
     void nextPermutation(vector<int>& nums) {
-        int i, j;
-        for (i = nums.size() - 2; i >= 0; i--){
-            if (nums[i] < nums[i+1]){
-                for (j = nums.size() - 1; j >= i; j--)
-                    if (nums[j] > nums[i]) break;
-                swap(nums[i], nums[j]);
-                reverse(nums.begin() + i + 1, nums.end());
-                return;
-            }
-        }
-        reverse(nums.begin(), nums.end());
+		int i = 0, j = 0;
+		for (int i = nums.size() - 2; i >= 0; i--) {
+			if (nums[i] < nums[i + 1]) {	//	此处为'<'，为了避免重复元素的排列无法和上一个排列区分
+				for (j = nums.size() - 1; j >= i; j--) {
+					if (nums[j] > nums[i])	break;
+				}
+				swap(nums[i], nums[j]);
+				reverse(nums.begin() + i + 1, nums.end());
+				return;
+			}
+		}
+		reverse(nums.begin(), nums.end());
     }
 };
 
