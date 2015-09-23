@@ -17,6 +17,9 @@
 ///@date    2015.09.05
 ///@version 2.0
 
+///@date	2015.09.23
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 
@@ -95,15 +98,20 @@ public:
 */
 class Solution{
 public:
+	///@brief	查找目标值元素的下标，如果它存在在数组中，则返回所在下标，否则返回应该插入的位置。假设数组中没有重复元素
+	///@param	nums	已经排好序的数组
+	///@param	target	目标值
+	///@return	返回目标值所在下标
+	///@note	二分查找即可。迭代版。在跳出循环后，左边界即为应该插入的位置。时间复杂度为O(logn)，空间复杂度为O(1)。
     int searchInsert(vector<int>& nums, int target) {
-        int start = 0, end = nums.size() - 1;
-        while (start <= end){
-            int mid = start + ((end - start) >> 2); // 防止start + end / 2出现溢出
-            if (nums[mid] < target) start = mid + 1;
-            else if (nums[mid] > target) end = mid - 1;
-            else return mid;
-        }
-        return start;
+		int l = 0, r = nums.size() - 1;
+		while (l <= r) {
+			int mid = (l + r) / 2;
+			if (target < nums[mid])	r = mid - 1;
+			else if (target > nums[mid])	l = mid + 1;
+			else return mid;
+		}
+		return l;
     }
 };
 
