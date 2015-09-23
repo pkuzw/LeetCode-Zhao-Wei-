@@ -17,6 +17,9 @@
 ///@date    2015.09.05
 ///@version 2.0
 
+///@date	2015.09.23
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -174,32 +177,35 @@ public:
 };
 */
 
-/*
-1. 先找左边界，通过二分查找的改进，将目标值大于中间值的情形转到start = mid + 1，其余情况都是end = mid即可；
-2. 找到左边界后，将其固定住再找右边界，将目标值小于中间值的情形转到end = mid，其余情况是start = mid + 1。
-3. 时间复杂度为O(logn)
-*/
 class Solution {
 public:
-    vector<int> searchRange(vector<int>& nums, int target) {
-        vector<int> rslt(2, -1);
-        int start = 0, end = nums.size() - 1;
-        while (start < end){    // 找左边界
-            int mid = (start + end) / 2;
-            if (nums[mid] < target) start = mid + 1;
-            else    end = mid;
-        }
-        if (nums[start] != target)  return rslt;
-        rslt[0] = start;
-        end = nums.size();
-        while (start < end){    //  找右边界
-            int mid = (start + end) / 2;
-            if (nums[mid] > target) end = mid;
-            else    start = mid + 1;
-        }
-        rslt[1] = start - 1;
-        return rslt;
-    }
+	///@brief	查找出有序数组中指定元素的范围
+	///@param	nums	数组
+	///@param	target	目标值
+	///@return	返回目标值在数组中的下标范围
+	/* @note	1. 先找左边界，通过二分查找的改进，将目标值大于中间值的情形转到l = mid + 1，其余情况都是r = mid即可；
+				2. 找到左边界后，将其固定住再找右边界，将目标值小于中间值的情形转到r = mid，其余情况是l = mid + 1。
+				3. 时间复杂度为O(logn)。
+	*/
+	vector<int> searchRange(vector<int>& nums, int target) {
+		vector<int> rslt(2, -1);
+		int l = 0, r = nums.size() - 1;
+		while (l < r) {
+			int mid = (l + r) / 2;
+			if (target > nums[mid])	l = mid + 1;
+			else	r = mid;
+		}
+		if (nums[l] != target)	return rslt;	//	如果不存在目标值
+		rslt[0] = l;
+		r = nums.size();
+		while (l < r) {
+			int mid = (l + r) / 2;
+			if (target < nums[mid]) r = mid;
+			else	l = mid + 1;
+		}
+		rslt[1] = l - 1;		//	跳出循环后的l是右边界的后一位
+		return rslt;
+	}
 };
 
 int main()
