@@ -20,6 +20,12 @@
 ///@date    2015.09.05
 ///@version 2.0
 
+///@date	2015.09.23
+///@version	2.1
+
+///@date	2015.09.23
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -120,7 +126,7 @@ private:
 /*
 通过观察发现，逆序找到第一个比前面一个数大的数字，然后在后面找到比前面这个数大的最小数，二者交换，然后将后面进行翻转即可。
 */
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算给定数组的下一个字典序排列
 	///@param	nums	数组
@@ -145,6 +151,17 @@ public:
     }
 };
 
+class Solution {
+public:
+	///@brief	计算给定数组的下一个字典序排列
+	///@param	nums	数组
+	///@return	无
+	///@note	STL<algorithm>中提供一个方法，能够计算下一个排列。next_permutation(iter_beg, iter_end, cmp)。与之相对应的是prev_permutation(iter_beg, iter_end)
+	void nextPermutation(vector<int>& nums) {
+		next_permutation(nums.begin(), nums.end());
+	}
+};
+
 int main()
 {
 	vector<int> ivec;
@@ -163,6 +180,10 @@ int main()
 	{
 		ivec.push_back(test[i]);
  	}
+	ivec.clear();
+	for (int i = 8; i >= 0; i--) ivec.push_back(i + 2);
+	for (int i = 0; i != ivec.size(); i++)	cout << ivec[i] << " ";
+	cout << endl;
 // 	ivec.push_back(3);
 // 	ivec.push_back(4);
 // 	ivec.push_back(1);
