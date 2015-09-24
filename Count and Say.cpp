@@ -17,6 +17,8 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.09.24
+///@version	2.1
 #include <iostream>
 #include <string>
 using namespace std;
@@ -74,32 +76,35 @@ public:
 
 class Solution {
 public:
+	///@brief	给定初始字符串“1”，将它念出来并转换成数字字符串，求第n次迭代的结果
+	///@param	n	迭代次数
+	///@return	返回第n次迭代的结果
+	///@note	迭代法。从初始字符串开始迭代，遇到相同的字符就进行计数，直到相邻两字符不同；对于最后一个字符要特殊对待，将累计计数器转化成的数字和它本身添加到结果的末尾。
     string countAndSay(int n) {
-        string a = "1";
-        if (n == 1) return a;
-        int j = 1;
-        while (j != n){
-            string b;
-            int cnt = 1;
-            for (int i = 0; i != a.size(); i++){
-                if (i == a.size() - 1){
-                    b += char(cnt + '0');
-                    b += a[i];
-                    cnt = 1;
-                }
-                else{
-                    if (a[i] == a[i+1]) cnt++;
-                    else{
-                        b += char(cnt + '0');
-                        b += a[i];
-                        cnt = 1;
-                    }
-                }
-            }
-            a = b;
-            j++;
-        }
-        return a;
+		string a = "1";
+		int j = 1;
+		while (j < n) {
+			int cnt = 1;
+			string b;
+			for (int i = 0; i != a.size(); i++) {
+				if (i == a.size() - 1) {
+					b += cnt + '0';	//	注意：这种方法生成的字符串可以证明不会有超过4的字符出现
+					b += a[i];
+					cnt = 1;
+				}
+				else {
+					if (a[i] == a[i + 1])	cnt++;
+					else {
+						b += cnt + '0';
+						b += a[i];
+						cnt = 1;
+					}
+				}
+			}
+			a = b;
+			j++;
+		}
+		return a;
     }
 };
 
