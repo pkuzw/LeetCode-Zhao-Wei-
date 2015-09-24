@@ -11,6 +11,8 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.09.24
+///@version	2.1
 #include <iostream>
 #include <string>
 #include <vector>
@@ -148,26 +150,33 @@ private:
 
 class Solution {
 public:
+	///@brief	大整数相乘
+	///@param	num1	乘数1
+	///@param	num2	乘数2
+	///@return	返回用字符串表示的积
+	///@note	对乘数的各位分别相乘，需要开辟一个长度为n1 + n2的整型数组（假设乘数1的长度为n1，乘数2的位数为n2）来保存各位的积。然后对各个位的进位进行计算，最后再截取积首部的多余
+	//			零，将它转换为字符串即可。需要注意结果数组的存放是高位存放在末尾而不是首部。类似于网络数据的小尾方式。时间复杂度为O(n1 * n2)，空间复杂度为O(n1 + n2)。
     string multiply(string num1, string num2) {
-        int n1 = num1.size(), n2 = num2.size();
-        int k = n1 + n2 - 2;
-        vector<int> v(n1 + n2, 0);
-        for (int i = 0; i != n1; i++)
-            for (int j = 0; j != n2; j++)
-                v[k - i - j] += (num1[i] - '0') * (num2[j] - '0');
-        int carry = 0;
-        for (int i = 0; i != n1 + n2; i++){
-            v[i] += carry;
-            carry = v[i] / 10;
-            v[i] %= 10;
-        }
-        
-        int l = n1 + n2 - 1;
-        while (!v[l])   l--;
-        if (l < 0)  return "0";
-        string rslt;
-        while (l >= 0)  rslt.push_back(v[l--] + '0');
-        return rslt;
+		int n1 = num1.size(), n2 = num2.size();
+		int k = n1 + n2 - 2;
+		vector<int> mult(n1 + n2, 0);
+		for (int i = 0; i != n1; i++) 	//	注意：与手算不同的是，我们从高位向低位逐个相乘
+			for (int j = 0; j != n2; j++) 
+				mult[k - i - j] += (num1[i] - '0') * (num2[j] - '0');	//	我们的结果数组中，高位存放在末尾，而非开头
+		int carry = 0;
+		for (int i = 0; i != n1 + n2; i++) {	//	从结果的低位向高位计算进位
+			mult[i] += carry;
+			carry = mult[i] / 10;
+			mult[i] %= 10;
+		}
+		int l = n1 + n2 - 1;	
+		while (l >= 0 && !mult[l])	l--;		//	消除积首部多余0
+		if (l < 0)	return "0";
+		string rslt;
+		while (l >= 0) {
+			rslt += mult[l--] + '0';
+		}
+		return rslt;
     }
 };
 
