@@ -13,6 +13,8 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.09.24
+///@version	2.1
 #include <iostream>
 #include <vector>
 
@@ -142,27 +144,29 @@ private:
 	}
 };
 
-///@note    dynamic programming
-/*
-两次遍历，第一遍从左至右，dp[i]表示i处左侧的最大值；第二遍从右至左，dp[i]表示i处右侧的最大值和其左侧的最大值之间的较小值。如果dp[i]与当前高度差为正，则将其累加进结果值。
-*/
 class Solution {
 public:
+	///@brief	计算能够储存的雨水量
+	///@param	height	地面的高度值
+	///@return	返回所储存雨水的总量
+	///@note	动态规划。利用一个数组dp[i]先从左至右保存好i处左侧的最高值，然后再从右向左遍历，保存好i处左侧最大值和右侧最大值之间的较小值。然后通过判断当前位置的地形高度和dp[i]
+	//			的差值是否大于0，如果是就将其差累计进结果。时间复杂度为O(n)，空间复杂度为O(n)。
     int trap(vector<int>& height) {
-        int mx = 0;
-        int rslt = 0;
-        vector<int> dp(height.size(), 0);
-        for (int i = 0; i != height.size(); i++){
-            dp[i] = mx;
-            mx = max(height[i], mx);
-        }
-        mx = 0;
-        for (int i = height.size() - 1; i >= 0; i--){
-            dp[i] = min(mx, dp[i]);
-            mx = max(mx, height[i]);
-            if (dp[i] - height[i] > 0)  rslt += dp[i] - height[i];
-        }
-        return rslt;
+		if (height.empty())	return 0;
+		vector<int> dp(height.size(), 0);
+		int maxi = 0;
+		for (int i = 0; i != height.size(); i++) {
+			dp[i] = maxi;
+			maxi = max(maxi, height[i]);			
+		}
+		maxi = 0;
+		int rslt = 0;
+		for (int i = height.size() - 1; i >= 0; i--) {
+			dp[i] = min(maxi, dp[i]);
+			maxi = max(height[i], maxi);
+			if (dp[i] - height[i] > 0)	rslt += dp[i] - height[i];
+		}
+		return rslt;
     }
 };
 
@@ -170,18 +174,18 @@ int main()
 {
 	vector<int> ivec;	//0,1,0,2,1,0,1,3,2,1,2,1
 //	sample 1:
-// 	ivec.push_back(0);
-// 	ivec.push_back(1);
-// 	ivec.push_back(0);
-// 	ivec.push_back(2);
-// 	ivec.push_back(1);
-// 	ivec.push_back(0);
-// 	ivec.push_back(1);
-// 	ivec.push_back(3);
-// 	ivec.push_back(2);
-// 	ivec.push_back(1);
-// 	ivec.push_back(2);
-// 	ivec.push_back(1);
+ 	ivec.push_back(0);
+ 	ivec.push_back(1);
+ 	ivec.push_back(0);
+ 	ivec.push_back(2);
+ 	ivec.push_back(1);
+ 	ivec.push_back(0);
+ 	ivec.push_back(1);
+ 	ivec.push_back(3);
+ 	ivec.push_back(2);
+ 	ivec.push_back(1);
+ 	ivec.push_back(2);
+ 	ivec.push_back(1);
 
 //	sample 2:
 // 	ivec.push_back(4);
@@ -200,14 +204,18 @@ int main()
 // 	ivec.push_back(4);
 
 //	sample 3:
-	ivec.push_back(0);
-	ivec.push_back(4);
-	ivec.push_back(4);
-	ivec.push_back(4);
-	ivec.push_back(0);
+// 	ivec.push_back(0);
+// 	ivec.push_back(4);
+// 	ivec.push_back(4);
+// 	ivec.push_back(4);
+// 	ivec.push_back(0);
 	Solution slt;
 	
 	cout << slt.trap(ivec);
+	cout << endl;
+
+	Solution_v1 s_v1;
+	cout << s_v1.trap(ivec);
 	cout << endl;
 	return 0;
 }
