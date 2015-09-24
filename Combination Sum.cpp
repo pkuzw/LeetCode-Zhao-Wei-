@@ -22,6 +22,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.09.24
+///@version 2.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -73,24 +76,38 @@ private:
 
 class Solution {
 public:
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<vector<int>> rslt;
-        vector<int> cmb;
-        sort(candidates.begin(), candidates.end());
-        dfs(rslt, cmb, candidates, 0, target);
-        return rslt;
-    }
-    
-    void dfs(vector<vector<int>>& rslt, vector<int>& cmb, vector<int>& candidates, int indx, int target){
-        if (!target)    rslt.push_back(cmb);
-        else{
-            for (int i = indx; i != candidates.size() && target >= candidates[i]; i++){
-                cmb.push_back(candidates[i]);
-                dfs(rslt, cmb, candidates, i, target - candidates[i]);
-                cmb.pop_back();
-            }
-        }
-    }
+	///@brief	给定一组数组（乱序）和一个给定值，计算所有可能的组合和为给定值，其中元素能够重复出现。
+	///@param	candidates	乱序数组
+	///@param	target		目标值
+	///@return	返回所有的可能组合
+	///@note	递归回溯法。首先对数组进行排序，然后逐个尝试每个组合。尝试的元素必须小于等于目标值，如果目标值被减为零，则可以将一个结果压入最终的结果集合。否则就弹出上一次压入的元素，
+	//			并进行下一个元素的尝试。
+	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+		vector<vector<int>> rslt;
+		if (candidates.empty())	return rslt;
+		sort(candidates.begin(), candidates.end());
+		vector<int> comb;
+		dfs(rslt, comb, candidates, 0, target);
+		return rslt;
+	}
+
+	///@brief	递归回溯法求组合
+	///@param	rslt	组合集合
+	///@param	comb	一个组合
+	///@param	cadidates	候选数组
+	///@param	indx	遍历到了候选数组中的元素下标
+	///@param	target	目标值
+	///@return	无
+	void dfs(vector<vector<int>>& rslt, vector<int>& comb, vector<int>& candidates, int indx, int target) {
+		if (!target)	rslt.push_back(comb);
+		else {
+			for (int i = indx; i < candidates.size() && candidates[i] <= target; i++) {
+				comb.push_back(candidates[i]);
+				dfs(rslt, comb, candidates, i, target - candidates[i]);
+				comb.pop_back();
+			}
+		}
+	}
 };
 
 int main()
@@ -102,6 +119,7 @@ int main()
 	test.push_back(7);
 	test.push_back(6);
 
+	
 	Solution slt;
 	vector<vector<int>> rslt = slt.combinationSum(test, 12);
 
