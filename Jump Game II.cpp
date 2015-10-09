@@ -18,6 +18,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.10.09
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -91,24 +94,29 @@ public:
 
 };
 
-/*
-cur: 能够到达的格子下标；
-pre: 到达cur之前的格子下标；
-i:   遍历在pre和cur之间能够跳跃的最大步数，能够到达的最远格子
- */
 class Solution {
 public:
+	///@brief	计算跳到尾元素的最小步数
+	///@param	nums	格子
+	///@return	返回最小步数
+	///@note	cur: 能够到达的格子下标；
+	//			pre: 到达cur之前的格子下标；
+	//			i:   遍历在pre和cur之间能够跳跃的最大步数，能够到达的最远格子
+	//			时间复杂度为O(n^2)，空间复杂度为O(1)。
     int jump(vector<int>& nums) {
-        int cur = 0, pre = 0, i = 0, rslt = 0;
-        while (cur < nums.size() - 1){
-            pre = cur;
-            while (i <= pre){
-                cur = max(cur, nums[i] + i);
-                i++;
-            }
-            rslt++;
-        }
-        return rslt;
+		int cur = 0;	//	当前位置处能够到达的最远格子
+		int pre	= 0;	//	到达cur之前的格子下标
+		int i = 0;		//	循环变量
+		int rslt = 0;	//	结果值
+		while (cur < nums.size() - 1) {
+			pre = cur;
+			while (i <= pre) {
+				cur = max(cur, i + nums[i]);
+				i++;
+			}
+			rslt++;
+		}
+		return rslt;
     }
 };
 
