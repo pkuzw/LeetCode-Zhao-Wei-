@@ -12,6 +12,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.10.14
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <deque>
@@ -135,29 +138,38 @@ private:
 
 class Solution {
 public:
-    vector<vector<int>> permute(vector<int>& nums){
-        vector<vector<int>> rslt;
-        if (nums.empty())   return rslt;
-        vector<int> pmt;
-        dfs(rslt, pmt, nums);
-        return rslt;
-    }
-    
-    void dfs(vector<vector<int>>& rslt, vector<int>& pmt, vector<int> nums){
-        if (nums.empty())   rslt.push_back(pmt);
-        else{
-            int i = 0;
-            while (i != nums.size()){
-                vector<int> new_nums;
-                pmt.push_back(nums[i]);
-                for (int j = 0; j != nums.size(); j++)
-                    if (i != j) new_nums.push_back(nums[j]);
-                dfs(rslt, pmt, new_nums);
-                pmt.pop_back();
-                i++;
-            }
-        }
-    }
+	///@brief	给定候选元素数组，计算所有可能的组合
+	///@param	nums	候选元素数组
+	///@return	返回所有可能的组合
+	vector<vector<int>> permute(vector<int>& nums) {
+		vector<vector<int>> rslt;
+		if (nums.empty())	return rslt;
+		vector<int> pmt;
+		dfs(rslt, pmt, nums);
+		return rslt;
+	}
+
+	///@brief	深度优先遍历所有可能的排列
+	///@param	rslt	结果数组
+	///@param	pmt		一种排列
+	///@param	nums	候选元素数组
+	///@return	无
+	void dfs(vector<vector<int>>& rslt, vector<int>& pmt, vector<int> nums) {
+		if (nums.empty()) {
+			rslt.push_back(pmt);
+		} 
+		else {
+			for (int i = 0; i != nums.size(); i++) {
+				pmt.push_back(nums[i]);
+				vector<int> new_nums;
+				for (int j = 0; j != nums.size(); j++) {
+					if (j != i) new_nums.push_back(nums[j]);
+				}
+				dfs(rslt, pmt, new_nums);
+				pmt.pop_back();
+			}
+		}
+	}
 };
 
 int main()
