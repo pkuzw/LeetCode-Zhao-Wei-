@@ -14,6 +14,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.10.14
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -100,25 +103,50 @@ public:
 	}
 };
 
-/*
-1. 将原矩阵转换成转置矩阵，然后将每行翻转即可。
-2. 空间复杂度为O(1)。
-*/
 class Solution {
 public:
+	///@brief	将一个n * n的二维矩阵顺时针翻转九十度
+	///@param	matrix	二维矩阵
+	///@return	无
+	///@note	1. 将原矩阵转换成转置矩阵，然后将每行翻转即可。另外，如果在转换成转置矩阵后，翻转每一列，则是逆时针翻转90°
+	///@note	2. 空间复杂度为O(1)。
     void rotate(vector<vector<int>>& matrix) {
-        int n = matrix.size();
-        for (int i = 0; i != n; i ++){
-            for (int j = i + 1; j != n; j++)
-                swap(matrix[i][j], matrix[j][i]);
-            reverse(matrix[i].begin(), matrix[i].end());
-        }
+		for (int i = 0; i != matrix.size(); i++)
+			for (int j = i + 1; j != matrix.size(); j++)
+				swap(matrix[i][j], matrix[j][i]);
+		for (int i = 0; i != matrix.size(); i++)
+			reverse(matrix[i].begin(), matrix[i].end());        
     }
+
+	///@brief	将一个n * n的二维矩阵逆时针翻转90°
+	///@param	matrix	二维矩阵
+	///@return	无
+	///@note	先将矩阵转换为转置矩阵，然后翻转每一列即可
+	void rotate_anticlockwise(vector<vector<int>>& matrix) {
+		for (int i = 0; i != matrix.size(); i++)
+			for (int j = i + 1; j != matrix.size(); j++)
+				swap(matrix[i][j], matrix[j][i]);
+		for (int i = 0; i != matrix.size(); i++) 
+			for (int j = 0; j != matrix.size() / 2; j++)
+				swap(matrix[j][i], matrix[matrix.size() - 1 - j][i]);		
+	}
 };
+
+void printMatrix(vector<vector<int>> matrix) {
+	for (int i = 0; i != matrix.size(); i++)
+	{
+		for (int j = 0; j != matrix.size(); j++)
+		{
+			cout << matrix[i][j] << ' ';
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
 
 int main()
 {
-	int len = 9;
+	int len = 3;
 	vector<vector<int>> matrix;
 	for (int i = 0; i != len; i++)
 	{
@@ -130,27 +158,12 @@ int main()
 		matrix.push_back(line);
 	}
 
-	for (int i = 0; i != len; i++)
-	{
-		for (int j = 0; j != len; j++)
-		{
-			cout << matrix[i][j] << ' ';
-		}
-		cout << endl;
-	}
-	cout << endl;
+	printMatrix(matrix);
+
 	Solution_v1 slt_v1;
 	slt_v1.rotate(matrix);
 
-	for (int i = 0; i != len; i++)
-	{
-		for (int j = 0; j != len; j++)
-		{
-			cout << matrix[i][j] << ' ';
-		}
-		cout << endl;
-	}
-	cout << endl;
+	printMatrix(matrix);
 
 	vector<vector<int>> matrix1;
 	for (int i = 0; i != len; i++)
@@ -164,25 +177,19 @@ int main()
 	}
 
 	slt_v1.rotate2(matrix1);
-	for (int i = 0; i != len; i++)
-	{
-		for (int j = 0; j != len; j++)
-		{
-			cout << matrix1[i][j] << ' ';
-		}
-		cout << endl;
-	}
-    cout << endl;
+	printMatrix(matrix1);
     
     Solution slt;
     slt.rotate(matrix1);
-    for (int i = 0; i != len; i++)
-    {
-        for (int j = 0; j != len; j++)
-        {
-            cout << matrix1[i][j] << ' ';
-        }
-        cout << endl;
-    }
+    printMatrix(matrix1);
+
+	slt.rotate(matrix1);
+	printMatrix(matrix1);
+
+	slt.rotate(matrix1);
+	printMatrix(matrix1);
+
+	slt.rotate_anticlockwise(matrix1);
+	printMatrix(matrix1);
 	return 0;
 }
