@@ -100,16 +100,26 @@ public:
 
 class Solution {
 public:
-    double myPow(double x, int n) {
-        if (n < 0) return double(1 / pow_(x, -n));
-        return pow_(x, n);
-    }
-    double pow_(double x, int n){
-        if (!n) return 1;
-        double half = pow_(x, n / 2);
-        if (n % 2)  return x * half * half;
-        return half * half;
-    }
+	///@brief	计算x的n次方，n有可能为负
+	///@param	x	底数
+	///@param	n	指数
+	///@return	返回幂值
+	///@note	递归法计算
+	double myPow(double x, int n) {
+		if (n < 0) return 1 / helper(x, -n);
+		return helper(x, n);
+	}
+
+	///@brief	计算x的n次方，n为自然数
+	///@param	x	底数
+	///@param	n	指数
+	///@return	x的n次幂
+	double helper(double x, unsigned n) {
+		if (!n)	return 1;
+		double half = helper(x, n / 2);
+		if (n % 2)	return x * half * half;
+		else return half * half;		
+	}
 };
 
 int main()
