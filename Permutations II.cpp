@@ -17,6 +17,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.10.14
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -73,7 +76,7 @@ public:
 			residue.pop_back();				//	将结果中的元素弹出
             
             indx++;
-            while (nums[indx] == nums[indx-1] && indx < nums.size())    //	如果元素重复，不要选择，直到不重复为止
+            while ( indx < nums.size() && nums[indx] == nums[indx-1])    //	如果元素重复，不要选择，直到不重复为止
                 indx++;
             
 		}	
@@ -85,32 +88,39 @@ private:
 
 class Solution {
 public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> rslt;
-        if (nums.empty()) return rslt;
-        sort(nums.begin(), nums.end());
-        vector<int> p;
-        dfs(rslt, p, nums);
-        return rslt;
-    }
-    void dfs(vector<vector<int>>& rslt, vector<int>& p, vector<int> nums){
-        if (nums.empty()){
-            rslt.push_back(p);
-        }
-        else{
-            int i = 0;
-            while (i != nums.size()){
-                vector<int> new_nums;
-                p.push_back(nums[i]);
-                for (int j = 0; j != nums.size(); j++)
-                    if (i != j) new_nums.push_back(nums[j]);
-                dfs(rslt, p, new_nums);
-                p.pop_back();
-                i++;
-                while (i < nums.size() && nums[i] == nums[i-1]) i++;
-            }
-        }
-    }
+	///@brief	计算所有可能的排列，但是不包括重复的排列
+	///@param	nums	候选元素数组
+	///@return	所有可能的排列
+	///@note	利用深度优先遍历思想，先将候选元素排序，然后按照"Permutation"题目中的算法来进行计算，但是在递归结束时，选择新的元素加入排列时，要避开已经选过的相同元素。
+	vector<vector<int>> permuteUnique(vector<int>& nums) {
+		vector<vector<int>> rslt;
+		if (nums.empty())	return rslt;
+		vector<int> pmt;
+		sort(nums.begin(), nums.end());
+		dfs(rslt, pmt, nums);
+		return rslt;
+	}
+
+	///@brief	深度优先遍历计算去重的所有排列
+	///@param	rslt	结果数组
+	///@param	pmt		一个排列
+	///@param	nums	候选元素数组
+	///@note	在一次递归结束后选择新的元素下标时，要排除上一次压入的相同元素
+	void dfs(vector<vector<int>>& rslt, vector<int> pmt, vector<int> nums) {
+		if (nums.empty()) rslt.push_back(pmt);
+		else {
+			int i = 0;
+			for (int i = 0; i != nums.size(); i++) {
+				pmt.push_back(nums[i]);
+				vector<int> new_nums;
+				for (int j = 0; j != nums.size(); j++) 
+					if (i != j) new_nums.push_back(nums[j]);
+				dfs(rslt, pmt, new_nums);
+				pmt.pop_back();
+				while (i != nums.size() - 1 && nums[i] == nums[i + 1]) i++;
+			}
+		}
+	}
 };
 
 int main()
