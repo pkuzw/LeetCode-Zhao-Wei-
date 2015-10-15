@@ -180,9 +180,12 @@ private:
 	}	
 };
 
-//@note backtracking
 class Solution {
 public:
+	///@brief	计算n皇后问题的结果数
+	///@param	n	皇后数目
+	///@return	返回n皇后问题的结果数
+	///@note	深度优先遍历
     int totalNQueens(int n) {
         int rslt = 0;
         vector<int> pos(n, -1);
