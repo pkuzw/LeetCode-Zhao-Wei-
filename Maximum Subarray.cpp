@@ -127,15 +127,19 @@ public:
 
 class Solution {
 public:
+	///@brief	计算一个整数数组的最大子数组和
+	///@param	nums	数组
+	///@return	最大整数组之和
+	///@note	动态规划解题。dp[i]表示i之前元素的最大子数组之和，则dp[i+1] = max(nums[i+1], dp[i] + nums[i+1])，为了节省存储空间，可以将dp[n]精简到用一个临时变量保存目前的最大值，另一个变量保存最后结果值
     int maxSubArray(vector<int>& nums) {
-        if (nums.empty())   return 0;
-        int tmp = nums[0];
-        int rslt = nums[0];
-        for (int i = 1; i != nums.size(); i++){
-            tmp = max(nums[i], tmp + nums[i]);
-            rslt = max(rslt, tmp);
-        }
-        return rslt;
+		if (nums.empty())	return 0;
+		int dp = nums[0];		
+		int rslt = nums[0];
+		for (int i = 1; i != nums.size(); i++) {
+			dp = max(nums[i] + dp, nums[i]);
+			rslt = max(dp, rslt);
+		}
+		return rslt;
     }
 };
 
@@ -161,5 +165,8 @@ int main()
 	}
 	cout << endl;
 	cout << slt_v1.maxSubArrayDC(nums) << endl;
+
+	Solution slt;
+	cout << slt.maxSubArray(nums) << endl;
 	return 0;
 }
