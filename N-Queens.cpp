@@ -30,6 +30,9 @@ There exist two distinct solutions to the 4-queens puzzle:
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2015.10.15
+///@version	2.1
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -212,37 +215,52 @@ private:
 
 class Solution {
 public:
-    vector<vector<string>> solveNQueens(int n) {
-        vector<vector<string>> rslt;
-        vector<int> pos(n, -1);
-        dfs(pos, 0, rslt);
-        return rslt;
-    }
-    
-    bool isValid(vector<int>& pos, int row, int col){
-        for (int i = 0; i != row; i++){
-            if (pos[i] == col || abs(row - i) == abs(col - pos[i])) return false;
-        }
-        return true;
-    }
-    
-    void dfs(vector<int>& pos, int row, vector<vector<string>>& rslt){
-        if (row == pos.size()){
-            vector<string> tmp(pos.size(), string(pos.size(), '.'));
-            for (int i = 0; i != pos.size(); i++)
-                tmp[i][pos[i]] = 'Q';
-            rslt.push_back(tmp);
-        }
-        else{
-            for (int i = 0; i != pos.size(); i++){
-                if (isValid(pos, row, i)){
-                    pos[row] = i;
-                    dfs(pos, row + 1, rslt);
-                    pos[row] = -1;
-                }
-            }
-        }
-    }
+	///@brief	n皇后问题
+	///@param	n	皇后的数目
+	///@return	返回n*n棋盘上所有可能的结果
+	///@note	利用深度优先遍历计算所有可能的组合
+	vector<vector<string>> solveNQueens(int n) {
+		vector<vector<string>> rslt;
+		vector<int> pos(n, -1);
+		dfs(pos, rslt, 0);
+		return rslt;
+	}
+
+	///@brief	判断目前的该皇后布局是否合法
+	///@param	pos	存放有n个皇后下标的数组
+	///@param	row	当前行
+	///@param	col	当前列
+	///@return	如果是合法布局，则将pos[row]赋值为col，否则保持为-1
+	bool isValid(vector<int>& pos, int row, int col) {
+		for (int i = 0; i != row; i++) {
+			if (pos[i] == col || (abs(i - row) == abs(pos[i] - col)))	return false;
+		}
+		return true;
+	}
+
+	///@brief	利用深度优先遍历递归计算所有合法的皇后布局
+	///@param	pos	皇后的一种布局
+	///@param	rslt所有可能的结果
+	///@param	row	当前行号
+	///@return	无
+	void dfs(vector<int>& pos, vector<vector<string>>& rslt, int row) {
+		if (row == pos.size()) {
+			vector<string> r(pos.size(), string(pos.size(), '.'));
+			for (int i = 0; i != pos.size(); i++) {
+				r[i][pos[i]] = 'Q';
+			}
+			rslt.push_back(r);
+		}
+		else {
+			for (int i = 0; i != pos.size(); i++) {
+				if (isValid(pos, row, i)) {
+					pos[row] = i;
+					dfs(pos, rslt, row + 1);
+					pos[row] = -1;
+				}
+			}
+		}
+	}
 };
 
 int main()
