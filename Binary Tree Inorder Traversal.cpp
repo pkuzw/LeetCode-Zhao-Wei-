@@ -25,6 +25,9 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@date	2015.08.25
 ///@version	3.0
 
+///@date	2015.10.16
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -98,17 +101,14 @@ private:
 		if (!root)	return rslt;
 		stack<TreeNode*> stk;
 		TreeNode* node = root;
-
-		while (node || !stk.empty())
-		{
-			while (node)
-			{
+		while (node || !stk.empty()) {
+			while (node) {
 				stk.push(node);
 				node = node->left;
 			}
 			node = stk.top();
 			stk.pop();
-			rslt.push_back(node->val);			
+			rslt.push_back(node->val);
 			node = node->right;
 		}
 		return rslt;
@@ -172,11 +172,12 @@ int main()
 // 	Solution_v1 slt_v1;
 // 	vector<int> rslt = slt_v1.inorderTraversal(root);
 // 
-// 	Solution slt_v2;
-// 	rslt = slt_v2.inorderTraversal(root);
+ 	Solution slt_v2;
+ 	vector<int> rslt2 = slt_v2.inorderTraversal(root);
 
 	Solution slt;
 	vector<int>	rslt = slt.inorderTraversal(root);
+
 
 	return 0;
 }
