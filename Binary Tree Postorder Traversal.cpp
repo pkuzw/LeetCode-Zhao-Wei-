@@ -20,6 +20,9 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@date	2015.08.20
 ///@version	2.1
 
+///@date	2015.10.16
+///@version	2.2
+
 #include <vector>
 #include <stack>
 
@@ -89,20 +92,17 @@ private:
 		stack<TreeNode*> stk;
 		stk.push(root);
 		TreeNode* visited = root;
-		while (!stk.empty())
-		{
+		while (!stk.empty()) {
 			TreeNode* node = stk.top();
-			if ((!node->left && !node->right) || node->left == visited || node->right == visited)	//	如果没有孩子，或者孩子节点已经被访问过，则输出
-			{
+			if ((!node->left && !node->right) || node->left == visited || node->right == visited) {
 				rslt.push_back(node->val);
 				stk.pop();
 				visited = node;
 			}
-			else
-			{
-				if (node->right)		stk.push(node->right);	//	应该是先右后左，这样在弹出的时候是先处理左孩子，再处理右孩子
-				if (node->left)		stk.push(node->left);	
-			}
+			else {
+				if (node->right)		stk.push(node->right);
+				if (node->left)		stk.push(node->left);				
+			}			
 		}
 		return rslt;
 	}
