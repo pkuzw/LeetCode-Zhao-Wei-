@@ -19,6 +19,9 @@ You should return [1,2,3,6,9,8,7,4,5].
 ///@date    2015.09.01
 ///@version 2.0
 
+///@date	2015.10.19
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 
@@ -105,28 +108,23 @@ private:
 
 class Solution {
 public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        vector<int> rslt;
-        if (matrix.empty() || matrix[0].empty())    return rslt;
-        int m = matrix.size(), n = matrix[0].size();
-        int p = n, q = m;
-        int c = (m < n) ? (m + 1) / 2 : (n + 1) / 2;
-        int i = 0, row = 0, col = 0;
-        for (i = 0; i < c; i++, q -= 2, p -= 2){
-            for (col = i; col < i + p; col++)
-                rslt.push_back(matrix[i][col]);
-            for (row = i + 1; row < i + q; row++)
-                rslt.push_back(matrix[row][i + p - 1]);
-            
-            if (p == 1 || q == 1)   break;
-            
-            for (col = i + p - 2; col >= i; col--)
-                rslt.push_back(matrix[i + q - 1][col]);
-            for (row = i + q - 2; row > i; row--)
-                rslt.push_back(matrix[row][i]);
-        }
-        return rslt;
-    }
+	///@brief	按照顺时针螺旋输出m * n的矩阵元素
+	///@note	枚举法：旋转输出。选定min(m, n)的一半上取整作为循环变量的上限，每次旋转输出。时间复杂度为O(n^2)，空间复杂度为O(1).
+	vector<int> spiralOrder(vector<vector<int>>& matrix) {
+		vector<int> rslt;
+		if (matrix.empty() || matrix[0].empty())	return rslt;
+		int m = matrix.size(), n = matrix[0].size();
+		int bound = (min(m, n) + 1) / 2;
+		int p = m, q = n;
+		for (int i = 0; i < bound; i++, p -= 2, q -= 2) {
+			for (int col = i; col < i + q; col++)		rslt.push_back(matrix[i][col]);
+			for (int row = i + 1; row < i + p; row++)	rslt.push_back(matrix[row][i + q - 1]);
+			if (p == 1 || q == 1)	break;	// 防止p, q在下一次循环变量减2后变为负数
+			for (int col = i + q - 2; col >= i; col--)	rslt.push_back(matrix[i + p - 1][col]);
+			for (int row = i + p - 2; row > i; row--)	rslt.push_back(matrix[row][i]);
+		}
+		return rslt;
+	}
 };
 
 int main()
