@@ -18,6 +18,9 @@ A = [3,2,1,0,4], return false.
 ///@date    2015.09.01
 ///@version 2.0
 
+///@date	2015.10.21
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -76,7 +79,7 @@ private:
 /*
 动态规划：dp[i]表示第i个格子处的最大剩余步数。初始条件为dp[0] = 0，递推关系是为dp[i] = max(dp[i-1], nums[i-1]) - 1.
 */
-class Solution {
+class Solution_v2 {
 public:
     bool canJump(vector<int>& nums) {
         vector<int> dp(nums.size(), 0); //dp表示在第i个格子处的剩余最远步数
@@ -90,12 +93,37 @@ public:
     }
 };
 
+class Solution {
+public:
+	///@brief	给定一组正整数，代表当前各自能继续向后走的步数，计算能否到达最后一个格子
+	///@param	nums	格子
+	///@return	如果可以到达最后一个格子，则返回true；否则返回false
+	///@note	动态规划：用dp[i]表示到达i时剩余的最大步数，则状态转移方程为dp[i] = max(dp[i-1] - 1, nums[i])。如果中间有一个格子小于等于0，则直接返回false。
+	bool canJump(vector<int>& nums) {
+		if (nums.size() == 1 || nums.size() == 0)	return true;		
+		vector<int> dp(nums.size()-1, 0);
+		dp[0] = nums[0];
+		for (int i = 1; i < nums.size() - 1; i++) 
+			dp[i] = max(dp[i - 1] - 1, nums[i]);
+		
+		for (int i = 0; i < nums.size() - 1; i++)
+			if (dp[i] <= 0)	return false;
+		return true;
+
+	}
+};
+
 int main()
 {
 	vector<int> nums;
+ 	nums.push_back(3);
+ 	nums.push_back(2);
  	nums.push_back(1);
- 	nums.push_back(0);
- 	nums.push_back(0);
+	nums.push_back(0);
+	nums.push_back(4);
+
+	Solution_v2 s2;
+	cout << s2.canJump(nums) << endl;
 
 	Solution slt;
 	cout << slt.canJump(nums) << endl;
