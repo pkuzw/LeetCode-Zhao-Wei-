@@ -10,6 +10,10 @@ return [1,6],[8,10],[15,18].
 ///@date	2015.07.07
 ///@version	1.0
 
+///@author	zhaowei
+///@date	2015.11.08
+///@version 1.1
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
