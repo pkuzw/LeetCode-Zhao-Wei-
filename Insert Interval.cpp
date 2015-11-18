@@ -19,6 +19,9 @@ This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 ///@date    2015.09.01
 ///@version 2.0
 
+///@date	2015.11.18
+///@version 2.1
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -91,25 +94,29 @@ private:
 
 class Solution {
 public:
+	///@brief	将重叠区间进行融合
+	///@param	intervals	区间数组
+	///@return	返回融合后的区间数组
+	///@note	从前往后遍历区间数组，统计新区间能够融合的区间数目，将融合的原有区间删除，将新融合的区间插入，时间复杂度为O(n)，空间复杂度为O(1)。	
     vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
-        if (intervals.empty()){
-            intervals.push_back(newInterval);
-            return intervals;
-        }
-        int overlap_cnt = 0;
-        int i = 0;
-        for (i = 0; i != intervals.size(); i++){
-            if (intervals[i].start > newInterval.end) break;
-            else if (intervals[i].end < newInterval.start)  continue;
-            else{
-                newInterval.start = min(newInterval.start, intervals[i].start);
-                newInterval.end = max(newInterval.end, intervals[i].end);
-                overlap_cnt++;
-            }
-        }
-        if (overlap_cnt)    intervals.erase(intervals.begin() + i - overlap_cnt, intervals.begin() + i);
-        intervals.insert(intervals.begin() + i - overlap_cnt, newInterval);
-        return intervals;
+		if (intervals.empty())	{
+			intervals.push_back(newInterval);
+			return intervals;
+		}
+		int over_lap_cnt = 0;
+		int i = 0;
+		for (i = 0; i != intervals.size(); i++) {
+			if (intervals[i].start > newInterval.end)	break;
+			else if (intervals[i].end < newInterval.start)continue;
+			else {
+				newInterval.start = min(newInterval.start, intervals[i].start);
+				newInterval.end = max(newInterval.end, intervals[i].end);
+				over_lap_cnt++;
+			}
+		}
+		if (over_lap_cnt) intervals.erase(intervals.begin() + i - over_lap_cnt, intervals.begin() + i);
+		intervals.insert(intervals.begin() + i - over_lap_cnt, newInterval);
+		return intervals;
     }
 };
 
