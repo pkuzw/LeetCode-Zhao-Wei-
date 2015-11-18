@@ -18,6 +18,9 @@ return 5.
 ///@date    2015.09.01
 ///@version 2.0
 
+///@date	2015.11.18
+///@version 2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -50,7 +53,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
     int lengthOfLastWord(string s) {
         if (s.empty())  return 0;
@@ -65,6 +68,26 @@ public:
         }
         return cnt;
     }
+};
+
+class Solution {
+public:
+	///@brief	计算字符串中最后一个单词的长度
+	///@param	s	字符串
+	///@return	返回最后一个单词的长度，如果字符串为空，则返回0
+	///@note	从后向前遍历字符串，遇到第一个空白字符停止。时间复杂度为O(n)，空间复杂度为O(1)。
+	int lengthOfLastWord(string s) {
+		if (s.empty())	return 0;
+		int len = s.size();
+		int cnt = 0;
+		int i = len - 1;
+		for (i = len - 1; i >= 0 && (s[i] == ' ' || s[i] == '	'); i--)		;	//	处理末尾的空白字符
+		for (; i != -1; i--) {
+			if (s[i] == ' ' || s[i] == '	')	break;
+			cnt++;
+		}
+		return cnt;
+	}
 };
 
 int main()
