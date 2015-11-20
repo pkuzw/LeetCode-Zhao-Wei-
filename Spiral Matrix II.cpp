@@ -19,6 +19,9 @@ You should return the following matrix:
 ///@date    2015.09.01
 ///@version 2.0
 
+///@date	2015.11.20
+///@version	2.1
+
 #include <vector>
 #include <iostream>
 
@@ -157,6 +160,9 @@ private:
 
 class Solution {
 public:
+	///@brief	生成顺时针旋转的二维矩阵1 - n^2
+	///@param	n	矩阵的边长
+	///@return	返回顺时针旋转的依次填充1 - n^2的二维矩阵
     vector<vector<int>> generateMatrix(int n) {
         vector<vector<int>> matrix(n, vector<int>(n, 1));
         int val = 1;
