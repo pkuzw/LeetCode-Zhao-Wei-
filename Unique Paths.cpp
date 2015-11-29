@@ -13,6 +13,8 @@ How many possible unique paths are there?
 ///@date	2015.08.28
 ///@version	2.0
 
+///@date	2015.11.29
+
 #include <iostream>
 
 using namespace std;
@@ -51,19 +53,23 @@ public:
 
 class Solution {
 public:
+	///@brief	计算一个m*n的棋盘中从左上角到右下角的方法数
+	///@param	m	棋盘的高度
+	///@param	n	棋盘的宽度
+	///@return	返回从棋盘左上角到右下角的方法数
+	///@note	相当于计算组合数C(m + n - 2, m - 1)或者C(m + n - 2, n - 1)。
 	int uniquePaths(int m, int n) {
-		if (m * n == 1)	return 1;
+		long long rslt = 1;
+		if (m == 1 || n == 1)	return rslt;
 		int k = m + n - 2;
 		int p = m > n ? n - 1 : m - 1;
 		int t = p;
-		long long rslt = 1;
-		while (t--)
-		{
+		
+		while (t--) {
 			rslt *= k;
 			k--;
 		}
-		while (p)
-		{
+		while (p) {
 			rslt /= p;
 			p--;
 		}
