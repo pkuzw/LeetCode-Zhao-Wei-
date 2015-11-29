@@ -13,6 +13,9 @@ return 4->5->1->2->3->NULL.
 ///@date    2015.08.30
 ///@version 2.0
 
+///@date	2015.11.29
+///@version 3.0
+
 #include <iostream>
 
 using namespace std;
@@ -95,36 +98,74 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
+	///@brief	对单链表进行循环翻转
+	///@param	head	链表头部节点
+	///@param	k		翻转的长度
+	///@return	返回新链表的首节点
     ListNode* rotateRight(ListNode* head, int k) {
-        if (!k || !head || !head->next)   return head;
-        int len = 0;
-        ListNode* indx = head;
-        while (indx)
-        {
-            len++;
-            indx = indx->next;
-        }
-        k = k % len;
-        if (!k) return head;
-        indx = head;
-        int a = len - k;
-        while (a > 1)
-        {
-            indx = indx->next;
-            a--;
-        }
-        ListNode* b = indx->next;
-        indx->next = nullptr;
-        indx = b;
-        while (indx->next)
-            indx = indx->next;
-        indx->next = head;
-        return b;
+         if (!k || !head || !head->next)   return head;
+         int len = 0;
+         ListNode* indx = head;
+         while (indx)
+         {
+             len++;
+             indx = indx->next;
+         }
+         k = k % len;
+         if (!k) return head;
+         indx = head;
+         int a = len - k;
+         while (a > 1)
+         {
+             indx = indx->next;
+             a--;
+         }
+         ListNode* b = indx->next;
+         indx->next = nullptr;
+         indx = b;
+         while (indx->next)
+             indx = indx->next;
+         indx->next = head;
+         return b;		
     }
 };
 
+class Solution {
+public:
+	///@brief	对单链表进行循环翻转
+	///@param	head	链表头部节点
+	///@param	k		翻转的长度
+	///@return	返回新链表的首节点
+	///@note	1. 先计算出原链表的长度，对k进行求模；2. 从首节点向后数出求模后的k个长度的节点，作为哨兵节点；3. 当哨兵节点遍历到尾部时，
+	//			将其后继节点改为原来的首节点，而遍历循环节点的后继节点指向空，作为新链表的尾结点；4. 时间复杂度为O(n)，空间复杂度为O(1)。
+	ListNode* rotateRight(ListNode* head, int k) {
+		if (!head || !head->next || !k)	return head;
+		int len = 0;
+		ListNode* indx = head;
+		while (indx) {
+			indx = indx->next;
+			len++;
+		}
+		k %= len;
+		if (!k)	return head;
+		ListNode* a = head;
+		while (k) {
+			a = a->next;
+			k--;
+		}
+		indx = head;
+		while (a->next) {
+			indx = indx->next;
+			a = a->next;
+		}
+		ListNode* b = indx->next;
+		indx->next = nullptr;
+		a->next = head;
+		return b;
+	}
+};
 int main()
 {
     
@@ -138,7 +179,7 @@ int main()
     for (int i = 0; i != 4; i++)
         n[i]->next = n[i+1];
 
-	int k = 1;
+	int k = 7;
     ListNode* l = n[0];
 
     l = slt.rotateRight(l, k);
