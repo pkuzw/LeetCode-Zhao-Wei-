@@ -11,6 +11,9 @@ The digits are stored such that the most significant digit is at the head of the
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.01
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 
@@ -56,8 +59,12 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
+	///@brief	将整数存储在一维数组当中，将其末位加1后，计算所得结果
+	///@param	digits	被加数
+	///@return	返回加1后的和
+	///@note	1. 从末位向前遍历；2. 设置一个标识符标记进位；3. 如果最高位也需要进位，则要在最前端插入1；4. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为数字的长度。
 	vector<int> plusOne(vector<int>& digits) {
 		bool flg = false;
 		digits.back()++;
@@ -81,13 +88,45 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	将整数存储在一维数组当中，将其末位加1后，计算所得结果
+	///@param	digits	被加数
+	///@return	返回加1后的和
+	///@note	1. 从末位向前遍历；2. 设置一个标识符标记进位；3. 如果最高位也需要进位，则要在最前端插入1；4. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为数字的长度。
+	vector<int> plusOne(vector<int>& digits) {
+		if (digits.empty()) {
+			vector<int> rslt(1, 0);
+			return rslt;
+		}
+		bool flg = false;
+		digits.back()++;
+		if (digits.back() == 10) {
+			digits.back() = 0;
+			flg = true;
+		}
+		for (int i = digits.size() - 2; i >= 0; i--) {
+			if (flg) {
+				digits[i]++;
+				flg = false;
+				if (digits[i] == 10) {
+					digits[i] = 0;
+					flg = true;
+				}
+			}
+		}
+		if (flg) digits.insert(digits.begin(), 1);
+		return digits;
+	}
+};
+
 int main()
 {
 	vector<int> sum;
 	vector<int> digits;
 	digits.push_back(9);
 	digits.push_back(9);
-	digits.push_back(9);
+	digits.push_back(8);
 
 	for (int i = 0; i != digits.size(); i++)
 	{
