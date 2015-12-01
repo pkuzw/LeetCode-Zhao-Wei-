@@ -12,6 +12,9 @@ Note: You can only move either down or right at any point in time.
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.01
+///@version 2.1
+
 #include <vector>
 #include <iostream>
 
@@ -81,14 +84,20 @@ public:
 
 class Solution {
 public:
+	///@brief	给定一个m*n的棋盘，计算从左上角到右下角的和最小的路径
+	///@param	grid	棋盘
+	///@return	返回最小路径和
+	///@note	1. 动态规划算法：设dp[i][j]表示到达点grid[i][j]的最小路径和，则递推关系式为dp[i][j] = grid[i][j] + min{dp[i-1][j], dp[i][j-1]}；
+	//			2. 先初始化左上角dp[0][0] = grid[0][0]；再初始化第0行和第0列，dp[i][0] = grid[i][0] + dp[i-1][0], i > 0；dp[0][j] = grid[0][j] + dp[0][j-1], j > 0；
+	//			3. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中m和n分别是棋盘的行数和列数。
 	int minPathSum(vector<vector<int>>& grid) {
-		if (grid.empty())	return 0;
+		if (grid.empty() || grid[0].empty())	return 0;
 		int row = grid.size();
 		int col = grid[0].size();
 		vector<vector<int>> dp(row, vector<int>(col, 0));
 		dp[0][0] = grid[0][0];
-		for (int j = 1; j != col; j++)	dp[0][j] = grid[0][j] + dp[0][j-1];
 		for (int i = 1; i != row; i++)	dp[i][0] = grid[i][0] + dp[i-1][0];
+		for (int j = 1; j != col; j++)	dp[0][j] = grid[0][j] + dp[0][j-1];
 		for (int i = 1; i != row; i++)
 			for (int j = 1; j != col; j++)
 				dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
