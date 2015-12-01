@@ -294,12 +294,28 @@ private:
 ///@note	有限自动状态机
 class Solution {
 public:
+	///@brief	判断给定的字符串是否是一个合法的数字
+	///@param	s	字符串
+	///@return	如果是合法字符串返回true；否则返回false
+	///@note	1. 采用有限状态自动机来做状态判断。
+	//			2. 对于字符串中的每一个字符输入，总共有6种情况，分别是INVALID, SPACE, SIGN, DIGIT, DOT, EXPONENT。
+	//			3. 有限状态自动机是一个二维矩阵，矩阵的一共有6列，分别对应上面的6中输入字符状态； 矩阵有9行，分别对应着
+	//			3.0 初始无输入或者只有space的状态；
+	//			3.1 输入了数字之后的状态
+	//			3.2 前面无数字，只输入了Dot的状态
+	//			3.3 输入了符号状态
+	//			3.4 前面有数字和有dot的状态
+	//			3.5 'e' or 'E'输入后的状态
+	//			3.6 输入e之后输入Sign的状态
+	//			3.7 输入e后输入数字的状态
+	//			3.8 前面有有效数输入之后，输入space的状态
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)。其中n为字符串长度。
 	bool isNumber(string s) {
 		enum InputType {
 			INVALID,		// 0 Include: Alphas, '(', '&' ans so on
-			SPACE,		// 1
-			SIGN,		// 2 '+','-'
-			DIGIT,		// 3 numbers
+			SPACE,			// 1 space
+			SIGN,			// 2 '+','-'
+			DIGIT,			// 3 numbers
 			DOT,			// 4 '.'
 			EXPONENT,		// 5 'e' 'E'
 		};
