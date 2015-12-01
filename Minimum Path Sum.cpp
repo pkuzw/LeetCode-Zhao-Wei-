@@ -15,6 +15,9 @@ Note: You can only move either down or right at any point in time.
 ///@date	2015.12.01
 ///@version 2.1
 
+///@date	2015.12.01
+///@version 2.2
+
 #include <vector>
 #include <iostream>
 
@@ -103,6 +106,28 @@ public:
 				dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
 		return dp[row-1][col-1];
 	}
+
+	///@brief	给定一个m*n的棋盘，计算从左上角到右下角的和最小的路径
+	///@param	grid	棋盘
+	///@return	返回最小路径和
+	///@note	1. 动态规划算法：设dp[j]表示当前行第j列的最小路径和，则dp[j] = grid[i][j] + min{dp[j-1], dp[j]}；
+	//			2. 初始化时，dp[0]并没有实际意义，初始化为INT_MAX，dp[1]才表示为第0列的最小路径和。之所以将dp整个初始化为INT_MAX，是因为递推关系式在计算第0行的各列最小路径和时，
+	//			便于直接将grid[i][j]算作dp[j-1]；另外也需要在进入循环前将dp[1]初始化为grid[0][0]，否则无法在循环内通过递推关系式计算出dp[1]；
+	//			3. 时间复杂度为O(mn)，空间复杂度为O(n)，其中m和n分别是棋盘的行数和列数。
+	int minPathSum_space_O_1(vector<vector<int>>& grid) {
+		if (grid.empty() || grid[0].empty())	return 0;
+		int row = grid.size();
+		int col = grid[0].size();
+		vector<int> dp(col + 1, INT_MAX);
+		dp[1] = grid[0][0];
+		for (int i = 1; i != row + 1; i++) {
+			for (int j = 1; j != col + 1; j++) {
+				if (i == 1 && j == 1)	continue;
+				dp[j] = grid[i-1][j-1] + min(dp[j-1], dp[j]);
+			}
+		}
+		return dp[col];
+	}
 };
 
 int main()
@@ -145,5 +170,6 @@ int main()
 	int minPath = slt_v1.minPathSum_saveSpace(grid);
 	Solution slt;
 	int rslt = slt.minPathSum(grid);
+	int r_save = slt.minPathSum_space_O_1(grid);
 	return 0;
 }
