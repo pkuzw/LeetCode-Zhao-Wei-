@@ -23,6 +23,9 @@ The total number of unique paths is 2.
 ///@date	2015.08.28
 ///@version	2.0
 
+///@date	2015.12.01
+///@version 2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -106,14 +109,20 @@ public:
 
 class Solution {
 public:
+	///@brief	计算带有障碍物的棋盘从左上角出发到达右下角的方法数
+	///@param	obstableGrid	棋盘
+	///@return	返回方法数
+	///@note	1. 动态规划算法：设dp[i][j]表示从左上角出发，到达第i行，第j列的方法数。递推关系式dp[i][j] = grid[i][j] == 1 ? 0 : dp[i-1][j] + dp[i][j-1]；
+	//			2. 初始化时，左上角根据grid[0][0]是否为1，来设置；第0行和第0列也是从左至右，从上到下来设置，如果中间某一个点为障碍物，则其后的所有格子达到的方法数均为0；
+	//			3. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中m和n分别为行数和列数。
 	int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
-		if (obstacleGrid.empty())	return 0;
+		if (obstacleGrid.empty() || obstacleGrid[0].empty())	return 0;
 		int row = obstacleGrid.size();
 		int col = obstacleGrid[0].size();
-		if (obstacleGrid[0][0] == 1)	return 0;
-
 		vector<vector<int>> dp(row, vector<int>(col, 0));
-		dp[0][0] = 1 - obstacleGrid[0][0];
+		dp[0][0] = obstacleGrid[0][0] ? 0 : 1;
+		if (!dp[0][0])	return 0;
+
 		for (int i = 1; i != row; i++)	dp[i][0] = obstacleGrid[i][0] ? 0 : dp[i-1][0];
 		for (int j = 1; j != col; j++)	dp[0][j] = obstacleGrid[0][j] ? 0 : dp[0][j-1];
 		for (int i = 1; i != row; i++)
