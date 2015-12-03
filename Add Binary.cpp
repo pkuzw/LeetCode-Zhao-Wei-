@@ -14,6 +14,9 @@ Return "100".
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.03
+///@version	2.1
+
 #include <iostream>
 #include <string>
 
@@ -70,6 +73,11 @@ public:
 
 class Solution {
 public:
+	///@brief	计算两个二进制数的加法
+	///@param	a	加数
+	///@param	b	加数
+	///@return	返回a+b的和
+	///@note	1. 先计算出a和b的长度，将短的加数补齐前端0；2. 从末尾向前逐一相加即可；3. 时间复杂度为O(n)，n为加数的长度。
 	string addBinary(string a, string b) {
 		int lenA = a.size(), lenB = b.size();
 		if (lenA < lenB)
