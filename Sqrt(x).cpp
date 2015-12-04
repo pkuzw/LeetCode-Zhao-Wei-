@@ -11,6 +11,9 @@ Compute and return the square root of x.
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.04
+///@version 2.1
+
 #include <iostream>
 
 using namespace std;
@@ -39,14 +42,20 @@ public:
 */
 class Solution {
 public:
+	///@brief	二分查找计算平方根
+	///@param	x	输入值，int整型变量
+	///@return	返回x的平方根，也为int型变量
+	///@note	1. 利用二分查找的思想来找x的平方根，时间复杂度为O(logx)，其中x为输入值；
+	//			2. 为了防止中间结果溢出，用long long型来保存中间值；
+	//			3. 因为返回值为整型，应该向下取整，故返回right，而非跳出循环后大于right的left值。
 	int mySqrt(int x) {
-		long long left = 1, right = x / 2 + 1;
-		while (left <= right)
-		{
-			long long mid = (left + right ) / 2;
+		long long left = 0;
+		long long right = x / 2 + 1;
+		while (left <= right) {
+			long long mid = (left + right) / 2;
 			if (mid * mid == x)	return mid;
-			else if (mid * mid < x) left = mid + 1;
-			else right = mid - 1;
+			else if (mid * mid > x)	right = mid - 1;
+			else left = mid + 1;
 		}
 		return right;
 	}
