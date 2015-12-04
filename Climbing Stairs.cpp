@@ -11,6 +11,9 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.04
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -51,7 +54,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	int climbStairs(int n) {
 		vector<int> dp(n+1);
@@ -60,6 +63,29 @@ public:
 		for (int i = 2; i != n + 1; i++)
 			dp[i] = dp[i-1] + dp[i-2];
 		return dp[n];
+	}
+};
+
+class Solution {
+public:
+	///@brief	一个有n阶台阶的梯子，可以选择每次爬一格，或者一次爬两格。计算爬完n阶有多少种方法。变相的计算菲波那切数列的第n项
+	///@param	n	台阶数目
+	///@return	返回菲波那切数列的第n项
+	///@note	1. 利用递推关系式f(n) = f(n-1) + f(n-2)来计算；2. 用两个临时变量来保存中间结果。时间复杂度为O(n)，空间复杂度为O(1)。
+	int climbStairs(int n) {
+		int a = 1;
+		int b = 2;		
+		if (n == 1 || n == 2)	return n;		
+		
+		int i = 3;
+		int c = a + b;
+		while (i <= n) {
+			c = a + b;
+			a = b;
+			b = c;
+			i++;
+		}
+		return c;
 	}
 };
 
