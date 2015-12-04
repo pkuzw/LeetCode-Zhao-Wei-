@@ -27,6 +27,9 @@ Note: Each word is guaranteed not to exceed L in length.
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.04
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -127,8 +130,16 @@ private:
 
 class Solution {
 public:
+	///@brief	将单词组均匀的分布在各行当中
+	///@param	words	原来的单词组
+	///@param	maxWidth	单行的宽度
+	///@return	返回新的段落
+	///@note	不考虑maxWidth < words[i]的情形。首先尝试尽可能多的在一行中放入单词，除了最后一个单词，每一个单词后面至少有一个空格，
+	//			直到遇到无法完整放下的单词，然后将额外需要补充的空格数均匀的放入每个单词后面，然后转入下一行。
+	//			时间复杂度为O(k*n)，k为一行的单词数，空间复杂度为O(n)。
 	vector<string> fullJustify(vector<string>& words, int maxWidth) {
-		int ch_cnt = 0, word_cnt = 0;
+		int ch_cnt = 0; //	当前行的字符个数
+		int word_cnt = 0;	//	当前行单词的数目
 		vector<string> svec;
 		for (int i = 0; i != words.size(); i++)
 		{
@@ -171,6 +182,11 @@ public:
 	}
 private:
 	vector<string> rslt;
+
+	///@brief	处理最后一行
+	///@param	svec	最后一行的单词数组
+	///@param	maxWidth	单行宽度，单词之间不留多余空格
+	///@return	返回最后一行字符串
 	string processLastLine(vector<string> svec, int maxWidth)
 	{
 		string s;
