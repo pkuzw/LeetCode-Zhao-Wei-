@@ -9,6 +9,9 @@ Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.05
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 
@@ -184,7 +187,7 @@ public:
 2. 用第一行的1..n-1表示第1..n-1列是否需要置零；用第一列的1..n-1表示第1..n-1行是否需要置零；
 3. 空间复杂度为O(1)，时间复杂度为O(n^2)
 */
-class Solution {
+class Solution_v2 {
 public:
 	void setZeroes(vector<vector<int>>& matrix) {
 		if (matrix.empty())	return;
@@ -245,6 +248,63 @@ public:
 		}
 		else if (flg1 && !flg2)	for (int i = 0; i != col; i++)	matrix[0][i] = 0;
 		else if (!flg1 && flg2)	for (int i = 0; i != row; i++)	matrix[i][0] = 0;
+	}
+};
+
+class Solution {
+public:
+	///@brief	给定一个二维矩阵，如果某个元素为0，则将该元素所在行列置为0。要求空间复杂度为O(1)。
+	///@param	matrix	二维矩阵
+	///@return	无
+	///@note	1. 如果要达到空间复杂度为O(1)的要求，要尽可能的利用现有元素所占用的空间；2. 用两个变量记录第一行和第一列是否存在0元素；3. 用第一行和第一列来标记
+	//			第2..m行，第2..n列中存在0元素的下标。如果某个位于[i, j]的元素为0，则将第1行的第j列和第1列的第i行元素值为0；4. 先遍历第一行和第一列，再遍历剩余
+	//			行和列，接着根据第一行和第一列的记录将相应行列置零，最后根据临时变量中的标记决定是否将第一行和第一列置零；5. 时间复杂度为O(mn)，空间复杂度为O(1)，
+	//			其中m和n分别为二维矩阵的行数和列数。
+	void setZeroes(vector<vector<int>>& matrix) {
+		if (matrix.empty() || matrix[0].empty())	return;
+		int m = matrix.size();
+		int n = matrix[0].size();
+		bool flg_row1 = false;
+		bool flg_col1 = false;
+		for (int i = 0; i != n; i++) {
+			if (!matrix[0][i]) {
+				flg_row1 = true;break;
+			}
+		}
+		for (int i = 0; i != m; i++) {
+			if (!matrix[i][0]) {
+				flg_col1 = true;break;
+			}
+		}
+		for (int i = 1; i != m; i++) {
+			for (int j = 1; j != n; j++) {
+				if (!matrix[i][j]) {
+					matrix[0][j] = 0;
+					matrix[i][0] = 0;
+				}
+			}
+		}
+		for (int i = 1; i != m; i++) {
+			if (!matrix[i][0]) {
+				for (int j = 1; j != n; j++)	
+					matrix[i][j] = 0;
+			}
+		}
+		for (int j = 1; j != n; j++) {
+			if (!matrix[0][j]) {
+				for (int i = 1; i != m; i++)	
+					matrix[i][j] = 0;
+			}
+		}
+		if (flg_row1) {
+			for (int i = 0; i != n; i++)
+				matrix[0][i] = 0;
+		}
+		if (flg_col1) {
+			for (int i = 0; i != m; i++)
+				matrix[i][0] = 0;
+		}
+		return;
 	}
 };
 
