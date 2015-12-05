@@ -16,6 +16,9 @@ c) Replace a character
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.05
+///@version	2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -69,14 +72,25 @@ public:
 
 class Solution {
 public:
+	///@brief	给定两个字符串word1和word2，可以进行三种操作，删除某个字符，增加某个字符或者更新某个字符。计算将word1变为word2的最少步数。
+	///@param	word1	字符串1
+	///@param	word2	字符串2
+	///@return	返回将字符串1变为字符串2的最少步数
+	///@note	1. 动态规划：设dp[i][j]表示将word1[0..i-1]变为word2[0..j-1]的最少步数。初始化dp[0][j] = j, dp[i][0] = i；递推关系式为
+	//			dp[i][j] = word1[i-1] == word2[j-1] ? dp[i-1][j-1] : 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])；
+	//			2. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中m, n分别是word1和word2的长度。
 	int minDistance(string word1, string word2) {
-		vector<vector<int>> dp(word1.size()+1, vector<int>(word2.size()+1, 0));
-		for (int i = 0; i != word1.size()+1; i++)	dp[i][0] = i;
-		for (int j = 0; j != word2.size()+1; j++)	dp[0][j] = j;
-		for (int i = 1; i != word1.size()+1; i++)
-			for (int j = 1; j != word2.size()+1; j++)
-				dp[i][j] = word1[i-1] == word2[j-1] ? dp[i-1][j-1] : 1 + min(min(dp[i-1][j], dp[i][j-1]), dp[i-1][j-1]);
-		return dp[word1.size()][word2.size()];
+		int m = word1.length();
+		int n = word2.length();
+		vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+		for (int i = 0; i != m + 1; i++)	dp[i][0] = i;
+		for (int i = 0; i != n + 1; i++)	dp[0][i] = i;
+		for (int i = 1; i != m + 1; i++) {
+			for (int j = 1; j != n + 1; j++) {
+				dp[i][j] = word1[i-1] == word2[j-1] ? dp[i-1][j-1] : 1 + min(dp[i-1][j], min(dp[i][j-1], dp[i-1][j-1]));
+			}
+		}
+		return dp[m][n];
 	}
 };
 
