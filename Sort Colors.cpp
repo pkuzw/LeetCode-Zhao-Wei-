@@ -12,6 +12,8 @@ Here, we will use the integers 0, 1, and 2 to represent the color red, white, an
 ///@date	2015.08.27
 ///@version	2.0
 
+///@date	2015.12.06
+///@version	2.1
 #include <iostream>
 #include <vector>
 
@@ -107,13 +109,17 @@ private:
 */
 class Solution {
 public:
+	///@brief	对于只有0，1，2三种元素组成的数组，进行排序。
+	///@param	nums	数组
+	///@return	无
+	///@note	1. 因为数组中只有三种元素，那么用两个指针分别记录0和2的下标，然后从首尾开始遍历，遇到0元素，和0指针所指的元素交换，0指针自增1；遇到2元素，和2指针所指的元素交换，
+	//			然后2指针自减1，且i也要自减1；将剩余的1元素留在中间即可；2. 时间复杂度为O(n)，空间复杂度为O(1)。n为数组的长度。
 	void sortColors(vector<int>& nums) {
-		int red = 0;
-		int blue = nums.size() - 1;
-		for (int i = red; i <= blue; i++)
-		{
-			if (nums[i] == 0)	swap(nums[red++], nums[i]);
-			else if (nums[i] == 2)	swap(nums[blue--], nums[i--]);
+		if (nums.empty())	return;
+		int red_indx = 0, blue_indx = nums.size() - 1;
+		for (int i = red_indx; i <= blue_indx; i++) {
+			if (nums[i] == 0)	swap(nums[i], nums[red_indx++]);
+			else if (nums[i] == 2) swap(nums[i--], nums[blue_indx--]);	//	这里要将i--，因为位于i的新元素还需要再次判定是否为0或者2.
 		}
 	}
 };
