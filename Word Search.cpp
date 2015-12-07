@@ -24,6 +24,9 @@ word = "ABCB", -> returns false.
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.07
+///@version	2.1
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -361,32 +364,46 @@ private:
 ///@note	dfs
 class Solution {
 public:
+	///@brief	在矩阵中匹配字符串
+	///@param	board	矩阵
+	///@param	word	字符串
+	///@return	如果能够找到相应字符串，返回true；否则返回false
+	///@note	1. 深度优先遍历：设置一个标记矩阵用来标记矩阵中某个元素是否已经被访问过，然后从左上角开始逐一进行深度优先遍历；
+	//			2. 时间复杂度为O(mnk)，空间复杂度为O(mn)，其中m和n为矩阵的边长，k为字符串长度。
 	bool exist(vector<vector<char>>& board, string word) {
-		if (word.empty())	return true;		
-		if (!word.empty() && board.empty())	return false;
+		if (board.empty() && !word.empty())	return false;
+		if (word.empty())	return true;
 		int m = board.size();
-		int n = board[0].size();	
-		vector<vector<bool>> visited(m, vector<bool>(n, false));
-		for (int i = 0; i != m; i++)
-			for (int j = 0; j != n; j++)							
-				if (dfs(board, word, visited, i, j, 0))	return true;			
+		int n = board[0].size();
+		vector<vector<bool>> visit(m, vector<bool>(n, false));
+		for (int i = 0; i != m; i++) {
+			for (int j = 0; j != n; j++) {
+				if (dfs(board, word, visit, i, j, 0))	return true;
+			}
+		}
 		return false;
 	}
 
-	bool dfs(vector<vector<char>>& board, string& word, vector<vector<bool>>& visited, int i, int j, int k)
-	{
+private:
+	///@brief	深度优先遍历矩阵
+	///@param	board	二维矩阵
+	///@param	word	字符串
+	///@param	visited	标识矩阵
+	///@param	i,j		元素坐标
+	///@param	k		字符在字符串中下标
+	///@param	如果能够找到该字符串则返回true；否则返回false。
+	bool dfs(vector<vector<char>>& board, string& word, vector<vector<bool>>& visited, int i, int j, int k) {
 		if (k == word.size())	return true;
-		if (!visited[i][j] && board[i][j] == word[k])
-		{
-			k++;
+		if (!visited[i][j] && board[i][j] == word[k]) {
 			visited[i][j] = true;
-			if (i > 0 && dfs(board, word, visited, i-1, j, k))					return true;
-			if (i < board.size()-1 && dfs(board, word, visited, i+1, j, k))		return true;
-			if (j > 0 && dfs(board, word, visited, i, j-1, k))					return true;
-			if (j < board[0].size()-1 && dfs(board, word, visited, i, j+1, k))	return true;
+			k++;
+			if (i > 0 && dfs(board, word, visited, i - 1, j, k))		return true;
+			if (i < board.size() - 1 && dfs(board, word, visited, i + 1, j, k))	return true;
+			if (j > 0 && dfs(board, word, visited, i, j - 1, k))		return true;
+			if (j < board[0].size() - 1 && dfs(board, word, visited, i, j + 1, k))	return true;
 			visited[i][j] = false;
 		}
-		return k == word.size() ? true : false;
+		return k == word.size() ? true : false;	//	对于只有一个元素的字符串，在经过上一个条件语句的判断后，到这里就可以通过这个三元符号得出结果。
 	}
 };
 
@@ -395,31 +412,31 @@ int main()
 	vector<vector<char>> board;
 	vector<char> cvec;
 	cvec.push_back('A');
-// 	cvec.push_back('B');
-// 	cvec.push_back('C');
-// 	cvec.push_back('E');
+ 	cvec.push_back('B');
+ 	cvec.push_back('C');
+ 	cvec.push_back('E');
 	board.push_back(cvec);
 	cvec.clear();
-// 
-// 	cvec.push_back('S');
-// 	cvec.push_back('F');
-// 	cvec.push_back('C');
-// 	cvec.push_back('S');
-// 	board.push_back(cvec);
-// 	cvec.clear();
-// 
-// 	cvec.push_back('A');
-// 	cvec.push_back('D');
-// 	cvec.push_back('E');
-// 	cvec.push_back('E');
-// 	board.push_back(cvec);
-// 	cvec.clear();
+ 
+ 	cvec.push_back('S');
+ 	cvec.push_back('F');
+ 	cvec.push_back('C');
+ 	cvec.push_back('S');
+ 	board.push_back(cvec);
+ 	cvec.clear();
+ 
+ 	cvec.push_back('A');
+ 	cvec.push_back('D');
+ 	cvec.push_back('E');
+ 	cvec.push_back('E');
+ 	board.push_back(cvec);
+ 	cvec.clear();
 
 	//ESECCEDFBASA	true
 	//ASFBCCED	true
 
 	Solution slt;
-	string word("A");
+	string word("SEE");
 	bool rslt = slt.exist(board, word);
 	return 0;
 }
