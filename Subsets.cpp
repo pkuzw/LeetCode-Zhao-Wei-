@@ -26,6 +26,9 @@ If nums = [1,2,3], a solution is:
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.07
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -76,27 +79,31 @@ private:
 
 class Solution {
 public:
+	///@brief	给定数组，计算其所有可能的子集
+	///@param	nums	数组
+	///@return	返回其所有的子集，子集中元素应该按照非降序排列
+	///@note	1. 类似"Combination"中的思路，先对数组进行排序，然后所有可能的C(n, k)即可。2. 时间复杂度为O(2^n)。
 	vector<vector<int>> subsets(vector<int>& nums) {
 		vector<vector<int>> rslt;
-		vector<int> combination;
+		vector<int> comb;
 		sort(nums.begin(), nums.end());
-		for (int i = 0; i <= nums.size(); i++)
-			getCombinations(nums, rslt, combination, nums.size(), i);
+		for (int i = 0; i <= nums.size(); i++)	getCombinations(nums, rslt, comb, nums.size(), i);
 		return rslt;
 	}
 private:
-	void getCombinations(vector<int>& nums, vector<vector<int>>& rslt, vector<int>& combination, int n, int k)
-	{
-		if (!k)
-		{
+	///@brief	计算组合数
+	///@param	nums	保存有候选元素的数组
+	///@param	n		候选元素的数目
+	///@param	k		选出的元素数目
+	void getCombinations(vector<int>& nums, vector<vector<int>>& rslt, vector<int>& combination, int n, int k) {
+		if (!k) {
 			rslt.push_back(combination);
 			return;
 		}
-		for (int i = 0; i != nums.size(); i++)
-		{
+		for (int i = 0; i != nums.size(); i++) {
 			combination.push_back(nums[i]);
-			vector<int> new_nums(nums.begin()+i+1, nums.end());
-			getCombinations(new_nums, rslt, combination, n-1, k-1);
+			vector<int> new_nums(nums.begin() + i + 1, nums.end());
+			getCombinations(new_nums, rslt, combination, n - 1, k - 1);
 			combination.pop_back();
 		}
 	}
