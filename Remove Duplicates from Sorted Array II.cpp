@@ -15,6 +15,9 @@ It doesn't matter what you leave beyond the new length.
 
 ///@date	2015.08.26
 ///@version	2.0
+
+///@date	2015.12.07
+///@version	3.0
 #include <iostream>
 #include <vector>
 
@@ -71,8 +74,10 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
+	///@brief	删除数组中重复出现超过2次的元素的多余次数
+	///@note	时间复杂度为O(n)，空间复杂度为O(n)。不符合题目对于空间复杂度的要求，应该降到O(1)
 	int removeDuplicates(vector<int>& nums) {
 		if (nums.empty())	return 0;
 		int rslt = 0;
@@ -92,6 +97,23 @@ public:
 		}	
 		nums = tmp;
 		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	将排好序的数组去重，当有相同元素出现时，最多留下2个
+	///@param	nums	排好序的数组
+	///@return	返回新数组的长度
+	///@note	1. 要求空间复杂度为O(1)；2. 设整个数组中应该被移除的多余元素总数为cnt；3. 因为每个重复元素不能超过两个，所以当超过两个时，就用
+	//			后面的元素覆盖掉超出的元素；4. 时间复杂度为O(n)，空间复杂度为O(1)。
+	int removeDuplicates(vector<int>& nums) {
+		int n = nums.size(), cnt = 0;
+		for (int i = 2; i < n; i++) {
+			if (nums[i] == nums[i - 2 - cnt])	cnt++;
+			else	nums[i - cnt] = nums[i];
+		}
+		return n - cnt;
 	}
 };
 
