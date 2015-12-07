@@ -19,6 +19,9 @@ If there are multiple such windows, you are guaranteed that there will always be
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.07
+///@version	2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -178,37 +181,37 @@ private:
 
 class Solution {
 public:
+	///@brief	给定两个字符串s和t，在s中寻找包含t的所有字符的最小子串
+	///@param	s	源字符串
+	///@param	t	目标字符串
+	///@return	返回包含所有t中字符的最小子串
+	///@note	1. 利用hash map来保存t中的字符数目；2. 在s中进行遍历，用左右两个指针来控制子串的范围；3. 在遍历时如果找到一个与t中字符匹配的
+	//			字符，则将hash map中的该字符数目自减1，如果值仍然不小于0，则说明可以组成子串中的一部分，总的计数器cnt自增1；4. 当计数器cnt
+	//			的值等于t的长度时，说明找到了一个窗口，先比较原来的子串长度与当前窗口的长度，如果前者更大，则更新之；5. 然后要尽可能的缩短当前
+	//			窗口，不断尝试移动窗口左指针，当窗口左指针所指向的字符属于hash map，则将对应的哈希值自增1，如果哈希值大于0，则将计数器自减1，说明有一个
+	//			字符失配，需要再次找到能够匹配它的字符；6. 时间复杂度为O(m)，空间复杂度为O(n)，其中n为t的长度，m为s的长度。
 	string minWindow(string s, string t) {
 		if (s.size() < t.size())	return "";
 		unordered_map<char, int> ht;
-		for (int i = 0; i != t.size(); i++)
-		{
-			if (ht.find(t[i]) != ht.end())	ht[t[i]]++;
-			else ht[t[i]] = 1;
-		}
-		int left = 0, cnt = 0, min_len = s.size()+1;
-		string rslt;
-		for (int right = 0; right != s.size(); right++)
-		{
-			if (ht.find(s[right]) != ht.end())
-			{
+		for (int i = 0; i != t.size(); i++)	ht[t[i]]++;
+		int left = 0, cnt = 0, len = s.size() + 1;
+		string rslt = "";
+		for (int right = 0; right < s.size(); right++) {
+			if (ht.find(s[right]) != ht.end()) {
 				ht[s[right]]--;
 				if (ht[s[right]] >= 0)	cnt++;
-				while (cnt == t.size())
-				{
-					if (right - left + 1 < min_len)
-					{
-						min_len = right - left + 1;
-						rslt = s.substr(left, min_len);							 
-					}
-					if (ht.find(s[left]) != ht.end())
-					{
-						ht[s[left]]++;
-						if (ht[s[left]] > 0) cnt--;
-					}
-					++left;
+			}
+			while (cnt == t.size()) {	//	不断尝试缩小左边界
+				if (len > right - left + 1) {
+					len = right - left + 1;
+					rslt = s.substr(left, len);
 				}
-			}		
+				if (ht.find(s[left]) != ht.end()) {
+					ht[s[left]]++;
+					if (ht[s[left]] > 0)	cnt--;
+				}
+				left++;
+			}
 		}
 		return rslt;
 	}
@@ -216,7 +219,7 @@ public:
 
 int main()
 {
-	string s = "A", t = "A";
+	string s = "ADOBECODEBANC", t = "ABBC";
 	Solution slt;
 	string rslt = slt.minWindow(s, t);
 	return 0;
