@@ -14,6 +14,8 @@ return 10.
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.09
+
 #include <vector>
 #include <iostream>
 #include <stack>
@@ -95,19 +97,25 @@ private:
 
 class Solution {
 public:
+	///@brief	计算直方图最大的矩形面积
+	///@param	height	直方图的高度数组
+	///@return	返回最大矩形的面积
+	///@note	1. 通过维护一个栈，来保存连续递增的圆柱的下标，当遇到比上一个柱子矮的柱子时，弹栈并计算栈中柱子的面积。
+	//			2. 如果栈为空，则计算当前柱子高度与当前下标的乘积。
+	//			3. 计算前要在输入数据末尾加上一个0，用来最后清栈。
+	//			4. 时间复杂度为O(n)，空间复杂度为O(n)。
+	//			5. 理解的不够透彻，还需要继续再想想。
 	int largestRectangleArea(vector<int>& height) {
 		height.push_back(0);
-		stack<int> s;
-		int i = 0;
 		int rslt = 0;
-		while (i < height.size())
-		{
-			if (s.empty() || height[s.top()] <= height[i])	s.push(i++);
-			else
-			{
-				int tp = s.top();
-				s.pop();
-				rslt = max(rslt, height[tp] * (s.empty() ? i : i - 1 - s.top()));
+		stack<int> stk;
+		int i = 0;
+		while (i < height.size()) {
+			if (stk.empty() || height[i] >= height[stk.top()])	stk.push(i++);
+			else {
+				int tp = stk.top();
+				stk.pop();
+				rslt = max(rslt, height[tp] * (stk.empty() ? i : i - stk.top() - 1));
 			}
 		}
 		return rslt;
