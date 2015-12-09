@@ -13,6 +13,9 @@ Given 1->1->1->2->3, return 2->3.
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.09
+///@version	1.1
+
 #include <deque>
 #include <iostream>
 
@@ -86,8 +89,9 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
+	///@note	时间复杂度为O(n)，空间复杂度为O(n)。不如算法1效率高。
 	ListNode* deleteDuplicates(ListNode* head) {
 		if (!head || !head->next)	return head;
 		deque<ListNode*> que;
@@ -121,6 +125,47 @@ public:
 			indx->next = que.empty() ? nullptr : que.front();
 		}
 		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	删除有序链表中的重复元素
+	///@param	head	链表表头
+	///@return	返回去除重复元素的链表表头
+	///note		1. 设置三个变量来删除重复元素，一个是循环变量indx，一个是indx的前驱元素pre_indx，另一个是indx的后继元素next_indx；
+	//			2. 在删除时，先删除重复出现的后续元素，再删除第一次出现的元素；
+	//			3. 要对遍历时最后一个元素是否是重复元素进行单独处理；
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)
+	ListNode* deleteDuplicates(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* first = new ListNode(INT_MAX);
+		first->next = head;
+		ListNode* indx = head;
+		ListNode* pre_indx = first;
+		ListNode* next_indx = indx->next;
+		bool flg = false;	//	 indx是否是重复元素
+		while (next_indx) {
+			if (indx->val == next_indx->val) {
+				indx->next = next_indx->next;
+				next_indx = indx->next;
+				flg = true;
+			}
+			else {
+				if (flg) {
+					pre_indx->next = indx->next;
+					indx = pre_indx;
+					flg = false;
+				}
+				else {
+					pre_indx = pre_indx->next;
+				}
+				indx = indx->next;
+				next_indx = next_indx->next;
+			}
+		}
+		if (flg) pre_indx->next = next_indx;
+		return first->next;
 	}
 };
 
