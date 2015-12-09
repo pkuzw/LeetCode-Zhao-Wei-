@@ -13,6 +13,9 @@ Given 1->1->2->3->3, return 1->2->3.
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.09
+///@version	1.1
+
 #include <iostream>
 #include <queue>
 
@@ -70,8 +73,9 @@ public:
 	}
 };
 
-///@note	用队列来保存其中不重复的元素，然后再将它们逐个串起来
-class Solution {
+///@note	1. 用队列来保存其中不重复的元素，然后再将它们逐个串起来；
+//			2. 时间复杂度为O(n)，空间复杂度为O(n)。
+class Solution_v2 {
 public:
 	ListNode* deleteDuplicates(ListNode* head) {
 		if (!head || !head->next)	return head;
@@ -92,6 +96,30 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	给定一个有序链表，删除其中的重复出现的元素的多余部分，每个元素只能出现一次
+	///@param	head	链表首元素
+	///@return	返回链表的首元素
+	///@note	1. 遍历；2. 遇到重复的元素跳过即可；3. 时间复杂度为O(n)，空间复杂度为O(1)，n为链表的元素数目。
+	ListNode* deleteDuplicates(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* indx = head;
+		ListNode* nxt_indx = indx->next;
+		while (nxt_indx) {
+			if (indx->val == nxt_indx->val) {
+				indx->next = nxt_indx->next;
+				nxt_indx = indx->next;
+			}
+			else {
+				indx = indx->next;
+				nxt_indx = nxt_indx->next;
+			}
+		}
+		return head;
+	}
+};
+
 int main()
 {
 	ListNode* n[5];
@@ -104,17 +132,18 @@ int main()
 	n[2]->val = 2;
 	n[3]->val = 3;
 	n[4]->val = 3;
-	Solution slt_v2;
+	Solution_v2 slt_v2;
 	ListNode* rslt = slt_v2.deleteDuplicates(n[0]);
 
+	Solution slt_v1_1;
 
 	ListNode* head = new ListNode(1);
 	Solution_v1 slt;
 	for (int i = 2; i <= 5; i++)
 	{
 		slt.insertNode(head, i);
-// 		slt.insertNode(head, i);
-// 		slt.insertNode(head, i);
+ 		slt.insertNode(head, i);
+ 		slt.insertNode(head, i);
 	}
 
 	ListNode* display = head;
@@ -128,7 +157,8 @@ int main()
 	cout << endl;
 
 
-	head = slt.deleteDuplicates(display);
+//	head = slt.deleteDuplicates(display);
+	head = slt_v1_1.deleteDuplicates(display);
 	cout << "After delete: ";
 	while (head != nullptr)
 	{
