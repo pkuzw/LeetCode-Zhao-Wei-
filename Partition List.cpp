@@ -15,6 +15,9 @@ return 1->2->2->4->3->5.
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.10
+///@version	1.1
+
 #include <iostream>
 #include <queue>
 
@@ -82,7 +85,8 @@ public:
 };
 
 //@note	利用队列来维护大于等于x值和小于x值的两部分，然后再将它们依次弹出。
-class Solution {
+//		空间复杂度为O(n)
+class Solution_v2 {
 public:
 	ListNode* partition(ListNode* head, int x) {
 		if (!head || !head->next)	return head;
@@ -115,21 +119,52 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	将链表划分成两部分，左半部分小于指定值x，有半部分大于等于x
+	///@param	head	原始链表
+	///@param	x		指定值
+	///@return	返回划分好的链表起点
+	///@note	1. 枚举；2. 遍历链表，如果小于x，则将其归为前半部分链表，如果大于等于x，则将其归为后半部分链表；3. 然后将前后两部分连接起来；4. 时间复杂度为O(n)，空间复杂度为O(1)。
+	ListNode* partition(ListNode* head, int x) {
+		if (!head)	return nullptr;
+		ListNode* lhead = new ListNode(INT_MAX);
+		ListNode* rhead = new ListNode(INT_MAX);
+		ListNode* indx = head;
+		ListNode* lindx = lhead;
+		ListNode* rindx = rhead;
+		while (indx) {
+			if (indx->val < x) {
+				lindx->next = indx;
+				lindx = lindx->next;
+			}
+			else {
+				rindx->next = indx;
+				rindx = rindx->next;
+			}
+			indx = indx->next;
+		}
+		lindx->next = rhead->next;
+		rindx->next = nullptr;
+		return lhead->next;
+	}
+};
+
 int main()
 {
 	Solution_v1 slt_v1;
 	ListNode* head = new ListNode(1);
 	slt_v1.insertNode(head, 1);
-// 	slt_v1.insertNode(head, 3);
-// 	slt_v1.insertNode(head, 2);
-// 	slt_v1.insertNode(head, 5);
-// 	slt_v1.insertNode(head, 2);
+ 	slt_v1.insertNode(head, 3);
+ 	slt_v1.insertNode(head, 2);
+ 	slt_v1.insertNode(head, 5);
+ 	slt_v1.insertNode(head, 2);
 
 // 	
 // 	ListNode* rslt = slt_v1.partition(head);
 	Solution slt;	
 	ListNode* display = head;
-	head = slt.partition(display, 0);
+	head = slt.partition(display, 3);
 
 	return 0;
 }
