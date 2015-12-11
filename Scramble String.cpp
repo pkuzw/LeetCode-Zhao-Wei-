@@ -44,6 +44,9 @@ Given two strings s1 and s2 of the same length, determine if s2 is a scrambled s
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.11
+///@version 2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -168,6 +171,10 @@ dp[k][i][j]表示s1[i..i+k-1]是否与s2[j, j+k-1]为scramble string
 */
 class Solution {
 public:
+	//@note	1. 动态规划：1.维护一个三维数组来dp[k][i][j]保存字符串s1[i..i+k]与字符串s2[j..j+k]是否为scramble string。
+	//		2. 初始条件为dp[1][i][j] = (s1[i] == s2[j]) ? true : false，
+	//		3. 递推关系式为dp[k][i][j] = ((dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]))。
+	//	    4. 时间复杂度为O(n^4)，空间复杂度为O(n^3)。
 	bool isScramble(string s1, string s2) {
 		if (s1.size() != s2.size())	return false;
 		const int len = s1.size();
