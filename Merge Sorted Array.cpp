@@ -12,8 +12,12 @@ The number of elements initialized in nums1 and nums2 are m and n respectively.
 
 ///@date	2015.08.26
 ///@version	2.0
+
+///@date	2015.12.19
+///@version	3.0
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -59,8 +63,15 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
+	///@brief	将两个有序数组归并成一个数组
+	///@param	nums1	数组1
+	///@param	nums2	数组2
+	///@param	m		数组1的长度
+	///@param	n		数组2的长度
+	///@return	无
+	///@note	归并排序中的merge操作，时间复杂度为O(n)，空间复杂度为O(n)。
 	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
 		vector<int> nums3;
 		int i = 0, j = 0;
@@ -72,6 +83,25 @@ public:
 		if (i == m)	nums3.insert(nums3.end(), nums2.begin()+j, nums2.end());
 		if (j == n) nums3.insert(nums3.end(), nums1.begin()+i, nums1.begin()+m);
 		nums1 = nums3;
+	}
+};
+
+class Solution {
+public:
+	///@brief	归并排序
+	///@param	nums1, nums2	数组1和数组2
+	///@param	m, n			数组1和数组2的长度
+	///@return	无
+	///@note	1. 将nums1添加到nums2的后端，然后调用快速排序进行排序。2. 时间复杂度为O(nlogn)，空间复杂度为O(m+n)；3. oj报wa，过不了{}, {1}这组测试数据。
+	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+		if (nums1.empty()) {
+			nums1 = nums2;
+			return;
+		}
+		else {
+			nums1.insert(nums1.end(), nums2.begin(), nums2.end());
+			sort(nums1.begin(), nums1.end());
+		}
 	}
 };
 
@@ -93,6 +123,9 @@ int main()
 	{
 		n1.push_back(10+i*3);
 	}
+	n1.clear();
+	n2.clear();
+	n2.push_back(1);
 	Solution slt;
 	slt.merge(n1, n1.size(), n2, n2.size());
 	return 0;
