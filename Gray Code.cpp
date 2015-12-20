@@ -112,15 +112,6 @@ public:
 		for (int i = 0; i != k; i++) 
 			rslt[i] = (i >> 1) ^ i;		
 		return rslt;
-
-
-
-
-// 		int k = 1 << n;
-// 		vector<int> grays(k, 0);
-// 		for (int i = 0; i != k; i++)
-// 			grays[i] = (i >> 1) ^ i;
-// 		return grays;
 	}
 
 	vector<int> grayCodeMirror(int n)
