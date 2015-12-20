@@ -24,6 +24,9 @@ For now, the judge is able to judge based on one instance of gray code sequence.
 
 ///@date	2015.08.26
 ///@version	2.0
+
+///@date	2015.12.20
+///@version 2.1
 #include <iostream>
 #include <vector>
 
@@ -99,12 +102,25 @@ private:
 */
 class Solution {
 public:
+	///@brief	计算格雷码
+	///@param	格雷码中的位数
+	///@return	返回一个合法的格雷码
+	///@note	1. 对于n位的各类码，第i个格雷码等于(i >> 1) ^ i。2. 时间复杂度为O(2^n)，空间复杂度为O(1)，其中n为格雷码的位数。
 	vector<int> grayCode(int n) {
 		int k = 1 << n;
-		vector<int> grays(k, 0);
-		for (int i = 0; i != k; i++)
-			grays[i] = (i >> 1) ^ i;
-		return grays;
+		vector<int> rslt(k, 0);
+		for (int i = 0; i != k; i++) 
+			rslt[i] = (i >> 1) ^ i;		
+		return rslt;
+
+
+
+
+// 		int k = 1 << n;
+// 		vector<int> grays(k, 0);
+// 		for (int i = 0; i != k; i++)
+// 			grays[i] = (i >> 1) ^ i;
+// 		return grays;
 	}
 
 	vector<int> grayCodeMirror(int n)
