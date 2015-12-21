@@ -23,6 +23,9 @@ Given m, n satisfy the following condition:
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2015.12.21
+///@version	2.1
+
 #include <iostream>
 #include <stack>
 
@@ -217,14 +220,17 @@ private:
 	}
 };
 
-/*
-1. 在链表表头处添加一个表头节点，以防起始翻转下标为首节点时无法找到起始遍历下标；
-2. 主要的翻转代码还是利用两个后续指针依次进行翻转；
-3. 用一个指针保存开始翻转的节点，该节点是翻转后的尾结点；
-4. 时间复杂度为O(k)，空间复杂度为O(1)。
-*/
 class Solution {
 public:
+	///@brief	反转链表，从指定起点m，到指定终点n
+	///@param	head	链表表头
+	///@param	m	起点下标
+	///@param	n	终点下标
+	///@return	返回新链表的表头
+	///@note	1. 在链表表头处添加一个表头节点，以防起始翻转下标为首节点时无法找到起始遍历下标；
+	//			2. 主要的翻转代码还是利用两个后续指针依次进行翻转；
+	//			3. 用一个指针保存开始翻转的节点，该节点是翻转后的尾结点；
+	//			4. 时间复杂度为O(k)，空间复杂度为O(1)。
 	ListNode* reverseBetween(ListNode* head, int m, int n) {
 		if (!head || !head->next || m >= n)	return head;
 		ListNode* pre_head = new ListNode(INT_MAX);
