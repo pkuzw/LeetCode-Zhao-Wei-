@@ -28,6 +28,9 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@date	2015.10.16
 ///@version	2.2
 
+///@date	2015.12.29
+///@version 1.1
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -115,7 +118,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	Morris中序遍历
 	///@note	时间复杂度为O(n)，空间复杂度为O(1)
@@ -149,6 +152,29 @@ public:
 			}
 		}
 		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	中序遍历二叉树
+	///@param	root	二叉树的根节点
+	///@return	返回中序遍历的节点值数组
+	///@note	递归版。时间复杂度为O(n)，空间复杂度为O(n)。
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> rslt;
+		helper(root, rslt);
+		return rslt;
+	}
+
+	///@brief	递归中序遍历二叉树
+	///@param	root	二叉树的节点
+	///@param	rslt	遍历的序列
+	void helper(TreeNode* root, vector<int>& rslt) {
+		if (!root)	return;
+		helper(root->left, rslt);
+		rslt.push_back(root->val);
+		helper(root->right, rslt);
 	}
 };
 
