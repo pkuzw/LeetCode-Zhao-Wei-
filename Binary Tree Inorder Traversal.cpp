@@ -28,6 +28,11 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@date	2015.10.16
 ///@version	2.2
 
+///@date	2015.12.29
+///@version 1.1
+///@version	2.3
+
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -115,7 +120,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	Morris中序遍历
 	///@note	时间复杂度为O(n)，空间复杂度为O(1)
@@ -146,6 +151,58 @@ public:
 					rslt.push_back(cur->val);	//	当前指针在移向右孩子之前要进行输出
 					cur = cur->right;
 				}
+			}
+		}
+		return rslt;
+	}
+};
+
+class Solution_v1_1 {
+public:
+	///@brief	中序遍历二叉树
+	///@param	root	二叉树的根节点
+	///@return	返回中序遍历的节点值数组
+	///@note	递归版。时间复杂度为O(n)，空间复杂度为O(n)。
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> rslt;
+		helper(root, rslt);
+		return rslt;
+	}
+
+	///@brief	递归中序遍历二叉树
+	///@param	root	二叉树的节点
+	///@param	rslt	遍历的序列
+	void helper(TreeNode* root, vector<int>& rslt) {
+		if (!root)	return;
+		helper(root->left, rslt);
+		rslt.push_back(root->val);
+		helper(root->right, rslt);
+	}
+};
+
+class Solution {
+public:
+	///@brief	中序遍历二叉树
+	///@param	root	二叉树的根节点
+	///@return	返回中序遍历的节点序列
+	///@note	1. 迭代版；2. 利用stack来存储暂时还未访问到的节点；3. 如果一个节点还有左孩子，则一直向左遍历，并将当前节点入栈；
+	//			4. 如果没有了左孩子，则将栈顶元素赋予遍历循环节点，并出栈，循环节点压入结果数组，并向右孩子遍历；
+	//			5. 时间复杂度为O(n)，空间复杂度为O(n)。
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> rslt;
+		if (!root)	return rslt;
+		stack<TreeNode*> stk;
+		TreeNode* p = root;
+		while (p || !stk.empty()) {
+			while (p) {
+				stk.push(p);
+				p = p->left;
+			}
+			if (!stk.empty()) {
+				p = stk.top();
+				stk.pop();
+				rslt.push_back(p->val);
+				p = p->right;
 			}
 		}
 		return rslt;

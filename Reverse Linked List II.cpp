@@ -23,6 +23,9 @@ Given m, n satisfy the following condition:
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2015.12.21
+///@version	2.1
+
 #include <iostream>
 #include <stack>
 
@@ -217,49 +220,93 @@ private:
 	}
 };
 
-/*
-1. 在链表表头处添加一个表头节点，以防起始翻转下标为首节点时无法找到起始遍历下标；
-2. 主要的翻转代码还是利用两个后续指针依次进行翻转；
-3. 用一个指针保存开始翻转的节点，该节点是翻转后的尾结点；
-4. 时间复杂度为O(k)，空间复杂度为O(1)。
-*/
 class Solution {
 public:
+	///@brief	反转链表，从指定起点m，到指定终点n
+	///@param	head	链表表头
+	///@param	m	起点下标
+	///@param	n	终点下标
+	///@return	返回新链表的表头
+	///@note	1. 在链表表头处添加一个表头节点，以防起始翻转下标为首节点时无法找到起始遍历下标；
+	//			2. 主要的翻转代码还是利用两个后续指针依次进行翻转；
+	//			3. 用一个指针保存开始翻转的节点，该节点是翻转后的尾结点；
+	//			4. 时间复杂度为O(k)，空间复杂度为O(1)。
 	ListNode* reverseBetween(ListNode* head, int m, int n) {
-		if (!head || !head->next || m >= n)	return head;
+		if (!head || !head->next || m >= n) return head;
 		ListNode* pre_head = new ListNode(INT_MAX);
 		pre_head->next = head;
-		ListNode* indx = head;		
+		ListNode* indx = head;
 		int i = 1;
-		while (i < m)
-		{
-			indx = indx->next;			
+		while (i < m) {
+			indx = indx->next;
 			i++;
 		}
-		ListNode* indx_next = indx->next;
-		ListNode* indx_next_next = indx_next;
+		ListNode* rtail = indx;
+		ListNode* indx_nxt = indx->next;
+		ListNode* indx_nxt_nxt = indx_nxt ? indx_nxt->next : nullptr;
 		indx->next = nullptr;
-		ListNode* r_tail = indx;
-		while (i < n)
-		{
-			if (indx_next)	indx_next_next = indx_next->next;
-			indx_next->next = indx;
-			indx = indx_next;
-			indx_next =  indx_next ? indx_next_next : indx_next;
-			
+		while (i < n) {
+			if (indx_nxt) indx_nxt_nxt = indx_nxt->next;
+			indx_nxt->next = indx;
+			indx = indx_nxt;
+			indx_nxt = indx_nxt ? indx_nxt_nxt : indx_nxt;
 			i++;
 		}
-		ListNode* pre = pre_head;
-		int j = 1;
-		while (j < m)
-		{
-			pre = pre->next;
-			j++;
+		ListNode* pre_indx = pre_head;
+		i = 1;
+		while (i < m) {
+			pre_indx = pre_indx->next;
+			i++;
 		}
-		pre->next = indx;
-		r_tail->next = indx_next;
+		pre_indx->next = indx;
+		rtail->next = indx_nxt;
 		return pre_head->next;
 	}
+
+
+
+
+
+
+
+
+
+
+
+// 		if (!head || !head->next || m >= n)	return head;
+// 		ListNode* pre_head = new ListNode(INT_MAX);
+// 		pre_head->next = head;
+// 		ListNode* indx = head;		
+// 		int i = 1;
+// 		while (i < m)
+// 		{
+// 			indx = indx->next;			
+// 			i++;
+// 		}
+// 		ListNode* indx_next = indx->next;
+// 		ListNode* indx_next_next = indx_next;
+// 		indx->next = nullptr;
+// 		ListNode* r_tail = indx;
+// 		while (i < n)
+// 		{
+// 			if (indx_next)	indx_next_next = indx_next->next;
+// 			indx_next->next = indx;
+// 			indx = indx_next;
+// 			indx_next =  indx_next ? indx_next_next : indx_next;
+// 			
+// 			i++;
+// 		}
+// 		ListNode* pre = pre_head;
+// 		int j = 1;
+// 		while (j < m)
+// 		{
+// 			pre = pre->next;
+// 			j++;
+// 		}
+// 		pre->next = indx;
+// 		r_tail->next = indx_next;
+// 		return pre_head->next;
+// 	}
 };
 
 int main()

@@ -20,6 +20,9 @@ The number of ways decoding "12" is 2.
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.20
+///@version	2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -132,7 +135,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	int numDecodings(string s) {
 		if (s.empty())	return 0;
@@ -140,8 +143,34 @@ public:
 		dp[0] = 1;
 		dp[1] = s[0] == '0' ? 0 : 1;
 		for (int i = 2; i != s.size()+1; i++)		
-			dp[i] = (s[i-1] == '0' ? 0 : dp[i-1]) + (((s[i-2] == '2' && s[i-1] <= '6' && s[i-1] >= '0') || s[i-2] == '1') ? dp[i-2] : 0);		
+			dp[i] = (s[i-1] == '0' ? 0 : dp[i-1]) + (((s[i-2] == '2' && s[i-1] <= '6' && s[i-1] >= '0') || s[i-2] == '1') ? dp[i-2] : 0);
 		return dp[s.size()];
+	}
+};
+
+class Solution {
+public:
+	///@brief	计算解码的方法数
+	///@param	s	字符串s
+	///@return	返回解码的方法数
+	///@note	1. 动态规划；2. 用dp[i]表示s[0..i-1]的解码方法数，递推方程为dp[i] = (s[i-1] > '0' && s[i-1] <= '9') ? dp[i-1] : 0 + (s[i-2] == '2' && s[i-1] >= '0' && s[i-1] <= '6') || (s[i-2] == '1') ? dp[i-2] : 0
+	//			3. 该递推关系式分成两部分看，前半部分的三元操作符是表示如果最后一个字符不是'0'，那么就相当于可以单独转化成一个字母，这样总的方法数就是原来的dp[i-1]不变；
+	//			4. 递推关系式的后半部分相当于看字符串的后两个字符能否转换成字母，如果可以的话，相当于在前半部分的基础上加上dp[i-2]。
+	//			5. 时间复杂度为O(n)，优化后空间复杂度为O(1)。n为字符串的长度。
+	int numDecodings(string s) {
+		if (s.empty())	return 0;
+		int a = 1;	//dp[i-2]
+		int b = s[0] == '0' ? 0 : 1;	//dp[i-1]		
+		int c = 0;	//dp[i]
+
+		if (s.size() == 1)	return b;
+
+		for (int i = 2; i <= s.size(); i++) {
+			c = ((s[i-1] != '0') ? b : 0) + ((s[i-2] == '1') || (s[i-2] == '2' && s[i-1] >= '0' && s[i-1] <= '6') ? a : 0);
+			a = b;
+			b = c;
+		}
+		return c;
 	}
 };
 

@@ -18,6 +18,9 @@ Given n = 3, your program should return all 5 unique BST's shown below.
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2015.12.29
+///@version	1.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -29,7 +32,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定正整数n，构造所有可能的二叉搜索树(BST)，它的每个节点都选自[1, n]。
 	///@param	n	正整数n
@@ -77,7 +80,7 @@ private:
 
 ///@note		非递归版
 ///@reference	http://www.cnblogs.com/TenosDoIt/p/3448569.html
-class Solution {
+class Solution_v2 {
 public:
 	vector<TreeNode *> generateTrees(int n) {
 		vector<vector<vector<TreeNode*> > > btrees(n+2, vector<vector<TreeNode*> >(n+2, vector<TreeNode*>()));
@@ -102,9 +105,49 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	计算所有可能的二叉查找树
+	///@param	n	二叉树的节点的数目
+	///@return	返回所有可能的二叉查找树的根节点数组
+	///@note	1. 递归计算；2. 依次用不同值作为根节点元素，然后递归的安排左右子树。
+	vector<TreeNode*> generateTrees(int n) {		
+		vector<TreeNode*> rslt;
+		if (!n)	return rslt;
+		rslt = generate(1, n);
+		return rslt;
+	}
+
+	///@brief	递归函数
+	///@param	start	剩余元素的起始值
+	///@param	end		剩余元素的终点值
+	///@return	返回所有可能的根节点数组
+	vector<TreeNode*> generate(int start, int end) {
+		vector<TreeNode*> trees;
+		if (start > end) {
+			trees.push_back(nullptr);
+			return trees;
+		}
+
+		for (int i = start; i <= end; i++) {
+			vector<TreeNode*> left = generate(start, i - 1);
+			vector<TreeNode*> right = generate(i + 1, end);
+			for (int j = 0; j < left.size(); j++) {
+				for (int k = 0; k < right.size(); k++) {
+					TreeNode* node = new TreeNode(i);
+					node->left = left[j];
+					node->right = right[k];
+					trees.push_back(node);
+				}
+			}
+		}
+		return trees;
+	}
+};
+
 int main()
 {
-	int n = 4;
+	int n = 0;
 	Solution slt;
 	vector<TreeNode*> rslt = slt.generateTrees(n);	
 	return 0;

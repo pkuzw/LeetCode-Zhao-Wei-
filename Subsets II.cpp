@@ -24,6 +24,9 @@ If nums = [1,2,2], a solution is:
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2015.12.20
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -84,28 +87,38 @@ private:
 
 class Solution {
 public:
+	///@brief	计算集合的所有子集，排除重复的子集
+	///@param	nums	集合
+	///@return	返回所有子集的集合
+	///@note	1. 利用计算组合的算法来进行计算；2. 当被选出的元素是当前候选数组中的第一个元素或者和前一个元素不同时，就可将其选入，否则跳过；
+	//			3. 时间复杂度为O(2^n)，空间复杂度为O(2^n)。其中n为候选集合的元素数目。
 	vector<vector<int>> subsetsWithDup(vector<int>& nums) {
 		sort(nums.begin(), nums.end());
 		vector<vector<int>> rslt;
 		vector<int> combination;
-		for (int i = 0; i <= nums.size(); i++)
-			getCombinations(nums, nums.size(), i, combination, rslt);
+		for (int i = 0; i <= nums.size(); i++) 
+			getCombination(nums, nums.size(), i, rslt, combination);
 		return rslt;
 	}
 private:
-	void getCombinations(vector<int> nums, int n, int k, vector<int>& combination, vector<vector<int>>& rslt)
-	{
-		if (!k)
-		{
+	///@brief	计算C(n, k)
+	///@param	nums	候选元素数组
+	///@param	n	候选元素个数
+	///@param	k	选出元素个数
+	///@param	rslt	最终子集合
+	///@param	combination	一个子集
+	///@return	无
+	///@note	1. 递归
+	void getCombination(vector<int> nums, int n, int k, vector<vector<int>>& rslt, vector<int> combination) {
+		if (!k) {
 			rslt.push_back(combination);
 			return;
 		}
-		for (int i = 0; i != nums.size(); i++)
-		{
-			if (i == 0 || nums[i] != nums[i-1])	combination.push_back(nums[i]);
+		for (int i = 0; i != nums.size(); i++) {
+			if (i == 0 || nums[i] != nums[i - 1])	combination.push_back(nums[i]);
 			else continue;
-			vector<int> new_nums(nums.begin()+i+1, nums.end());
-			getCombinations(new_nums, n-1, k-1, combination, rslt);
+			vector<int> new_nums(nums.begin() + i + 1, nums.end());
+			getCombination(new_nums, n - 1, k - 1, rslt, combination);
 			combination.pop_back();
 		}
 	}
