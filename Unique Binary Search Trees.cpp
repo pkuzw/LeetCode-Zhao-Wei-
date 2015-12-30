@@ -18,6 +18,9 @@ Given n = 3, there are a total of 5 unique BST's.
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2015.12.30
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -56,13 +59,20 @@ public:
 
 class Solution {
 public:
+	///@brief	计算所有可能的二叉搜索树数目
+	///@param	n	最大节点值
+	///@return	返回二叉搜索树数目
+	///@note	1. 动态规划；2. 设dp[i]表示{1..i}所组成的二叉搜索树的数目，初始条件为dp[0] = 1， dp[1] = 1，递推方程为dp[i] = sum{dp[j] * dp[i - j - 1]}；
+	///			3. 递推方程这么设计原理在于，外层循环i相当于根节点，内层循环j将原有的dp[i]划分成dp[j]和dp[i - j - 1]左右两个子树，根据排列组合的乘法原理，左右
+	//			子树数目相乘为i做根节点的二叉搜索树数目；4. 时间复杂度为O(n^2)，空间复杂度为O(n)；5. 与Catalan数计算有关。	
 	int numTrees(int n) {
-		vector<int> dp(n+1, 0);
-		dp[0] = 1;
-		dp[1] = 1;
-		for (int i = 2; i <= n; i++)
-			for (int j = 0; j != i; j++)
-				dp[i] += dp[j] * dp[i-j-1];
+		vector<int> dp(n + 1, 0);
+		dp[0] = dp[1] = 1;
+		for (int i = 2; i <= n; i++) {
+			for (int j = 0; j < i; j++) {
+				dp[i] += dp[j] * dp[i - j - 1];
+			}
+		}
 		return dp[n];
 	}
 };
