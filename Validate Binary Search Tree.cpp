@@ -15,6 +15,9 @@ Both the left and right subtrees must also be binary search trees.
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2015.12.31
+///@version 2.1
+
 #include <iostream>
 #include <vector>
 
@@ -66,15 +69,26 @@ private:
 
 class Solution {
 public:
+	///@brief	判断一棵二叉树是否满足BST的性质
+	///@param	root	根节点
+	///@return	如果这棵二叉树是BST，则返回true；否则返回false
+	///@note	1. 递归；2. 通过遍历二叉树节点时其值是否满足上下限来进行判断；3. 上下限用LONG_MAX和LONG_MIN来做初始值，这样可以包含比INT_MAX和INT_MIN更大的值。
 	bool isValidBST(TreeNode* root) {		
-		return validBstRecur(root, LONG_MAX, LONG_MIN);
+		return helper(root, LONG_MAX, LONG_MIN);
 	}
-private:
-	bool validBstRecur(TreeNode* root, long max_, long min_)
-	{
-		if (!root)	return true;
-		if (root->val >= max_ || root->val <= min_)	return false;
-		return validBstRecur(root->left, root->val, min_) && validBstRecur(root->right, max_, root->val);
+
+	///@brief	递归判断一棵二叉树是否满足BST性质
+	///@param	root	根节点
+	///@param	max		节点值的上限
+	///@param	min		节点值的下限
+	///@return	如果这棵二叉树是BST，则返回true；否则返回false
+	bool helper(TreeNode* root, long max, long min) {		
+		if (!root || 
+			(root->val < max && root->val > min &&
+			helper(root->left, root->val, min) &&
+			helper(root->right, max, root->val)))
+			return true;
+		return false;
 	}
 };
 
