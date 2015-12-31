@@ -14,6 +14,9 @@ A solution using O(n) space is pretty straight forward. Could you devise a const
 ///@date	2015.08.25
 ///@version	2.1
 
+///@date	2015.12.31
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
