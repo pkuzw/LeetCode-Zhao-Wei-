@@ -32,6 +32,9 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@version 1.1
 ///@version	2.3
 
+///@date	2015.12.31
+///@version	3.1
+
 
 #include <iostream>
 #include <vector>
@@ -180,7 +183,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_3 {
 public:
 	///@brief	中序遍历二叉树
 	///@param	root	二叉树的根节点
@@ -209,6 +212,43 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	二叉树中序遍历
+	///@param	root	二叉树根节点
+	///@return	返回中序遍历的节点值数组
+	///@note	1. 采用Morris遍历方法，时间复杂度为O(n)，空间复杂度为O(1)；2. 该算法利用叶子节点的右孩子指针来作为前驱节点指向当前节点的指针，
+	//			可以将空间复杂度降为O(1)；3. 具体的算法分成两部分：查看当前节点是否有左孩子，如果没有左孩子，则输出当前节点，并将当前节点移至
+	//			右孩子；4. 如果有左孩子，则先找到当前节点的在左子树中的前驱节点，判断该前驱节点是否有右孩子；5. 如果没有右孩子，则将前驱节点的
+	//			右孩子指针指向当前节点，并将当前节点移至其左孩子；6. 如果前驱节点有右孩子（必定指向当前节点），则将其右值针置空，输出当前节点，
+	//			并将当前节点移至其右孩子；7. 重复上述步骤，直至当前节点为空。
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> rslt;
+		if (!root)	return rslt;
+		TreeNode* pre = root, *cur = root;
+		while (cur) {
+			if (!cur->left) {
+				rslt.push_back(cur->val);
+				cur = cur->right;
+			}
+			else {
+				pre = cur->left;
+				while (pre->right && pre->right != cur) pre = pre->right;
+				if (!pre->right) {
+					pre->right = cur;
+					cur = cur->left;
+				}
+				else {
+					pre->right = nullptr;
+					rslt.push_back(cur->val);
+					cur = cur->right;
+				}
+			}			
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	TreeNode *root = new TreeNode(1);
@@ -229,7 +269,7 @@ int main()
 // 	Solution_v1 slt_v1;
 // 	vector<int> rslt = slt_v1.inorderTraversal(root);
 // 
- 	Solution slt_v2;
+ 	Solution_v2 slt_v2;
  	vector<int> rslt2 = slt_v2.inorderTraversal(root);
 
 	Solution slt;
