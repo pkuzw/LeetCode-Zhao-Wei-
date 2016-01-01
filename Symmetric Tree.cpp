@@ -22,6 +22,10 @@ But the following is not:
 
 ///@date	2015.08.25
 ///@version	2.0
+
+///@date	2016.01.01
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -108,7 +112,6 @@ private:
 				}
 			}			
 		}
-		
 		return level_order_seq;
 	}
 
@@ -117,16 +120,23 @@ private:
 
 class Solution {
 public:
+	///@brief	判断一棵二叉树是否镜面对称
+	///@param	root	根节点
+	///@return	如果二叉树镜面对称，则返回true；否则返回false
+	///@note	1. 递归判断；2. 递归函数接收两个参数，分别为左孩子和右孩子；3. 如果左右孩子都为空，则返回true；4. 如果其中一个为空，另一个不为空，或者它们的值不相等
+	//			则返回false；5. 然后递归调用该函数，实参分别为左孩子的左孩子和右孩子的右孩子以及左孩子的右孩子和右孩子的左孩子；6. 时间复杂度为O(n)，空间复杂度为O(n)。
 	bool isSymmetric(TreeNode* root) {
 		if (!root)	return true;
-		return symRecur(root->left, root->right);
+		return helper(root->left, root->right);
 	}
-private:
-	bool symRecur(TreeNode* left, TreeNode* right)
-	{
+
+	///@brief	递归函数
+	///@param	left, right	当前节点的左右孩子
+	///@return	如果是镜面对称的，则返回true；否则返回false
+	bool helper(TreeNode* left, TreeNode* right) {
 		if (!left && !right)	return true;
-		if ((left && !right) || (!left && right) || (left->val != right->val))	return false;
-		return symRecur(left->left, right->right) && symRecur(left->right, right->left);
+		if ((!left && right) || (!right && left) || (left->val != right->val))	return false;
+		return helper(left->left, right->right) && helper(left->right, right->left);
 	}
 };
 
