@@ -23,6 +23,9 @@ return its level order traversal as:
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2016.01.01
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -86,28 +89,37 @@ private:
 
 class Solution {
 public:
+	///@brief	层序遍历二叉树
+	///@param	root	二叉树根节点
+	///@return	返回层序遍历的二叉树节点值序列
+	///@note	1. 利用队列。这里有一个点需要注意，宽度优先的搜索算法一般需要队列作为辅助数据结构，深度优先的搜索算法一般需要栈作为辅助数据结构；
+	//			2. 队列初始化后先将根节点压入，然后紧跟着压入一个空指针，这是为了标记一层的结束；
+	//			3. 循环的判定条件是队列不为空，在循环内将队首元素出队，然后判定其是否为空指针；
+	//			4. 如果不是空指针，则将其节点值压入单层子数组，将其左右孩子压入队列；
+	//			5. 如果是空指针，则在队列不为空的情形下，压入一个空指针入队。之所以要先判定队列不为空，是为了防止在队列为空时再压入一个空指针造成死循环；
+	//			6. 然后将单层子数组压入二维结果数组，并清空单层子数组；
+	//			7. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为二叉树节点数目。
 	vector<vector<int>> levelOrder(TreeNode* root) {
 		vector<vector<int>> rslt;
-		vector<int> level;
+		vector<int> lvl;
 		if (!root)	return rslt;
 		queue<TreeNode*> que;
 		que.push(root);
 		que.push(nullptr);
-		while (!que.empty())
-		{
-			TreeNode* n = que.front();
+		while (!que.empty()) {
+			TreeNode* node = que.front();
 			que.pop();
-			if (n)
-			{
-				level.push_back(n->val);
-				if (n->left)		que.push(n->left);
-				if (n->right)	que.push(n->right);
+			if (node) {
+				lvl.push_back(node->val);
+				if (node->left)		que.push(node->left);
+				if (node->right)	que.push(node->right);
 			}
-			else
-			{
-				if (!que.empty())	que.push(nullptr);
-				rslt.push_back(level);
-				level.clear();
+			else {
+				if (!que.empty()) {
+					que.push(nullptr);
+				}
+				rslt.push_back(lvl);
+				lvl.clear();
 			}
 		}
 		return rslt;
