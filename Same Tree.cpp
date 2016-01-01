@@ -11,6 +11,9 @@ Two binary trees are considered equal if they are structurally identical and the
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2016.01.01
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 
@@ -143,6 +146,11 @@ private:
 
 class Solution {
 public:
+	///@brief	判断两棵二叉树是否相同
+	///@param	p, q	两棵二叉树的树根节点
+	///@return	如果二叉树相同，则返回true；否则返回false
+	///@note	1. 递归；2. 如果两棵树的当前节点都为空，则返回true；3. 如果一个为空，另一个不为空，或者是两者的值不相等，则返回false；4. 然后递归地判断当前节点的
+	//			左右子树是否相同即可；5. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为二叉树的节点数目。
 	bool isSameTree(TreeNode* p, TreeNode* q) {
 		if (!p && !q)	return true;
 		if ((!p && q) || (p && !q) || (p->val != q->val))	return false;
