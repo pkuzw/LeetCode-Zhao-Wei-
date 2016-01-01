@@ -10,12 +10,13 @@ A solution using O(n) space is pretty straight forward. Could you devise a const
 ///@author	zhaowei
 ///@date	2015.07.21
 ///@version	1.0
+///@version	2.0
 
 ///@date	2015.08.25
-///@version	2.1
+///@version	3.0
 
 ///@date	2015.12.31
-///@version	2.2
+///@version	3.1
 
 #include <iostream>
 #include <vector>
@@ -152,7 +153,7 @@ private:
    seconde节点都不为空，那么交换二者即可。
 3. 这样空间复杂度为O(1)。
 */
-class Solution {
+class Solution_v3 {
 public:
 	void recoverTree(TreeNode* root) {
 		TreeNode* cur = root;
@@ -194,6 +195,51 @@ public:
 			}
 		}
 		if (first && second)	swap(first->val, second->val);
+	}
+};
+
+class Solution {
+public:
+	///@brief	将二叉树中的异常节点交换，转换成正常的BST
+	///@param	root	根节点
+	///@return	无
+	///@note	1. Morris中序遍历；2. 在Morris中序遍历时新建三个临时变量，parent用来记录cur节点的前驱节点，first记录第一个异常值，second记录第二个异常值；
+	//			3. 这里与Morris中序遍历不同的地方在于，原来处理输出代码的地方改成判断cur节点和parent节点的值是否异常，如果异常则在first为空的情形下记录下
+	//			第一个异常值为parent，然后第二个异常值自然是cur；4. 注意，这里更新parent节点只是在cur向右孩子移动的时候更新，向左孩子移动时未更新，相当于只在
+	//			原来Morris中序遍历算法处理输出时更新parent值；5. 最后如果first和second指针不为空，将二者的值交换即可；6. 时间复杂度为O(n)，空间复杂度为O(1)。
+	void recoverTree(TreeNode* root) {
+		TreeNode* cur = root, *pre = root;
+		TreeNode* parent = nullptr, *first = nullptr, *second = nullptr;
+		while (cur) {
+			if (!cur->left) {
+				if (parent && parent->val > cur->val) {
+					if (!first) first = parent;
+					second = cur;
+				}
+				parent = cur;
+				cur = cur->right;
+			}
+			else {
+				pre = cur->left;
+				while (pre->right && pre->right != cur) {
+					pre = pre->right;
+				}
+				if (!pre->right) {
+					pre->right = cur;
+					cur = cur->left;
+				}
+				else {
+					pre->right = nullptr;
+					if (parent && parent->val > cur->val) {
+						if (!first) first = parent;
+						second = cur;
+					}
+					parent = cur;
+					cur = cur->right;
+				}
+			}
+		}
+		if (first && second) swap(first->val, second->val);
 	}
 };
 
