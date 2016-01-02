@@ -23,6 +23,9 @@ return its zigzag level order traversal as:
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2016.01.02
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -93,35 +96,32 @@ private:
 
 class Solution {
 public:
+	///@brief	按之字形层序遍历二叉树
+	///@param	root	根节点
+	///@return	返回之字形层序遍历二叉树的二维数组
+	///@note	1. 层序遍历二叉树；2. 设置一个标志位，每遍历一层就改变标志位的值，根据标志位来确定应该是顺序还是逆序保存该层的子数组；3. 时间复杂度为O(n)，空间复杂度为O(n)。
 	vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
 		vector<vector<int>> rslt;
 		if (!root)	return rslt;
+		vector<int> lvl;
+		bool flg = false;
 		queue<TreeNode*> que;
 		que.push(root);
 		que.push(nullptr);
-		bool flg = false;
-		vector<int> level;
-		while (!que.empty())
-		{
-			TreeNode* n = que.front();
-			que.pop();			
-			if (n)
-			{
-				level.push_back(n->val);
-				if (n->left)		que.push(n->left);
-				if (n->right)	que.push(n->right);
+		while (!que.empty()) {
+			TreeNode* node = que.front();
+			que.pop();
+			if (node) {
+				lvl.push_back(node->val);
+				if (node->left)		que.push(node->left);
+				if (node->right)	que.push(node->right);
 			}
-			else
-			{
-				if (flg)
-				{
-					reverse(level.begin(), level.end());
-					flg = false;
-				}
-				else	flg = true;
-				rslt.push_back(level);
-				level.clear();
+			else {
 				if (!que.empty())	que.push(nullptr);
+				if (flg)	reverse(lvl.begin(), lvl.end());
+				flg = !flg;
+				rslt.push_back(lvl);
+				lvl.clear();				
 			}
 		}
 		return rslt;
