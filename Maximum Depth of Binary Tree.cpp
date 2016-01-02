@@ -11,6 +11,9 @@ The maximum depth is the number of nodes along the longest path from the root no
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2016.01.02
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -62,6 +65,10 @@ public:
 
 class Solution {
 public:
+	///@brief	计算二叉树的最大深度
+	///@param	root	根节点
+	///@return	返回二叉树的最大深度
+	///@note	1. 递归计算；2. 通过判断某一节点的左子树和右子树哪个更深，在返回时通过更深子树的深度 + 1来递归计算；3. 递归的代码更直观。
 	int maxDepth(TreeNode* root) {
 		if (!root)	return 0;
 		return 1 + max(maxDepth(root->left), maxDepth(root->right));
