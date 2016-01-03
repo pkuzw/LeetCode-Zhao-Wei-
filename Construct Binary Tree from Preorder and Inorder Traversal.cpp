@@ -12,6 +12,9 @@ You may assume that duplicates do not exist in the tree.
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2016.01.03
+///@version	2.1
+
 #include <vector>
 #include <algorithm>	//	find
 #include <iostream>
@@ -84,6 +87,12 @@ private:
 
 class Solution {
 public:
+	///@brief	从前序和中序遍历序列重建二叉树
+	///@param	preorder	前序遍历序列
+	///@param	inorder		中序遍历序列
+	///@return	返回重建的二叉树根节点
+	///@note	1. 递归；2. 前序遍历的首元素为当前子树的根节点，中序遍历的中间节点为当前子树的根节点，中序遍历根节点左边的子序列为左子树节点，
+	//			根节点右边的子序列为右子树节点；3. 先找中序遍历中当前子树的根节点，然后递归调用即可。
 	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
 		return buildRecur(preorder, 0, preorder.size()-1, inorder, 0, inorder.size()-1);
 	}
