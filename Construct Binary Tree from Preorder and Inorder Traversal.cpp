@@ -92,24 +92,31 @@ public:
 	///@param	inorder		中序遍历序列
 	///@return	返回重建的二叉树根节点
 	///@note	1. 递归；2. 前序遍历的首元素为当前子树的根节点，中序遍历的中间节点为当前子树的根节点，中序遍历根节点左边的子序列为左子树节点，
-	//			根节点右边的子序列为右子树节点；3. 先找中序遍历中当前子树的根节点，然后递归调用即可。
+	//			根节点右边的子序列为右子树节点；3. 先找中序遍历中当前子树的根节点，然后递归调用即可；4. 递归调用时对于preorder数组，因为第一个元素
+	//			是根节点，故对于左子树来说，pleft传入的实参应该为pl + 1，pright传入的实参为pl + i - il，即从pl开始的左子树的数目，ileft传入的实参为
+	//			il, iright传入的实参为i - 1，其中i为子树根节点；对于右子树来说，pleft传入的实参为pl + i - il + 1，即左子树的pright的后一位，
+	//			pright传入的实参为pr；ileft传入的实参为i + 1，iright传入的实参为ir。
 	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-		return buildRecur(preorder, 0, preorder.size()-1, inorder, 0, inorder.size()-1);
+		return helper(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);	
 	}
-private:
-	TreeNode* buildRecur(vector<int>& preorder, int pleft, int pright, vector<int>& inorder, int ileft, int iright)
-	{
-		if (pleft > pright || ileft > iright)	return nullptr;
-		TreeNode* node = new TreeNode(preorder[pleft]);
-		int i = ileft;
-		while (i <= iright)
-		{
-			if (inorder[i] == node->val)		break;
+
+	///@brief	重构二叉树的递归辅助函数
+	///@param	preorder	前序遍历的节点值数组
+	///@param	pl, pr		当前子树在前序遍历数组中的起始和终止下标
+	///@param	inorder		中序遍历的节点数组
+	///@param	il, ir		当前子树在中序遍历数组中的起始和终止下标
+	///@return	返回重构的二叉树根节点
+	TreeNode* helper(vector<int>& preorder, int pl, int pr, vector<int>& inorder, int il, int ir) {
+		if (pl > pr || il > ir)	return nullptr;
+		TreeNode* root = new TreeNode(preorder[pl]);
+		int i = il;
+		while (i <= ir) {
+			if (inorder[i] == preorder[pl])	break;
 			i++;
 		}
-		node->left = buildRecur(preorder, pleft + 1, pleft + i - ileft, inorder, ileft, i - 1);
-		node->right = buildRecur(preorder, pleft + i - ileft + 1, pright, inorder, i + 1, iright);
-		return node;
+		root->left = helper(preorder, pl + 1, pl + i - il, inorder, il, i - 1);
+		root->right = helper(preorder, pl + i - il + 1, pr, inorder, i + 1, ir);
+		return root;
 	}
 };
 
