@@ -26,6 +26,9 @@ return its level order traversal as:
 ///@date	2016.01.01
 ///@version	2.1
 
+///@date	2016.01.04
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -87,7 +90,7 @@ private:
 	vector<vector<int>> level_order_seq;
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	层序遍历二叉树
 	///@param	root	二叉树根节点
@@ -123,6 +126,32 @@ public:
 			}
 		}
 		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	层序遍历二叉树
+	///@param	root	根节点
+	///@return	返回二叉树层序遍历的二维数组
+	///@note	1. 递归；2. 时间复杂度为O(n)，空间复杂度为O(n)。
+	vector<vector<int>> levelOrder(TreeNode* root) {
+		vector<vector<int>> rslt;
+		helper(root, rslt, 0);
+		return rslt;
+	}
+
+	///@brief	递归辅助函数
+	///@param	root	二叉树根节点
+	///@param	rslt	结果数组
+	///@param	lvl		层号
+	///@note	1. 当层号暂时大于等于二维数组的大小时，先压入一个空的一维数组，为以后添加该层的元素留余地。
+	void helper(TreeNode* root, vector<vector<int>>& rslt, int lvl) {
+		if (!root)	return;
+		if (lvl >= rslt.size())	rslt.push_back(vector<int>());
+		rslt[lvl].push_back(root->val);
+		helper(root->left, rslt, lvl + 1);
+		helper(root->right, rslt, lvl + 1);
 	}
 };
 
