@@ -23,6 +23,9 @@ return its bottom-up level order traversal as:
 ///@date	2015.08.24
 ///@version	2.0
 
+///@date	2016.01.04
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -87,7 +90,7 @@ private:
 	vector<vector<int>> level_order_seq;
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	vector<vector<int>> levelOrderBottom(TreeNode* root) {
 		vector<vector<int>> rslt;
@@ -118,6 +121,39 @@ public:
 		}
 		reverse(rslt.begin(), rslt.end());
 		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	自底向上层序遍历二叉树
+	///@param	root	根节点
+	///@return	返回保存有遍历结果的二维数组
+	///@note	1. 递归；2. 先计算出二叉树的深度，将深度作为参数传入辅助递归函数；3. 按照递归遍历二叉树的方法逐层添加节点；4. 时间复杂度为O(n)，空间复杂度为O(n)。
+	vector<vector<int>> levelOrderBottom(TreeNode* root) {
+		int dep = depth(root);
+		vector<vector<int>> rslt(dep, vector<int>());
+		levelOrder(root, rslt, dep - 1);
+		return rslt;
+	}
+
+	///@brief	计算二叉树的深度
+	///@param	root	根节点
+	///@return	返回二叉树的深度
+	int depth(TreeNode* root) {
+		if (!root)	return 0;
+		return max(depth(root->left), depth(root->right)) + 1;
+	}
+
+	///@brief	递归辅助函数
+	///@param	root	根节点
+	///@param	rslt	结果数组
+	///@param	lvl		层号
+	void levelOrder(TreeNode* root, vector<vector<int>>& rslt, int lvl) {
+		if (!root)	return;
+		rslt[lvl].push_back(root->val);
+		levelOrder(root->left, rslt, lvl - 1);
+		levelOrder(root->right, rslt, lvl - 1);
 	}
 };
 
