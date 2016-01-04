@@ -12,6 +12,9 @@ You may assume that duplicates do not exist in the tree.
 ///@date	2015.08.25
 ///@version	2.0
 
+///@date	2016.01.04
+///@version	2.1
+
 #include <vector>
 #include <algorithm>	//	find
 #include <iostream>
@@ -82,7 +85,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
 		return buildRecur(inorder, 0, inorder.size()-1, postorder, 0, postorder.size()-1);
@@ -99,6 +102,39 @@ private:
 		node->left = buildRecur(inorder, ileft, i - 1, postorder, pleft, pleft + i - ileft - 1);
 		node->right = buildRecur(inorder, i + 1, iright, postorder, pleft + i - ileft, pright - 1);
 		return node;
+	}
+};
+
+class Solution {
+public:
+	///@brief	通过中序遍历序列和后序遍历序列来重建二叉树
+	///@param	inorder		中序遍历序列
+	///@param	postorder	后序遍历序列
+	///@return	返回重建的二叉树根节点
+	///@note	1. 递归；2. 后序遍历序列的尾结点是当前子树的根节点，故先找后序序列的尾结点，然后在中序序列中寻找该节点，以便确定左右子树的长度；
+	//			3. 本题与Construct Binary Tree from Inorder and Postorder Traversal类似，也是通过辅助递归函数来求解，参数的设置把根节点改动一下即可；
+	//			4. 另外注意，postorder的左子树pright和右子树pleft实参都比上一题少1。
+	TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+		return helper(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1);
+	}
+
+	///@brief	辅助递归函数
+	///@param	inorder	中序遍历序列
+	///@param	il, ir	中序遍历序列的起始与终结下标
+	///@param	postorder	后序遍历序列
+	///@param	pl, pr	后序遍历序列的起始与终结下标
+	///@return	重建的当前子树根节点
+	TreeNode* helper(vector<int>& inorder, int il, int ir, vector<int>& postorder, int pl, int pr) {
+		if (il > ir || pl > pr)	return nullptr;
+		TreeNode* root = new TreeNode(postorder[pr]);
+		int root_indx = il;
+		while (root_indx <= ir) {
+			if (inorder[root_indx] == root->val)		break;
+			root_indx++;
+		}
+		root->left = helper(inorder, il, root_indx - 1, postorder, pl, pl + root_indx - il - 1);
+		root->right = helper(inorder, root_indx + 1, ir, postorder, pl + root_indx - il, pr - 1);
+		return root;
 	}
 };
 
