@@ -11,7 +11,11 @@ differ by more than 1.
 ///@version	1.0
 
 ///@date	2015.08.24
-///@version	2.1
+///@version	2.0
+///@version	3.0
+
+///@date	2016.01.05
+///@version	3.1
 
 #include <iostream>
 #include <vector>
@@ -102,7 +106,7 @@ public:
 		return checkDepth(root) == -1 ? false : true;
 	}
 private:
-	///@brief	计算以某节点的根的左右子树最大深度，如果左右子数不平衡，则返回-1，否则返回真实最大深度
+	///@brief	计算以某节点为根的左右子树最大深度，如果左右子数不平衡，则返回-1，否则返回真实最大深度
 	int checkDepth(TreeNode* root){
 		if (!root)	return 0;
 		int left = checkDepth(root->left);		
@@ -114,7 +118,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	bool isBalanced(TreeNode* root) {
 		if (!root)	return true;
@@ -127,6 +131,27 @@ private:
 	{
 		if (!root)	return 0;
 		return 1 + max(depth(root->left), depth(root->right));
+	}
+};
+
+class Solution {
+public:
+	///@brief	判断一棵二叉树是否是平衡二叉树
+	///@param	root	根节点
+	///@return	如果二叉树的每一个节点的左右子树深度相差不超过1，则返回true；否则返回false
+	///@note	1. 递归；2. 递归的解法非常直观，就是按照高度平衡二叉树的性质来解即可。
+	bool isBalanced(TreeNode* root) {
+		if (!root)	return true;
+		if (abs(depth(root->left) - depth(root->right)) > 1)		return false;
+		return isBalanced(root->left) && isBalanced(root->right);
+	}
+
+	///@brief	计算二叉树的深度
+	///@param	root	节点
+	///@return	返回以当前节点为根的子树深度
+	int depth(TreeNode* root) {
+		if (!root)	return 0;
+		return max(depth(root->left), depth(root->right)) + 1;
 	}
 };
 
