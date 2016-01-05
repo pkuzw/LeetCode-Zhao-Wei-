@@ -7,6 +7,9 @@
 ///@date	2015.08.24
 ///@version	2.0
 
+///@date	2016.01.05
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -66,7 +69,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	TreeNode* sortedListToBST(ListNode* head) {
 		int len = 0;
@@ -89,6 +92,43 @@ private:
 		TreeNode* root = new TreeNode(mid->val);
 		root->left = convert(head, len/2);
 		root->right = convert(mid->next, (len-1)/2);
+		return root;
+	}
+};
+
+class Solution {
+public:
+	///@brief	将已经排好序的链表转换成高度平衡的BST树
+	///@param	head	链表表头
+	///@return	返回构造的高度平衡二叉搜索树的根节点
+	///@note	1. 递归；2. 与有序数组转换BST类似，也是需要找到当前链表的中位值来作为当前节点；
+	//			3. 因为int型变量的除法是向下取整，故左子树长度为len - 1，这样不论len为奇偶都可以处理。而右子树需要除去当前子树根节点，所以应为(len - 1) / 2。
+	TreeNode* sortedListToBST(ListNode* head) {
+		if (!head)	return nullptr;
+		int len = 0;
+		ListNode* indx = head;
+		while (indx) {
+			len++;
+			indx = indx->next;
+		}
+		return helper(head, len);
+	}
+
+	///@brief	递归辅助函数
+	///@param	head	链表表头
+	///@param	len		链表长度
+	///@return	返回当前链表组成的子树根节点
+	TreeNode* helper(ListNode* head, int len) {
+		if (!len || !head)	return nullptr;
+		int mid = len / 2;
+		ListNode* indx = head;
+		while (mid) {
+			indx = indx->next;
+			mid--;
+		}
+		TreeNode* root = new TreeNode(indx->val);
+		root->left = helper(head, len / 2);	//	因为int型变量的除法是向下取整，故左子树长度为len - 1，这样不论len为奇偶都可以处理
+		root->right = helper(indx->next, (len - 1) / 2);	//	而右子树需要除去当前子树根节点，所以应为(len - 1) / 2
 		return root;
 	}
 };
