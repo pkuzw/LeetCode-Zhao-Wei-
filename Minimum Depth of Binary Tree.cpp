@@ -9,11 +9,15 @@ The minimum depth is the number of nodes along the shortest path from the root n
 ///@version	1.0
 
 ///@date	2015.08.24
+///@version	1.1
+
+///@date	2016.01.05
 ///@version	2.0
 
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <cstdlib>
 
 using namespace std;
 
@@ -62,7 +66,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	int minDepth(TreeNode* root) {
 		if (!root)	return 0;
@@ -92,6 +96,21 @@ public:
 				}
 			}
 		}
+	}
+};
+
+class Solution {
+public:
+	///@brief	计算二叉树的最浅叶节点深度
+	///@param	root	根节点
+	///@return	返回最浅叶节点深度
+	///@note	1. 递归；2. 如果当前节点为空，返回0；3. 如果当前节点有左右孩子，则返回左右孩子较浅的那个，并加1；4. 如果不存在或只存在一个孩子，则
+	//			应该返回左右子树中最浅叶节点的较大值，并加1。因为当前节点如果没有孩子，则应该就是叶节点了，返回1，如果只有一个孩子，则其也不是叶节点，
+	//			较浅叶节点应该在较深的子树上。
+	int minDepth(TreeNode* root) {
+		if (!root)	return 0;
+		if (root->left && root->right)	return min(minDepth(root->left), minDepth(root->right)) + 1;
+		return max(minDepth(root->left), minDepth(root->right)) + 1;
 	}
 };
 
