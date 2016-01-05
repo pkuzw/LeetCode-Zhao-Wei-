@@ -9,6 +9,9 @@ Given an array where elements are sorted in ascending order, convert it to a hei
 ///@date	2015.08.24
 ///@version	2.0
 
+///@date	2016.01.05
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -54,17 +57,26 @@ private:
 
 class Solution {
 public:
+	///@brief	给定一个已经按照升序排好序的数组，用它构建出一个高度平衡的二叉搜索树
+	///@param	nums	数组
+	///@return	返回一个高度平衡的二叉搜索树树根
+	///@note	1. 递归；2. 因为BST的性质是左子树的节点都小于当前节点，右子树的节点都大于当前节点。故通过限定数组的左右边界，就能确定中位数是
+	//			当前根节点；3. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为节点数目。
 	TreeNode* sortedArrayToBST(vector<int>& nums) {
-		return convert(nums, 0, nums.size());
+		return helper(nums, 0, nums.size());
 	}
-private:
-	TreeNode* convert(vector<int>& nums, int i, int j)
-	{
-		if (i == j)	return nullptr;
-		int k = (i + j) / 2;
-		TreeNode* root = new TreeNode(nums[k]);
-		root->left = convert(nums, i, k);
-		root->right = convert(nums, k+1, j);
+
+	///@brief	辅助递归函数
+	///@param	nums	排好序的数组
+	///@param	start	数组的起始下标
+	///@param	end		数组的终止下标
+	///@return	返回当前子树的根节点
+	TreeNode* helper(vector<int>& nums, int start, int end) {
+		if (start >= end)	return nullptr;
+		int mid = (start + end) / 2;
+		TreeNode* root = new TreeNode(nums[mid]);
+		root->left = helper(nums, start, mid);
+		root->right = helper(nums, mid + 1, end);
 		return root;
 	}
 };
