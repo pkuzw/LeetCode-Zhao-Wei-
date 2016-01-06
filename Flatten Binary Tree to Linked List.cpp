@@ -28,7 +28,10 @@ The flattened tree should look like:
 ///@version	1.0
 
 ///@date	2015.08.24
-///@version 2.0
+///@version 1.1
+
+///@date	2016.01.06
+///@version	2.0
 
 #include <iostream>
 #include <vector>
@@ -98,7 +101,7 @@ private:
 	TreeNode* first_leaf;	//	记录先序遍历时第一个叶节点
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	void flatten(TreeNode* root) {
 		preorderTraversal(root);
@@ -131,6 +134,35 @@ private:
 	}
 
 	TreeNode* first_leaf;
+};
+
+class Solution {
+public:
+	///@brief	将二叉树压缩成扁平的只有右孩子的单链表
+	///@param	root	根节点
+	///@return	无
+	///@note	1. 递归；2. 将当前节点的左孩子置为空，将右孩子置为原先的左孩子，然后在新的右子树中寻找最右子节点，将其右孩子置为原本的右孩子即可。
+	void flatten(TreeNode* root) {
+		helper(root);
+	}
+
+	///@brief	递归辅助函数
+	///@param	root	根节点
+	///@return	返回新的二叉树根节点
+	TreeNode* helper(TreeNode* root) {
+		if (!root)	return root;
+		TreeNode* cur = root;
+		TreeNode* left = helper(root->left);
+		TreeNode* right = helper(root->right);
+
+		if (left) {
+			cur->left = nullptr;
+			cur->right = left;
+			while (cur->right)	cur = cur->right;
+		}
+		cur->right = right;
+		return root;
+	}
 };
 
 int main()
