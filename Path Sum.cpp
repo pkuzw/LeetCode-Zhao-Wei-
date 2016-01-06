@@ -20,6 +20,9 @@ Given the below binary tree and sum = 22,
 ///@date	2015.08.24
 ///@version	2.0
 
+///@date	2016.01.06
+///@version 2.1
+
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -61,11 +64,16 @@ public:
 
 class Solution {
 public:
+	///@brief	判断是否存在一条从根节点到叶子节点的路径，其上各节点之和为指定值
+	///@param	root	根节点
+	///@param	sum		指定值
+	///@return	如果存在这么一条路径，返回true；否则返回false
+	///@note	1. 递归；2. 与先序遍历类似，通过扣除当前节点值后的剩余大小，来递归调用节点的左右子树。
 	bool hasPathSum(TreeNode* root, int sum) {
 		if (!root)	return false;
 		if (root->val == sum && !root->left && !root->right)		return true;
-		if (root->left && hasPathSum(root->left, sum - root->val))	return true;
-		if (root->right && hasPathSum(root->right, sum - root->val))return true;
+		if (hasPathSum(root->left, sum - root->val))		return true;
+		if (hasPathSum(root->right, sum - root->val))	return true;
 		return false;
 	}
 };
