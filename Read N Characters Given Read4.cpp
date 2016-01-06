@@ -1,4 +1,4 @@
-///@file	Read N Characters Given Read4
+ï»¿///@file	Read N Characters Given Read4
 /*
 The API: int read4(char *buf) reads 4 characters at a time from a file.
 
@@ -28,21 +28,21 @@ public:
      * @param buf Destination buffer
      * @param n   Maximum number of characters to read
      * @return    The number of characters read
-	 * @note	1. ½¨Á¢Ò»¸öÁÙÊ±±äÁ¿±£´æÃ¿´Îµ÷ÓÃread4()ºóµÄ·µ»ØÖµ£¬Èç¹û¸ÃÁÙÊ±±äÁ¿Îª4ÇÒÀÛ»ı¶Á³ö×Ö·ûÊıĞ¡ÓÚn£¬ÔòÒ»Ö±µ÷ÓÃread4£¬Ö±µ½³¬¹ın£»
-				2. ³¬¹ınºóÖğ×Ö·û»ØÍË£¬²¢ÓÃ'\0'½áÊø×Ö·û´®¡£
-				3. Ê±¼ä¸´ÔÓ¶ÈÎªO(n)£¬¿Õ¼ä¸´ÔÓ¶ÈÎªO(1)¡£
+	 * @note	1. å»ºç«‹ä¸€ä¸ªä¸´æ—¶å˜é‡ä¿å­˜æ¯æ¬¡è°ƒç”¨read4()åçš„è¿”å›å€¼ï¼Œå¦‚æœè¯¥ä¸´æ—¶å˜é‡ä¸º4ä¸”ç´¯ç§¯è¯»å‡ºå­—ç¬¦æ•°å°äºnï¼Œåˆ™ä¸€ç›´è°ƒç”¨read4ï¼Œç›´åˆ°è¶…è¿‡nï¼›
+				2. è¶…è¿‡nåé€å­—ç¬¦å›é€€ï¼Œå¹¶ç”¨'\0'ç»“æŸå­—ç¬¦ä¸²ã€‚
+				3. æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ï¼Œç©ºé—´å¤æ‚åº¦ä¸ºO(1)ã€‚
      */
     int read(char *buf, int n) {
-		int tmp = 4;	//	Ã¿´Îµ÷ÓÃread4()µÄ·µ»ØÖµ
-		int num = 0;	//	ÀÛ»ı¶Á³öµÄ×Ö·ûÊı
+		int tmp = 4;	//	æ¯æ¬¡è°ƒç”¨read4()çš„è¿”å›å€¼
+		int num = 0;	//	ç´¯ç§¯è¯»å‡ºçš„å­—ç¬¦æ•°
 		while (num < n && tmp == 4) {
 			tmp = read4(buf);
-			buf += tmp;	//	ÒÆ¶¯×Ö·û´®Ö¸Õë
+			buf += tmp;	//	ç§»åŠ¨å­—ç¬¦ä¸²æŒ‡é’ˆ
 			num += tmp;
 			while (num > n) {
 				buf--;
 				num--;
-				*buf = '\0';	//	½áÊø×Ö·û´®
+				*buf = '\0';	//	ç»“æŸå­—ç¬¦ä¸²
 			}
 		}
 		return num;
