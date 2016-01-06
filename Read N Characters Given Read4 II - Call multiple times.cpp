@@ -43,6 +43,7 @@ public:
     }
 
 	queue<char> que;
+
 };
 
 int main() {
