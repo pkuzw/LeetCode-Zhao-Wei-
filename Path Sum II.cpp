@@ -22,7 +22,10 @@ return
 ///@version	1.0
 
 ///@date	2015.08.24
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.06
+///@version	1.2
 
 #include <iostream>
 #include <vector>
@@ -75,7 +78,7 @@ private:
 	vector<vector<int>> paths;
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	vector<vector<int>> pathSum(TreeNode* root, int sum) {
 		vector<int> path;
@@ -91,6 +94,39 @@ private:
 		if (root->val == sum && !root->left && !root->right)		rslt.push_back(path);
 		if (root->left)		pathRecur(root->left, sum - root->val, path);
 		if (root->right)		pathRecur(root->right, sum- root->val, path);
+		path.pop_back();
+	}
+};
+
+class Solution {
+public:
+	///@brief	计算出所有从根节点到叶子节点路径和为指定值的路径
+	///@param	root	根节点
+	///@param	sum		指定值
+	///@return	返回所有可能的节点值数组
+	///@note	1. 递归；2. 与"Path Sum"类似，可以用先序遍历来递归求解；3. 每当遍历到一个节点时就将其压入一条路径，然后递归调用其左右子树，
+	//			目标值也要相应扣除该节点值；4. 当到达叶节点时恰好等于指定值，则将路径压入结果数组；5. 否则从路径中弹出节点值。
+	vector<vector<int>> pathSum(TreeNode* root, int sum) {
+		vector<vector<int>> rslt;
+		vector<int> path;
+		helper(root, sum, path, rslt);
+		return rslt;
+	}
+
+	///@brief	递归辅助函数
+	///@param	root	根节点
+	///@param	sum		指定值
+	///@param	path	路径
+	///@param	rlst	结果数组
+	///@return	无
+	void helper(TreeNode* root, int sum, vector<int>& path, vector<vector<int>>& rslt) {
+		if (!root)	return;
+
+		path.push_back(root->val);
+
+		if (root->val == sum && !root->left && !root->right)		rslt.push_back(path);		
+		helper(root->left, sum - root->val, path, rslt);
+		helper(root->right, sum - root->val, path, rslt);
 		path.pop_back();
 	}
 };
