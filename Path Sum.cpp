@@ -18,10 +18,10 @@ Given the below binary tree and sum = 22,
 ///@version	1.0
 
 ///@date	2015.08.24
-///@version	2.0
+///@version	1.1
 
 ///@date	2016.01.06
-///@version 2.1
+///@version 1.2
 
 #include <iostream>
 #include <queue>
