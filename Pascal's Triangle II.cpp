@@ -25,6 +25,7 @@ Could you optimize your algorithm to use only O(k) extra space?
 ///@version	1.2
 
 ///@date	2016.01.07
+///@version	1.3
 
 #include <vector>
 #include <deque>
