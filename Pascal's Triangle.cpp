@@ -17,8 +17,11 @@ Return
 ///@date	2015.07.23
 ///@versio	1.0
 
-///@date	2015.08.023
-///@version	2.0
+///@date	2015.08.23
+///@version	1.1
+
+///@date	2016.01.07
+///@version	1.2
 
 #include <vector>
 
@@ -55,21 +58,25 @@ private:
 
 class Solution {
 public:
+	///@brief	生成杨辉三角
+	///@param	n	行数
+	///@return	返回杨辉三角的前n行
+	///@note	1. 杨辉三角的第i+1行的第j个元素相当于在第i行的首末各加1个0，然后将第i行的第j和第j+1求和的值。
+	//			2. 时间复杂度为O(n^2)，空间复杂度为O(n^2)。
 	vector<vector<int>> generate(int numRows) {
-		vector<vector<int>> pascal_triangle;
-		if (numRows < 0)	return pascal_triangle;
-		vector<int> line(1, 1);
-		
-		for (int i = 0; i != numRows; i++)
-		{
-			pascal_triangle.push_back(line);
-			line.insert(line.begin(), 0);
-			line.push_back(0);
-			for (int j = 0; j != line.size()-1; j++)
-				line[j] += line[j+1];
-			line.pop_back();
+		vector<vector<int>> rslt;
+		if (numRows < 1)	return rslt;
+		vector<int> pline(1, 1);
+		rslt.push_back(pline);
+		for (int i = numRows; i > 1; i--) {
+			pline.push_back(0);
+			pline.insert(pline.begin(), 0);
+			for (int j = 0; j < pline.size() - 1; j++) 
+				pline[j] += pline[j + 1];
+			pline.pop_back();
+			rslt.push_back(pline);
 		}
-		return pascal_triangle;
+		return rslt;
 	}
 };
 
