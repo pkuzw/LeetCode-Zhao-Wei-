@@ -14,9 +14,13 @@ The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
 ///@author	zhaowei
 ///@date	2015.07.24
 ///@version	1.0
+///@version	1.1
 
 ///@date	2015.08.22
-///@version	2.0
+///@version	1.2
+
+///@date	2016.01.07
+///@version	1.3
 
 #include <vector>
 using namespace std;
@@ -78,7 +82,7 @@ public:
 };
 
 ///@note	动态规划。自底向上。
-class Solution {
+class Solution_v1_2 {
 public:
 	int minimumTotal(vector<vector<int>>& triangle) {
 		if (triangle.empty())	return 0;
@@ -86,6 +90,25 @@ public:
 		for (int i = triangle.size()-2; i >= 0; i--)
 			for (int j = 0; j != triangle[i].size(); j++)
 				dp[j] = triangle[i][j] + min(dp[j], dp[j+1]);
+		return dp[0];
+	}
+};
+
+class Solution {
+public:
+	///@brief	给定一个三角形，找到从顶点到底层的最小和路径
+	///@param	triangle	三角形
+	///@return	返回最小和路径的和
+	///@note	1. 动态规划；2. 设dp[i]表示从节点triangle[j][i]向下的最小和，自底向上，最底层初始值dp[i] = triangle[j][i]；
+	//			3. 递推关系式为dp[i] = triangle[j-1][i] + min(dp[i], dp[i+1])；
+	//			4. 时间复杂度为O(n^2)，空间复杂度为O(n)，其中n为三角形的底层节点数。
+	int minimumTotal(vector<vector<int>>& triangle) {
+		if (triangle.empty() || triangle[0].empty())	return 0;
+		int depth = triangle.size(), width = triangle[depth - 1].size();
+		vector<int> dp(triangle[depth - 1].begin(), triangle[depth - 1].end());
+		for (int j = depth - 2; j >= 0; j--)
+			for (int i = 0; i < triangle[j].size(); i++)
+				dp[i] = triangle[j][i] + min(dp[i], dp[i + 1]);					
 		return dp[0];
 	}
 };
@@ -123,10 +146,11 @@ int main()
 	line.push_back(2);
 	triangle.push_back(line);
 
+	Solution_v1 slt_v1;
+	int rslt_v1 = slt_v1.minimumTotal(triangle);
+
 	Solution slt;
 	int rslt = slt.minimumTotal(triangle);
 
-	Solution_v1 slt_v1;
-	rslt = slt_v1.minimumTotal(triangle);
 	return 0;
 }
