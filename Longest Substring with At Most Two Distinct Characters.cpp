@@ -9,6 +9,8 @@ T is "ece" which its length is 3.
 ///@author	zhaowei
 ///@date	2015.08.14
 ///@version	1.0
+
+//	如果是n种字符呢？
 #include <string>
 using namespace std;
 
@@ -17,46 +19,29 @@ public:
 	///@brief	计算最多只有两个不同字符组成的字符串的最大长度
 	///@param	s	字符串
 	///@return	返回字符串的最大长度
-	///@note	用左右指针l和r标定包含两个不同字符的字符串的最左边界和最右边界。遍历字符串即可。时间复杂度为O(n)，空间复杂度为O(1)。
+	///@note	1. 用i表示合法子串的第一种字符的首次出现下标，初始化为0；j表示合法子串第二种字符的首次出现下标，初始化为-1；
+	//			2. 从字符串的s[1]开始遍历，如果s[k] == s[k - 1]，则进入下一次迭代；
+	//			3. 如果j > -1 && s[k] != s[j]，则说明子串中出现了超过2种字符，计算出当前子串的长度，并和之前获得的最长子串长度比较，记下较长者，然后更新i；
+	//			4. 在每次循环中都要将j更新为k - 1；
+	//			5. 最后返回时，要比较最长值和s.size() - i的值，因为有可能后面出现连续相同字符直到结束，这样是没办法进入循环中的更新最长值代码的，需要在最后判断一下；
+	//			6. 时间复杂度为O(n)，空间复杂度为O(1)。
 	int lengthOfLongestSubstringTwoDistinct(string s) {
-		if (s.size() < 3)	return s.size();	// 长度小于3的字符串，最多包含2个差异字符的长度为其本身长度		
-		int l = 0, r = 2;	//	左右指针，用于标定最多只有两个不同字符的字符串
-		int len = s.size();	
-		char a = s[0], b = s[1];	//	差异字符，字符串由这两个字符组成
-
-		int j = 1;
-		while (j < len && b == a)
-		{
-			b = s[j++];		//	找到右边界的字符
-		}
-		r = j-1;		//	初始右边界
-		int rslt = r + 1;
-		while (r < len)
-		{
-			if (s[r] != a && s[r] != b)
-			{
-				rslt = max(rslt, r-l);
-				while (s[l] == a)
-					l++;
-				a = s[l];
+		int i = 0, j = -1, rslt = 0;
+		for (int k = 1; k < s.size(); k++) {
+			if (s[k] == s[k - 1]	)	continue;
+			if (j > -1 && s[k] != s[j]) {
+				rslt = max(rslt, k - i);
+				i = j + 1;
 			}
-			else
-			{
-				if (r != len-1)
-				{
-					b = s[r];
-					while (s[r] == b)
-						r++;					
-				}			
-			}
+			j = k - 1;
 		}
-		return rslt;
+		return rslt > s.size() - i ? rslt : s.size() - i;
 	}
 };
 
 int main()
 {
-	string s = "eeeba";
+	string s = "eceecebaaaaaaaaaa";
 	Solution slt;
 	int rslt = slt.lengthOfLongestSubstringTwoDistinct(s);
 	return 0;
