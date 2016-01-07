@@ -57,7 +57,7 @@ struct TreeLinkNode {
 class Solution_v1 {
 public:
 	///@brief	将二叉树中的各个节点横向连接起来
-	///@root	根节点
+	///@param	root	根节点
 	///@note	利用BFS的思想，在每一层中将节点横向相连。时间复杂度为O(n)，空间复杂度为O(n)。如何才能达到O(1)的空间复杂度呢？
 	void connect(TreeLinkNode *root) {
 		if (root == nullptr)	return;
@@ -91,44 +91,104 @@ public:
 
 class Solution {
 public:
-	///@note	空间复杂度为O(1)
+	///@brief	将二叉树中的各个节点横向连接起来
+	///@param	root	根节点	
+	///@note	1. 与"Populating Next Right Pointers in Each Node"类似，只是要注意对于任意二叉树来说，不是每一个节点都有孩子。
+	//			2. 同样也是从每层最左端开始遍历二叉树，设置三个临时变量，left_most表示每层的最左端节点，cur表示当前节点，parent表示当前遍历层的父节点；
+	//			3. 初始化left_most为根节点，最外层循环是直到left_most为空；parent为每一层最左边的有孩子节点的节点；cur为parent的最左边的孩子；
+	//			4. 如果cur == parent->left，则cur->next = parent->right（如果parent->right存在的话）, cur = cur->next；
+	//			5. 如果cur == parent->right，则parent = parent->next；
+	//			6. 如果以上二者皆不是，则cur->next = 有孩子的parent的最左孩子；
+	//			7. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为节点数。
 	void connect(TreeLinkNode *root) {
 		if (!root)	return;
 		TreeLinkNode* left_most = root;
-		while (left_most)
-		{
-			TreeLinkNode* p = left_most;
-			while (p && !p->left && !p->right) p = p->next;
-			if (!p)	return;
-			left_most = p->left ? p->left : p->right;
+		while (left_most) {
+			TreeLinkNode* parent = left_most;
+			while (parent && !parent->left && !parent->right)	parent = parent->next;
+			if (!parent)	return;
+			left_most = parent->left ? parent->left : parent->right;
 			TreeLinkNode* cur = left_most;
-			while (p)
-			{
-				if (cur == p->left)
-				{
-					if (p->right)
-					{
-						cur->next = p->right;
+			while (parent) {
+				if (cur == parent->left) {
+					if (parent->right) {
+						cur->next = parent->right;
 						cur = cur->next;
 					}
-					p = p->next;
+					parent = parent->next;
 				}
-				else if (cur == p->right)
-				{
-					p = p->next;
+				else if (cur == parent->right) {
+					parent = parent->next;
 				}
-				else
-				{
-					if (!p->left && !p->right)
-					{
-						p = p->next;
+				else {
+					if (!parent->left && !parent->right)	 {
+						parent = parent->next;
 						continue;
 					}
-					cur->next = p->left ? p->left : p->right;
+					cur->next = parent->left ? parent->left : parent->right;
 					cur = cur->next;
 				}
 			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 		if (!root)	return;
+// 		TreeLinkNode* left_most = root;
+// 		while (left_most)
+// 		{
+// 			TreeLinkNode* p = left_most;
+// 			while (p && !p->left && !p->right) p = p->next;
+// 			if (!p)	return;
+// 			left_most = p->left ? p->left : p->right;
+// 			TreeLinkNode* cur = left_most;
+// 			while (p)
+// 			{
+// 				if (cur == p->left)
+// 				{
+// 					if (p->right)
+// 					{
+// 						cur->next = p->right;
+// 						cur = cur->next;
+// 					}
+// 					p = p->next;
+// 				}
+// 				else if (cur == p->right)
+// 				{
+// 					p = p->next;
+// 				}
+// 				else
+// 				{
+// 					if (!p->left && !p->right)
+// 					{
+// 						p = p->next;
+// 						continue;
+// 					}
+// 					cur->next = p->left ? p->left : p->right;
+// 					cur = cur->next;
+// 				}
+// 			}
+// 		}
 	}
 };
 
