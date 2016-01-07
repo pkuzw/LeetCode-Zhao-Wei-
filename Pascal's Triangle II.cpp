@@ -18,10 +18,13 @@ Could you optimize your algorithm to use only O(k) extra space?
 */
 ///@author	zhaowei
 ///@date	2015.07.23
+///@version	1.0
 ///@version	1.1
 
 ///@date	2015.08.23
-///@version	2.0
+///@version	1.2
+
+///@date	2016.01.07
 
 #include <vector>
 #include <deque>
@@ -51,7 +54,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	vector<int> getRow(int rowIndex) {
 		vector<int> pascal_triangle(1, 1);
@@ -64,6 +67,27 @@ public:
 			pascal_triangle.pop_back();
 		}
 		return pascal_triangle;
+	}
+};
+
+class Solution {
+public:
+	///@brief	生成杨辉三角的第k行
+	///@param	rowIndex	行号
+	///@return	返回杨辉三角的第n行
+	///@note	1. 与"Pascal's Triangle"类似，只不过是不保存前n行，直接求第n行。
+	vector<int> getRow(int rowIndex) {
+		vector<int> rslt;
+		if (rowIndex < 0)	return rslt;
+		rslt.push_back(1);
+		for (int i = 1; i <= rowIndex; i++) {
+			rslt.push_back(0);
+			rslt.insert(rslt.begin(), 0);
+			for (int j = 0; j < rslt.size() - 1; j++)
+				rslt[j] += rslt[j + 1];
+			rslt.pop_back();
+		}
+		return rslt;
 	}
 };
 
