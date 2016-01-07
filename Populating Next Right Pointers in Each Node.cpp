@@ -36,6 +36,9 @@ After calling your function, the tree should look like:
 ///@date	2015.08.24
 ///@version	2.0
 
+///@date	2016.01.07
+///@version	2.1
+
 #include <queue>
 using namespace std;
 
@@ -48,7 +51,7 @@ struct TreeLinkNode {
 class Solution_v1 {
 public:
 	///@brief	将二叉树中的各个节点横向连接起来
-	///@root	根节点
+	///@param	root	根节点
 	///@note	利用BFS的思想，在每一层中将节点横向相连。时间复杂度为O(n)，空间复杂度为O(n)。如何才能达到O(1)的空间复杂度呢？
 	void connect(TreeLinkNode *root) {
 		if (root == nullptr)	return;
@@ -82,28 +85,72 @@ public:
 
 class Solution {
 public:
-	///@note	时间复杂度为O(n)，空间复杂度为O(1)
+	///@brief	将二叉树中的各个节点横向连接起来
+	///@param	root	根节点
+	///@note	1. 因为是完美二叉树，所以只需要每层的最左端开始；
+	//			2. 新建三个临时变量，left_most表示每层最左端的节点；cur表示当前节点；parent表示当前节点的父节点；
+	//			3. 自顶向下逐层遍历，每层从left_most开始，先将parent置为left_most，然后将后者更新为parent的左孩子，并将cur初始化为新的left_most节点；
+	//			4. 只要parent不为空，则可以一直向右移动，直到该层遍历完；
+	//			5. 在遍历的时候，如果当前节点是parent的左孩子，则将cur-next指向parent的右孩子，并将parent移动到自己的next节点处；否则就将cur->next更新为parent的左孩子，以上
+	//			两种情况都需要将cur右移到cur->next；
+	//			6. 时间复杂度为O(n)，空间复杂度为O(1)。
 	void connect(TreeLinkNode *root) {
 		if (!root)	return;
 		TreeLinkNode* left_most = root;
-		while (left_most)
-		{
+		while (left_most) {
 			TreeLinkNode* parent = left_most;
-			if (!parent->left)	return;
 			left_most = parent->left;
-			TreeLinkNode* cur = left_most;
-			while (parent)
-			{
-				if (cur == parent->left)
-				{
-					cur->next = parent->right;					
+			if (!left_most)	return;
+			TreeLinkNode* cur = left_most;		
+			while (parent) {
+				if (cur == parent->left) {
+					cur->next = parent->right;
 					parent = parent->next;
 				}
-				else
-					cur->next = parent->left;				
+				else	cur->next = parent->left;
 				cur = cur->next;
 			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 		if (!root)	return;
+// 		TreeLinkNode* left_most = root;
+// 		while (left_most)
+// 		{
+// 			TreeLinkNode* parent = left_most;
+// 			if (!parent->left)	return;
+// 			left_most = parent->left;
+// 			TreeLinkNode* cur = left_most;
+// 			while (parent)
+// 			{
+// 				if (cur == parent->left)
+// 				{
+// 					cur->next = parent->right;					
+// 					parent = parent->next;
+// 				}
+// 				else
+// 					cur->next = parent->left;				
+// 				cur = cur->next;
+// 			}
+// 		}
 	}
 };
 
