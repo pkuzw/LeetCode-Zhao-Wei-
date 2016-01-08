@@ -14,6 +14,8 @@ You may not engage in multiple transactions at the same time (ie, you must sell 
 ///@date	2015.08.22
 ///@version	2.0
 
+///@date	2016.01.08
+///@version	2.1
 #include <vector>
 
 using namespace std;
@@ -118,7 +120,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	int maxProfit(vector<int>& prices) {
 		if (prices.size() < 2)	return 0;
@@ -134,6 +136,39 @@ public:
 			}
 		}
 		return dp_global[prices.size()-1][2];
+	}
+};
+
+class Solution {
+public:
+	///@brief	如果最多只能进行2次交易，计算最大收益
+	///@param	prices	股价数组
+	///@return	返回最多进行两次交易时的最大收益
+	///@note	1. 动态规划；
+	//			2. 设dp_local[i][j]表示在第i天进行第j次交易的最大利润，dp_global[i][j]表示在前i天进行j次交易的最大利润；
+	//			3. 初始值为0；
+	//			4. 设diff = prices[i] - prices[i - 1]，递推关系式为dp_local[i][j] = max(dp_local[i - 1][j] + diff, dp_global[i - 1][j - 1] +　max(diff, 0)),
+	//			   dp_global[i][j] = max(dp_local[i][j], dp_global[i - 1][j])；
+	//			5. 这里需要解释一下dp_local的递推关系式，因为对于dp_local[i][j]来说，意味着在第i天
+	//			   进行第j次交易，所以可以分成两种情况，一种是第i-1天进行了第j次交易，那么则第i天必须进行交易，这样就可以将第i天和第i-1天两次卖出交易合并，转换为只
+	//			   在第i天进行卖出交易，所以无论diff是否为负，都必须要加上；第二种情况是，第i-1天可能没进行第j次交易，所以就是dp[i - 1][j - 1]，即在前i-1天进行了
+	//			   j-1次交易，最后一次交易安排在第i天，如果diff为负，则不用加上；
+	//			6. 另外，dp_global[i][j]也分成两种情况，一种是在第i天进行了第j次交易，那么就是dp_local[i][j]；如果没在第i天进行交易，意味着在前i-1天进行了j次交易，
+	//			   则是dp_global[i - 1][j]；
+	//			7. 时间复杂度为O(n)，空间复杂度为O(n)。
+	int maxProfit(vector<int>& prices) {
+		int days = prices.size();
+		if (days < 2)	return 0;
+		vector<vector<int>> dp_local(days, vector<int>(3, 0));
+		vector<vector<int>> dp_global(days, vector<int>(3, 0));
+		for (int i = 1; i < days; i++) {
+			int diff = prices[i] - prices[i - 1];
+			for (int j = 1; j < 3; j++) {
+				dp_local[i][j] = max(dp_local[i - 1][j] + diff, dp_global[i - 1][j - 1] + max(diff, 0));
+				dp_global[i][j] = max(dp_local[i][j], dp_global[i - 1][j]);
+			}
+		}
+		return dp_global[days - 1][2];
 	}
 };
 
