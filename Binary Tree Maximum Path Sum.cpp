@@ -18,7 +18,10 @@ Return 6.
 ///@version	1.0
 
 ///@date	2015.08.22
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.08
+///@versin	1.2
 
 #include <vector>
 
@@ -78,7 +81,7 @@ public:
 //			如果以某点为路径的中间点，那么该路径的最大值应该为sum'(p) = p + sum(p->left) + sum(p->right)；
 //			那么为了找到树中的最大路径，应该通过后序遍历树中的所有点，将最大值作为引用传入后续的递归参数，然后递归函数每次计算的是以该节点
 //			为起点的最大路径值，并更新最大路径值。
-class Solution {
+class Solution_v1_1 {
 public:
 	int maxPathSum(TreeNode* root) {
 		if (!root)	return 0;
@@ -100,6 +103,36 @@ private:
 	}
 };
 
+class Solution {
+public:
+	///@brief	计算二叉树中两个节点之间的最大路径和，起点和终点可以是任意节点
+	///@param	root	根节点
+	///@return	返回最大路径和
+	///@note	1. 递归版后序遍历二叉树中的每个节点；
+	//			2. 对于二叉树中的每个节点，如果它是路径的起点，则sum(p) = max(p, p + max(sum(p->left), sum(p->right)))，
+	//			   如果它是路径的中间点，则sum(p) = sum(p->left) + p + sum(p->right)。
+	int maxPathSum(TreeNode* root) {
+		if (!root)	return 0;
+		int rslt = INT_MIN;
+		helper(root, rslt);
+		return rslt;
+	}
+
+	///@brief	后序遍历递归辅助函数
+	///@param	root	节点
+	///@param	rslt	路径最大值
+	///@return	返回以当前节点为起始节点的路径最大值
+	int helper(TreeNode* root, int& rslt) {
+		if (!root)	return 0;
+		int left = helper(root->left, rslt);
+		int right = helper(root->right, rslt);
+		int start_path = max(root->val, root->val + max(left, right));
+		int pass_path = root->val + left + right;
+		rslt = max(rslt, max(start_path, pass_path));
+		return start_path;
+	}
+};
+
 int main()
 {
 	TreeNode* n[20];
@@ -112,6 +145,9 @@ int main()
 	n[2]->right = n[5];
 	n[3]->left = n[6];
 	n[3]->right = n[7];
+
+	Solution_v1_1 slt1_1;
+	int r1_1 = slt1_1.maxPathSum(n[1]);
 
 	Solution slt;
 	int rslt = slt.maxPathSum(n[1]);
