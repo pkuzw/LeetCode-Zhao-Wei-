@@ -12,6 +12,9 @@ However, you may not engage in multiple transactions at the same time (ie, you m
 ///@version	1.0
 
 ///@date	2015.08.22
+///@version	1.1
+
+///@date	2016.01.08
 ///@version	2.0
 
 #include <vector>
@@ -58,7 +61,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	int maxProfit(vector<int>& prices) {
 		if (prices.size() < 2)	return 0;
@@ -87,6 +90,20 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	计算多次股票交易的最大利润
+	///@param	prices	股票每一天的价格
+	///@return	返回所能挣到的最大利润
+	///@note	1. 遍历；2. 通过枚举出所有单增相邻区间和即可；3. 时间复杂度为O(n)，空间复杂度为O(1)。n为交易天数。
+	int maxProfit(vector<int>& prices) {
+		int rslt = 0;
+		for (int i = 1; i < prices.size(); i++) 
+			rslt += max(prices[i] - prices[i - 1], 0);
+		return rslt;
+	}
+};
+
 int main()
 {
 	int n[13] = {1,9,6,9,9,1,7,1,1,5,9,9,9};
@@ -98,6 +115,6 @@ int main()
 	int r = slt.maxProfit(prices);
 
 	Solution_v1 slt_v1;
-	r = slt_v1.maxProfit(prices);
+	int r1 = slt_v1.maxProfit(prices);
 	return 0;
 }
