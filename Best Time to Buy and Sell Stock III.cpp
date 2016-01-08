@@ -16,6 +16,8 @@ You may not engage in multiple transactions at the same time (ie, you must sell 
 
 ///@date	2016.01.08
 ///@version	2.1
+///@version	3.0
+
 #include <vector>
 
 using namespace std;
@@ -139,7 +141,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@brief	如果最多只能进行2次交易，计算最大收益
 	///@param	prices	股价数组
@@ -169,6 +171,33 @@ public:
 			}
 		}
 		return dp_global[days - 1][2];
+	}
+};
+
+class Solution {
+public:
+	///@brief	如果最多只能进行2次交易，计算最大收益
+	///@param	prices	股价数组
+	///@return	返回最多进行两次交易时的最大收益
+	///@note	1. 动态规划；
+	//			2. 建立4个临时变量：max_profit_2, lowest_buy_price_2, max_profit_1, lowest_buy_price_1，分别表示第二次卖出的最大利润，
+	//			第二次买入的最低价格，第一次卖出的最大利润和第二次买入的最低价格。按照这个顺序依次对其进行更新。
+	//			3. max_profit_2 = max(max_profit_2, prices[i] - lowest_buy_price_2);
+	//			4. lowest_buy_price_2 = min(lowest_buy_price_2, prices[i] - max_profit_1);
+	//			5. max_profit_1 = max(max_profit_1, prices[i] - lowest_buy_price_1);
+	//			6. lowest_buy_price_1 = min(lowest_buy_price_1, p);
+	//			7. 其中初始化为max_profit_1 & 2 = 0, lowest_buy_price_1 & 2 = INT_MAX；
+	//			8. 时间复杂度为O(n)，空间复杂度为O(1)。
+	int maxProfit(vector<int>& prices) {
+		int max_profit[2] = {0, 0};
+		int lowest_buy_price[2] = {INT_MAX, INT_MAX};
+		for (int i = 0; i < prices.size(); i++) {
+			max_profit[1] = max(max_profit[1], prices[i] - lowest_buy_price[1]);
+			lowest_buy_price[1] = min(lowest_buy_price[1], prices[i] - max_profit[0]);
+			max_profit[0] = max(max_profit[0], prices[i] - lowest_buy_price[0]);
+			lowest_buy_price[0] = min(lowest_buy_price[0], prices[i]);
+		}
+		return max_profit[1];
 	}
 };
 
