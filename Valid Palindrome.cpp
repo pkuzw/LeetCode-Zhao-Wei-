@@ -16,6 +16,9 @@ For the purpose of this problem, we define empty string as valid palindrome.
 ///@version	1.0
 
 ///@date	2015.08.22
+///@version	1.1
+
+///@date	2016.01.08
 ///@version	2.0
 
 #include <iostream>
@@ -53,7 +56,7 @@ public:
 };
 
 ///@note	先将字符串转换成只有小写字母和数字的形式，然后对其进行判断。
-class Solution {
+class Solution_1_1 {
 public:
 	bool isPalindrome(string s) {
 		if (s.empty())	return true;
@@ -74,10 +77,42 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	判断一个字符串是否是回文字符串。忽略非字母和非数字字符
+	///@param	s	字符串
+	///@return	如果字符串是回文的，则返回true；否则返回false
+	///@note	1. 先将字符串转换为只包含有字母和数字的形式；
+	//			2. 然后对其前后比较；
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
+	bool isPalindrome(string s) {
+		helper(s);
+		for (int i = 0; i < s.size() / 2; i++) 
+			if (s[i] != s[s.size() - 1 - i])		return false;		
+		return true;
+	}
+
+	///@brief	预处理字符串
+	///@param	s	字符串
+	///@note	时间复杂度为O(n)，空间复杂度为O(1)。百度二面面试题，是除去多余空格。
+	void helper(string& s) {
+		int j = 0;	//	下一个应该被填充的位置
+		for (int i = 0; i != s.size(); i++) {
+			if ((s[i] <= 'z' && s[i] >= 'a') || (s[i] <= '9' && s[i] >= '0'))	s[j++] = s[i];
+			else if (s[i] <= 'Z' && s[i] >= 'A') {
+				s[i] += 'a' - 'A';
+				s[j++] = s[i];
+			} 
+		}
+		s = s.substr(0, j);
+	}
+};
+
 int main()
 {
 	string s = "A man, a plan, a canal: Panama";
 	Solution slt;
+	slt.helper(s);
 	bool r = slt.isPalindrome(s);
 	return 0;
 }
