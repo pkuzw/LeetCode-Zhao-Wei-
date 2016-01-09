@@ -25,7 +25,10 @@ All words contain only lowercase alphabetic characters.
 ///@version	1.0
 
 ///@date	2015.08.22
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.09
+///@version	1.2
 
 #include <string>
 #include <vector>
@@ -93,46 +96,111 @@ public:
 //			在词典中将它删去，以避免出现死循环。
 class Solution {
 public:
+	///@brief	计算将一个单词转换成另一个单词所用的步数
+	///@param	beginWord	起始单词
+	///@param	endWord		目标单词
+	///@param	wordDict	词典
+	///@return	返回从起始单词转换到目标单词的步数
+	///@note	1. 宽度优先遍历BFS，与二叉树的迭代版宽度优先遍历算法类似，也要使用queue；
+	//			2. 将每个单词看做k叉树的一个节点，相差一个字母的单词是该节点的孩子节点；
+	//			3. 层与层之间通过特殊字符串隔开；
+	//			4. 每找到一个后继单词，要	在词典中将它删去，以避免出现死循环；
+	//			5. 时间复杂度为O(nk)，空间复杂度为O(n)。其中n为单词数目，k为单词长度。
 	int ladderLength(string beginWord, string endWord, unordered_set<string>& wordDict) {
-		if (beginWord == endWord)	return 1;
-		int cnt = 1;
 		queue<string> que;
+		int rslt = 1;
 		que.push(beginWord);
-		que.push("");
-		while (!que.empty())
-		{
-			string frt = que.front();
+		que.push("$");
+		while (!que.empty()) {
+			string word = que.front();
 			que.pop();
-			if (frt != "")
-			{
-				string tmp = frt;
-				for (int i = 0; i != frt.size(); i++)
-				{
-					for (char j = 'a'; j <= 'z'; j++)
-					{
-						if (frt[i] == j)	continue;
-						frt[i] = j;
-
-						if (frt == endWord)	return cnt + 1;
-						if (wordDict.find(frt) != wordDict.end())
-						{
-							wordDict.erase(frt);
-							que.push(frt);
+			if (word != "$") {
+				string word_original = word;	//	因为要寻找与word相差一个字符的其余单词，需要改动word，这里进行备份
+				for (int i = 0; i != word.size(); i++) {
+					for (char j = 'a'; j <= 'z'; j++) {
+						if (word[i] != j)	word[i] = j;
+						if (word == endWord)	return rslt + 1;
+						if (wordDict.find(word) != wordDict.end()) {
+							que.push(word);
+							wordDict.erase(word);
 						}
 					}
-					frt = tmp;
+					word = word_original;
 				}
 			}
-			else
-			{
-				if (!que.empty())
-				{
-					que.push("");
-					cnt++;
-				}
+			else {
+				if (!que.empty())	que.push("$");
+				rslt++;
 			}
 		}
 		return 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 		if (beginWord == endWord)	return 1;
+// 		int cnt = 1;
+// 		queue<string> que;
+// 		que.push(beginWord);
+// 		que.push("");
+// 		while (!que.empty())
+// 		{
+// 			string frt = que.front();
+// 			que.pop();
+// 			if (frt != "")
+// 			{
+// 				string tmp = frt;
+// 				for (int i = 0; i != frt.size(); i++)
+// 				{
+// 					for (char j = 'a'; j <= 'z'; j++)
+// 					{
+// 						if (frt[i] == j)	continue;
+// 						frt[i] = j;
+// 
+// 						if (frt == endWord)	return cnt + 1;
+// 						if (wordDict.find(frt) != wordDict.end())
+// 						{
+// 							wordDict.erase(frt);
+// 							que.push(frt);
+// 						}
+// 					}
+// 					frt = tmp;
+// 				}
+// 			}
+// 			else
+// 			{
+// 				if (!que.empty())
+// 				{
+// 					que.push("");
+// 					cnt++;
+// 				}
+// 			}
+// 		}
+// 		return 0;
 	}
 };
 
@@ -146,6 +214,6 @@ int main()
 	dict.insert("log");
 
 	Solution slt;
-	int rslt = slt.ladderLength("hit", "cog", dict);
+	int rslt = slt.ladderLength("hot", "dog", dict);
 	return 0;
 }
