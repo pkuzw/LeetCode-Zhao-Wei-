@@ -23,6 +23,9 @@ X O X X
 ///@date	2015.08.21
 ///@version	2.0
 
+///@date	2016.01.09
+///@version	2.1
+
 #include <vector>
 #include <queue>
 using namespace std;
@@ -116,7 +119,7 @@ public:
 
 ///@note	dfs的递归版.从棋盘的四边开始寻找'O'字符，然后dfs递归向上下左右找是否有相邻的'O'，都将它们与改变成'*'，这样能与中间的不与边界
 //			相连的'O'区别开。然后再遍历矩阵，找到剩余的'O'，将它们改成'X'，原本的'*'恢复成'O'。
-class Solution {
+class Solution_v2 {
 public:
 	void solve(vector<vector<char>>& board) {
 		for (int i = 0; i != board.size(); i++)
@@ -144,6 +147,42 @@ private:
 	}
 };
 
+class Solution {
+public:
+	///@brief	将棋盘上的非边缘连续'O'块转换成'X'
+	///@param	board	棋盘
+	///@return	无
+	///@note	1. 深度优先遍历；2. 先从棋盘四个边开始寻找相连的'O'，将其转换为'$'，然后对于中间的不与边相连的'O'，转换为'X'，最后把开始调用dfs
+	//			递归计算出来的'$'转换回'O'即可；3. 注意在递归dfs时，列号从j > 1开始判断，否则测试数据会栈溢出。
+	void solve(vector<vector<char>>& board) {
+		int rows = board.size(), cols = board.empty() ? 0 : board[0].size();
+		for (int i = 0; i != rows; i++) {
+			for (int j = 0; j != cols; j++) {
+				if ((i == 0 || i == rows - 1 ||
+					j == 0 || j == cols - 1) && board[i][j] == 'O')
+					helper(board, i, j);
+			}
+		}
+		for (int i = 0; i != rows; i++) {
+			for (int j = 0; j != cols; j++) {
+				if (board[i][j] == 'O')	board[i][j] = 'X';
+				if (board[i][j] == '$')	board[i][j] = 'O';
+			}
+		}
+	}
+
+	///@brief	dfs辅助函数
+	///@param	board	棋盘
+	///@param	i, j	当前元素下标
+	void helper(vector<vector<char>>& board, int i, int j) {
+		board[i][j] = '$';
+		if (i > 0 && board[i - 1][j] == 'O')						helper(board, i - 1, j);
+		if (i < board.size() - 1 && board[i + 1][j] == 'O')		helper(board, i + 1, j);
+		if (j > 1 && board[i][j - 1] == 'O')						helper(board, i, j - 1);
+		if (j < board[i].size() - 1 && board[i][j + 1] == 'O')	helper(board, i, j + 1);
+	}
+};
+
 int main()
 {
 	vector<char> line(2, 'O');
@@ -153,7 +192,7 @@ int main()
 	line.clear();
  	line.push_back('X');
  	line.push_back('O');
- 	line.push_back('O');
+ 	line.push_back('X');
  	line.push_back('X');
  	board.push_back(line);
  
@@ -171,6 +210,7 @@ int main()
  	line.push_back('X');
  	board.push_back(line);
 
+	board.clear();
 	Solution slt;
 	slt.solve(board);
 
