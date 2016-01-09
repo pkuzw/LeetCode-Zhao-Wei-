@@ -24,7 +24,10 @@ All words contain only lowercase alphabetic characters.
 ///@version	1.0
 
 ///@date	2015.08.22
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.09
+///@version	1.2
 
 #include <unordered_map>
 #include <unordered_set>
@@ -149,84 +152,86 @@ private:
 */
 class Solution {
 public:	
+	///@brief	计算所有可能的单词转换路径
+	///@param	start	起始单词
+	///@param	end		目标单词
+	///@param	dict	词典
+	///@return	返回所有可能的单词转换路径
+	///@note	1. 以"Word Ladder"解法为基础，增加两个遍历，pre_path为以单词为键，其前驱单词数组为值的哈希表，hash_tbl为键为单词的哈希表，用来
+	//			   记录压入前驱单词数组的单词，避免重复压入；
+	//			2. 从开始单词，逐个替换可能的字符，如果在单词表中存在，就压入前驱单词数组，并在哈希表中记录；
+	//			3. 当找到结尾单词时，就以前驱单词数组来重构路径。
 	vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
+		unordered_set<string> hash_tbl;
+		unordered_map<string, vector<string>> pre_path;
+		bool found = false;
 		queue<string> que;
 		que.push(start);
-		que.push("");
-		bool has_found = false;
-		unordered_map<string, vector<string>> pre_path;
-		unordered_set<string> ht;
-		while (!que.empty())
-		{
-			string frt = que.front();
-			string cpy = frt;
+		que.push("$");
+		while (!que.empty()) {
+			string word = que.front();
 			que.pop();
-			if (frt != "")
-			{
-				string tmp = frt;
-				for (int i = 0; i != frt.size(); i++)
-				{
-					for (char j = 'a'; j <= 'z'; j++)
-					{
-						if (frt[i] == j)	continue;
-						frt[i] = j;
-						if (frt == end)
-						{
-							has_found = true;
-							pre_path[frt].push_back(cpy);
-							goto END;
+			if (word != "$") {
+				string word_original = word;
+				for (int i = 0; i != word.size(); i++) {
+					for (char j = 'a'; j <= 'z'; j++) {
+						if (word[i] != j)	word[i] = j;
+						if (word == end) {
+							found = true;
+							pre_path[word].push_back(word_original);
+							goto FOUND;
 						}
-
-						if (dict.find(frt) != dict.end())
-						{
-							pre_path[frt].push_back(cpy);
-							if (ht.find(frt) == ht.end())
-							{
-								que.push(frt);
-								ht.insert(frt);
+						if (dict.find(word) != dict.end()) {
+							pre_path[word].push_back(word_original);
+							if (hash_tbl.find(word) == hash_tbl.end()) {
+								hash_tbl.insert(word);
+								que.push(word);
 							}
 						}
 					}
-					frt = tmp;
+					word = word_original;
 				}
 			}
-			else
-			{
-				if (!que.empty())
-				{
-					if (has_found)	break;
-					for (unordered_set<string>::iterator iter = ht.begin(); iter != ht.end(); iter++)
-						dict.erase(*iter);
-					ht.clear();
-					que.push("");
+			else {
+				if (!que.empty()) {
+					if (found)	break;
+					que.push("$");
+					for (unordered_set<string>::iterator ht_iter = hash_tbl.begin(); ht_iter != hash_tbl.end(); ht_iter++)
+						dict.erase(*ht_iter);
+					hash_tbl.clear();
 				}
 			}
-			END:;
+			FOUND:;
 		}
-		vector<vector<string>> rslt;
-		vector<string> tmp_rslt;
-		if (pre_path.find(end) == pre_path.end())	return rslt;
-		tmp_rslt.push_back(end);
-		constructPath(rslt, tmp_rslt, pre_path, start, end);
-		return rslt;
+		vector<vector<string>> paths;
+		vector<string> path(1, end);
+		constructPath(paths, path, pre_path, start, end);
+		return paths;
 	}
-private:
-	void constructPath(vector<vector<string>>& rslt, vector<string>& tmp_rslt, unordered_map<string, vector<string>>& pre_path, string start, string end)
-	{
-		if (start == end)
-		{
-			reverse(tmp_rslt.begin(), tmp_rslt.end());
-			rslt.push_back(tmp_rslt);
-			reverse(tmp_rslt.begin(), tmp_rslt.end());
-			return;
-		}
-		vector<string>& pre = pre_path[end];
-		for (int i = 0; i != pre.size(); i++)
-		{
-			tmp_rslt.push_back(pre[i]);
-			constructPath(rslt, tmp_rslt, pre_path, start, pre[i]);
-			tmp_rslt.pop_back();
-		}
+
+	///@brief	重构路径
+	///@param	paths	结果数组
+	///@param	path	一条路径
+	///@param	pre_path	单词及其前驱路径
+	///@param	start, end	起始和终止单词
+	///@note	1. 递归；
+	//			2. 因为是从终止单词的前驱单词数组开始重构，所以需要翻转一下再压入结果数组；
+	//			3. 压入结果数组后，需要继续递归，还得再翻转回来；
+	//			4. 逐个遍历前驱数组中的单词，递归调用自身。
+	void constructPath(vector<vector<string>>& paths, vector<string>& path, 
+		unordered_map<string, vector<string>>& pre_path, string start, string end) {
+			if (start == end) {
+				reverse(path.begin(), path.end());
+				paths.push_back(path);
+				reverse(path.begin(), path.end());
+				return;
+			}
+			vector<string> pre = pre_path[end];
+			for (int i = 0; i != pre.size(); i++) {
+				path.push_back(pre[i]);
+				constructPath(paths, path, pre_path, start, pre[i]);
+				path.pop_back();
+			}
 	}
 };
 
@@ -240,6 +245,6 @@ int main()
 	dict.insert("log");
 
 	Solution slt;
-	vector<vector<string>> rslt = slt.findLadders("hit", "cog", dict);
+	vector<vector<string>> rslt = slt.findLadders("hit", "pou", dict);
 	return 0;
 }
