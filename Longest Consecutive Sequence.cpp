@@ -13,7 +13,10 @@ Your algorithm should run in O(n) complexity.
 ///@version	1.0
 
 ///@date	2015.08.22
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.09
+///@version	1.2
 
 #include <vector>
 #include <unordered_set>
@@ -157,33 +160,35 @@ public:
 ///@note	利用哈希表保存现有的元素，每当找到一个元素就在哈希表中删除，这样能够减少重复计算。
 class Solution {
 public:
+	///@brief	计算最长连续整数
+	///@param	nums	整数数组
+	///@return	返回数组的最长连续整数
+	///@note	1. 哈希表；2. 用哈希表保存数组中的所有数，然后遍历数组，在哈希表中查找相应的元素；3. 如果存在该元素，就在哈希表中删除它，避免
+	//			重复查找，并寻找其相邻元素是否存在，更新连续元素长度和最大值即可；4. 时间复杂度为O(n)，空间复杂度为O(n)，n为元素数目。
 	int longestConsecutive(vector<int>& nums) {
-		unordered_set<int> ht(nums.begin(), nums.end());
-		int max_len = INT_MIN, len = 0;
-		for (int i = 0; i != nums.size(); i++)
-		{
-			if (ht.find(nums[i]) != ht.end())
-			{
-				ht.erase(nums[i]);
-				len++;
-
+		unordered_set<int> hash_tbl;
+		int max_len = INT_MIN;
+		for (int i = 0; i != nums.size(); i++) 
+			if (hash_tbl.find(nums[i]) == hash_tbl.end())
+				hash_tbl.insert(nums[i]);
+		for (int i = 0; i != nums.size(); i++) {
+			int len = 1;
+			if (hash_tbl.find(nums[i]) != hash_tbl.end()) {
+				hash_tbl.erase(nums[i]);
 				int j = nums[i] + 1;
-				while (ht.find(j) != ht.end())
-				{
-					ht.erase(j);
+				while (hash_tbl.find(j) != hash_tbl.end()) {
+					hash_tbl.erase(j);
 					len++;
 					j++;
 				}
 				j = nums[i] - 1;
-				while (ht.find(j) != ht.end())
-				{
-					ht.erase(j);
+				while (hash_tbl.find(j) != hash_tbl.end()) {
+					hash_tbl.erase(j);
 					len++;
 					j--;
 				}
-				max_len = max(max_len, len);
-				len = 0;
-			}			
+				max_len = max_len < len ? len : max_len;			
+			}
 		}
 		return max_len;
 	}
@@ -191,12 +196,14 @@ public:
 
 int main()
 {
-	int n[10] = {-2, -10, 0, 100, 2, 3, 400, 5, 60, 7};
+	int n[10] = {-2, -1, 0, 4, 2, 3, 400, 5, 60, 1};
 	vector<int> nums;
 	for (int i = 0; i != 10; i++)
 		nums.push_back(n[i]);
 
 //	nums.clear();
+	Solution_v1 s1;
+	int r1 = s1.longestConsecutive(nums);
 	Solution slt;
 	int rslt = slt.longestConsecutive(nums);
 	return 0;
