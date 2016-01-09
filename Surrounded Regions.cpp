@@ -210,7 +210,7 @@ int main()
  	line.push_back('X');
  	board.push_back(line);
 
-	board.clear();
+//	board.clear();
 	Solution slt;
 	slt.solve(board);
 
