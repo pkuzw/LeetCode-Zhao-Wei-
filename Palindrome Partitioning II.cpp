@@ -14,6 +14,9 @@ Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 
 ///@date	2015.08.21
 ///@version	2.0
 
+///@date	2016.01.10
+///@version	2.1
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -30,7 +33,7 @@ public:
 				递推关系式： dp[i][j] = (s[i] == s[i+j-1] && dp[i+1][j-2])
 				如果s[0...i]是回文，mins[i] = 0；
 				如果s[0...i]不是回文，mins[i] = min{mins[k] + 1 (s[k+1...i]是回文)  或  mins[k] + i - k (s[k+1...i]不是回文)}，
-				其中0<= k < i.
+				其中0 <= k < i.
 				时间复杂度为O(n^2)，空间复杂度为O(n^2).
 				*/
 	int minCut(string s) {
@@ -74,7 +77,7 @@ public:
 
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	/*//@note	动态规划。isPalin[i][j]表示s[i..j]是否是回文，min_cut[i]表示s[0..i-1]需要的最小切割数，初始化min_cut[i] = i-1, 
 				0 <= i <= s.size(). 
@@ -102,9 +105,36 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	计算将s划分为回文子串的最小的分割次数
+	///@param	s	字符串
+	///@return	返回最小分割次数
+	///@note	1. 动态规划；2. 设isPalindrome[i][j]表示字符串s[i..j]是否为回文字符串，递推关系式为isPalindrome[i][j] = s[i] == s[j] && (j - i < 2 || isPalindrome[i+1][j-1]) ? true : false；
+	//			3. min_cut[i]表示字符串s[0..i-1]的最小划分次数，初始值为min_cut[i] = i - 1，则递推关系式为min_cut[j+1] = isPalindrome[i][j] ? min(min_cut[i] + 1, min_cut[j+1]) : min_cut[j+1]，它的意思是如果s[i..j]已经是回文的了，那么只需要选取s[0..j]的最小切割数和s[0..i-1]的最小切割数加1的较小值。
+	int minCut(string s) {
+		const int slen = s.size();
+		vector<vector<bool>> isPalindrome(slen, vector<bool>(slen, false));
+		vector<int> min_cut(slen + 1, 0);
+		for (int i = 0; i <= slen; i++)	min_cut[i] = i - 1;
+		for (int j = 1; j < slen; j++) {
+			for (int i = j; i >= 0; i--) {	//这里需要注意，因为在递推关系式中需要用到isPalindrome[i+1][j-1]，即循环变量应从中间向两边遍历
+				if (s[i] == s[j] && (j - i < 2 || isPalindrome[i+1][j-1])) {
+					isPalindrome[i][j] = true;
+					min_cut[j+1] = min(min_cut[i] + 1, min_cut[j+1]);
+				}
+			}
+		}
+		return min_cut[slen];
+	}
+};
+
 int main()
 {
 	string s = "aab";
+	Solution_v2 slt2;
+	int r2 = slt2.minCut(s);
+
 	Solution slt;
 	int rslt = slt.minCut(s);
 	return 0;
