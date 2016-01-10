@@ -7,7 +7,10 @@ Clone an undirected graph. Each node in the graph contains a label and a list of
 ///@version	1.0
 
 ///@date	2015.08.21
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.10
+///@version	1.2
 
 #include <iostream>
 #include <vector>
@@ -56,22 +59,27 @@ private:
 ///@note	图遍历算法的DFS递归实现。利用hash table来保存已经遍历过的元素。
 class Solution {
 public:
+	///@brief	拷贝一个无向图
+	///@param	node	无向图的一个节点
+	///@return	返回拷贝后的无向图的某个节点
+	///@note	1. dfs；2. 用unordered_map<int, UndirectedGraphNode*>来保存dfs过程中已经复制（遍历）过的节点；
+	//			3. 在递归时，如果这个节点已经复制过，直接取哈希表中的对应节点；否则就复制一个节点，并把它放回哈希表，然后递归的寻找该节点的邻居节点。
 	UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
-		if (!node)	return nullptr;
-		unordered_map<int, UndirectedGraphNode*> ht;
-		return cloneGraph_DFS(node, ht);
+		  unordered_map<int, UndirectedGraphNode*> hash_tbl;
+		  return helper(node, hash_tbl);
 	}
-private:
-	UndirectedGraphNode* cloneGraph_DFS(UndirectedGraphNode* node, unordered_map<int, UndirectedGraphNode*>& ht)
-	{
+	///@brief	dfs递归辅助函数
+	///@param	node		当前节点
+	///@paramt	hash_tbl	哈希表
+	///@return	返回拷贝的新节点
+	UndirectedGraphNode* helper(UndirectedGraphNode* node, unordered_map<int, UndirectedGraphNode*>& hash_tbl) {
 		if (!node)	return nullptr;
-		if (ht.find(node->label) != ht.end())	return ht[node->label];
-
-		UndirectedGraphNode* new_node = new UndirectedGraphNode(node->label);
-		ht[node->label] = new_node;
-		for (int i = 0; i != node->neighbors.size(); i++)
-			new_node->neighbors.push_back(cloneGraph_DFS(node->neighbors[i], ht));		
-		return new_node;
+		if (hash_tbl.find(node->label) != hash_tbl.end())	return hash_tbl[node->label];		
+		UndirectedGraphNode* cpy_node = new UndirectedGraphNode(node->label);
+		hash_tbl[node->label] = cpy_node;
+		for (int i = 0; i != node->neighbors.size(); i++) 
+			cpy_node->neighbors.push_back(helper(node->neighbors[i], hash_tbl));
+		return cpy_node;
 	}
 };
 
