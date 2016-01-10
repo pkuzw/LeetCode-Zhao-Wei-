@@ -19,6 +19,9 @@ Return
 ///@date	2015.08.21
 ///@version	2.0
 
+///@date	2016.01.10
+///@version	2.1
+
 #include <vector>
 #include <string>
 
@@ -86,7 +89,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	dfs. 判断一个子串是否回文，如果是就将其压入一个结果数组，然后递归调用dfs函数，否则继续向后遍历，直到字符串末尾。
 	vector<vector<string>> partition(string s) {
@@ -129,6 +132,52 @@ private:
 				part.push_back(s.substr(start, i - start + 1));
 				dfs(s, i + 1, part);
 				part.pop_back();
+			}
+		}
+	}
+};
+
+class Solution {
+public:
+	///@brief	找到字符串中的所有回文子串
+	///@param	s	字符串
+	///@return	返回不同的回文子串划分
+	///@note	1. 递归；2. 实现一个判断子串是否为回文子串的接口，然后从前向后遍历字符串，判断子串是否回文，如果是回文，就压入进一个划分；当到达末尾时将划分压入结果数组。
+	vector<vector<string>> partition(string s) {
+		vector<vector<string>> rslt;
+		vector<string> partition;
+		helper(s, 0, partition, rslt);
+		return rslt;
+	}
+
+	///@brief	判断字符串是否回文
+	///@param	s	字符串
+	///@return	如果字符串回文，则返回true；否则返回false
+	bool isPalindrome(const string& s) {
+		if (s.empty())	return true;
+		int i = 0, j = s.length() - 1;
+		while (s[i++] == s[j--]) {
+			if (i > j)	return true;
+		}
+		return false;
+	}
+
+	///@brief	递归辅助函数
+	///@param	s	字符串
+	///@param	start	子串的起始下标
+	///@param	partition	对s的一个划分
+	///@param	rslt	结果数组
+	void helper(const string& s, int start, vector<string>& partition, vector<vector<string>>& rslt) {
+		if (start == s.size()) {
+			rslt.push_back(partition);
+			return;
+		}
+		for (int i = start; i != s.size(); i++) {
+			string sub_str = s.substr(start, i - start + 1);
+			if (isPalindrome(sub_str)) {
+				partition.push_back(sub_str);
+				helper(s, i + 1, partition, rslt);
+				partition.pop_back();
 			}
 		}
 	}
