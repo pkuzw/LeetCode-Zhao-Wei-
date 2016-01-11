@@ -12,6 +12,9 @@ Your algorithm should have a linear runtime complexity. Could you implement it w
 ///@date	2015.08.21
 ///@version	2.0
 
+///@date	2016.01.11
+///@version	2.1
+
 #include <unordered_map>
 #include <vector>
 using namespace std;
@@ -47,6 +50,12 @@ public:
 
 class Solution {
 public:
+	///@brief	寻找数组中唯一一个没有出现2次的元素
+	///@param	nums	数组
+	///@return	返回该元素
+	///@note	1. 位运算；
+	//			2. 利用异或运算的特性，如果一个数和自身异或得到0，同时一个数和0异或得到自身的特点，将数组中的所有元素都异或一遍即可，最后得到的结果就是那个没有出现两次的元素。
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
 	int singleNumber(vector<int>& nums) {
 		int rslt = nums[0];
 		for (int i = 1; i != nums.size(); i++)
