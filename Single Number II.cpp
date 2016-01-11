@@ -12,6 +12,9 @@ Your algorithm should have a linear runtime complexity. Could you implement it w
 ///@date	2015.08.21
 ///@version	2.0
 
+///@date	2016.01.11
+///@version	2.1
+
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -35,8 +38,8 @@ public:
 };
 
 ///@note	因为数组中每个元素都出现三次，只有一个例外，所以对元素的每一位进行1的计数，在遍历所有元素后，如果该位的1累加之和模3不为0，
-//			则说明该位出现不是3次的元素的位，然后再逐一对各位进行累加即可。时间复杂度为O(n)，空间复杂度为O(1)。
-class Solution {
+//			则说明该位是出现不是3次的元素的位，然后再逐一对各位进行累加即可。时间复杂度为O(n)，空间复杂度为O(1)。
+class Solution_v2 {
 public:
 	int singleNumber(vector<int>& nums) {
 		vector<int> cnt(32, 0);
@@ -53,6 +56,33 @@ public:
 		{
 			if (cnt[i])
 				rslt += (1 << i);
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	找出数组中出现次数不为3的元素
+	///@param	nums	数组
+	///@return	返回出现次数不为3的元素
+	///@note	1. 位运算；2. 因为数组中除了一个特殊元素，其余所有元素都只出现三次。所以对所有元素的1位进行累加，如果模3后不为0，则说明该位是特殊元素的1位，否则就是0位；
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
+	int singleNumber(vector<int>& nums) {
+		int cnt[32] = {0};
+		int rslt = 0;
+		for (int i = 0; i != nums.size(); i++) {
+			for (int j = 0; j != 32; j++) {
+				if ((nums[i] >> j) & 1)
+					cnt[j]++;
+			}
+		}
+		for (int i = 31; i >= 0; i--) {
+			if (cnt[i] % 3) {
+				int j = 1;
+				j <<= i;
+				rslt |= j;				
+			}
 		}
 		return rslt;
 	}
