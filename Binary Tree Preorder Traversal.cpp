@@ -27,6 +27,7 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@date	2016.01.12
 ///@version	1.2
 ///@version	2.1
+///@version	3.0
 
 #include <vector>
 #include <stack>
@@ -116,7 +117,8 @@ public:
 	///@return	返回结果数组
 	vector<int> preorderTraversal(TreeNode* root) {
 //		preTrav_Recur(root);
-		rslt = preTrav_Iter(root);
+//		rslt = preTrav_Iter(root);
+		rslt = preTrav_Morris(root);
 		return rslt;
 	}
 
@@ -152,6 +154,36 @@ private:
 		return rslt;
 	}
 
+	///@brief	Morris前序遍历算法
+	///@param	root	根节点
+	///@return	返回结果数组
+	///@note	1. 与Morris中序遍历算法基本一致，在有左孩子到情况下输出位置不同，在这里要在前驱节点右孩子为空时输出，而非在有右孩子时输出，其余均一样；
+	//			2. 时间复杂度为O(n)，空间复杂度为O(1)。
+	vector<int> preTrav_Morris(TreeNode* root) {
+		if (!root)	return rslt;
+		TreeNode* cur = root, *pre = root;
+		while (cur) {
+			if (!cur->left) {
+				rslt.push_back(cur->val);
+				cur = cur->right;
+			}
+			else {
+				pre = cur->left;
+				while (pre->right && pre->right != cur) 
+					pre = pre->right;
+				if (!pre->right) {
+					pre->right = cur;
+					rslt.push_back(cur->val);
+					cur = cur->left;
+				}
+				else if (pre->right == cur) {
+					pre->right = nullptr;
+					cur = cur->right;
+				}
+			}
+		}
+		return rslt;
+	}
 };
 
 int main()
