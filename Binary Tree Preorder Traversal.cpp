@@ -19,10 +19,13 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@version	1.0
 
 ///@date	2015.08.20
-///@version	2.1
+///@version	1.1
 
 ///@date	2015.10.16
-///@version	2.2
+///@version	2.0
+
+///@date	2016.01.12
+///@version	1.2
 
 #include <vector>
 #include <stack>
@@ -67,7 +70,7 @@ private:
 	vector<int> pre_seq;	//	后序遍历的节点数组
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	vector<int> preorderTraversal(TreeNode* root) {
 // 		preorderTraversal_Recur(root);
@@ -105,6 +108,31 @@ private:
 	}
 };
 
+class Solution {
+public:
+	///@brief	前序遍历二叉树
+	///@param	root	根节点
+	///@return	返回结果数组
+	vector<int> preorderTraversal(TreeNode* root) {
+		helper(root);
+		return rslt;
+	}
+
+private:
+	vector<int> rslt;
+
+	///@brief	递归版前序遍历
+	///@param	root	根节点
+	///@return	返回结果数组
+	void helper(TreeNode* root) {
+		if (!root)	return;
+		rslt.push_back(root->val);
+		helper(root->left);
+		helper(root->right);
+	}
+
+};
+
 int main()
 {
 	TreeNode* n[20];
@@ -117,6 +145,9 @@ int main()
 	n[2]->right = n[5];
 	n[3]->left = n[6];
 	n[3]->right = n[7];
+
+	Solution_v2 s2;
+	vector<int> r2 = s2.preorderTraversal(n[1]);
 
 	Solution slt;
 	vector<int> rslt = slt.preorderTraversal(n[1]);
