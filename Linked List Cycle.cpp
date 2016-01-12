@@ -10,7 +10,10 @@ Can you solve it without using extra space?
 ///@version	1.0
 
 ///@date	2015.08.20
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.12
+///@version	1.2
 
 #include <iostream>
 
@@ -51,12 +54,14 @@ public:
 
 class Solution {
 public:
+	///@brief	判断一个单链表是否有环
+	///@param	head	链表头节点
+	///@return	如果单链表有环，则返回true；否则返回false
+	///@note	1. 用两个指针表示循环变量的步长，一个每次前进1步，另一个每次前进2步，如果二者能够相遇，则说明有环，否则没有环。
 	bool hasCycle(ListNode *head) {
 		if (!head || !head->next)	return false;
-
-		ListNode *fast = head, *slow = head;
-		while (fast && fast->next)
-		{
+		ListNode* fast = head, *slow = head;
+		while (fast && fast->next) {
 			fast = fast->next->next;
 			slow = slow->next;
 			if (fast == slow)	return true;
