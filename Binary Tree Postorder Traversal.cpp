@@ -18,10 +18,13 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@version	1.0
 
 ///@date	2015.08.20
-///@version	2.1
+///@version	1.1
 
 ///@date	2015.10.16
-///@version	2.2
+///@version	2.0
+
+///@date	2016.01.12
+///@version	1.2
 
 #include <vector>
 #include <stack>
@@ -65,7 +68,7 @@ private:
 	vector<int> post_seq;	//	后序遍历的节点数组
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	vector<int> postorderTraversal(TreeNode* root) {
 		//postorderTraversal_Recur(root);
@@ -107,6 +110,29 @@ private:
 		return rslt;
 	}
 };
+
+class Solution {
+public:
+	///@brief	后序遍历二叉树
+	///@param	root	二叉树树根
+	///@return	返回后序遍历的数组
+	vector<int> postorderTraversal(TreeNode* root) {
+		postTrav_Recur(root);
+		return rslt;
+	}
+private:
+	vector<int> rslt;
+
+	///@brief	递归后序遍历
+	///@param	根节点
+	void postTrav_Recur(TreeNode* root) {
+		if (!root)	return;
+		postTrav_Recur(root->left);
+		postTrav_Recur(root->right);
+		rslt.push_back(root->val);
+	}
+};
+
 int main()
 {
 	TreeNode* n[20];
@@ -119,6 +145,9 @@ int main()
 	n[2]->right = n[5];
 	n[3]->left = n[6];
 	n[3]->right = n[7];
+
+	Solution_v2 s2;
+	vector<int> r2 = s2.postorderTraversal(n[1]);
 
 	Solution slt;
 	vector<int> rslt = slt.postorderTraversal(n[1]);
