@@ -13,7 +13,10 @@ Given {1,2,3,4}, reorder it to {1,4,2,3}.
 ///@version	1.0
 
 ////@date	2015.08.20
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.12
+///@version	1.2
 
 #include <iostream>
 
@@ -87,7 +90,8 @@ public:
 	///@brief	修改链表的顺序。将原来的n1, n2, n3, ..., nn改变为n1, nn, n2, nn-1, n3, nn-2...
 	///@param	head	链表首节点
 	///@return	无
-	/* @note	找到链表的中点，将链表一分为二，然后将后半部分链表翻转，依次插入到前半部分的链表节点之后即可。时间复杂度为O(n)，空间复杂度为O(1)。
+	/* @note	找到链表的中点，将链表一分为二，然后将后半部分链表翻转，依次插入到前半部分的链表节点之后即可。
+				时间复杂度为O(n)，空间复杂度为O(1)。
 	*/
 	void reorderList(ListNode* head)
 	{
@@ -144,7 +148,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v1_2 {
 public:
 	void reorderList(ListNode* head) {
 		if (!head || !head->next)	return;
@@ -194,10 +198,60 @@ private:
 	}
 };
 
+class Solution {
+public:
+	///@brief	修改链表的顺序。将原来的n1, n2, n3, ..., nn改变为n1, nn, n2, nn-1, n3, nn-2...
+	///@param	head	链表首节点
+	///@note	1. 先将链表一分为二，因为用快慢节点法找到的链表中点能够对于奇数长度的链表将中点划入前半部分，所以不必担心奇偶问题；
+	//			2. 翻转后半部分链表；
+	//			3. 将后半部分链表节点逐个插入前半部分节点。
+	void reorderList(ListNode* head) {
+		if (!head || !head->next)	return;
+		ListNode* fast = head, *slow = head;
+		while (fast && fast->next) {
+			fast = fast->next->next;
+			slow = slow->next;			
+		}
+		fast = slow->next;
+		slow->next = nullptr;
+		slow = head;
+
+		fast = reverseList(fast);
+		while (fast && slow) {
+			ListNode* fast_nxt = fast->next;
+			ListNode* slow_nxt = slow->next;
+
+			slow->next = fast;
+			fast->next = slow_nxt;
+
+			slow = slow_nxt;
+			fast = fast_nxt;
+		}		
+	}
+
+	///@brief	翻转链表
+	///@param	head	链表头指针
+	///@return	返回翻转后链表的头节点
+	ListNode* reverseList(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* indx = head;
+		ListNode* indx_nxt = head->next;
+		ListNode* indx_nxt_nxt = indx_nxt->next;
+		indx->next = nullptr;
+		while (indx_nxt) {
+			indx_nxt->next = indx;
+			indx = indx_nxt;
+			indx_nxt = indx_nxt_nxt;
+			indx_nxt_nxt = indx_nxt ? indx_nxt->next : nullptr;
+		}
+		return indx;
+	}
+};
+
 int main()
 {
-	ListNode* n[6];
-	for (int i = 0; i != 6; i++)
+	ListNode* n[7];
+	for (int i = 0; i != 7; i++)
 	{
 		n[i] = new ListNode(i);
 		if (i > 0)
