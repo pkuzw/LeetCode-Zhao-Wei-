@@ -26,6 +26,7 @@ Note: Recursive solution is trivial, could you do it iteratively?
 
 ///@date	2016.01.12
 ///@version	1.2
+///@version	2.1
 
 #include <vector>
 #include <stack>
@@ -114,7 +115,8 @@ public:
 	///@param	root	根节点
 	///@return	返回结果数组
 	vector<int> preorderTraversal(TreeNode* root) {
-		helper(root);
+//		preTrav_Recur(root);
+		rslt = preTrav_Iter(root);
 		return rslt;
 	}
 
@@ -124,11 +126,30 @@ private:
 	///@brief	递归版前序遍历
 	///@param	root	根节点
 	///@return	返回结果数组
-	void helper(TreeNode* root) {
+	void preTrav_Recur(TreeNode* root) {
 		if (!root)	return;
 		rslt.push_back(root->val);
-		helper(root->left);
-		helper(root->right);
+		preTrav_Recur(root->left);
+		preTrav_Recur(root->right);
+	}
+
+	///@brief	迭代版前序遍历
+	///@param	root	根节点
+	///@return	返回结果数组
+	///@note	1. 栈；2. 需要留意的是先压入右孩子，再压入左孩子，这样才能在弹栈后先处理左孩子，再处理右孩子。
+	vector<int> preTrav_Iter(TreeNode* root) {
+		if (!root)	return rslt;
+		stack<TreeNode*> stk;
+		stk.push(root);
+		while (!stk.empty()) {
+			TreeNode* node = stk.top();
+			stk.pop();
+			rslt.push_back(node->val);
+
+			if (node->right)		stk.push(node->right);
+			if (node->left)		stk.push(node->left);
+		}
+		return rslt;
 	}
 
 };
