@@ -25,6 +25,7 @@ Note: Recursive solution is trivial, could you do it iteratively?
 
 ///@date	2016.01.12
 ///@version	1.2
+///@version	2.1
 
 #include <vector>
 #include <stack>
@@ -117,19 +118,45 @@ public:
 	///@param	root	二叉树树根
 	///@return	返回后序遍历的数组
 	vector<int> postorderTraversal(TreeNode* root) {
-		postTrav_Recur(root);
+//		postTrav_Recur(root);
+		rslt = postTrav_Iter(root);
 		return rslt;
 	}
 private:
 	vector<int> rslt;
 
-	///@brief	递归后序遍历
-	///@param	根节点
+	///@brief	递归版后序遍历
+	///@param	root	根节点
 	void postTrav_Recur(TreeNode* root) {
 		if (!root)	return;
 		postTrav_Recur(root->left);
 		postTrav_Recur(root->right);
 		rslt.push_back(root->val);
+	}
+
+	///@brief	迭代版后序遍历
+	///@param	root	根节点
+	///@return	返回结果数组
+	///@note	1. 需要一个标记指针，用来标注当前节点的孩子是否已经访问过，如果访问过其中之一的孩子或者该节点为叶子节点，就将该节点放入结果数组，同时将该节点标记为已经访问过，并且弹出栈顶元素；
+	//			否则就将该节点的非空“右左”孩子依次入栈（注意顺序）。
+	vector<int> postTrav_Iter(TreeNode* root) {
+		if (!root)	return rslt;
+		TreeNode* visited = root;
+		stack<TreeNode*> stk;
+		stk.push(root);
+		while (!stk.empty()) {
+			TreeNode* node = stk.top();
+			if ((!node->left && !node->right) || node->left == visited || node->right == visited) {
+				rslt.push_back(node->val);
+				visited = node;
+				stk.pop();
+			}
+			else {
+				if (node->right)		stk.push(node->right);
+				if (node->left)		stk.push(node->left);
+			}
+		}
+		return rslt;
 	}
 };
 
