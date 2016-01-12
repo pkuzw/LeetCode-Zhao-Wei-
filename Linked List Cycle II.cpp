@@ -10,7 +10,10 @@ Can you solve it without using extra space?
 ///@version	1.0
 
 ///@date	2015.08.20
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.12
+///@version	1.2
 
 #include <iostream>
 using namespace std;
@@ -26,7 +29,7 @@ public:
 	///@brief	检查一个链表是否有环
 	///@param	head	头指针
 	///@return	如果有环，则返回环开始的节点；否则返回nullptr
-	/* @note	设链表长度为len，表头到环起点的长度为a，快指针和满指针相遇点到环起点的长度为b，环长度为r，快指针每次移动2步，慢指针
+	/* @note	设链表长度为len，表头到环起点的长度为a，快指针和慢指针相遇点到环起点的长度为b，环长度为r，快指针每次移动2步，慢指针
 				每次移动1步，则相遇的时候慢指针移动了s的长度，快指针移动了2s的长度。且2s = k*r + s. k为快指针多跑的圈数。所以
 				s = kr = (k-1)r + r. 又因为r = len - a. 所以s = (k-1)r + len - a. 又因为s = a + b。所以a + b = (k-1)r + len - a，
 				a = (k-1)r + len - a - b. 这个等式的左边是链表首节点到环起点的距离，右边是相遇点到尾结点即环起点的距离。所以如果在
@@ -59,27 +62,27 @@ public:
 
 class Solution {
 public:
+	///@brief	检查一个链表是否有环
+	///@param	head	头指针
+	///@return	如果有环，则返回环开始的节点；否则返回nullptr
+	///@note	1. 在判定有环后，从快慢节点相遇的地方和链表表头分别出发，每次前进一步，相遇点就是环起始点。
 	ListNode *detectCycle(ListNode *head) {
 		if (!head || !head->next)	return nullptr;
-		ListNode *fast = head, *slow = head;
-		while (fast && fast->next)
-		{
+		ListNode* fast = head, *slow = head;
+		while (fast && fast->next) {
 			fast = fast->next->next;
 			slow = slow->next;
-			if (slow == fast)	break;
+			if (fast == slow)	break;
 		}
-		if (slow == fast)
-		{
+		if (fast == slow) {
 			slow = head;
-			while (slow != fast)
-			{
-				slow = slow->next;
+			while (fast != slow) {
 				fast = fast->next;
+				slow = slow->next;
 			}
-			return slow;
+			return fast;
 		}
-		else
-			return nullptr;
+		return nullptr;
 	}
 };
 
