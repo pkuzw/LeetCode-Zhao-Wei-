@@ -5,7 +5,10 @@
 ///@version	1.0
 
 ///@date	2015.08.19
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.13
+///@version	1.2
 #include <iostream>
 using namespace std;
 
@@ -74,41 +77,35 @@ private:
 class Solution {
 public:
 	ListNode* sortList(ListNode* head) {
-		if (!head || !head->next)	return head;
+		if (!head || !head->next) return head;
 		ListNode* fast = head, *slow = head;
-		while (fast->next && fast->next->next)
-		{
+		while (fast->next && fast->next->next) {
 			fast = fast->next->next;
 			slow = slow->next;
 		}
 		fast = slow->next;
 		slow->next = nullptr;
 		slow = head;
-
-		fast = sortList(fast);
 		slow = sortList(slow);
-		merge(fast, slow);
+		fast = sortList(fast);
+		return merge(slow, fast);
 	}
 private:
-	ListNode* merge(ListNode* a, ListNode* b)
-	{
+	ListNode* merge(ListNode* head1, ListNode* head2) {
 		ListNode* rslt = new ListNode(INT_MIN);
 		ListNode* cur = rslt;
-		while (a && b)
-		{
-			if (a->val < b->val)
-			{
-				cur->next = a;
-				a = a->next;
+		while (head1 && head2) {
+			if (head1->val < head2->val) {
+				cur->next = head1;
+				head1 = head1->next;
 			}
-			else
-			{
-				cur->next = b;
-				b = b->next;
+			else {
+				cur->next = head2;
+				head2 = head2->next;
 			}
 			cur = cur->next;
 		}
-		cur->next = a ? a : b;
+		cur->next = head1 ? head1 : head2;
 		return rslt->next;
 	}
 };
