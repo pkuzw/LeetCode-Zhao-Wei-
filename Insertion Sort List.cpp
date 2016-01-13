@@ -7,7 +7,10 @@ Sort a linked list using insertion sort.
 ///@version 1.0
 
 ///@date	2015.08.19
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.13
+///@version	1.2
 
 #include <iostream>
 
@@ -44,7 +47,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	ListNode* insertionSortList(ListNode* head) {
 		if (!head || !head->next)	return head;
@@ -63,6 +66,32 @@ public:
 			indx = indx_next;
 		}
 		return rslt->next;
+	}
+};
+
+class Solution {
+public:
+	///@brief	插入法给链表排序
+	///@param	head	链表首节点
+	///@return	返回排好序的链表首节点
+	///@note	1. 设置一个哨兵节点dump(INT_MIN)，位于首节点之前；
+	//			2. indx为当前待插入的节点，cur为比较的节点，从dump开始；
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
+	ListNode* insertionSortList(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode *dump = new ListNode(INT_MIN);
+		ListNode* indx = head;		
+		while (indx) {
+			ListNode* cur = dump;
+			ListNode* indx_nxt = indx->next;
+			while (cur->next && cur->next->val <= indx->val) {
+				cur = cur->next;
+			}
+			indx->next = cur->next;
+			cur->next = indx;
+			indx = indx_nxt;			
+		}
+		return dump->next;
 	}
 };
 
