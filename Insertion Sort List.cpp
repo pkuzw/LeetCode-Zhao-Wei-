@@ -76,7 +76,7 @@ public:
 	///@return	返回排好序的链表首节点
 	///@note	1. 设置一个哨兵节点dump(INT_MIN)，位于首节点之前；
 	//			2. indx为当前待插入的节点，cur为比较的节点，从dump开始；
-	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
+	//			3. 时间复杂度为O(n^2)，空间复杂度为O(1)。
 	ListNode* insertionSortList(ListNode* head) {
 		if (!head || !head->next)	return head;
 		ListNode *dump = new ListNode(INT_MIN);
