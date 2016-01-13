@@ -27,6 +27,9 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@version	1.2
 ///@version	2.1
 
+///@date	2016.01.13
+///@version	3.0
+
 #include <vector>
 #include <stack>
 
@@ -119,7 +122,8 @@ public:
 	///@return	返回后序遍历的数组
 	vector<int> postorderTraversal(TreeNode* root) {
 //		postTrav_Recur(root);
-		rslt = postTrav_Iter(root);
+//		rslt = postTrav_Iter(root);
+		rslt = postTrav_Morris(root);
 		return rslt;
 	}
 private:
@@ -158,7 +162,73 @@ private:
 		}
 		return rslt;
 	}
-};
+
+	///@brief	Morris后序遍历
+	///@param	root	根节点
+	///@return	返回结果数组
+	///@note	1. 与Morris中序遍历算法的大体框架一致，也是利用叶子节点的右指针来作为当前节点的前驱。需要注意的几点不同是这样的：
+	//			2. 在遍历之前，设置一个dump节点，其值为0，左孩子指向根节点，当前节点cur初始化也为dump；
+	//			3. 当左孩子为空时，将当前节点转移到右孩子，不做输出；
+	//			4. 当左孩子存在，在左子树上找到当前节点中序遍历的前驱节点，如果前驱节点的右孩子为空，则将前驱节点的右孩子指向当前节点，并将当前节点左移至其左孩子；
+	//			5. 当前驱节点的右孩子指向了当前节点时，按照从当前节点的左孩子到其前驱节点的逆序输出，然后断开前驱节点右孩子到当前节点的连接，之后接着将当前节点移至其右孩子。
+	vector<int> postTrav_Morris(TreeNode* root) {
+		if (!root)	return rslt;
+		TreeNode* dump = new TreeNode(0);
+		dump->left = root;
+		TreeNode* cur = dump, *pre = cur;
+		while (cur) {
+			if (!cur->left) {
+				cur = cur->right;
+			}
+			else {
+				pre = cur->left;
+				while (pre->right && pre->right != cur) 
+					pre = pre->right;
+				if (!pre->right) {
+					pre->right = cur;
+					cur = cur->left;
+				}
+				else if (pre->right == cur) {
+					printReverse(cur->left, pre);
+					pre->right = nullptr;
+					cur = cur->right;
+				}
+			}
+		}
+		return rslt;
+	}
+
+	///@brief	逆序输出指定节点间路径上的所有点
+	///@param	from	起始节点
+	///@param	to		终止节点
+	void printReverse(TreeNode* from, TreeNode* to) {
+		reverseRightPath(from, to);
+		TreeNode* x = to;
+		while (1) {
+			rslt.push_back(x->val);
+			if (x == from)	break;
+			x = x->right;
+		}
+		reverseRightPath(to, from);
+	}
+
+	///@brief	逆转指定节点的连接顺序
+	///@param	from	起始节点
+	///@param	to		终止节点
+	///@note	1. 因为需要逆转输出的是当前节点的左孩子到其前驱节点的左子树上的最右边路径，所以按照翻转链表的算法进行操作即可。
+	//			2. 注意在遍历的时候使用死循环中间break的方法来遍历。
+	void reverseRightPath(TreeNode* from, TreeNode* to) {
+		if (from == to)	return;
+		TreeNode* x = from, *y = from->right, *z = from;
+		while (1) {
+			z = y->right;
+			y->right = x;
+			x = y;
+			y = z;
+			if (x == to)	break;
+		}
+	}
+};		
 
 int main()
 {
