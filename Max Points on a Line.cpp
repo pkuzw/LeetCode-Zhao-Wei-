@@ -7,7 +7,10 @@ Given n points on a 2D plane, find the maximum number of points that lie on the 
 ///@version	1.0
 
 ///@date	2015.08.19
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.13
+///@version	1.2
 
 #include <vector>
 #include <unordered_map>
@@ -60,22 +63,25 @@ public:
 
 class Solution {
 public:
+	///@brief	计算共线的最大点数目
+	///@param	points	点
+	///@return	返回共线最多的点
+	///@note	1. 用哈希表以斜率为键，共线点数为值存储共线点；
+	//			2. 注意处理相同点和斜率不存在的点
 	int maxPoints(vector<Point>& points) {
-		unordered_map<float, int> ht;
+		unordered_map<float, int> hash_tbl;
 		int rslt = 0;
-		for (int i = 0; i != points.size(); i++)
-		{
+		for (int i = 0; i != points.size(); i++) {
 			int dup = 1;
-			ht.clear();
-			ht[INT_MIN] = 0;
-			for (int j = 0; j != points.size(); j++)
-			{
+			hash_tbl.clear();
+			hash_tbl[INT_MIN] = 0;
+			for (int j = 0; j != points.size(); j++) {
 				if (i == j)	continue;
-				if (points[i].x == points[j].x && points[i].y == points[j].y)	dup++;
-				else if (points[i].x == points[j].x && points[i].x != points[j].y)	ht[INT_MAX]++;
-				else	ht[float(points[i].y - points[j].y) / float(points[i].x - points[j].x)]++;				
+				if (points[i].x == points[j].x && points[i].y != points[j].y)	hash_tbl[INT_MAX]++;
+				else if (points[i].x == points[j].x && points[i].y == points[j].y)	dup++;
+				else	hash_tbl[float(points[i].y - points[j].y) / float(points[i].x - points[j].x)]++;
 			}
-			for (unordered_map<float, int>::iterator iter = ht.begin(); iter != ht.end(); iter++)
+			for (unordered_map<float, int>::iterator iter = hash_tbl.begin(); iter != hash_tbl.end(); iter++)
 				rslt = max(rslt, iter->second + dup);
 		}
 		return rslt;
