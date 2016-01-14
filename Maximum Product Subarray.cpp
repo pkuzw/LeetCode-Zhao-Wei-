@@ -10,7 +10,10 @@ the contiguous subarray [2,3] has the largest product = 6.
 ///@version	1.0
 
 ///@date	2015.08.18
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.14
+///@version	1.2
 #include <vector>
 
 using namespace std;
@@ -39,7 +42,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	int maxProduct(vector<int>& nums) {
 		vector<int> dp_max(nums.size(), INT_MIN);
@@ -57,13 +60,42 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	计算整数型数组最大的连续子串乘积
+	///@param	nums	数组
+	///@return	返回最大的连续子串乘积
+	///@note	1. 动态规划；
+	//			2. 设dp_max[i]表示包含num[i]之前的所有数的最大乘积，dp_min[i]表示包含num[i]之前的所有数的最小乘积；
+	//			3. 初始化dp_max[0] = dp_min[0] = num[0]；
+	//			4. 递推关系式为dp_max[i] = max(num[i], dp_max[i-1] * num[i], dp_min[i-1] * num[i])；
+	//			5. dp_min[i] = min(num[i], dp_max[i-1] * num[i], dp_min[i-1] * num[i])；
+	//			6. 时间复杂度为O(n)，空间复杂度为O(1)。
+	int maxProduct(vector<int>& nums) {
+		if (nums.empty())	return 0;
+		int rslt = nums[0];
+		int dp_max = nums[0], dp_min = nums[0];
+		for (int i = 1; i < nums.size(); i++) {
+			int tmp = dp_max;
+			dp_max = max(nums[i], max(nums[i] * dp_max, nums[i] * dp_min));
+			dp_min = min(nums[i], min(nums[i] * tmp, nums[i] * dp_min));
+			rslt = max(rslt, dp_max);
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	vector<int> nums;
 	nums.push_back(-4);
  	nums.push_back(-3);
  	nums.push_back(-2);
-// 	nums.push_back(-1);
+ 	nums.push_back(8);
+	nums.push_back(4);
+	Solution_v1_1 s11;
+	int r11 = s11.maxProduct(nums);
+
 	Solution slt;
 	int rslt = slt.maxProduct(nums);
 	return 0;
