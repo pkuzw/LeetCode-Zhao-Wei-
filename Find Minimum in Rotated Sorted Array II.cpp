@@ -17,7 +17,10 @@ The array may contain duplicates.
 ///@version	1.0
 
 ///@date	2015.08.18
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.14
+///@version	1.2
 
 #include <vector>
 
@@ -61,27 +64,29 @@ public:
 
 class Solution {
 public:
+	///@brief	在一个部分翻转的有序数组中查找最小值
+	///@param	nums	数组
+	///@return	返回数组中的最小值
+	///@note	1. 二分查找；2. 存在的重复元素可能导致左右边界指针和中间指针全部相同，此时用暴力枚举法解决；
+	//			3. 因为存在重复元素，在二分查找时，移动左边界指针的判定条件为<=，而非<。
+	//			4. 受重复元素影响，最差情况下，即全部元素一样时，时间复杂度为O(n)。
 	int findMin(vector<int>& nums) {
+		if (nums.empty())	return 0;
 		if (nums.size() == 1)	return nums[0];
-		int l = 0, r = nums.size()-1;
+		int l = 0, r = nums.size() - 1;
 		if (nums[l] < nums[r])	return nums[l];
-		else if (nums[l] > nums[r])
-		{
-			while (l < r-1)
-			{
-				int m = (l+r)/2;
+		else if (nums[l] == nums[r]) {
+			int min_ele = INT_MAX;
+			for (int i = 0; i < nums.size(); i++)	min_ele = min(min_ele, nums[i]);
+			return min_ele;
+		}
+		else {
+			while (l < r - 1) {
+				int m = (l + r) / 2;
 				if (nums[l] <= nums[m])	l = m;
 				else	r = m;
 			}
-			return (nums[l] < nums[r]) ? nums[l] : nums[r];
-		}
-		else
-		{
-			int min = INT_MAX;
-			for (int i = 0; i != nums.size(); i++)
-				if (nums[i] < min)
-					min = nums[i];
-			return min;
+			return nums[l] < nums[r] ? nums[l] : nums[r];
 		}
 	}
 };
