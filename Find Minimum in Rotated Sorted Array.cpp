@@ -13,7 +13,10 @@ You may assume no duplicate exists in the array.
 ///@version	1.0
 
 ///@date	2015.08.18
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.14
+///@version	1.2
 
 #include <vector>
 
@@ -46,17 +49,43 @@ public:
 
 class Solution {
 public:
+	///@brief	在一个已经排好序但部分翻转的数组中查找最小值
+	///@param	nums	数组
+	///@return	返回最小值
+	///@note	1. 二分查找
 	int findMin(vector<int>& nums) {
-		if (nums.size() == 1)	return nums[0];
-		int l = 0, r = nums.size()-1;
+		int l = 0, r = nums.size() - 1;
+		if (l == r)	return nums[0];
 		if (nums[l] < nums[r])	return nums[l];
-		while (l < r-1)
-		{
+		while (l < r - 1) {
 			int m = (l + r) / 2;
 			if (nums[l] < nums[m])	l = m;
-			else r = m;
+			else	r = m;
 		}
 		return (nums[l] < nums[r]) ? nums[l] : nums[r];
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 		if (nums.size() == 1)	return nums[0];
+// 		int l = 0, r = nums.size()-1;
+// 		if (nums[l] < nums[r])	return nums[l];
+// 		while (l < r-1)
+// 		{
+// 			int m = (l + r) / 2;
+// 			if (nums[l] < nums[m])	l = m;
+// 			else r = m;
+// 		}
+// 		return (nums[l] < nums[r]) ? nums[l] : nums[r];
 	}
 };
 
