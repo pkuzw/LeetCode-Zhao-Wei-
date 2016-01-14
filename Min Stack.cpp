@@ -12,7 +12,10 @@ getMin() -- Retrieve the minimum element in the stack.
 ///@version	1.0
 
 ///@date	2015.08.18
-///@version	2.1
+///@version	1.1
+
+///@date	2016.01.14
+///@version	1.2
 
 #include <iostream>
 #include <vector>
@@ -94,16 +97,13 @@ private:
 class MinStack {
 public:
 	void push(int x) {
+		if (min_stk.empty() || x <= min_stk.top())	min_stk.push(x);
 		stk.push(x);
-		if (min_stk.empty() || x <= min_stk.top())
-			min_stk.push(x);
 	}
 
 	void pop() {
-		if (stk.top() == min_stk.top())
-			min_stk.pop();
-		if (!stk.empty())
-			stk.pop();		
+		if (stk.top() == min_stk.top())	min_stk.pop();
+		if (!stk.empty())	stk.pop();
 	}
 
 	int top() {
