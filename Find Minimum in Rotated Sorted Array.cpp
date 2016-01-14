@@ -63,29 +63,6 @@ public:
 			else	r = m;
 		}
 		return (nums[l] < nums[r]) ? nums[l] : nums[r];
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 		if (nums.size() == 1)	return nums[0];
-// 		int l = 0, r = nums.size()-1;
-// 		if (nums[l] < nums[r])	return nums[l];
-// 		while (l < r-1)
-// 		{
-// 			int m = (l + r) / 2;
-// 			if (nums[l] < nums[m])	l = m;
-// 			else r = m;
-// 		}
-// 		return (nums[l] < nums[r]) ? nums[l] : nums[r];
 	}
 };
 
