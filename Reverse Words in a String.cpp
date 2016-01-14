@@ -23,6 +23,9 @@ Reduce them to a single space in the reversed string.
 ///@date	2015.08.18
 ///@version	2.0
 
+///@date	2016.01.14
+///@version	2.1
+
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -95,21 +98,24 @@ private:
 };
 
 ///@note	先除去多余的空格，然后将每个单词按照相间1个空格的间距排列，然后将单个的单词反转，最后将整个的句子进行反转。
-//			i标记出遍历的数组下标到达了哪个位置；j表示单词结束的下标；k表示单词开始的下标；word_cnt表示单词的数目。时间复杂度为O(n)，空间复杂度为O(1)。
+//			i标记出遍历的数组下标到达了哪个位置；j表示单词结束的下标；k表示单词开始的下标；word_cnt表示单词的数目。
+//			时间复杂度为O(n)，空间复杂度为O(1)。
 class Solution {
 public:
-	void reverseWords(string &s)
-	{
+	///@brief	翻转字符串中的单词
+	///@param	s	字符串
+	///@note	1. 先将字符串中的每个非空格连续字符子串（单词）翻转，然后再将整个字符串翻转即可；
+	//			2. 能够删除首部和尾部多余以及单词间的多余空格符；
+	//			3. 设置4个变量，i为字符串的循环变量；j为单词的终止下标；k为单词的起始下标；word_cnt表示单词的数目；
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)。
+	void reverseWords(string &s) {
 		int i = 0, j = 0, k = 0, word_cnt = 0;
-		while (1)
-		{
-			while (i < s.size() && s[i] == ' ')
-				i++;
+		while (1) {
+			while (i < s.size() && s[i] == ' ')	i++;
 			if (i == s.size())	break;
 			if (word_cnt)	s[j++] = ' ';
 			k = j;
-			while (i < s.size() && s[i] != ' ')
-				s[j++] = s[i++];
+			while (i < s.size() && s[i] != ' ')	s[j++] = s[i++];						
 			reverse(s.begin() + k, s.begin() + j);
 			word_cnt++;
 		}
