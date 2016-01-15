@@ -24,7 +24,10 @@ Your code should preferably run in O(n) time and use only O(1) memory.
 ///@version	1.0
 
 ///@date	2015.08.14
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.15
+///@version	1.2
 
 #include <vector>
 #include <iostream>
@@ -91,37 +94,59 @@ public:
 	ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
 		int lenA = 0, lenB = 0;
 		ListNode* indxA = headA, *indxB = headB;
-		while (indxA)
-		{
-			lenA++;
+		while (indxA) {
 			indxA = indxA->next;
+			lenA++;
 		}
-		while (indxB)
-		{
-			lenB++;
+		while (indxB) {
 			indxB = indxB->next;
+			lenB++;
 		}
-
 		indxA = headA;
 		indxB = headB;
-		if (lenA > lenB)
-		{
-			for (int i = 0; i != lenA - lenB; i++)
-				indxA = indxA->next;
-		}
-		else if (lenB > lenA)
-		{
-			for (int i = 0; i != lenB - lenA; i++)
-				indxB = indxB->next;
-		}
-
-		while (indxA != indxB)
-		{
+		if (lenA > lenB) 
+			for (int i = 0; i < lenA - lenB; i++)	indxA = indxA->next;		
+		else if (lenA < lenB) 
+			for (int i = 0; i < lenB - lenA; i++)	indxB = indxB->next;		
+		while (indxA != indxB) {
 			indxA = indxA->next;
 			indxB = indxB->next;
 		}
 		return indxA;
 	}
+// 		int lenA = 0, lenB = 0;
+// 		ListNode* indxA = headA, *indxB = headB;
+// 		while (indxA)
+// 		{
+// 			lenA++;
+// 			indxA = indxA->next;
+// 		}
+// 		while (indxB)
+// 		{
+// 			lenB++;
+// 			indxB = indxB->next;
+// 		}
+// 
+// 		indxA = headA;
+// 		indxB = headB;
+// 		if (lenA > lenB)
+// 		{
+// 			for (int i = 0; i != lenA - lenB; i++)
+// 				indxA = indxA->next;
+// 		}
+// 		else if (lenB > lenA)
+// 		{
+// 			for (int i = 0; i != lenB - lenA; i++)
+// 				indxB = indxB->next;
+// 		}
+// 
+// 		while (indxA != indxB)
+// 		{
+// 			indxA = indxA->next;
+// 			indxB = indxB->next;
+// 		}
+// 		return indxA;
+// 	}
 };
 
 int main()
