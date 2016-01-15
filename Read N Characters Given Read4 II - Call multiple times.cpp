@@ -3,12 +3,15 @@
 ///@date	2016.01.06
 ///@version	1.0
 
+///@date	2016.01.15
+///@version	1.1
+
 // Forward declaration of the read4 API.
 #include <queue>
 using namespace std;
 int read4(char *buf);
 
-class Solution {
+class Solution_v1 {
 public:
     /**
      * @param buf Destination buffer
@@ -43,7 +46,36 @@ public:
     }
 
 	queue<char> que;
+};
 
+class Solution {
+public:
+    /**
+     * @param buf Destination buffer
+     * @param n   Maximum number of characters to read
+     * @return    The number of characters read
+     */
+    int read(char *buf, int n) {
+		int len = 0;
+        while (!que.empty()) {
+			buf[len++] = que.front();
+			que.pop();
+			if (len == n)	return n;
+		}
+		int num = 0;
+		while (len < n) {
+			num = read4(buf + len);
+			len += num;
+			if (num < 4)	break;
+		}
+		for (int i = n; i < len; i++)
+			que.push(buf[i]);
+		int end = min(len, n);
+		buf[end] = '\0';
+		return end;
+    }
+private:
+	queue<char> que;
 };
 
 int main() {
