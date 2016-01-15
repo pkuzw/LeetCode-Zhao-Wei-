@@ -10,11 +10,14 @@ T is "ece" which its length is 3.
 ///@date	2015.08.14
 ///@version	1.0
 
+///@date	2016.01.15
+///@version	1.1
+
 //	如果是n种字符呢？
 #include <string>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算最多只有两个不同字符组成的字符串的最大长度
 	///@param	s	字符串
@@ -39,9 +42,27 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int lengthOfLongestSubstringTwoDistinct(string s) {
+		int i = 0, j = -1, rslt = 0;
+		for (int k = 1; k < s.size(); k++) {
+			if (s[k] == s[k-1])	continue;
+			if (j > -1 && s[k] != s[j]) {
+				rslt = max(rslt, k - i);
+				i = j + 1;
+			}
+			j = k - 1;
+		}
+		return rslt > s.size() - i ? rslt : s.size() - i;
+	}
+};
+
 int main()
 {
 	string s = "eceecebaaaaaaaaaa";
+	Solution_v1 s1;
+	int r1 = s1.lengthOfLongestSubstringTwoDistinct(s);
 	Solution slt;
 	int rslt = slt.lengthOfLongestSubstringTwoDistinct(s);
 	return 0;
