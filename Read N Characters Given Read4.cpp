@@ -13,6 +13,8 @@ The read function will only be called once for each test case.
 ///@date	2016.01.05
 ///@version	1.0
 
+///@date	2016.01.15
+///@version	1.1
 
 #include <iostream>
 using namespace std;
@@ -22,7 +24,7 @@ int read4(char *buf) {
 	return 4;
 }
 
-class Solution {
+class Solution_v1 {
 public:
     /**
      * @param buf Destination buffer
@@ -43,6 +45,29 @@ public:
 				buf--;
 				num--;
 				*buf = '\0';	//	结束字符串
+			}
+		}
+		return num;
+    }
+};
+
+class Solution {
+public:
+    /**
+     * @param buf Destination buffer
+     * @param n   Maximum number of characters to read
+     * @return    The number of characters read
+     */
+    int read(char *buf, int n) {
+        int num = 0, tmp = 4;
+		while (tmp == 4 && num < n) {
+			tmp = read4(buf);
+			num += tmp;
+			buf += tmp;
+			while (num > n) {
+				buf--;
+				num--;
+				buf[num] = '\0';
 			}
 		}
 		return num;
