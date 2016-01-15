@@ -114,39 +114,6 @@ public:
 		}
 		return indxA;
 	}
-// 		int lenA = 0, lenB = 0;
-// 		ListNode* indxA = headA, *indxB = headB;
-// 		while (indxA)
-// 		{
-// 			lenA++;
-// 			indxA = indxA->next;
-// 		}
-// 		while (indxB)
-// 		{
-// 			lenB++;
-// 			indxB = indxB->next;
-// 		}
-// 
-// 		indxA = headA;
-// 		indxB = headB;
-// 		if (lenA > lenB)
-// 		{
-// 			for (int i = 0; i != lenA - lenB; i++)
-// 				indxA = indxA->next;
-// 		}
-// 		else if (lenB > lenA)
-// 		{
-// 			for (int i = 0; i != lenB - lenA; i++)
-// 				indxB = indxB->next;
-// 		}
-// 
-// 		while (indxA != indxB)
-// 		{
-// 			indxA = indxA->next;
-// 			indxB = indxB->next;
-// 		}
-// 		return indxA;
-// 	}
 };
 
 int main()
