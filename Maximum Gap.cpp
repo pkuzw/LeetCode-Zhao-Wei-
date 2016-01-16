@@ -13,7 +13,10 @@ You may assume all elements in the array are non-negative integers and fit in th
 ///@version	1.0
 
 ///@date	2015.08.13
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.16
+///@version	1.2
 
 #include <vector>
 #include <algorithm>
@@ -82,8 +85,7 @@ public:
 		if (nums.size() < 2)	return 0;
 		int max_num = INT_MIN;
 		int min_num = INT_MAX;
-		for (int i = 0; i != nums.size(); i++)
-		{
+		for (int i = 0; i != nums.size(); i++) {
 			if (nums[i] > max_num)	max_num = nums[i];
 			if (nums[i] < min_num)	min_num = nums[i];
 		}
@@ -93,8 +95,7 @@ public:
 		vector<int>max_bucket(bucket_num, INT_MIN);
 		vector<int>min_bucket(bucket_num, INT_MAX);
 
-		for (int i = 0; i != nums.size(); i++)
-		{
+		for (int i = 0; i != nums.size(); i++) {
 			if (nums[i] > max_bucket[(nums[i] - min_num) / bucket_capacity])	
 				max_bucket[(nums[i] - min_num) / bucket_capacity] = nums[i];
 			if (nums[i] < min_bucket[(nums[i] - min_num) / bucket_capacity])
@@ -103,18 +104,18 @@ public:
 
 		int max_gap = INT_MIN;
 		int j = 0;
-		for (int i = 1; i != bucket_num; i++)
-		{
+		for (int i = 1; i != bucket_num; i++) {
 			if (min_bucket[i] == INT_MAX || max_bucket[j] == INT_MIN)	continue;
-			if (min_bucket[i] - max_bucket[j] > max_gap)
-			{
-				max_gap = min_bucket[i] - max_bucket[j];				
+			if (min_bucket[i] - max_bucket[j] > max_gap) {
+				max_gap = min_bucket[i] - max_bucket[j];		
 			}
 			j = i;
 		}
 		return max_gap;
 	}
 };
+
+///@brief	leetcode修改了测试数据，增加了连续相同数据，v1.0和v1.1两个版本的代码WA在了{1, 1, 1, 1}上面
 
 int main()
 {
