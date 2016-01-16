@@ -8,12 +8,15 @@ For example, given [0, 1, 3, 50, 75], lower = 0 and upper = 99, return ["2", "4-
 ///@date	2015.08.13
 ///@version	1.0
 
+///@date	2016.01.16
+///@version	1.1
+
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算缺失的数值范围
 	///@param	nums	排好序的数组
@@ -59,6 +62,49 @@ public:
 		}
 		if (nums.back() != upper)	//	处理上界。如果上界出现在数组里，那么就不需要单独处理。
 		{
+			if (l == upper)
+				rslt.push_back(to_string(static_cast<long long>(l)));
+			else
+				rslt.push_back(to_string(static_cast<long long>(l)) + "->" + to_string(static_cast<long long>(upper)));
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	vector<string> findMissingRanges(vector<int>& nums, int lower, int upper) {
+		vector<string> rslt;
+		if (nums.empty()) {	//	处理数组为空的情形
+			if (lower < upper)
+				rslt.push_back(to_string(static_cast<long long>(lower)) + "->" + to_string(static_cast<long long>(upper)));
+			else if (lower == upper)
+				rslt.push_back(to_string(static_cast<long long>(lower)));
+			return rslt;
+		}
+
+		int l = lower;
+		int r = lower;
+		int i = 0;
+		while (r != upper+1) {	//	要让r == upper，这样可以处理上界。
+			if (i < nums.size() && r == nums[i]) {
+				if (l == nums[i])
+					l++;									
+				else {
+					if (l == nums[i]-1)
+						rslt.push_back(to_string(static_cast<long long>(l)));					
+					else
+						rslt.push_back(to_string(static_cast<long long>(l)) + "->" + to_string(static_cast<long long>(nums[i]-1)));
+					l = r + 1;
+				}				
+				i++;
+			}
+			if (i < nums.size())
+				r = nums[i];
+			else
+				r = upper+1;	//	这里不能使r++，应该是r = nums[i]
+		}
+		if (nums.back() != upper) {	//	处理上界。如果上界出现在数组里，那么就不需要单独处理。		
 			if (l == upper)
 				rslt.push_back(to_string(static_cast<long long>(l)));
 			else
