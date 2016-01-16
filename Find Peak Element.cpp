@@ -15,7 +15,10 @@ For example, in array [1, 2, 3, 1], 3 is a peak element and your function should
 ///@version	1.0
 
 ///@date	2015.08.13
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.16
+///@version	1.2
 #include <vector>
 
 using namespace std;
@@ -46,10 +49,8 @@ class Solution {
 public:
 	int findPeakElement(vector<int>& nums) {
 		if (nums.size() == 1)	return 0;
-
-		int l = 0, r = nums.size()-1;
-		while (l <= r)
-		{
+		int l = 0, r = nums.size() - 1;
+		while (l <= r) {
 			if (l == r)	return l;
 			int m = (l + r) / 2;
 			if (nums[m] < nums[m+1])	l = m + 1;
