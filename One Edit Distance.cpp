@@ -4,13 +4,16 @@
 ///@date	2015.08.14
 ///@version	1.0
 
+///@date	2016.01.16
+///@version	1.1
+
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <cmath>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断两个字符串是否能够修改、删除或者添加一次来变得一样
 	///@param	s	字符串s
@@ -50,6 +53,40 @@ public:
 			}
 			return true;
 		}
+	}
+};
+
+class Solution {
+public:	
+	///@brief	判断两个字符串是否能够修改、删除或者添加一次来变得一样
+	///@param	s	字符串s
+	///@param	t	字符串t
+	///@return	如果可以，则返回true；否则返回false
+	///@note	1. 枚举；2. 当两个字符串的长度相差超过1时，返回false；当两个字符串长度相同且不同的字符数累积值为1时，返回true，否则为false；
+	//			当两个字符串长度相差为1，且较长的字符串除去其中的一个字符后的子串与较短字符串相同，则返回true，否则返回false。
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
+	bool isOneEditDistance(string s, string t) {
+		if (s.size() > t.size())	swap(s, t);
+		int slen = s.size(), tlen = t.size();
+		if (tlen - slen > 1)		return false;
+		else if (tlen == slen) {
+			int diff_cnt = 0;
+			for (int i = 0; i != tlen; i++) {
+				if (s[i] != t[i])	diff_cnt++;
+			}
+			if (diff_cnt == 1)	return true;			
+		}
+		else {
+			string r = t.substr(0, tlen - 1);
+			for (int i = 0; i != slen; i++) {
+				if (s[i] != t[i]) {
+					r = t.substr(0, i) + t.substr(i + 1);
+					break;
+				}
+			}
+			if (r == s)	return true;
+		}
+		return false;
 	}
 };
 
