@@ -16,11 +16,16 @@ Here is an example of version numbers ordering:
 ///@version	1.0
 
 ///@date	2015.08.13
+///@version	1.1
+
+///@date	2016.01.16
 ///@version	2.0
 
 #include <vector>
 #include <string>
 #include <queue>
+#include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -97,7 +102,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	int compareVersion(string version1, string version2) {
 		queue<int> v1 = parse(version1);
@@ -145,10 +150,31 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	比较版本号
+	///@param	version1, version2	版本号
+	///@return	如果版本号1 -版本号2的值
+	///@note	1. 使用stringstream；2. 将ver1中的一段输入到val1中，截止到最近的dot为止，同理ver2，然后逐段比较即可。
+	int compareVersion(string version1, string version2) {
+		istringstream ver1(version1 + "."), ver2(version2 + ".");
+		int val1 = 0, val2 = 0;
+		char dot = '.';
+		while (ver1.good() || ver2.good()) {
+			if (ver1.good()) ver1 >> val1 >> dot;	//	将ver1中的一段输入到val1中，截止到最近的dot为止
+			if (ver2.good()) ver2 >> val2 >> dot;
+			if (val1 > val2) return 1;
+			else if (val1 < val2) return -1;
+			val1 = val2 = 0;
+		}
+		return 0;
+	}
+};
+
 int main()
 {
-	string s1 = "1";
-	string s2 = "1.0";
+	string s1 = "1.17.23";
+	string s2 = "1.0.6";
 	Solution slt;
 	int rslt = slt.compareVersion(s1, s2);
 	return 0;
