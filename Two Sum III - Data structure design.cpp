@@ -14,10 +14,13 @@ find(7) -> false
 ///@date	2015.08.13
 ///@version	1.0
 
+///@date	2016.01.17
+///@version	1.1
+
 #include <unordered_map>
 using namespace std;
 
-class TwoSum {
+class TwoSum_v1 {
 public:
 	void add(int number) {		
 		ht[number]++;
@@ -40,17 +43,42 @@ private:
 	unordered_map<int, int> ht;
 };
 
+class TwoSum {
+public:
+
+	// Add the number to an internal data structure.
+	void add(int number) {
+		hash_tbl[number]++;
+	}
+
+	// Find if there exists any pair of numbers which sum is equal to the value.
+	bool find(int value) {
+		for (unordered_map<int, int>::iterator it = hash_tbl.begin(); it != hash_tbl.end(); it++) {
+			int i = it->first;
+			int j = value - it->first;
+			if ((i == j && it->second > 1) || 
+				(i != j && hash_tbl.find(j) != hash_tbl.end()))		
+				return true;			
+		}
+		return false;
+	}
+
+private:
+	unordered_map<int, int> hash_tbl;
+};
+
 int main()
 {
 	TwoSum ts;
 	ts.add(1);
 	ts.add(-2);
 	ts.add(3);
+	ts.add(3);
 	ts.add(4);
 
 	bool rslt = ts.find(2);
 	rslt = ts.find(5);
 	rslt = ts.find(8);
-
+	rslt = ts.find(6);
 	return 0;
 }
