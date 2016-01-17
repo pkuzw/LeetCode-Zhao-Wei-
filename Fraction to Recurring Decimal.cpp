@@ -15,7 +15,10 @@ Given numerator = 2, denominator = 3, return "0.(6)".
 ///@version	1.0
 
 ///@date	2015.08.13
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.17
+///@version	1.2
 
 #include <string>
 #include <vector>
@@ -66,40 +69,39 @@ public:
 
 class Solution {
 public:
+	///@brief	将分数转换成小数
+	///@param	numerator	分子
+	///@param	denominator	分母
+	///@return	返回字符串表示的小数，如果是循环小数，则将循环部分用括号括起来
+	///@note	1. 分成整数部分和小数部分两部分来计算；2. 在计算整数部分时，要注意添加合适的符号；3. 在计算小数部分是，通过hash table来存储
+	//			之前出现过的循环小数部分，一旦以前出现过，就可以在小数部分将其插入，并添加上括弧。
 	string fractionToDecimal(int numerator, int denominator) {
+		if (!numerator)	return "0";
 		if (!denominator)	return "";
-		if (!numerator)		return "0";
-
-		int sign_n = (numerator < 0) ? -1 : 1;
-		int sign_d = (denominator < 0) ? -1 : 1;
-		long long num = abs((long long)numerator);	//	将除数和被除数都转换成正数，便于后续处理
-		long long den = abs((long long)denominator);//	这里要将int型转换成long long型变量，否则遇到INT_MIN，就会溢出
-		long long out = num / den;
+		long long num = abs((long long)numerator);
+		long long den = abs((long long)denominator);
+		int sign_num = numerator >= 0 ? 1 : -1;
+		int sign_den = denominator >= 0 ? 1 : -1;
+		long long out = num / den;	//	整数部分
 		long long rem = num % den;
-
 		string rslt = to_string(out);
-		if (sign_d * sign_n == -1)	rslt = "-" + rslt;
+		if (sign_den * sign_num < 1)	rslt = "-" + rslt;
 		if (!rem)	return rslt;
 
+		unordered_map<long long, int> hash_tbl;
 		rslt += ".";
-		unordered_map<long long, int> ht;	//	记录循环部分的起始下标
-		string s;
 		int pos = 0;
-		while (rem)
-		{
-			if (ht.find(rem) != ht.end())
-			{
-				s.insert(ht[rem], "(");
+		string s = "";	//	小数部分
+		while (rem) {
+			if (hash_tbl.find(rem) != hash_tbl.end()) {
+				s.insert(hash_tbl[rem], "(");
 				s += ")";
-				return rslt + s;
+				break;
 			}
-			else
-			{
-				s += to_string(rem * 10 / den);
-				ht[rem] = pos;
-				rem = rem * 10 % den;
-				pos++;
-			}
+			hash_tbl[rem] = pos;
+			s += to_string((rem * 10) / den);
+			rem = (rem * 10) % den;
+			pos++;
 		}
 		return rslt + s;
 	}
