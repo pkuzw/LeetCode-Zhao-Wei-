@@ -13,11 +13,14 @@ Output: index1=1, index2=2
 ///@date	2015.08.12
 ///@version	1.0
 
+///@date	2016.01.17
+///@version	1.1
+
 #include <algorithm>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	在已经排好序的数组中寻找两个数之和为指定值的元素下标
 	///@param	numbers	数组
@@ -50,6 +53,45 @@ private:
 		if (nums[mid] == v)	return mid;
 		else if (nums[mid] > v)	return binarySearch(nums, p, mid-1, v);
 		else	return binarySearch(nums, mid+1, r, v);
+	}
+};
+
+class Solution {
+public:
+	///@brief	在已经排好序的数组中寻找两个数之和为指定值的元素下标
+	///@param	numbers	数组
+	///@param	target	指定值
+	///@return	和为指定值的元素下标
+	///@note	1. 二分查找
+	vector<int> twoSum(vector<int>& numbers, int target) {
+		vector<int> rslt;
+		for (int i = 0; i != numbers.size(); i++) {
+			if (numbers[i] > target)	break;
+			rslt.push_back(i + 1);
+			int j = binarySearch(numbers, target - numbers[i], i + 1);
+			if (j == -1)		rslt.pop_back();
+			else {
+				rslt.push_back(j + 1);
+				break;
+			}
+		}
+		return rslt;		
+	}
+
+	///@brief	二分查找
+	///@param	numbers	数组
+	///@param	val		指定值
+	///@param	l		开始查找的起始下标
+	///@return	返回指定值在数组中的下标
+	int binarySearch(const vector<int>& numbers, const int& val, const int& l) {
+		int i = l, j = numbers.size() - 1;
+		while (i <= j) {
+			int k = (i + j) / 2;
+			if (numbers[k] == val)	return k;
+			else if (numbers[k] < val)	i = k + 1;
+			else	j = k - 1;
+		}
+		return -1;
 	}
 };
 
