@@ -11,6 +11,9 @@ You may assume that the array is non-empty and the majority element always exist
 ///@date	2015.08.13
 ///@version	2.0
 
+///@date	2016.01.17
+///@version	2.1
+
 #include <iostream>
 #include <unordered_map>
 
@@ -42,7 +45,7 @@ public:
 majority vote algorithm. 投票法能够找出一个数组中出现次数超过一半的元素。它的做法是将初始元素作为众数，然后开始遍历数组。在遍历数组的过程中，
 如果遇到和当前众数相同的元素，则计数器自增1，否则自减1；如果计数器已经到0，则将众数改变为当前元素，并修改计数器值。
 */
-class Solution {
+class Solution_v2 {
 public:
 	int majorityElement(vector<int>& nums) {
 		int a = 0;
@@ -58,6 +61,33 @@ public:
 					cnt++;
 				}
 				else	cnt--;							
+			}
+		}
+		return nums[a];
+	}
+};
+
+class Solution {
+public:
+	///@brief	寻找众数
+	///@param	nums	数组
+	///@return	返回众数
+	///@note	1. 投票法；2. 遍历数组，当前元素为众数时，则将计数器自增1；
+	//			3. 否则看计数器是否为0，如果为0则修改众数，并将计数器自增1；
+	//			4. 如果计数器不为0，则将计数器自减1；
+	//			5. 时间复杂度为O(n)，空间复杂度为O(1)。
+	int majorityElement(vector<int>& nums) {
+		int cnt = 0, a = 0;
+		for (int i = 0; i != nums.size(); i++) {
+			if (nums[i] == nums[a])	cnt++;
+			else {
+				if (!cnt) {
+					a = i;
+					cnt++;
+				}
+				else {
+					cnt--;
+				}
 			}
 		}
 		return nums[a];
