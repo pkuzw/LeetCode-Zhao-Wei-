@@ -17,7 +17,10 @@ For example:
 ///@version	1.0
 
 ///@date	2015.08.13
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.17
+///@version	1.2
 
 #include <string>
 #include <vector>
@@ -46,13 +49,16 @@ public:
 
 class Solution {
 public:
+	///@brief	将int型正整数转换成二十六进制整数:A, B, C, ..., Z, AA, AB, ...
+	///@param	n	十进制整数
+	///@return	返回二十六进制数字符串
+	///@note	1. 枚举；2. 先算低位，再算高位即可。
 	string convertToTitle(int n) {
 		string rslt;
-		while (n)
-		{
+		while (n) {
 			n--;
-			int i = n % 26;
-			rslt = char('A' + i) + rslt;
+			int m = n % 26;
+			rslt = char('A' + m) + rslt;
 			n /= 26;
 		}
 		return rslt;
