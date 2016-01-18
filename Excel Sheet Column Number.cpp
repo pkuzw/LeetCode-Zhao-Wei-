@@ -19,6 +19,9 @@ For example:
 ///@date	2015.08.13
 ///@version	2.0
 
+///@date	2016.01.18
+///@version	3.0
+
 #include <string>
 #include <vector>
 #include <cmath>
@@ -56,7 +59,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	int titleToNumber(string s) {
 		vector<int> pow_of_26;
@@ -75,6 +78,23 @@ public:
 		for (int i = s.size()-1; i >= 0; i--)
 			rslt += (s[i] - 'A' + 1) * pow_of_26[j++];
 		
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	将Excel中的列号转换成数字
+	///@param	s	字符串
+	///@return	返回转换后的数字
+	///@note	1. 迭代；2. 从前向后遍历一遍字符串，每次循环都将结果乘以26，相当于向后多一位数，然后再将当前位与'A'的实际差值加到结果数组中去即可。
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)，n为字符串长度。
+	int titleToNumber(string s) {
+		int rslt = 0;
+		for (int i = 0; i != s.size(); i++) {
+			rslt *= 26;
+			rslt += s[i] - 'A' + 1;
+		}
 		return rslt;
 	}
 };
