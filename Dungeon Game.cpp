@@ -20,7 +20,10 @@ Any room can contain threats or power-ups, even the first room the knight enters
 ///@version	1.0
 
 ///@date	2015.08.12
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.18
+///@version	1.2
 
 #include <vector>
 using namespace std;
@@ -58,16 +61,18 @@ public:
 
 class Solution {
 public:
+	///@brief	计算到达右下角的最小HP
+	///@param	dungeon	二维矩阵地图
+	///@return	返回所需的最小HP
+	///@note	1. 动态规划；2. 设dp[i][j]表示到达点[i][j]时的最小hp；3. 初始化dp[row-1][col-1] = max(1, 1 - dungeon[row-1][col-1]), 
+	//			dp[i][col-1] = max(1, dp[i+1][col-1] - dungeon[i][col-1]), dp[row-1][j] = max(1, dp[row-1][j+1] - dungeon[row-1][j])；
+	//			4. 递推关系式为dp[i][j] = max(1, min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j]).
 	int calculateMinimumHP(vector<vector<int>>& dungeon) {
-		if (dungeon.empty())	return 1;
-		int row = dungeon.size();
-		int col = dungeon[0].size();
+		int row = dungeon.size(), col = dungeon[0].size();
 		vector<vector<int>> dp(row, vector<int>(col, 0));
 		dp[row-1][col-1] = max(1, 1 - dungeon[row-1][col-1]);
-		for (int i = row - 2; i >= 0; i--)
-			dp[i][col-1] = max(1, dp[i+1][col-1] - dungeon[i][col-1]);
-		for (int i = col - 2; i >= 0; i--)
-			dp[row-1][i] = max(1, dp[row-1][i+1] - dungeon[row-1][i]);
+		for (int i = row - 2; i >= 0; i--)	dp[i][col-1] = max(1, dp[i+1][col-1] - dungeon[i][col-1]);
+		for (int j = col - 2; j >= 0; j--)	dp[row-1][j] = max(1, dp[row-1][j+1] - dungeon[row-1][j]);
 		for (int i = row - 2; i >= 0; i--)
 			for (int j = col - 2; j >= 0; j--)
 				dp[i][j] = max(1, min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j]);
