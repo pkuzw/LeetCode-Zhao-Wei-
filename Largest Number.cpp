@@ -11,7 +11,10 @@ Note: The result may be very large, so you need to return a string instead of an
 ///@version	1.0
 
 ///@date	2015.08.12
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.18
+///@version	1.2
 
 #include <string>
 #include <algorithm>
@@ -52,36 +55,36 @@ private:
 /*
 精华在于自定义的比较函数。将两个整数转换成字符串，然后利用字符串之和的比较规则来定义排序规则，真是妙！
 */
+
+///@brief	比较函数
+///@param	a, b	待比较的两个参数
+///@return	如果a和b转换成字符串后，进行不同的组合，返回组合后较大的情形排名更靠前。
+bool cmp(int a, int b) {
+	string s1 = to_string(static_cast<long long>(a));
+	string s2 = to_string(static_cast<long long>(b));
+	return s1 + s2 > s2 + s1;
+}
+
 class Solution {
 public:
 	string largestNumber(vector<int>& nums) {
-		string rslt;
-		sort(nums.begin(), nums.end(), myCmp);
+		sort(nums.begin(), nums.end(), cmp);
 		if (!nums.front())	return "0";
+		string rslt;
 		for (int i = 0; i != nums.size(); i++)
 			rslt += to_string(static_cast<long long>(nums[i]));
 		return rslt;
 	}
-
-private:
-	struct myClass{
-		bool operator() (const int& a, const int& b)
-		{
-			string s1 = to_string(static_cast<long long>(a));
-			string s2 = to_string(static_cast<long long>(b));
-			return s1 + s2 > s2 + s1;
-		}
-	}myCmp;
 };
 
 int main()
 {
 	vector<int> nums;
-	nums.push_back(0);
-	nums.push_back(0);
- 	nums.push_back(0);
- 	nums.push_back(0);
- 	nums.push_back(0);
+	nums.push_back(3);
+	nums.push_back(30);
+ 	nums.push_back(5);
+ 	nums.push_back(9);
+ 	nums.push_back(34);
 
 	Solution slt;
 	string rslt = slt.largestNumber(nums);
