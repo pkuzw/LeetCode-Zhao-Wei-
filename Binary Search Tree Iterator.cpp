@@ -11,7 +11,10 @@ Note: next() and hasNext() should run in average O(1) time and uses O(h) memory,
 ///@version	1.0
 
 ///@date	2015.08.13
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.18
+///@version	1.2
 
 #include <iostream>
 #include <stack>
@@ -65,8 +68,7 @@ private:
 class BSTIterator {
 public:
 	BSTIterator(TreeNode *root) {
-		while (root)
-		{
+		while (root) {
 			stk.push(root);
 			root = root->left;
 		}
@@ -79,16 +81,14 @@ public:
 
 	/** @return the next smallest number */
 	int next() {
-		TreeNode* n = stk.top();
+		TreeNode* node = stk.top();
 		stk.pop();
-		int rslt = n->val;
-		if (n->right)
-		{
-			n = n->right;
-			while (n)
-			{
-				stk.push(n);
-				n = n->left;
+		int rslt = node->val;
+		if (node->right) {
+			node = node->right;
+			while (node) {
+				stk.push(node);
+				node = node->left;
 			}
 		}
 		return rslt;
