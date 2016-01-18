@@ -9,7 +9,10 @@ Note: Your solution should be in logarithmic time complexity.
 ///@version	1.0
 
 ///@date	2015.08.13
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.18
+///@version	1.2
 
 #include <vector>
 
@@ -35,10 +38,13 @@ public:
 
 class Solution {
 public:
+	///@brief	计算n!的末尾的0的数目
+	///@param	n	正整数
+	///@return	返回n!的末尾0的个数
+	///@note	1. n!中末尾0的数目实际上就是10的倍数，10可以分解为2 * 5，那么就要看n是5的多少倍，对于5^k来说，可以分解出k个5.
 	int trailingZeroes(int n) {
 		int rslt = 0;
-		while (n)
-		{
+		while (n) {
 			rslt += n / 5;
 			n /= 5;
 		}
