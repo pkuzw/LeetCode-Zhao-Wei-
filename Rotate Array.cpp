@@ -11,6 +11,10 @@ Try to come up as many solutions as you can, there are at least 3 different ways
 ///@version	1.0
 
 ///@date	2015.08.12
+///@version	1.1
+///@version	2.0
+
+///@date	2016.01.19
 ///@version	2.1
 
 #include <deque>
@@ -44,7 +48,7 @@ public:
 	}
 };
 
-class Solution_v2 {
+class Solution_v1_1 {
 public:
 	void rotate(vector<int>& nums, int k) {
 		k %= nums.size();
@@ -65,10 +69,16 @@ public:
 
 class Solution {
 public:
+	///@brief	翻转一个数组中的指定长度的元素。
+	///@param	nums	数组
+	///@param	k		指定长度
+	///@note	1. 先将整个数组翻转；
+	//			2. 然后对于前k个元素进行翻转；
+	//			3. 最后对后面的剩余元素进行翻转；
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)。其中n为数组元素数目。
 	void rotate(vector<int>& nums, int k) {
 		k %= nums.size();
 		if (!k)	return;
-
 		reverse(nums.begin(), nums.end());
 		reverse(nums.begin(), nums.begin() + k);
 		reverse(nums.begin() + k, nums.end());
