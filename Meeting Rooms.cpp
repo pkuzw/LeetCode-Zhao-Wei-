@@ -21,7 +21,7 @@ bool cmp(const Interval& a, const Interval& b) {
 	return a.start < b.start;
 }
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断给定的区间组是否有重叠
 	///@param	intervals	区间组
@@ -41,9 +41,29 @@ public:
     }
 };
 
+class Solution {
+public:
+	///@brief	判断给定的区间组是否有重叠
+	///@param	intervals	区间组
+	///@return	如果有重叠则返回false，否则返回true
+	///@note	1. 按照区间的起始时间进行排序；
+	//			2. 遍历已经排好序的区间组，从前向后遍历时维护一个当前最晚结束的区间末端，如果有区间的开始时间早于这个最晚的结束区间，则返回false；
+	//			3. 时间复杂度为O(nlogn)，空间复杂度为O(1)。
+	bool canAttendMeetings(vector<Interval>& intervals) {
+		if (intervals.empty())	return true;
+		sort(intervals.begin(), intervals.end(), cmp);
+		int late_point = intervals[0].end;
+		for (int i = 1; i < intervals.size(); i++) {
+			if (intervals[i].start < late_point)	return false;
+			late_point = intervals[i].end;
+		}
+		return true;
+	}
+};
+
 int main() {
 	vector<Interval> intervals;
-	Interval a(0, 3), b(5, 10), c(15, 20);
+	Interval a(0, 30), b(5, 10), c(15, 20);
 	intervals.push_back(a);
 	intervals.push_back(b);
 	intervals.push_back(c);
