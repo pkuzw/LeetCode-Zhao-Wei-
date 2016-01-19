@@ -12,7 +12,11 @@ If this function is called many times, how would you optimize it?
 ///@version	1.0
 
 ///@date	2015.08.11
+///@version	1.1
 ///@version	2.0
+
+///@date	2016.01.19
+///@version	2.1
 
 #include <cstdint>
 #include <vector>
@@ -49,7 +53,7 @@ public:
 	}
 };
 
-class Solution_v2_1 {
+class Solution_v1_1 {
 public:
 	uint32_t reverseBits(uint32_t n) {
 		vector<uint32_t> pow_of_2;
@@ -78,7 +82,7 @@ public:
 /*
 位操作。只需要将当前数字的二进制表示从右至左析取出来，然后添加到新数字的末端即可
 */
-class Solution {
+class Solution_v2 {
 public:
 	uint32_t reverseBits(uint32_t n) {
 		uint32_t rslt = 0;
@@ -92,9 +96,29 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	将一个十进制uint32_t数转换成二进制，然后计算出它的二进制逆序的十进制数
+	///@param	n	十进制整数
+	///@return  返回它的二进制逆序的十进制数
+	///@note	1. 利用位操作运算将uint32_t整型变量从左至右析出，然后添加到一个初始值为0的uint32_t的整型变量末尾。
+	//			2. 注意在循环过程中，如果已经遍历完输入的整型变量，应该立即中止循环。
+	uint32_t reverseBits(uint32_t n) {
+		uint32_t rslt = 0;
+		int k = 32;
+		while (k--) {
+			rslt |= (n & 1);
+			if (!k)	break;
+			rslt <<= 1;
+			n >>= 1;
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
-	uint32_t n = 1;
+	uint32_t n = 1/*2147483648*/;
 	Solution slt;
 	uint32_t rslt = slt.reverseBits(n);
 	return 0;
