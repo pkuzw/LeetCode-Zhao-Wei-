@@ -98,30 +98,42 @@ public:
 
 class Solution {
 public:
-	///@brief	
+	///@brief	如果能够最多进行k次股票交易，计算最大利润
+	///@param	k	交易次数
+	///@param	prices	每日股价
+	///@return	返回最大利润
+	///@note	1. 动态规划；
+	//			2. 如果k >= prices.size()，则说明可以每天都进行交易，则计算出累积增量即可；
+	//			3. 如果k < 2，则直接返回0；
+	//			4. 如果2 <= k < prices.size()，则设dp_local[i][j]表示在第i天进行了第j次交易，dp_global[i][j]表示在前i天进行了j次交易，
+	//			   递推关系式为dp_local[i][j] = max(dp_local[i-1][j] + diff, dp_global[i-1][j-1] + max(diff, 0));
+	//			   dp_global[i][j] = max(dp_local[i][j], dp_global[i-1][j])。
 	int maxProfit(int k, vector<int>& prices) {
-		if (prices.size() < 2)	return 0;
-		if (prices.size() <= k)	return maxProfit_II(prices);
-
-		vector<vector<int>> dp_local(prices.size(), vector<int>(k+1, 0));
-		vector<vector<int>> dp_global(prices.size(), vector<int>(k+1, 0));
-
-		for (int i = 1; i != prices.size(); i++)
-		{
+		int days = prices.size();
+		if (days < 2)	return 0;
+		else if (days <= k)	return maxProfit_II(prices);
+		vector<vector<int>> dp_local(days, vector<int>(k + 1, 0));
+		vector<vector<int>> dp_global(days, vector<int>(k + 1, 0));
+		for (int i = 1; i != days; i++) {
 			int diff = prices[i] - prices[i-1];
-			for (int j = 1; j <= k; j++)
-			{
+			for (int j = 1; j <= k; j++) {
 				dp_local[i][j] = max(dp_local[i-1][j] + diff, dp_global[i-1][j-1] + max(diff, 0));
-				dp_global[i][j] = max(dp_global[i-1][j], dp_local[i][j]);
+				dp_global[i][j] = max(dp_local[i][j], dp_global[i-1][j]);
 			}
 		}
-		return dp_global[prices.size()-1][k];
+		return dp_global[days-1][k];
 	}
 
+	///@brief	能够进行多次交易的最大利润
+	///@param	prices	股价
+	///@return	返回最大利润
 	int maxProfit_II(vector<int>& prices) {
-
+		if (prices.size() < 2)	return 0;
+		int rslt = 0;
+		for (int i = 1; i != prices.size(); i++) 
+			rslt += max(prices[i] - prices[i-1], 0);
+		return rslt;
 	}
-
 };
 
 int main()
@@ -136,7 +148,7 @@ int main()
 	int s = slt.maxProfit_II(prices);
 
 	Solution_v1 slt_v1;
-	r = slt_v1.maxProfit(2, prices);
-	s = slt_v1.maxProfit_II(prices);
+	int r1 = slt_v1.maxProfit(2, prices);
+	int s1 = slt_v1.maxProfit_II(prices);
 	return 0;
 }
