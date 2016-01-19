@@ -12,6 +12,9 @@ You may not engage in multiple transactions at the same time (ie, you must sell 
 ///@version	1.0
 
 ///@date	2015.08.12
+///@version	1.1
+
+///@date	2016.01.19
 ///@version	2.0
 
 #include <vector>
@@ -95,6 +98,7 @@ public:
 
 class Solution {
 public:
+	///@brief	
 	int maxProfit(int k, vector<int>& prices) {
 		if (prices.size() < 2)	return 0;
 		if (prices.size() <= k)	return maxProfit_II(prices);
@@ -114,34 +118,8 @@ public:
 		return dp_global[prices.size()-1][k];
 	}
 
-	int maxProfit_II(vector<int>& prices)
-	{
-		int start = 0, end = 0;
-		int max_profit = 0;
-		bool flg = true;
+	int maxProfit_II(vector<int>& prices) {
 
-		for (int i = 0; i != prices.size()-1; i++)
-		{
-			if (prices[i + 1] > prices [i])
-			{
-				if (!flg)
-				{
-					start = i;
-					flg = true;
-				}
-				if (i == prices.size() - 1)	max_profit += prices.back() - prices[start];
-			}
-			else
-			{
-				if (flg)
-				{
-					end = i;
-					max_profit += prices[end] - prices[start];
-					flg = false;
-				}
-			}
-		}
-		return max_profit;
 	}
 
 };
