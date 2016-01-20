@@ -9,7 +9,10 @@ For example, the 32-bit integer '11' has binary representation 00000000000000000
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.20
+///@version	1.2
 
 #include <cstdint>	//	uint32_t
 #include <vector>
