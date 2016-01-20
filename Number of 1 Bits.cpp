@@ -11,8 +11,8 @@ For example, the 32-bit integer '11' has binary representation 00000000000000000
 ///@date	2015.08.11
 ///@version	1.1
 
-///@date	2016.01.20
-///@version	1.2
+///@date	2016.01.21
+///@version	2.0
 
 #include <cstdint>	//	uint32_t
 #include <vector>
@@ -44,7 +44,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	int hammingWeight(uint32_t n) {
 		vector<uint32_t> pow_of_2;
@@ -64,9 +64,27 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   计算32位整型变量中的1位数目
+    ///@param   n   32位无符号变量
+    ///@return  返回其中的1的数目
+    ///@note    1. 位操作，将n不断的右移，以统计其中的1数目即可。
+    int hammingWeight(uint32_t n) {
+        if (!n) return 0;
+        int k = 32;
+        int rslt = 0;
+        while (k--) {
+            rslt += n & 1;
+            n >>= 1;
+        }
+        return rslt;
+    }
+};
+
 int main()
 {
-	uint32_t n = INT_MAX;
+	uint32_t n = INT_MAX * 2 + 1;
 	Solution slt;
 	int rslt = slt.hammingWeight(n);
 	return 0;
