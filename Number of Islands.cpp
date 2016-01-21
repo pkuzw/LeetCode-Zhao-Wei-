@@ -29,7 +29,10 @@ Answer: 3
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date    2016.01.21
+///@version 1.2
 
 #include <vector>
 using namespace std;
@@ -82,39 +85,39 @@ private:
 
 class Solution {
 public:
+    ///@brief   计算棋盘中被0包围的1的块数
+    ///@param   grid    棋盘
+    ///@return  返回1的块数
+    ///@note    1. 深度优先遍历；2. 通过一个辅助的标记二维数组来标记那些元素已被访问过。
 	int numIslands(vector<vector<char>>& grid) {
-		if (grid.empty())	return 0;
-		row = grid.size();
-		col = grid[0].size();
-		vector<vector<bool>> visited(row, vector<bool>(col, false));
-
-		int islands_cnt = 0;
-		for (int i = 0; i != row; i++)
-		{
-			for (int j = 0; j != col; j++)
-			{
-				if (!visited[i][j] && grid[i][j] == '1')
-				{
-					dfs(grid, i, j, visited);
-					islands_cnt++;
-				}
-			}
-		}
-		return islands_cnt;
+        if (grid.empty() || grid[0].empty())    return 0;
+        row = grid.size();
+        col = grid[0].size();
+        
+        vector<vector<bool>> visit(row, vector<bool>(col, false));
+        int rslt = 0;
+        for (int i = 0; i != row; i++) {
+            for (int j = 0; j != col; j++) {
+                if (grid[i][j] == '1' && !visit[i][j]) {
+                    dfs(grid, i, j, visit);
+                    rslt++;
+                }
+            }
+        }
+        return rslt;
 	}
 
 private:
-	void dfs(vector<vector<char>>& grid, int i, int j, vector<vector<bool>>& visited)
-	{
-		if (i < 0 || i >= row)	return;
-		if (j < 0 || j >= col)	return;
-		if (visited[i][j] || grid[i][j] == '0')	return;
-
-		visited[i][j] = true;
-		dfs(grid, i + 1, j, visited);
-		dfs(grid, i - 1, j, visited);
-		dfs(grid, i, j + 1, visited);
-		dfs(grid, i, j - 1, visited);
+    ///@bfief   辅助dfs函数
+    ///@param   i, j    当前元素的下标
+    ///@param   visited 辅助标志数组
+	void dfs(vector<vector<char>>& grid, int i, int j, vector<vector<bool>>& visited) {
+        if (i < 0 || i >= row || j < 0 || j >= col || grid[i][j] == '0' || visited[i][j]) return;
+        visited[i][j] = true;
+        dfs(grid, i + 1, j, visited);
+        dfs(grid, i - 1, j, visited);
+        dfs(grid, i, j + 1, visited);
+        dfs(grid, i, j - 1, visited);
 	}
 
 	int row, col;
