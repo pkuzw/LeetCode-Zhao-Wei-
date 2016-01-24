@@ -7,7 +7,10 @@ Count the number of prime numbers less than a non-negative number, n.
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.24
+///@version	1.2
 
 #include <vector>
 using namespace std;
@@ -43,23 +46,18 @@ public:
 
 class Solution {
 public:
+	///@note	埃氏筛法
 	int countPrimes(int n) {
-		vector<bool> candidates(n+1, true);
-		float tmp = n;
-		int x = sqrt(tmp);
-		for (int i = 2; i <= x; i++)
-		{
-			for (int j = 2; i * j < n; j++)
-			{
-				candidates[i * j] = false;
-			}
+		vector<bool> flg(n, true);
+		for (int i = 2; i * i < n; i++) {
+			if (!flg[i])	continue;
+			for (int j = 2; j * i < n; j++)
+				flg[j * i] = false;
 		}
-
-		int cnt = 0;
+		int rslt = 0;
 		for (int i = 2; i < n; i++)
-			if (candidates[i])	cnt++;
-
-		return cnt;
+			if (flg[i])	rslt++;
+		return rslt;
 	}
 };
 
@@ -67,9 +65,9 @@ int main()
 {
 	int n = 12000;
 	Solution_v1 slt_v1;
-	int rslt = slt_v1.countPrimes(n);
+	int rslt1 = slt_v1.countPrimes(n);
 
 	Solution slt;
-	rslt = slt.countPrimes(n);
+	int rslt = slt.countPrimes(n);
 	return 0;
 }
