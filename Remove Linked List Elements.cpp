@@ -11,7 +11,11 @@ Return: 1 --> 2 --> 3 --> 4 --> 5
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.24
+///@version	1.2
+
 #include <cstdlib>
 using namespace std;
 
@@ -63,7 +67,7 @@ public:
 另一个保存当前节点的后继节点。如果当前节点是指定值，那么就将前驱节点指向其后继节点，然后将当前节点和后继节点后移。否则就直接将三个变量
 直接后移。在后移时需要注意后继节点是否存在后继节点，需要先判断一下才行。
 */
-class Solution {
+class Solution_v1_1 {
 public:
 	ListNode* removeElements(ListNode* head, int val) {
 		//排除首节点是要删除节点的情形，因为在头节点，如果按照一般情况删除的话，会到最后找不到链表的起始节点
@@ -92,6 +96,34 @@ public:
 			indx = indx_next;
 			if (indx_next)
 				indx_next = indx_next->next;
+		}
+		return head;
+	}
+};
+
+class Solution {
+public:
+	///@brief	删除链表中的指定值节点
+	///@param	head	头结点
+	///@param	val		指定值
+	///@return	返回链表头结点
+	///@note	1. 注意考虑头节点为被删除节点的情形。
+	ListNode* removeElements(ListNode* head, int val) {
+		while (head && head->val == val)		head = head->next;
+		if (!head)	return nullptr;
+
+		ListNode* pre_indx = new ListNode(INT_MIN);
+		pre_indx->next = head;
+		ListNode* indx = head;
+		ListNode* indx_nxt = head->next;
+		while (indx) {
+			if (indx->val == val) {
+				pre_indx->next = indx_nxt;
+				indx->next = nullptr;
+			}
+			else	pre_indx = indx;			
+			indx = indx_nxt;
+			indx_nxt = indx_nxt ? indx_nxt->next : nullptr;
 		}
 		return head;
 	}
