@@ -23,7 +23,10 @@ Example: 19 is a happy number
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.24
+///@version	1.2
 
 #include <vector>
 #include <unordered_set>
@@ -60,26 +63,22 @@ public:
 
 class Solution {
 public:
+	///@brief	判断一个正整数是否为幸福数。幸福数的定义为对于一个正整数的各位依次求平方和，得到一个新的数，只要该数不为1，则迭代继续求其各位平方和。如果为1，则是幸福数，否则不是。
+	///@param	n	正整数
+	///@return	返回一个数是否为幸福数。
+	///@note	1. 利用哈希表来保存迭代过程中出现的各个中间值，如果没有重复值且为1，则是幸福数，否则不是。
 	bool isHappy(int n) {
-		unordered_set<int> ht;
-		int k = n;
-		while (1)
-		{
-			vector<int> digits;
-			while (k)
-			{
-				digits.push_back(k % 10);
-				k /= 10;
+		unordered_set<int> hash_tbl;
+		while (n != 1) {
+			vector<int> digits;			
+			while (n) {
+				digits.push_back(n % 10);
+				n /= 10;
 			}
-			int sum = 0;
 			for (int i = 0; i != digits.size(); i++)
-			{
-				sum += digits[i] * digits[i];
-			}
-			if (sum == 1)	break;
-			if (ht.find(sum) != ht.end())	return false;
-			ht.insert(sum);
-			k = sum;
+				n += digits[i] * digits[i];
+			if (hash_tbl.find(n) == hash_tbl.end())	hash_tbl.insert(n);
+			else	return false;
 		}
 		return true;
 	}
@@ -87,11 +86,11 @@ public:
 
 int main()
 {
-	int n = 263;
+	int n = 2;
 	Solution_v1 slt_v1;
-	bool rslt = slt_v1.isHappy(n);
+	bool rslt1 = slt_v1.isHappy(n);
 
 	Solution slt;
-	rslt = slt.isHappy(n);
+	bool rslt = slt.isHappy(n);
 	return 0;
 }
