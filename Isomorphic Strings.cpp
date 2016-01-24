@@ -23,7 +23,10 @@ You may assume both s and t have the same length.
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.24
+///@version	1.2
 
 #include <unordered_map>
 #include <string>
@@ -72,48 +75,32 @@ public:
 
 class Solution {
 public:
+	///@note	1. 注意处理ab -> cc的情形
 	bool isIsomorphic(string s, string t) {
-		if (s.size() != t.size())	return false;
-
-		unordered_map<char, char> ht1, ht2;
-		bool flg1 = true, flg2 = true;
-
-		for (int i = 0; i != s.size(); i++)
-		{
-			if (ht1.find(s[i]) != ht1.end())
-			{
-				if (t[i] != ht1[s[i]])	flg1 = false;
-			}
-			else
-			{
-				ht1[s[i]] = t[i];
-			}
+		if (s.size() != t.size())	return false;		
+		unordered_map<char, char> hash_tbl;
+		for (int i = 0; i != s.size(); i++) {
+			if (hash_tbl.find(s[i]) == hash_tbl.end())	hash_tbl[s[i]] = t[i];
+			else if (hash_tbl[s[i]] != t[i])	return false;
 		}
-
-		for (int i = 0; i != t.size(); i++)
-		{
-			if (ht2.find(t[i]) != ht2.end())
-			{
-				if (s[i] != ht2[t[i]])	flg2 = false;
-			}
-			else
-			{
-				ht2[t[i]] = s[i];
-			}
+		hash_tbl.clear();
+		for (int i = 0; i != t.size(); i++) {
+			if (hash_tbl.find(t[i]) == hash_tbl.end())	hash_tbl[t[i]] = s[i];
+			else if (hash_tbl[t[i]] != s[i])	return false;
 		}
-		return flg1 && flg2;
+		return true;
 	}
 };
 
 int main()
 {
 	string s = "aab";
-	string t = "aaa";
+	string t = "dde";
 
 	Solution slt;
 	bool rslt = slt.isIsomorphic(s, t);
 
 	Solution_v1 slt_v1;
-	rslt = slt_v1.isIsomorphic(s, t);
+	bool rslt1 = slt_v1.isIsomorphic(s, t);
 	return 0;
 }
