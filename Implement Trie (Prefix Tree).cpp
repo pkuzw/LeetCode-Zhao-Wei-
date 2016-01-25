@@ -9,6 +9,9 @@ Implement a trie with insert, search, and startsWith methods.
 ///@date	2015.08.11
 ///@version	2.0
 
+///@date	2016.01.25
+///@version	1.1
+
 #include <string>
 
 using namespace std;
@@ -19,9 +22,8 @@ class TrieNode {
 public:
 	TrieNode* child[26];
 	bool isWord;
-	// Initialize your data structure here.	
-	TrieNode() : isWord(false)
-	{
+
+	TrieNode() : isWord(false) {
 		for (int i = 0; i != 26; i++)
 			child[i] = nullptr;
 	}
@@ -81,9 +83,10 @@ public:
 // trie.insert("somestring");
 // trie.search("key");
 
-class Trie {
+///@note	递归版实现
+class Trie_v2 {
 public:
-	Trie() {
+	Trie_v2() {
 		root = new TrieNode();
 	}
 
@@ -141,8 +144,50 @@ private:
 	TrieNode* root;
 };
 
-int main()
-{
+class Trie {
+public:
+	Trie() {
+		root = new TrieNode();
+	}
 
+	// Inserts a word into the trie.
+	void insert(string word) {
+		TrieNode* indx = root;
+		for (int i = 0; i != word.size(); i++) {
+			int cur = word[i] - 'a';
+			if (!indx->child[cur])		indx->child[cur] = new TrieNode();
+			indx = indx->child[cur];
+		}
+		indx->isWord = true;
+	}
+
+	// Returns if the word is in the trie.
+	bool search(string word) {
+		TrieNode* indx = root;
+		for (int i = 0; i != word.size(); i++) {
+			int cur = word[i] - 'a';
+			if (!indx->child[cur])	return false;
+			indx = indx->child[cur];
+		}
+		return indx->isWord;
+	}
+
+	// Returns if there is any word in the trie
+	// that starts with the given prefix.
+	bool startsWith(string prefix) {
+		TrieNode* indx = root;
+		for (int i = 0; i != prefix.size(); i++) {
+			int cur = prefix[i] - 'a';
+			if (!indx->child[cur])	return false;
+			indx = indx->child[cur];
+		}
+		return true;
+	}
+
+private:
+	TrieNode* root;
+};
+
+int main() {
 	return 0;
 }
