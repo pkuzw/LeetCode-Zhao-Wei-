@@ -19,7 +19,10 @@ There are a total of 2 courses to take. To take course 1 you should have finishe
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version 2.0
+///@version 1.1
+
+///@date	2016.01.25
+///@version	1.2
 
 #include <vector>
 #include <queue>
@@ -73,38 +76,33 @@ public:
 
 class Solution {
 public:
+	///@note	1. 如果用有向图来表示该问题，则先修课程指向后续课程，问题转换为有向图中是否存在环路；
+	//			2. 用一个二维矩阵来保存邻接表，用一个一维数组来保存每个节点的前驱节点数目；
+	//			3. 采用队列来进行BFS，当遍历完成后，如果存在节点的前驱节点数目不为0，则存在环路，否则不存在环路。
 	bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
-		vector<vector<int>> grp(numCourses, vector<int>(0));
-		vector<int> pre_cnt(numCourses, 0);
+		vector<vector<int>> graph(numCourses, vector<int>());
+		vector<int> pre_nums(numCourses, 0);
 
-		for (int i = 0; i != prerequisites.size(); i++)
-		{
-			grp[prerequisites[i].second].push_back(prerequisites[i].first);
-			pre_cnt[prerequisites[i].first]++;
+		for (int i = 0; i != prerequisites.size(); i++) {
+			graph[prerequisites[i].second].push_back(prerequisites[i].first);
+			pre_nums[prerequisites[i].first]++;
 		}
 
 		queue<int> que;
 		for (int i = 0; i != numCourses; i++)
-		{
-			if (pre_cnt[i] == 0)	que.push(i);
-		}
+			if (!pre_nums[i])	que.push(i);
 
-		while (!que.empty())
-		{
-			int frt = que.front();
+		while (!que.empty()) {
+			int cur = que.front();
 			que.pop();
-
-			for (int i = 0; i != grp[frt].size(); i++)
-			{
-				pre_cnt[grp[frt][i]]--;
-				if (pre_cnt[grp[frt][i]] == 0)	que.push(grp[frt][i]);
+			for (int i = 0; i != graph[cur].size(); i++) {
+				pre_nums[graph[cur][i]]--;
+				if (!pre_nums[graph[cur][i]])	que.push(graph[cur][i]);				
 			}
 		}
 
 		for (int i = 0; i != numCourses; i++)
-		{
-			if (pre_cnt[i])	return false;
-		}
+			if (pre_nums[i])	return false;
 		return true;
 	}
 };
