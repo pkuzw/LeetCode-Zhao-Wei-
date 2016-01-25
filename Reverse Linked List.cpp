@@ -21,6 +21,9 @@ A linked list can be reversed either iteratively or recursively. Could you imple
 ///@date	2015.10.15
 ///@version	2.1
 
+///@date	2016.01.25
+///@version	2.2
+
 #include <iostream>
 #include <stack>
 
@@ -119,15 +122,14 @@ public:
 	ListNode* reverseList(ListNode* head) {
 		if (!head || !head->next)	return head;
 		ListNode* indx = head;
-		ListNode* indx_next = indx->next;
-		ListNode* indx_next_next = indx_next->next;
+		ListNode* indx_nxt = head->next;
+		ListNode* indx_nxt_nxt = indx_nxt->next;
 		indx->next = nullptr;
-
-		while (indx_next) {
-			indx_next->next = indx;
-			indx = indx_next;
-			indx_next = indx_next_next;
-			if (indx_next_next)	indx_next_next = indx_next_next->next;
+		while (indx_nxt) {
+			indx_nxt->next = indx;
+			indx = indx_nxt;
+			indx_nxt = indx_nxt_nxt;
+			indx_nxt_nxt = indx_nxt_nxt ? indx_nxt_nxt->next : nullptr;
 		}
 		return indx;
 	}
