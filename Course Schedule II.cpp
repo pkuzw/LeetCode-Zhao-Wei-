@@ -24,7 +24,10 @@ The input prerequisites is a graph represented by a list of edges, not adjacency
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.25
+///@version	1.2
 #include <vector>
 #include <queue>
 
@@ -82,33 +85,28 @@ public:
 */
 class Solution {
 public:
+	///@note	1. 有向图是否存在环路，利用队列和宽度优先遍历解决。
 	vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
 		vector<int> rslt;
-		vector<vector<int>> graph(numCourses, vector<int>(0));
-		vector<int> pre_cnt(numCourses, 0);
+		vector<vector<int>> graph(numCourses, vector<int>());
+		vector<int> pre_nums(numCourses, 0);
 
-		for (int i = 0; i != prerequisites.size(); i++)
-		{
+		for (int i = 0; i != prerequisites.size(); i++) {
 			graph[prerequisites[i].second].push_back(prerequisites[i].first);
-			pre_cnt[prerequisites[i].first]++;
+			pre_nums[prerequisites[i].first]++;
 		}
 
 		queue<int> que;
 		for (int i = 0; i != numCourses; i++)
-		{
-			if (pre_cnt[i] == 0)	que.push(i);
-		}
+			if (!pre_nums[i])	que.push(i);
 
-		while (!que.empty())
-		{
-			int frt = que.front();
+		while (!que.empty()) {
+			int cur = que.front();
 			que.pop();
-			rslt.push_back(frt);
-
-			for (int i = 0; i != graph[frt].size(); i++)
-			{
-				pre_cnt[graph[frt][i]]--;
-				if (pre_cnt[graph[frt][i]] == 0)	que.push(graph[frt][i]);
+			rslt.push_back(cur);
+			for (int i = 0; i != graph[cur].size(); i++) {
+				pre_nums[graph[cur][i]]--;
+				if (!pre_nums[graph[cur][i]])	que.push(graph[cur][i]);
 			}
 		}
 
