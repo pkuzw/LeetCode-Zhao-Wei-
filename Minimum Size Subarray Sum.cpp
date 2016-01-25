@@ -10,7 +10,10 @@ the subarray [4,3] has the minimal length under the problem constraint.
 ///@version	1.0
 
 ///@date	2015.08.11
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.25
+///@version	1.2
 
 #include <vector>
 
@@ -53,18 +56,16 @@ public:
 */
 class Solution {
 public:
+	///@note	1. 设置左右边界指针，先将右边界移动至累积和大于指定值的位置，然后再将左指针尽可能的右移，保证累积和不能小于指定值，记录下当前
+	//			   子数组的长度；
+	//			2. 直到右值针到达右边界为止，找到最短子数组。
 	int minSubArrayLen(int s, vector<int>& nums) {
-		int l = 0, r = 0;
-		int rslt = INT_MAX;
-		int sum = 0;
-
-		while (r < nums.size())
-		{
+		int l = 0, r = 0, rslt = INT_MAX, sum = 0;
+		while (r < nums.size()) {
 			sum += nums[r++];
-			while (sum >= s)
-			{
+			while (sum >= s) {
 				sum -= nums[l++];
-				rslt = min(rslt, r-l+1);
+				rslt = min(rslt, r - l + 1);
 			}
 		}
 		return rslt == INT_MAX ? 0 : rslt;
@@ -84,6 +85,6 @@ int main()
 	int rslt = slt.minSubArrayLen(10, nums);
 
 	Solution_v1 slt_v1;
-	rslt = slt_v1.minSubArrayLen(10, nums);
+	int rslt1 = slt_v1.minSubArrayLen(10, nums);
 	return 0;
 }
