@@ -13,7 +13,10 @@ Given "abcd", return "dcbabcd"
 ///@version	1.0
 
 ///@date	2015.08.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.26
+///@version	1.2
 
 #include <vector>
 #include <string>
@@ -51,7 +54,7 @@ public:
 /*
 1. 先将字符串逆转，然后添加到原字符串末尾，在两者之间加一个非字母字符；
 2. 然后维护一个长度为2*s.size()+1的一维数组p，p[i]是t[0..i-1]的前后缀公共子串的长度；
-3. 最后将逆转的字符串的前r.size() - p.back()添加的原字符串之前即可。
+3. 最后将逆转的字符串的前r.size() - p.back()添加到原字符串之前即可。
 4. 其中p的维护是基于kmp算法的思想。
 */
 class Solution {
@@ -59,11 +62,9 @@ public:
 	string shortestPalindrome(string s) {
 		string r = s;
 		reverse(r.begin(), r.end());
-		string t = s + "^" + r;
-
+		string t = s + '%' + r;
 		vector<int> p(t.size(), 0);
-		for (int i = 1; i != t.size(); i++)
-		{
+		for (int i = 1; i != t.size(); i++) {
 			int j = p[i-1];
 			while (j > 0 && t[i] != t[j])
 				j = p[j-1];
