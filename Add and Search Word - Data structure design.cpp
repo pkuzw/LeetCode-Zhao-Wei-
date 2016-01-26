@@ -23,9 +23,13 @@ You may assume that all words are consist of lowercase letters a-z.
 ///@version	1.0
 
 ///@date	2015.08.10
+///@version	1.1
+
+///@date	2016.01.26
 ///@version	2.0
 
 #include <string>
+#include <stack>
 using namespace std;
 
 ///@brief	前缀树的节点类
@@ -100,51 +104,77 @@ private:
 class WordDictionary {
 public:
 	// Constructor
-	WordDictionary ()
-	{
+	WordDictionary () {
 		root = new TrieNode();
 	}
 
 	// Adds a word into the data structure.
 	void addWord(string word) {
-		TrieNode* p = root;
-		for (int i = 0; i != word.size(); i++)
-		{
-			int ch = word[i] - 'a';
-			if (!p->child[ch])
-			{
-				p->child[ch] = new TrieNode();				
-			}
-			p = p->child[ch];
+		TrieNode* indx = root;
+		for (int i = 0; i != word.size(); i++) {
+			int cur = word[i] - 'a';
+			if (!indx->child[cur])	indx->child[cur] = new TrieNode();
+			indx = indx->child[cur];
 		}
-		p->isWord = true;
+		indx->isWord = true;
+
+
+
+
+
+// 		TrieNode* p = root;
+// 		for (int i = 0; i != word.size(); i++)
+// 		{
+// 			int ch = word[i] - 'a';
+// 			if (!p->child[ch])
+// 			{
+// 				p->child[ch] = new TrieNode();				
+// 			}
+// 			p = p->child[ch];
+// 		}
+// 		p->isWord = true;
 	}
 
 	// Returns if the word is in the data structure. A word could
 	// contain the dot character '.' to represent any one letter.
 	bool search(string word) {
-		return searchRecur(word, root, 0);
-	}
+		TrieNode* indx = root;
+		stack<TrieNode*> stk;
+		for (int i = 0; i != word.size(); i++) {			
+			int cur = word[i] - 'a';
+			if (cur == '.' - 'a') {
+				for (int j = 0; j != 26; j++) {
 
-	bool searchRecur(string word, TrieNode* tnode, int indx)
-	{
-		if (indx == word.size())	return tnode->isWord;
-		if (word[indx] == '.')
-		{
-			for (int j = 0; j != 26; j++)
-			{
-				if (tnode->child[j] && searchRecur(word, tnode->child[j], indx+1))
-					return true;
+				}
 			}
-			return false;
+			else {
+				if (!indx->child[cur])	return false;
+				indx = indx->child[cur];
+			}
 		}
-		else
-		{
-			int ch = word[indx] - 'a';
-			return (tnode->child[ch] && searchRecur(word, tnode->child[ch], indx+1));
-		}
-
+		return true;
+//		return searchRecur(word, root, 0);
 	}
+
+// 	bool searchRecur(string word, TrieNode* tnode, int indx)
+// 	{
+// 		if (indx == word.size())	return tnode->isWord;
+// 		if (word[indx] == '.')
+// 		{
+// 			for (int j = 0; j != 26; j++)
+// 			{
+// 				if (tnode->child[j] && searchRecur(word, tnode->child[j], indx+1))
+// 					return true;
+// 			}
+// 			return false;
+// 		}
+// 		else
+// 		{
+// 			int ch = word[indx] - 'a';
+// 			return (tnode->child[ch] && searchRecur(word, tnode->child[ch], indx+1));
+// 		}
+// 
+// 	}
 private:
 	TrieNode* root;
 };
