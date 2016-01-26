@@ -26,7 +26,9 @@ You may assume that all words are consist of lowercase letters a-z.
 ///@version	1.1
 
 ///@date	2016.01.26
-///@version	2.0
+///@version	1.2
+
+///@note	What is iterative implementatation?
 
 #include <string>
 #include <stack>
@@ -117,64 +119,32 @@ public:
 			indx = indx->child[cur];
 		}
 		indx->isWord = true;
-
-
-
-
-
-// 		TrieNode* p = root;
-// 		for (int i = 0; i != word.size(); i++)
-// 		{
-// 			int ch = word[i] - 'a';
-// 			if (!p->child[ch])
-// 			{
-// 				p->child[ch] = new TrieNode();				
-// 			}
-// 			p = p->child[ch];
-// 		}
-// 		p->isWord = true;
 	}
 
 	// Returns if the word is in the data structure. A word could
 	// contain the dot character '.' to represent any one letter.
 	bool search(string word) {
-		TrieNode* indx = root;
-		stack<TrieNode*> stk;
-		for (int i = 0; i != word.size(); i++) {			
-			int cur = word[i] - 'a';
-			if (cur == '.' - 'a') {
-				for (int j = 0; j != 26; j++) {
-
-				}
-			}
-			else {
-				if (!indx->child[cur])	return false;
-				indx = indx->child[cur];
-			}
-		}
-		return true;
-//		return searchRecur(word, root, 0);
+		return dfs(word, root, 0);
 	}
 
-// 	bool searchRecur(string word, TrieNode* tnode, int indx)
-// 	{
-// 		if (indx == word.size())	return tnode->isWord;
-// 		if (word[indx] == '.')
-// 		{
-// 			for (int j = 0; j != 26; j++)
-// 			{
-// 				if (tnode->child[j] && searchRecur(word, tnode->child[j], indx+1))
-// 					return true;
-// 			}
-// 			return false;
-// 		}
-// 		else
-// 		{
-// 			int ch = word[indx] - 'a';
-// 			return (tnode->child[ch] && searchRecur(word, tnode->child[ch], indx+1));
-// 		}
-// 
-// 	}
+	///@brief	dfs辅助递归函数
+	///@param	word	字符串
+	///@param	node	当前节点
+	///@param	i		当前字符的下标
+	///@return	如果能够找到该字符串，返回true；否则返回false
+	bool dfs(string word, TrieNode* node, int i) {
+		if (i == word.size())	return node->isWord;	
+		if (word[i] == '.') {
+			for (int j = 0; j != 26; j++)
+				if (node->child[j] && dfs(word, node->child[j], i + 1))	return true;
+			return false;
+		}
+		else {
+			int cur = word[i] - 'a';
+			return node->child[cur] && dfs(word, node->child[cur], i + 1);
+		}		
+	}
+
 private:
 	TrieNode* root;
 };
