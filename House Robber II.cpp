@@ -9,7 +9,10 @@ Given a list of non-negative integers representing the amount of money of each h
 ///@version	1.0
 
 ///@date	2015.8.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.26
+///@version	1.2
 
 #include <vector>
 
@@ -59,40 +62,35 @@ private:
 
 class Solution {
 public:
+	///@note	1. 动态规划；2. 通过优化，将空间复杂度降低到O(1)。
 	int rob(vector<int>& nums) {
+		if (nums.empty())	return 0;
 		if (nums.size() == 1)	return nums[0];
-		if (nums.empty())		return 0;
-
-		vector<int> rooms_without_first(++nums.begin(), nums.end());
-		vector<int> rooms_without_last(nums.begin(), --nums.end());
-		int money1 = rob_I(rooms_without_first);
-		int money2 = rob_I(rooms_without_last);
-
-		return max(money1, money2);
+		vector<int> rooms(nums.begin(), nums.end() - 1);
+		int rslt = rob_I(rooms);
+		for (int i = 0; i != rooms.size(); i++)	rooms[i] = nums[i+1];		
+		return max(rslt, rob_I(rooms));
 	}
 
 private:
-	int rob_I(vector<int>& nums)
-	{
-		if (nums.empty())		return 0;
+	int rob_I(vector<int>& nums) {				
 		if (nums.size() == 1)	return nums[0];
-
-		vector<int> dp(nums.size(), 0);	//	抢劫前n家的最大金额
-		dp[0] = nums[0];
-		dp[1] = max(nums[0], nums[1]);
-		for (int i = 2; i != nums.size(); i++)
-		{
-			dp[i] = max(dp[i-2] + nums[i], dp[i-1]);
+		int rslt = 0, dp0 = nums[0], dp1 = max(dp0, nums[1]);
+		if (nums.size() == 2)	return max(dp0, dp1);
+		for (int i = 2; i != nums.size(); i++) {
+			int tmp = dp1;
+			dp1 = max(nums[i] + dp0, dp1);
+			dp0 = tmp;
 		}
-		return dp.back();
+		return dp1;
 	}
 };
 
 int main()
 {
-	int n[4] = {10,1,2,17};
+	int n[5] = {1,3,1,3,100};
 	vector<int> nums;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 		nums.push_back(n[i]);
 
 	Solution slt;
