@@ -217,11 +217,12 @@ private:
 	int height;	//	矩阵的高
 };
 
-/*
+/* version 1.1
 1. 用trie来保存词典；用深搜来查找单词；
 2. trieNode的isWord标志位改成了word，直接标出来到这个节点有哪个单词，便于压入结果数组；
 3. 在深搜时，要注意保证数组的下标都是有效值。
 */
+/*
 class TrieNode {
 public:
 	TrieNode* child[26];
@@ -309,6 +310,86 @@ private:
 		visited[i][j] = false;	// 因为不同的单词可以利用多次同一个字母，所以在递归后将visited标志位重置
 	}
 };
+*/
+
+///@brief	Trie树节点
+
+///@version 1.2
+class TrieNode {
+public:
+	TrieNode() {
+		for (int i = 0; i != 26; i++) {
+			this->child[i] = nullptr;
+		}
+	}
+	string word;
+	TrieNode* child[26];
+};
+
+///@brief	Trie树，用于保存单词
+class Dictionary {
+public:
+	Dictionary() {
+		root = new TrieNode();		
+	}
+
+	///@brief	插入新单词
+	void insert(const string& word) {
+		TrieNode* indx = root;
+		for (int i = 0; i != word.size(); i++) {
+			int cur = word[i] - 'a';
+			if (!indx->child[cur])	indx->child[cur] = new TrieNode();
+			indx = indx->child[cur];
+		}
+		indx->word = word;
+	}
+
+	TrieNode* root;
+};
+
+class Solution {
+public:
+	///@note	1. 用Trie数保存单词，提高检索效率；
+	//			2. 利用dfs来遍历棋盘。
+	vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+		row = board.size();
+		col = board[0].size();
+		vector<string> rslt;
+		if (!row || !col)	return rslt;
+		vector<vector<bool>> visited(row, vector<bool>(col, false));
+		dict = new Dictionary();
+		for (int i = 0; i != words.size(); i++)
+			dict->insert(words[i]);
+
+		for (int i = 0; i != row; i++) {
+			for (int j = 0; j != col; j++) {
+				TrieNode* indx = dict->root;
+				if (indx->child[board[i][j] - 'a'])
+					dfs(board, i, j, indx->child[board[i][j] - 'a'], rslt, visited);				
+			}
+		}
+		return rslt;
+	}
+
+	void dfs(vector<vector<char>>& board, int i, int j, TrieNode* node, vector<string>& rslt, vector<vector<bool>>& visited) {
+		if (node && !node->word.empty())	 {
+			rslt.push_back(node->word);
+			node->word.clear();
+		}
+		if (i < 0 || i >= row || j < 0 || j >= col)	return;
+		
+		visited[i][j] = true;
+		if (i > 0 && node->child[board[i-1][j] - 'a'] && !visited[i-1][j])			dfs(board, i - 1, j, node->child[board[i-1][j] - 'a'], rslt, visited);
+		if (i < row - 1 && node->child[board[i+1][j] - 'a'] && !visited[i+1][j])		dfs(board, i + 1, j, node->child[board[i+1][j] - 'a'], rslt, visited);
+		if (j > 0 && node->child[board[i][j-1] - 'a'] && !visited[i][j-1])			dfs(board, i, j - 1, node->child[board[i][j-1] - 'a'], rslt, visited);
+		if (j < col - 1 && node->child[board[i][j+1] - 'a'] && !visited[i][j+1])		dfs(board, i, j + 1, node->child[board[i][j+1] - 'a'], rslt, visited);
+		visited[i][j] = false;
+	}
+
+	Dictionary* dict;	//	词典
+
+	int col, row;	//	行列数
+};
 
 int main()
 {
@@ -323,6 +404,8 @@ int main()
 	['i','f','l','v']
 	]
 	*/
+
+	/*
 	vector<vector<char>> board;
 	vector<char> cvec;
 	cvec.push_back('o');
@@ -368,7 +451,14 @@ int main()
 // 
 // 	words.push_back("pea");
 // 	words.push_back("eat");
-
+*/
+	vector<vector<char>> board;
+	vector<char> chvec;
+	chvec.push_back('a');
+	chvec.push_back('b');
+	board.push_back(chvec);
+	vector<string> words;
+	words.push_back("ba");
 	Solution slt;
 	vector<string> rslt = slt.findWords(board, words);
 	
