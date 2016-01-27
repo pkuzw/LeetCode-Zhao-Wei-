@@ -9,7 +9,10 @@ in the array such that nums[i] = nums[j] and the difference between i and j is a
 ///@version	1.0
 
 ///@date	2015.08.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.27
+///@version	1.2
 
 #include <unordered_map>
 #include <vector>
@@ -47,14 +50,12 @@ public:
 class Solution {
 public:
 	bool containsNearbyDuplicate(vector<int>& nums, int k) {
-		unordered_map<int, int> ht;
-		for (int i = 0; i != nums.size(); i++)
-		{
-			if (ht.find(nums[i]) == ht.end())	ht[nums[i]] = i;
-			else
-			{
-				if (i - ht[nums[i]] <= k)		return true;
-				ht[nums[i]] = i;
+		unordered_map<int, int> hash_tbl;
+		for (int i = 0; i != nums.size(); i++) {
+			if (hash_tbl.find(nums[i]) == hash_tbl.end())	hash_tbl[nums[i]] = i;
+			else {
+				if (i - hash_tbl[nums[i]] <= k)	return true;
+				hash_tbl[nums[i]] = i;
 			}
 		}
 		return false;
