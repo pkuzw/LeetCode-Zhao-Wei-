@@ -9,7 +9,10 @@ nums[i] and nums[j] is at most t and the difference between i and j is at most k
 ///@version	1.0
 
 ///@date	2015.08.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.27
+///@version	1.2
 
 #include <set>
 #include <vector>
@@ -47,23 +50,20 @@ public:
 
 class Solution {
 public:
+	///@note	1. 用multiset来维护一个k大小的窗口，在其中来判断是否存在差值小于等于t的两元素；
+	//			2. 在判定时要注意整型溢出的问题。
 	bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
-		multiset<int> ms;
-		for (int i = 0; i != nums.size(); i++)
-		{
-			if (ms.size() > k)	ms.erase(ms.find(nums[i-k-1]));
+		multiset<long> window;
+		for (int i = 0; i != nums.size(); i++) {
+			if (window.size() > k)	window.erase(window.find(nums[i-k-1]));
 
-			multiset<int>::iterator j = ms.lower_bound(nums[i] - t);
-
-			if (j != ms.end() && *j - nums[i] <= t)	return true;
-
-			ms.insert(nums[i]);
+			multiset<long>::iterator j = window.lower_bound(nums[i] - t);
+			if (j != window.end() && *j - t <= nums[i])	return true;
+			window.insert(nums[i]);
 		}
 		return false;
 	}
 };
-
-
 
 int main()
 {
