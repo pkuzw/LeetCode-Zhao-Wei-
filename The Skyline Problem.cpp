@@ -22,7 +22,10 @@ There must be no consecutive horizontal lines of equal height in the output skyl
 ///@version	1.0
 
 ///@date	2015.08.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.27
+///@version	1.2
 
 #include <vector>
 #include <set>
@@ -77,7 +80,7 @@ public:
 4. 继而查看当前最大堆中的最大值是否和前一个最大高度相同，如果不同则说明出现了拐点，将当前点的横坐标与当前最大高度作为拐点压入结果数组，并更新前一个最大高度；
 5. 如果有需求输出大楼轮廓的线段前后端点，那么就在上面算法的基础上，在每一个点后面插入前一个点的纵坐标加上后一个点的横坐标即可。
 */
-class Solution {
+class Solution_v1_1 {
 public:
 	vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
 		vector<pair<int, int>> rslt;
@@ -120,6 +123,40 @@ private:
 	}myCmp;
 };
 
+class Solution {
+public:
+	///@note	1. 将输入数据拆分成两种端点，前端点的高度值为负，后端点的高度值为正，这样可以保证在按照横坐标排序时，横坐标相等的情况下，左端点排在右端点前面；
+	//			2. 利用multiset来保存高度值，需要初始化压入一个0，防止最后heights为空时没有元素可以删除；
+	//			3. 排序后遍历端点数组，如果是左端点，就压入高度数组；如果是右端点，就删除高度数组中的该高度；
+	//			4. 当出现拐点时，即当前高度和原来的最大高度不等时，需要将结果压入，并更新原来的最大高度。
+	//			5. 时间复杂度为O(nlogn)，空间复杂度为O(n)，其中n为端点数目。
+	vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
+		vector<pair<int, int>> rslt;
+		vector<pair<int, int>> points;
+		multiset<int> heights;
+
+		heights.insert(0);	// 初始化，防止最后heights为空时没有元素可以删除
+
+		for (int i = 0; i != buildings.size(); i++) {
+			points.push_back(make_pair(buildings[i][0], -buildings[i][2]));
+			points.push_back(make_pair(buildings[i][1], buildings[i][2]));
+		}
+
+		sort(points.begin(), points.end());
+		int cur_max = 0, pre_max = 0;
+		for (int i = 0; i != points.size(); i++) {
+			if (points[i].second < 0)	heights.insert(-points[i].second);
+			else	heights.erase(heights.find(points[i].second));
+			cur_max = *heights.rbegin();
+			if (cur_max != pre_max) {
+				rslt.push_back(make_pair(points[i].first, cur_max));
+				pre_max = cur_max;
+			}
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	vector<int> line;
@@ -158,6 +195,6 @@ int main()
 	vector<pair<int, int>> rslt = slt.getSkyline(buildings);
 
 	Solution_v1 slt_v1;
-	rslt = slt_v1.getSkyline(buildings);
+	vector<pair<int, int>> rslt1 = slt_v1.getSkyline(buildings);
 	return 0;
 }
