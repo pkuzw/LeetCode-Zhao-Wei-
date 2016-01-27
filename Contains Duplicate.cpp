@@ -11,7 +11,10 @@ every element is distinct.
 ///@version	1.0
 
 ///@date	2015.08.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.27
+///@version	1.2
 
 #include <unordered_set>
 #include <vector>
@@ -39,10 +42,10 @@ public:
 class Solution {
 public:
 	bool containsDuplicate(vector<int>& nums) {
-		unordered_set<int> ht;
-		for (int i = 0; i != nums.size(); i++)
-		{
-			if (ht.find(nums[i]) == ht.end())	ht.insert(nums[i]);
+		unordered_set<int> hash_tbl;
+		for (int i = 0; i != nums.size(); i++) {
+			if (hash_tbl.find(nums[i]) == hash_tbl.end())
+				hash_tbl.insert(nums[i]);
 			else	return true;
 		}
 		return false;
