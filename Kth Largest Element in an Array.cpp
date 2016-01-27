@@ -68,6 +68,6 @@ int main()
 	nums.push_back(6);
 	nums.push_back(4);
 	Solution slt;
-	int rslt = slt.findKthLargest(nums, 2);
+	int rslt = slt.findKthLargest(nums, 11);
 	return 0;
 }
