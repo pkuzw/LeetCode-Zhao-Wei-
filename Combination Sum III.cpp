@@ -27,7 +27,10 @@ Output:
 ///@version	1.0
 
 ///@date	2015.08.10
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.27
+///@version	1.2
 #include <vector>
 
 using namespace std;
@@ -77,30 +80,26 @@ private:
 
 class Solution {
 public:
+	///@note	1. dfs；2. 递归实现。
 	vector<vector<int>> combinationSum3(int k, int n) {
 		vector<int> candidates;
-		for (int i = 1; i <= 9; i++)
-			candidates.push_back(i);
-
-		vector<int> comb;
-		combine(k, n, comb, candidates, 0);
+		vector<int> combination;
+		for (int i = 1; i != 10; i++)	candidates.push_back(i);
+		combine(k, n, combination, candidates, 0);
 		return rslt;
 	}
 
-private:
-	void combine(int k, int n, vector<int>& comb, const vector<int>& candidates, int start)
-	{
-		if (k == 0 && n == 0)
-		{
-			rslt.push_back(comb);
+	///@note	1. 递归辅助函数。
+	void combine(int k, int n, vector<int>& combination, const vector<int>& candidates, int start) {
+		if (!n && !k) {
+			rslt.push_back(combination);
 			return;
 		}
 
-		while(start < 9 && candidates[start] <= n)
-		{
-			comb.push_back(candidates[start]);
-			combine(k-1, n-candidates[start], comb, candidates, start+1);
-			comb.pop_back();
+		while (start < 9 && candidates[start] <= n) {
+			combination.push_back(candidates[start]);
+			combine(k - 1, n - candidates[start], combination, candidates, start + 1);
+			combination.pop_back();
 			start++;
 		}
 	}
@@ -116,6 +115,6 @@ int main()
 	vector<vector<int>> rslt = slt.combinationSum3(k, n);
 
 	Solution_v1 slt_v1;
-	rslt = slt_v1.combinationSum3(k, n);
+	vector<vector<int>> rslt1 = slt_v1.combinationSum3(k, n);
 	return 0;
 }
