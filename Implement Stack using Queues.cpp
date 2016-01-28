@@ -16,7 +16,10 @@ You may assume that all operations are valid (for example, no pop or top operati
 ///@version	1.0
 
 ///@date	2015.08.09
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.28
+///@version	1.2
 
 #include <queue>
 using namespace std;
@@ -87,14 +90,12 @@ public:
 
 	// Removes the element on top of the stack.
 	void pop() {
-		while (q1.size() > 1)
-		{
+		while (q1.size() > 1) {
 			q2.push(q1.front());
 			q1.pop();
 		}
 		q1.pop();
-		while (!q2.empty())
-		{
+		while (!q2.empty()) {
 			q1.push(q2.front());
 			q2.pop();
 		}
@@ -102,16 +103,14 @@ public:
 
 	// Get the top element.
 	int top() {
-		while (q1.size() > 1)
-		{
+		while (q1.size() > 1) {
 			q2.push(q1.front());
 			q1.pop();
 		}
 		int tp = q1.front();
 		q2.push(tp);
 		q1.pop();
-		while (!q2.empty())
-		{
+		while (!q2.empty()) {
 			q1.push(q2.front());
 			q2.pop();
 		}
