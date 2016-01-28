@@ -13,6 +13,9 @@ Assume that the total area is never beyond the maximum possible value of int.
 ///@date	2015.08.09
 ///@version	2.0
 
+///@date	2016.01.28
+///@version	2.1
+
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -65,7 +68,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
 		if (A >= G || B >= H || C <= E || D <= F)	return (C-A)*(D-B) + (G-E)*(H-F);	//	相离的情况
@@ -76,6 +79,18 @@ public:
 		int y_bottom = (B > F) ? B : F;
 		int y_ceil = (D < H) ? D : H;
 		return (C - A) * (D - B) + (G - E) * (H - F) - (x_right - x_left) * (y_ceil - y_bottom);
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 分成相离和相交两种情形；
+	//			2. 相离时，总面积 = 两矩形面积之和
+	//			3. 相交时，总面积 = 两矩形面积之和 - 相交矩形面积。其中相交矩形的左下端点为两矩形的左下端点的横纵坐标的较小值，右上端点为两矩形的右上端点的横纵坐标的较大值。
+	int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+		if (A >= G || B >= H || C <= E || D <= F)	return (C-A)*(D-B) + (G-E)*(H-F);
+		int left_bottom_x = max(A, E), left_bottom_y = max(B, F), right_top_x = min(C, G), right_top_y = min(D, H);
+		return (C-A)*(D-B) + (G-E)*(H-F) - (right_top_x - left_bottom_x) * (right_top_y - left_bottom_y);
 	}
 };
 
