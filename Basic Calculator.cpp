@@ -19,6 +19,9 @@ Some examples:
 ///@date	2015.08.09
 ///@version	2.0
 
+///@date	2016.01.28
+///@version	2.1
+
 #include <stack>
 #include <string>
 #include <vector>
@@ -224,15 +227,15 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	int calculate(string s) {
 		if (s.empty())	return 0;
 
 		int rslt = 0;
 		stack<int> stk;	//	符号栈
-		stk.push(1);
-		stk.push(1);	//	初始的符号栈中要有两个'+'，这样在第一个数字被弹出后，还可以有一个符号与遇到的第一个符合进行计算
+		stk.push(1);	//	1相当于'+'，正号
+		stk.push(1);	//	初始的符号栈中要有两个'1'，这样在第一个数字被弹出后，还可以有一个正号与遇到的第一个正负号进行计算
 
 		for (int i = 0; i != s.size(); i++)
 		{
@@ -257,6 +260,32 @@ public:
 	}	
 };
 
+class Solution {
+public:
+	///@note	1. 符号栈，对于每一个数字或者括号前都有一个符号，用栈来保存每一个符号，初始化时栈中有两个1，即两个正号，保证第一个元素弹出后，
+	//			还有符号可以与后续数字或符号进行运算。
+	int calculate(string s) {
+		if (s.empty())	return 0;
+		stack<int> stk;	//	符号栈
+		stk.push(1);
+		stk.push(1);
+		int rslt = 0;
+		for (int i = 0; i != s.size(); i++) {
+			if (s[i] >= '0' && s[i] <= '9') {
+				int d = 0;
+				while (i < s.size() && s[i] >= '0' && s[i] <= '9') 
+					d = d * 10 + s[i++] - '0';
+				rslt += stk.top() * d;
+				stk.pop();
+				i--;
+			}
+			else if (s[i] == ')')	stk.pop();
+			else if (s[i] != ' ')	stk.push(stk.top() * (s[i] == '-' ? -1 : 1));
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	/*
@@ -273,6 +302,8 @@ int main()
 	//"1+2+3-10-11";
 	Solution slt;
 	int rslt = slt.calculate(s);
-	cout << rslt << endl;
+	
+	Solution_v2 slt2;
+	int r2 = slt2.calculate(s);
 	return 0;
 }
