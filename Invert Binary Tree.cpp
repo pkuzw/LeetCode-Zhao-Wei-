@@ -27,7 +27,9 @@ Google: 90% of our engineers use the software you wrote (Homebrew), but you can�
 
 ///@date	2016.01.29
 ///@version	1.2
+///@version	2.0
 #include <algorithm>
+#include <stack>
 using namespace std;
 
 struct TreeNode {
@@ -70,13 +72,34 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	TreeNode* invertTree(TreeNode* root) {
 		if (!root)	return nullptr;
 		swap(root->left, root->right);
 		invertTree(root->left);
 		invertTree(root->right);
+		return root;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 非递归；
+	//			2. 栈
+	TreeNode* invertTree(TreeNode* root) {
+		if (!root)	return nullptr;
+		stack<TreeNode*> stk;
+		stk.push(root);
+		while (!stk.empty()) {
+			TreeNode* node = stk.top();
+			stk.pop();
+			if (node) {
+				stk.push(node->left);
+				stk.push(node->right);
+				swap(node->left, node->right);
+			}
+		}
 		return root;
 	}
 };
