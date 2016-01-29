@@ -11,6 +11,9 @@ For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
 ///@date	2015.08.07
 ///@version	2.1
 
+///@version	2016.01.29
+///@version	2.2
+
 #include <vector>
 #include <string>
 
@@ -99,30 +102,25 @@ private:
 
 class Solution {
 public:
+	///@note	1. to_string；
+	//			2. 连个指针来从头到尾标记连续元素范围，注意遍历数组时不要使下标超出范围。
 	vector<string> summaryRanges(vector<int>& nums) {
 		vector<string> rslt;
 		if (nums.empty())	return rslt;
-
-		int start = 0, end = 0;
 		string s;
-		for (int i = 0; i < nums.size()-1; i++)
-		{
-			if (nums[i] == nums[i+1]-1)	end++;
-			else
-			{
-				if (end == start)	s = to_string(static_cast<long long>(nums[i]));									
-				else				s = to_string(static_cast<long long>(nums[start])) + "->" + to_string(static_cast<long long>(nums[end]));
-				
+		int start = 0, end = 0;
+		for (int i = 0; i != nums.size() - 1; i++) {
+			if (nums[i] == nums[i+1] - 1)	end++;
+			else {
+				if (start == end)	s = to_string(static_cast<long long>(nums[start]));
+				else	s = to_string(static_cast<long long>(nums[start])) + "->" + to_string(static_cast<long long>(nums[end]));
 				rslt.push_back(s);
-				start = i+1;
-				end = i+1;
-			}
+				start = end = i + 1;
+			}			
 		}
-
-		if (end == start)	s = to_string(static_cast<long long>(nums[start]));									
-		else				s = to_string(static_cast<long long>(nums[start])) + "->" + to_string(static_cast<long long>(nums[end]));
-
-		rslt.push_back(s);		
+		if (start == end)	s = to_string(static_cast<long long>(nums[start]));
+		else	s = to_string(static_cast<long long>(nums[start])) + "->" + to_string(static_cast<long long>(nums[end]));
+		rslt.push_back(s);
 		return rslt;
 	}
 };
@@ -137,5 +135,5 @@ int main()
 
 	Solution slt;
 	vector<string> rslt = slt.summaryRanges(nums);
-	return 0;
+                                 	return 0;
 }
