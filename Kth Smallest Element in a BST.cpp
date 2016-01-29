@@ -15,6 +15,9 @@ What if the BST is modified (insert/delete operations) often and you need to fin
 ///@date	2015.08.07
 ///@version	2.0
 
+///@date	2016.01.29
+///@version	3.0
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -59,8 +62,7 @@ public:
 	vector<int> in_order;	//	存放中序遍历的序列
 };
 
-class Solution
-{
+class Solution_v2 {
 public:
 	int kthSmallest(TreeNode* root, int k) {
 		int cnt = 0;
@@ -81,6 +83,32 @@ public:
 			p = p->right;
 		}
 		return 0;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 递归；
+	//			2. BST中的第k个元素如果在左子树中，则就是左子树的第k个元素；
+	//			3. 如果左子树大小为k-1，则根元素就是第k个元素；
+	//			4. 如果在右子树，则就是右子树中第k - left_cnt - 1个元素。
+	int kthSmallest(TreeNode* root, int k) {
+		int rslt = 0;
+		helper(root, k, rslt);
+		return rslt;
+	}
+
+	///@brief	递归辅助函数
+	///@param	root	根节点
+	///@param	k		需要寻找的节点排序序号
+	///@param	rslt	结果节点值
+	///@return	返回以root为根的BST的节点数目
+	int helper(TreeNode* root, int k, int& rslt) {
+		if (!root)	return 0;
+		int left_cnt = helper(root->left, k, rslt);
+		int right_cnt = helper(root->right, k - left_cnt - 1, rslt);
+		if (k == left_cnt + 1)	rslt = root->val;		
+		return left_cnt + right_cnt + 1;
 	}
 };
 
