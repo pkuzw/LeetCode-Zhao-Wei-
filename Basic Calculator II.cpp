@@ -17,7 +17,10 @@ Some examples:
 ///@version	1.0
 
 ///@date	2015.08.09
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.29
+///@version	1.2
 
 #include <stack>
 #include <vector>
@@ -191,7 +194,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	int calculate(string s) {
 		stack<int> stk;
@@ -238,6 +241,45 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 栈，用一个栈来保存所有能够做加法的数，这些数可以是正数、负数或者乘除组合起来的数；
+	//			2. 用一个标记变量来保存当前数字的符号，初始为'+'。
+	//			3. 注意处理表达式最后一个数字，它在第二个条件语句的第二个条件判断里面，是和第一个条件并列的关系，不是互斥的。
+	int calculate(string s) {
+		int rslt = 0, num = 0;
+		char sign = '+';
+		stack<int> stk;
+		if (s.empty())	return 0;
+		for (int i = 0; i != s.size(); i++) {
+			if (s[i] >= '0') {	//	由于在ASCII中'0'~'9'的编码值大于'+', '-', '*', '/', ' '等符号，所以只需要判定下限即可
+				num = num * 10 + s[i] - '0'	;
+			}
+			if ((s[i] < '0' && s[i] != ' ') || (i == s.size() - 1)) {
+				if (sign == '+')		stk.push(num);
+				else if (sign == '-')	stk.push(-num);
+				else if (sign == '*') {
+					num = stk.top() * num;
+					stk.pop();
+					stk.push(num);
+				}
+				else if (sign == '/') {
+					num = stk.top() / num;
+					stk.pop();
+					stk.push(num);
+				}
+				sign = s[i];
+				num = 0;
+			}			
+		}
+		while (!stk.empty()) {
+			rslt += stk.top();
+			stk.pop();
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	/*
@@ -253,5 +295,8 @@ int main()
 	string s = "100000000/1/2/3/4/5/6/7/8/9/10";
 	Solution slt;
 	int rslt = slt.calculate(s);
+
+	Solution_v1_1 slt11;
+	int r11 = slt11.calculate(s);
 	return 0;
 }
