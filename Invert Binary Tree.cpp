@@ -23,7 +23,10 @@ Google: 90% of our engineers use the software you wrote (Homebrew), but you canâ
 ///@version	1.0
 
 ///@date	2015.08.09
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.29
+///@version	1.2
 #include <algorithm>
 using namespace std;
 
@@ -70,9 +73,9 @@ private:
 class Solution {
 public:
 	TreeNode* invertTree(TreeNode* root) {
-		if (!root)	return root;
+		if (!root)	return nullptr;
 		swap(root->left, root->right);
-		invertTree(root->left);		
+		invertTree(root->left);
 		invertTree(root->right);
 		return root;
 	}
