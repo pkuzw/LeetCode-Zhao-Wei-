@@ -9,7 +9,10 @@ The algorithm should run in linear time and in O(1) space.
 ///@version	1.0
 
 ///@date	2015.08.07
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.29
+///@version	1.2
 
 #include <vector>
 
@@ -70,53 +73,37 @@ public:
 
 class Solution {
 public:
+	///@note	1. 投票法；
+	//			2. 数组中出现次数超过n/3的元素个数不超过2；
+	//			3. 先用投票法找出可能的2个候选元素，然后验证之。
 	vector<int> majorityElement(vector<int>& nums) {
-		int a = 0;
-		int b = 0;
-		int a_cnt = 0;
-		int b_cnt = 0;
+		int a = 0, b = 0, a_cnt = 0, b_cnt = 0;
 		vector<int> rslt;
-
-		if (nums.empty())	return rslt;
-
-		for (int i = 0; i != nums.size(); i++)
-		{
-			if (nums[i] == nums[a])
-			{
-				a_cnt++;
-			}
-			else if (nums[i] == nums[b])
-			{
-				b_cnt++;
-			}
-			else if (!a_cnt)
-			{
+		for (int i = 0; i != nums.size(); i++) {
+			if (nums[i] == nums[a])	a_cnt++;
+			else if (nums[i] == nums[b])	b_cnt++;
+			else if (!a_cnt) {
 				a = i;
 				a_cnt = 1;
 			}
-			else if (!b_cnt)
-			{
+			else if (!b_cnt) {
 				b = i;
 				b_cnt = 1;
 			}
-			else
-			{
+			else {
 				a_cnt--;
 				b_cnt--;
 			}
 		}
-
-			a_cnt = 0;
-			b_cnt = 0;
-			for (int i = 0; i != nums.size(); i++)
-			{
-				if (nums[i] == nums[a])			a_cnt++;
-				else if (nums[i] == nums[b])	b_cnt++;
-			}
-
-			if (a_cnt > nums.size() / 3)	rslt.push_back(nums[a]);
-			if (b_cnt > nums.size() / 3)	rslt.push_back(nums[b]);
-			return rslt;		
+		a_cnt = 0;
+		b_cnt = 0;
+		for (int i = 0; i != nums.size(); i++) {
+			if (nums[i] == nums[a])	a_cnt++;
+			else if (nums[i] == nums[b])	b_cnt++;
+		}
+		if (a_cnt > nums.size() / 3)	rslt.push_back(nums[a]);
+		if (b_cnt > nums.size() / 3)	rslt.push_back(nums[b]);
+		return rslt;
 	}
 };
 
