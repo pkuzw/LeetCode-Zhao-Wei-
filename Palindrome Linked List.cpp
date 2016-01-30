@@ -12,6 +12,9 @@ Could you do it in O(n) time and O(1) space?
 ///@date	2015.08.06
 ///@version	2.0
 
+///@date	2016.01.30
+///@version	2.1
+
 #include <iostream>
 #include <stack>
 #include <queue>
@@ -74,7 +77,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	bool isPalindrome(ListNode* head) {
 		if (!head || !head->next)	return true;
@@ -113,6 +116,46 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 快慢节点法找到链表中点，把后半段翻转，然后比较前后两段链表是否相同。
+	bool isPalindrome(ListNode* head) {
+		if (!head || !head->next)	return true;
+		ListNode* middle = revertLinkedList(findMiddlePoint(head));
+		while (middle) {
+			if (head->val != middle->val)	return false;
+			head = head->next;
+			middle = middle->next;
+		}
+		return true;
+	}
+
+	///@brief	找到链表的中点，如果链表长度n为奇数，则中点就是就是中间的唯一中点；如果n为偶数，就是中间并列的第二个数。
+	ListNode* findMiddlePoint(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* slow = head, *fast = head;
+		while (fast && fast->next) {
+			slow = slow->next;
+			fast = fast->next->next;
+		}
+		return slow;
+	}
+
+	///@brief	翻转链表
+	ListNode* revertLinkedList(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* indx = head, *indx_nxt = indx->next, *indx_nxt_nxt = indx_nxt->next;
+		indx->next = nullptr;
+		while (indx_nxt) {
+			indx_nxt->next = indx;
+			indx = indx_nxt;
+			indx_nxt = indx_nxt_nxt;
+			indx_nxt_nxt = indx_nxt_nxt ? indx_nxt_nxt->next : nullptr;
+		}
+		return indx;
+	}
+};
+
 int main()
 {
 	ListNode* n[11];
@@ -127,19 +170,19 @@ int main()
 		n[i]->val = (10-i);
 	//	n[0]->next = n[0];
 
-	ListNode* head = n[1];
+	ListNode* head = n[0];
 // 	n[0]->next = nullptr;
 // 
 // 	n[1]->val = 0;
 // 	n[1]->next = nullptr;
 
-	n[0]->val = 1;
-	n[0]->next = n[1];
-
-	n[1]->val = 1;
-	n[1]->next = nullptr;
-
-	head = n[0];
+// 	n[0]->val = 1;
+// 	n[0]->next = n[1];
+// 
+// 	n[1]->val = 1;
+// 	n[1]->next = nullptr;
+// 
+// 	head = n[0];
 
 
 
