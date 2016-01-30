@@ -11,7 +11,10 @@ Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.30
+///@version	1.2
 using namespace std;
 
 class Solution_v1 {
@@ -56,13 +59,20 @@ public:
 
 class Solution {
 public:
+	///@note	1. 用c = {1, 10, 100, 1000, ...}来将正数逐位分成两部分，第一部分是a / c，第二部分是a % c。
+	//			2. 举个例子，对于3141592这个数来说，当c = 1时，a = 3141592，b = 0，此时对a部分来说，末尾的1出现了314160 * 1次，因为除了末位，其前缀是从0到314159；
+	//			3. 当c = 10时，a = 314159, b = 2，此时a中的末位1出现了31416 * 10次；
+	//			4. 当c = 100时，a = 31415，b = 92，a的末位1出现了3142 * 100次；
+	//			5. 当c = 1000时，a = 3141，b = 592，a的末位1在前缀从0到313的314次中都是出现了314 * 1000次，而在前缀为314时，因为末位是1，所以只出现了b + 1次，即593次，共计314 * 1000 + 593次；
+	//			6. 当c = 10000时，a = 314, b = 1592，a的末位1出现了32 * 10000次；
+	//			7. 当c = 100000时，a = 31，b = 41592，a的末位1出现了3 * 100000 + 41593；
+	//			8. 当c = 1000000时，a = 3，b = 141592，a的末位1出现了1 * 1000000次。计算完毕。
+	//			9. 当a的末位是0时，其末位1出现的次数是其前缀的数目 * c。
 	int countDigitOne(int n) {
 		int rslt = 0;
-		for (long long m = 1; m <= n; m *= 10)
-		{
-			int a = n / m;
-			int b = n % m;
-			rslt += (a + 8) / 10 * m + (a % 10 == 1) * (b + 1);
+		for (long long c = 1; n / c > 0; c *= 10) {
+			int a = n / c, b = n % c;
+			rslt += ((a + 8) / 10) * c + (a % 10 == 1) * (b + 1);
 		}
 		return rslt;
 	}
@@ -71,6 +81,6 @@ public:
 int main()
 {
 	Solution slt;
-	slt.countDigitOne(133);
+	int rslt = slt.countDigitOne(13);
 	return 0;
 }
