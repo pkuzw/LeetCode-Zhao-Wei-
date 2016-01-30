@@ -89,9 +89,23 @@ public:
 	//			4. 否则当前节点就是它们的最低公共祖先。
 	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 		if (!root)	return nullptr;
-		if (root->val > max(p->val, q->val))		return lowestCommonAncestor(root->left, p, q);
+		if (root->val > max(p->val, q->val))			return lowestCommonAncestor(root->left, p, q);
 		else if (root->val < min(p->val, q->val))	return lowestCommonAncestor(root->right, p, q);
 		else return root;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 迭代实现；
+	///			2. 原理与递归实现一样，通过一个while(1)循环来向下查找。
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+		if (!root)	return nullptr;
+		while (1) {
+			if (root->val > max(p->val, q->val))			root = root->left;
+			else if (root->val < min(p->val, q->val))	root = root->right;
+			else	return root;
+		}
 	}
 };
 
