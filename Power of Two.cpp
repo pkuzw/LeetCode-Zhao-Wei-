@@ -7,7 +7,11 @@ Given an integer, write a function to determine if it is a power of two.
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.1
+///@version	1.1
+///@version	2.0
+
+///@date	2016.01.30
+///@version	3.0
 
 #include <iostream>
 #include <vector>
@@ -15,7 +19,7 @@ Given an integer, write a function to determine if it is a power of two.
 
 using namespace std;
 
-class Solution_v2 {
+class Solution_v1 {
 public:
 	///@brief	判断一个数n是否是2的幂
 	///@param	n	整数
@@ -33,32 +37,32 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
-	bool isPowerOfTwo(int n) {
-		int power_n[31] = {1};
-		for (int i = 0; i < 31; i++)
-		{
-			power_n[i] = 1 << i;
-		}
-
-		for (int i = 30; i >= 0; i--)
-		{
-			if (power_n[i] == n)	return true;
-		}
-		return false;
-	}
-
-	///@brief	 2的正整数次幂减1与本身相与得0
-	bool isPowerOfTwo_v2_1(int n)
+	///@note	 2的正整数次幂减1与本身相与得0
+	bool isPowerOfTwo(int n)
 	{
 		return (n > 0) && (!(n & (n-1)));
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 正整数的2^k的2进制表示只有1个1，其余各位是0；对于负数直接判错。
+	bool isPowerOfTwo(int n) {
+		if (n < 0)	return false;
+		int cnt = 0;
+		while (n) {
+			cnt += (n & 1);
+			n >>= 1;
+		}
+		return cnt == 1;
 	}
 };
 
 int main()
 {
 	Solution slt;
-	bool rslt = slt.isPowerOfTwo(1024);
+	bool rslt = slt.isPowerOfTwo(0);
 	return 0;
 }
