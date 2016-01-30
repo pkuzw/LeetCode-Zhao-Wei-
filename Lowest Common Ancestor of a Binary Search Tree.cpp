@@ -21,6 +21,9 @@ For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another exa
 ///@date	2015.08.06
 ///@version	2.0
 
+///@date	2016.01.30
+///@version	2.1
+
 #include <iostream>
 
 using namespace std;
@@ -54,13 +57,13 @@ public:
 	}	
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	TreeNode* lowestCommonAncestor_recur(TreeNode* root, TreeNode* p, TreeNode* q) {
 		if (!root)	return nullptr;
 
-		if (root->val < min(p->val, q->val))		return lowestCommonAncestor(root->right, p, q);
-		else if (root->val > max(p->val, q->val)) return lowestCommonAncestor(root->left, p, q);
+		if (root->val < min(p->val, q->val))		return lowestCommonAncestor_recur(root->right, p, q);
+		else if (root->val > max(p->val, q->val)) return lowestCommonAncestor_recur(root->left, p, q);
 		else return root;
 	}
 
@@ -75,6 +78,20 @@ public:
 			else	break;
 		}
 		return root;
+	}
+};
+
+class Solution_v2_1 {
+public:
+	///@note	1. 递归；
+	//			2. 如果两节点都比当前节点小，则进入左子树；
+	//			3. 如果两节点都比当前节点大，则进入右子树；
+	//			4. 否则当前节点就是它们的最低公共祖先。
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+		if (!root)	return nullptr;
+		if (root->val > max(p->val, q->val))		return lowestCommonAncestor(root->left, p, q);
+		else if (root->val < min(p->val, q->val))	return lowestCommonAncestor(root->right, p, q);
+		else return root;
 	}
 };
 
