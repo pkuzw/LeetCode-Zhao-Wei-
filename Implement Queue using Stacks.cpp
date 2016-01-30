@@ -15,7 +15,10 @@ Notes:
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.30
+///@version	1.2
 
 #include <iostream>
 #include <vector>
@@ -82,18 +85,14 @@ public:
 
 	// Removes the element from in front of queue.
 	void pop(void) {
-		if (s1.empty())	return;
+		if (this->empty())	return;
 
-		while (!s1.empty())
-		{
+		while (!s1.empty()) {
 			s2.push(s1.top());
 			s1.pop();
 		}
-
 		s2.pop();
-
-		while (!s2.empty())
-		{
+		while (!s2.empty()) {
 			s1.push(s2.top());
 			s2.pop();
 		}
@@ -101,21 +100,17 @@ public:
 
 	// Get the front element.
 	int peek(void) {
-		while (!s1.empty())
-		{
+		if (this->empty())	return -1;
+		while (!s1.empty()) {
 			s2.push(s1.top());
 			s1.pop();
 		}
-
-		int tp = s2.top();
-
-		while (!s2.empty())
-		{
+		int rslt = s2.top();
+		while (!s2.empty()) {
 			s1.push(s2.top());
 			s2.pop();
 		}
-
-		return tp;
+		return rslt;
 	}
 
 	// Return whether the queue is empty.
