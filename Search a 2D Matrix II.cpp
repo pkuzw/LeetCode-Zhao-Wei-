@@ -28,6 +28,10 @@ Given target = 20, return false.
 ///@date	2015.08.06
 ///@version	2.0
 
+///@date	2016.01.31
+
+///@version	2.1
+
 #include <vector>
 #include <algorithm>
 
@@ -114,10 +118,7 @@ class Solution {
 public:
 	bool searchMatrix(vector<vector<int>>& matrix, int target) {
 		for (int i = 0; i != matrix.size(); i++)
-		{
-			if (binary_search(matrix[i].begin(), matrix[i].end(), target))
-				return true;
-		}
+			if (binary_search(matrix[i].begin(), matrix[i].end(), target))	return true;		
 		return false;
 	}
 };
