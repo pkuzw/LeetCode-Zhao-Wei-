@@ -11,7 +11,10 @@ should become 1 -> 2 -> 4 after calling your function.
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.31
+///@version	1.2
 
 #include <iostream>
 
