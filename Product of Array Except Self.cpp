@@ -14,7 +14,10 @@ Could you solve it with constant space complexity? (Note: The output array does 
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.31
+///@version	1.2
 #include <vector>
 
 using namespace std;
@@ -46,7 +49,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	vector<int> productExceptSelf(vector<int>& nums) {		
 		vector<int> rslt(nums.size(), 0);
@@ -65,6 +68,26 @@ public:
 			t = t * nums[i];	//	t是i+1...n的阶乘
 		}
 
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 两遍单循环，two-pass；
+	//			2. 第一遍是计算0..i-1的连乘积，第二遍是计算i+1..n-1的连乘积；
+	//			3. 最后将二者相乘即可。
+	vector<int> productExceptSelf(vector<int>& nums) {
+		if (nums.empty())	return nums;
+		int len = nums.size();
+		vector<int> rslt(len, 1);
+		for (int i = 1; i != len; i++) 
+			rslt[i] = rslt[i-1] * nums[i-1];
+		int tmp = 1;
+		for (int i = len-1; i >= 0; i--) {
+			rslt[i] = rslt[i] * tmp;
+			tmp = tmp * nums[i];
+		}
 		return rslt;
 	}
 };
