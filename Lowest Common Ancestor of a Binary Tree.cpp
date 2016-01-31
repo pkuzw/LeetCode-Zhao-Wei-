@@ -19,7 +19,10 @@ For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another exa
 ///@version	1.0
 
 ///@date	2015.08.06
-///@version	2.0
+///@version	1.1
+
+///@date	2016.01.31
+///@version	1.2
 
 #include <iostream>
 using namespace std;
@@ -66,16 +69,13 @@ class Solution {
 public:
 	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 		if (!root || !p || !q)	return nullptr;
-
 		if (root == p || root == q)	return root;
-		
 		TreeNode* lsub = lowestCommonAncestor(root->left, p, q);
 		TreeNode* rsub = lowestCommonAncestor(root->right, p, q);
-
-		if (lsub && rsub)		return root;
-		else if (lsub && !rsub)	return lsub;
+		if (lsub && rsub)	return root;
 		else if (!lsub && rsub)	return rsub;
-		else return nullptr;
+		else if (lsub && !rsub)	return lsub;
+		else return	nullptr;
 	}
 };
 
