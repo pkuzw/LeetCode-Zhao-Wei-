@@ -10,6 +10,7 @@ using namespace std;
 
 class Solution {
 public:
+	///@brief	
 	vector<string> generatePalindromes(string s) {
 
 	}
