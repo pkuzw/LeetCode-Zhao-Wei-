@@ -1,4 +1,4 @@
-﻿///@file	Palindrome Permutation II
+///@file	Palindrome Permutation II
 ///@author	zhaowei
 ///@date	2016.02.02
 ///@version	1.0
@@ -10,10 +10,14 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	
+	///@brief	hello world 
 	vector<string> generatePalindromes(string s) {
 
 	}
+
+	///@brief
+	vector<string> rslt;
+	
 };
 
 int main() {
