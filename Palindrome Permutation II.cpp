@@ -18,17 +18,21 @@ public:
 	//			2. 先判断原字符串是否可以组成回文字符串，如果不可以直接返回空；否则逐个递归遍历；
 	vector<string> generatePalindromes(string s) {
 		if (s.empty() || !isPalindrome(s))	return rslt;
-		string str;
+		string mid, str;
+		int len = s.size();
 		for (unordered_map<char, int>::iterator i = hash_tbl.begin(); i != hash_tbl.end(); i++) {
 			if (i->second % 2) {
-				str = i->first;
+				mid = i->first;
 				i->second--;
-				if (!i->second)	hash_tbl.erase(i);
 				break;
 			}
 		}
 		for (unordered_map<char, int>::iterator i = hash_tbl.begin(); i != hash_tbl.end(); i++)	i->second /= 2;
-		dfs(hash_tbl, str);
+		dfs(hash_tbl, str, len / 2);
+		for (int i = 0; i != rslt.size(); i++) {
+			string tmp(rslt[i].rbegin(), rslt[i].rend());
+			rslt[i] += mid + tmp;
+		}
 		return rslt;
 
 	}
@@ -47,22 +51,34 @@ public:
 	///@brief	通过递归来生成回文字符串的前半部分
 	///@param	candidates	候选字符数组
 	///@param	str			生成的回文子串的前半部分
+	///@param	len			回文子串的长度
 	///@return	无
 	///@note	1. 递归；
-	//			2. 从候选数组中选择元素生成新的回文子串。
-	void dfs(unordered_map<char, int>& hash_tbl, string& str) {
-		if (hash_tbl.empty()) {
+	//			2. 从候选数组中选择元素生成新的回文子串；
+	//			3. 当子串的长度为原来字符串的一半时，生成完毕，压入结果数组；
+	//			4. 否则就是从哈希表中逐个遍历，把哈希表中的字符压入子串，然后减少其计数器，如果计数器为零，应该跳过；
+	void dfs(unordered_map<char, int> hash_tbl, string& str, const int len) {
+		if (str.size() == len) {
 			rslt.push_back(str);
 			return;
+		}
+		for (unordered_map<char, int>::iterator i = hash_tbl.begin(); i != hash_tbl.end(); i++) {
+			if (!i->second)	continue;
+			str += i->first;
+			i->second--;
+			dfs(hash_tbl, str, len);
+			hash_tbl[i->first]++;
+			str.pop_back();
 		}
 	}
 
 	unordered_map<char, int> hash_tbl;
 	vector<string> rslt;
-	
 };
 
 int main() {
-	
+	string s = "aacccbb";
+	Solution slt;
+	vector<string> rslt = slt.generatePalindromes(s);
 	return 0;
 }
