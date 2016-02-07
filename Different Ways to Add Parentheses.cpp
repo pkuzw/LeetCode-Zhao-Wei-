@@ -27,6 +27,9 @@ Output: [-34, -14, -10, -10, 10]
 ///@date	2015.08.04
 ///@version	1.0
 
+///@date	2016.02.07
+///@version	1.1
+
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -84,30 +87,34 @@ private:
 
 class Solution {
 public:
+	///@brief	包含有'+'，'-'，'*'的算术表达式，通过添加不同位置的括号计算出不同的结果
+	///@param	input	算术表达式
+	///@return	返回不同的结果值
+	///@note	1. 递归和剪枝；
+	//			2. 用一个键为字符串，值为对应的可能结果数组组成的哈希表来减少递归的次数；
 	vector<int> diffWaysToCompute(string input) {
-		unordered_map<string, vector<int>> hash_table;
-		return diffRecur(input, hash_table);
+		unordered_map<string, vector<int>> hash_tbl;
+		return diffRecur(input, hash_tbl);
 	}
 
 private:
-	vector<int> diffRecur(string input, unordered_map<string, vector<int>>& hash_table)
-	{
+	///@brief	递归辅助函数
+	///@param	input	输入字符串
+	///@param	hash_tbl	哈希表
+	///@return	返回输入字符串可能的结果数组
+	///@note	1. 递归运算符号左右两侧的子串。
+	vector<int> diffRecur(string input, unordered_map<string, vector<int>>& hash_tbl) {
 		vector<int> rslt;
-
-		for (int i = 0; i != input.size(); i++)
-		{
-			if (input[i] == '+' || input[i] == '-' || input[i] == '*')
-			{
+		for (int i = 0; i != input.size(); i++) {
+			if (input[i] == '+' || input[i] == '-' || input[i] == '*') {
 				string l = input.substr(0, i);
 				string r = input.substr(i+1);
 
-				vector<int> rslt1 = (hash_table.find(l) != hash_table.end()) ? hash_table[l] : diffRecur(l, hash_table);
-				vector<int> rslt2 = (hash_table.find(r) != hash_table.end()) ? hash_table[r] : diffRecur(r, hash_table);
+				vector<int> rslt1 = (hash_tbl.find(l) != hash_tbl.end()) ? hash_tbl[l] : diffRecur(l, hash_tbl);
+				vector<int> rslt2 = (hash_tbl.find(r) != hash_tbl.end()) ? hash_tbl[r] : diffRecur(r, hash_tbl);
 				
-				for (int j = 0; j != rslt1.size(); j++)
-				{
-					for (int k = 0; k != rslt2.size(); k++)
-					{
+				for (int j = 0; j != rslt1.size(); j++) {
+					for (int k = 0; k != rslt2.size(); k++) {
 						if (input[i] == '+')	rslt.push_back(rslt1[j] + rslt2[k]);
 						else if (input[i] == '-')	rslt.push_back(rslt1[j] - rslt2[k]);
 						else if (input[i] == '*')	rslt.push_back(rslt1[j] * rslt2[k]);
@@ -116,9 +123,8 @@ private:
 			}
 		}
 
-		if (rslt.empty())
-			rslt.push_back(stoi(input));
-		hash_table[input] = rslt;
+		if (rslt.empty())	rslt.push_back(stoi(input));
+		hash_tbl[input] = rslt;
 		return rslt;
 	}
 };
