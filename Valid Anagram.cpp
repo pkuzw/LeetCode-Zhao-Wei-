@@ -15,7 +15,10 @@ You may assume the string contains only lowercase alphabets.
 
 ///@author	zhaowei
 ///@date	2015.08.05
-///@version	2.0
+///@version	1.1
+
+///@date	2016.02.08
+///@version	1.2
 
 #include <string>
 #include <unordered_map>
@@ -49,17 +52,16 @@ public:
 
 class Solution {
 public:
+	///@note	1. 遍历；
+	//			2. 新建一个关于s字符串中字符出现次数的哈希表，如果t中的字符不在该哈希表中或者出现的次数多于哈希表中该字符的出现次数，则返回false；
+	//			3. 时间复杂度为O(n)，空间复杂度为O(n)。
 	bool isAnagram(string s, string t) {
 		if (s.size() != t.size())	return false;
-		
-		unordered_map<char, int> hash_table;
-		for (int i = 0; i != s.size(); i++)
-			hash_table[s[i]]++;
-
-		for (int i = 0; i != t.size(); i++)
-		{
-			if (hash_table.find(t[i]) == hash_table.end() || hash_table[t[i]] == 0)	return false;
-			hash_table[t[i]]--;
+		unordered_map<char, int> hash_tbl;
+		for (int i = 0; i != s.size(); i++)	hash_tbl[s[i]]++;
+		for (int i = 0; i != t.size(); i++) {
+			if (hash_tbl.find(t[i]) == hash_tbl.end() || !hash_tbl[t[i]])	return false;
+			hash_tbl[t[i]]--;
 		}
 		return true;
 	}
