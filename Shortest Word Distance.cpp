@@ -15,6 +15,9 @@ You may assume that word1 does not equal to word2, and word1 and word2 are both 
 ///@date	2015.10.19
 ///@version	1.0
 
+///@date	2016.02.08
+///@version	1.1
+
 #include <vector>
 #include <string>
 using namespace std;
