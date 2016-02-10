@@ -15,14 +15,15 @@ You may assume that word1 does not equal to word2, and word1 and word2 are both 
 ///@date	2015.10.19
 ///@version	1.0
 
-///@date	2016.02.09
+///@date	2016.02.10
 ///@version	1.1
 
 #include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算两个单词在数组内的距离
 	///@param	words	数组
@@ -53,6 +54,38 @@ public:
 		int rslt = INT_MAX;
 		for (int i = 0; i != dis.size(); i++)
 			rslt = min(dis[i], rslt);
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 枚举；
+	//			2. 计算每一个word1到之前和之后的第一个出现的word2的距离，找出每一个word1的最短word2距离；
+	//			3. 然后找出最短的word1到word2距离即可。
+	int shortestDistance(vector<string>& words, string word1, string word2) {
+		if (words.empty())	return 0;
+		vector<int> distances;
+		for (int i = 0; i != words.size(); i++) {
+			int before_word1 = INT_MAX, after_word1 = INT_MAX;
+			if (words[i] == word1) {
+				for (int j = i; j >= 0; j--) {
+					if (words[j] == word2) {
+						before_word1 = i - j;
+						break;
+					}
+				}
+				for (int j = i; j < words.size(); j++) {
+					if (words[j] == word2) {
+						after_word1 = j - i;
+						break;
+					}
+				}
+				distances.push_back(min(before_word1, after_word1));
+			}
+		}
+		int rslt = INT_MAX;
+		for (int i = 0; i != distances.size(); i++)	rslt = min(rslt, distances[i]);
 		return rslt;
 	}
 };
