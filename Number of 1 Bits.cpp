@@ -1,4 +1,4 @@
-﻿///@file	Number of 1 Bits
+///@file	Number of 1 Bits
 /*
 Write a function that takes an unsigned integer and returns the number of ’1' bits it has (also known as the Hamming weight).
 
@@ -13,7 +13,7 @@ For example, the 32-bit integer '11' has binary representation 00000000000000000
 
 ///@date	2016.01.21
 ///@version	2.0
-
+  
 #include <cstdint>	//	uint32_t
 #include <vector>
 
