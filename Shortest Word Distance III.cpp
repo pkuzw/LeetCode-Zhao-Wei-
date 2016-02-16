@@ -3,13 +3,16 @@
 ///@date	2016.01.09
 ///@version	1.0
 
+///@date    2016.02.16
+///@version 1.1
+
 #include <unordered_map>
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算一组单词中两个单词的最短距离，单词有可能重复，也可能相同
 	///@param	words	词典
@@ -40,6 +43,15 @@ public:
 		}
 		return min_distance;
 	}
+};
+
+class Solution {
+public:
+    ///@note    1. 分成两种情况，第一种是两个单词相同，则在同一个数组中查找最短距离即可；
+    //          2. 第二种情况参照Shortest Word Distance II，时间复杂度能够压缩到O(n)，n为该单词出现的次数。
+    int shortestWordDistance(vector<string>& words, string word1, string word2) {
+        
+    }
 };
 
 int main() {
