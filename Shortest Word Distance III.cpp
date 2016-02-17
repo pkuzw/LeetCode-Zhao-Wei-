@@ -50,7 +50,7 @@ public:
     ///@note    1. 分成两种情况，第一种是两个单词相同，则在同一个数组中查找最短距离即可；
     //          2. 第二种情况参照Shortest Word Distance II，时间复杂度能够压缩到O(n)，n为该单词出现的次数。
     int shortestWordDistance(vector<string>& words, string word1, string word2) {
-        
+        if (words.empty())  return 0;
     }
 };
 
