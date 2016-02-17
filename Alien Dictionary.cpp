@@ -20,5 +20,6 @@ public:
 };
 
 int main() {
+	vector<string> words;
 	return 0;
 }
