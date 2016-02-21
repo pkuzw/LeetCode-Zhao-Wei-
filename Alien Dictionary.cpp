@@ -1,6 +1,6 @@
 ﻿///@file	Alien Dictionary
 ///@author	zhaowei
-///@date	2016.02.20
+///@date	2016.02.21
 ///@version	1.0
 
 #include <string>
