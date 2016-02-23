@@ -21,8 +21,10 @@ public:
 		map<char, set<char>> adjacent_list;
 		map<char, set<char>> adjacent_list_reverse;
 		set<char> characters;
+		// 建立按照字典序排列的有向图
 		for (int i = 0; i < words.size(); i++) {
-			for (int k = 0; k < words[i].size(); k++) characters.insert(words[i][k]);
+			for (int k = 0; k < words[i].size(); k++) 
+				characters.insert(words[i][k]);
 			for (int j = i+1; j < words.size(); j++) {
 				int k = 0;
 				while (k < words[i].size() && k < words[j].size() && words[i][k] == words[j][k]) k++;
