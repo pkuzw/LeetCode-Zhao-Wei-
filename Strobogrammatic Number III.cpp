@@ -3,12 +3,15 @@
 ///@date	2016.01.13
 ///@version	1.0
 
+///@date	2016.02.26
+///@version	1.1
+
 #include <vector> 
 #include <string>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算在指定范围内[low, high]的旋转回文数的个数
 	///@param	low, high	范围边界
@@ -76,9 +79,58 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int strobogrammaticInRange(string low, string high) {
+		int m = low.size(), n = high.size(), rslt = 0;
+		long long llhigh = stoll(high), lllow = stoll(low);
+		for (int i = m; i <= n; i++) {
+			vector<string> nums = findStrobogrammaticNum(i);
+			if (i < n && i > m) {
+				rslt += nums.size();
+				continue;
+			}
+			for (int j = 0; j != nums.size(); j++) {
+				long long k = stoll(nums[j]);
+				if (k > INT_MAX)	break;
+				else if (k <= llhigh && k >= lllow)	rslt++;
+			}
+		}
+		return rslt;
+	}
+
+	vector<string> findStrobogrammaticNum(int n) {
+		const char hash_tbl[5][2] = {{'0', '0'}, {'1', '1'}, {'6', '9'}, {'8', '8'}, {'9', '6'}};
+		vector<string> rslt;
+		string num(n, '$');
+		dfs(rslt, num, 0, n - 1, hash_tbl);
+		return rslt;
+	}
+
+	void dfs(vector<string>& rslt, string& num, int start, int end, const char hash_tbl[5][2]) {
+		if (start > end) {
+			if (rslt.empty() || num != rslt.back())	rslt.push_back(num);
+			return;
+		}
+		for (int i = 0; i != 5; i++) {
+			if (!start && end - start >= 1 && !i)	continue;
+			if (start == end) {
+				if (i == 0 || i == 1 || i == 3)	num[start] = hash_tbl[i][0];
+			}
+			else {
+				num[start] = hash_tbl[i][0];
+				num[end] = hash_tbl[i][1];
+			}
+			dfs(rslt, num, start + 1, end - 1, hash_tbl);
+		}
+	}
+};
+
 int main() {
 	string low = "0", high = "2147483647";
 	Solution slt;
 	int rslt = slt.strobogrammaticInRange(low, high);
+	Solution_v1 s1;
+	int r1 = s1.strobogrammaticInRange(low, high);
 	return 0;
 }
