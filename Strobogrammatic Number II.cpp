@@ -3,13 +3,16 @@
 ///@date	2016.01.11
 ///@version	1.0
 
+///@date	2016.02.26
+///@version	1.1
+
 #include <string>
 #include <vector>
 #include <unordered_map>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	找到所有长度为n的旋转回文数字串
 	///@param	n	长度
@@ -48,6 +51,35 @@ public:
 				num[end] = hash_tbl[i][1];
 			}
 			helper(num, start + 1, end - 1, hash_tbl, rslt);
+		}
+	}
+};
+
+class Solution {
+public:
+	vector<string> findStrobogrammatic(int n) {
+		vector<string> rslt;
+		char hash_tbl[5][2] = {{'0', '0'}, {'1', '1'}, {'6', '9'}, {'8', '8'}, {'9', '6'}};
+		string num(n, '$');
+		dfs(rslt, num, 0, n - 1, hash_tbl);
+		return rslt;
+	}
+
+	void dfs(vector<string>& rslt, string& num, int start, int end, const char hash_tbl[5][2]) {
+		if (start > end) {
+			if (rslt.empty() || num != rslt.back())	rslt.push_back(num);
+			return;
+		}		
+		for (int i = 0; i != 5; i++) {			
+			if (!start && end - start >= 1 && !i)	continue;	// 首字符不能为0
+			if (start == end) {
+				if (i == 0 || i == 1 || i == 3)	num[start] = hash_tbl[i][0];
+			}
+			else {
+				num[start] = hash_tbl[i][0];
+				num[end] = hash_tbl[i][1];				
+			}
+			dfs(rslt, num, start + 1, end - 1, hash_tbl);
 		}
 	}
 };
