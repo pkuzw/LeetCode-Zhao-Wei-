@@ -3,12 +3,13 @@
 ///@date	2016.01.09
 ///@version	1.0
 
-///@date    2016.02.16
+///@date    2016.02.26
 ///@version 1.1
 
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -51,6 +52,21 @@ public:
     //          2. 第二种情况参照Shortest Word Distance II，时间复杂度能够压缩到O(n)，n为该单词出现的次数。
     int shortestWordDistance(vector<string>& words, string word1, string word2) {
         if (words.empty())  return 0;
+		unordered_map<string, vector<int>> hash_tbl;
+		for (int i = 0; i != words.size(); i++)	hash_tbl[words[i]].push_back(i);
+		int rslt = INT_MAX;
+		if (word1 == word2) {
+			for (int i = 1; i != hash_tbl[word1].size(); i++) 
+				rslt = min(rslt, hash_tbl[word1][i] - hash_tbl[word1][i-1]);			
+		}
+		else {
+			int i = 0, j = 0;
+			while (i < hash_tbl[word1].size() && j < hash_tbl[word2].size()) {
+				rslt = min(rslt, abs(hash_tbl[word1][i] - hash_tbl[word2][j]));
+				hash_tbl[word1][i] < hash_tbl[word2][j] ? i++ : j++;
+			}
+		}
+		return rslt;
     }
 };
 
@@ -60,6 +76,6 @@ int main() {
 	for (int i = 0; i < 5; i++)
 		words.push_back(sarr[i]);
 	Solution slt;
-	int r = slt.shortestWordDistance(words, "practice", "coding");
+	int r = slt.shortestWordDistance(words, "coding", "makes");
 	return 0;
 }
