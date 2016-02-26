@@ -3,6 +3,9 @@
 ///@date	2016.01.15
 ///@version	1.0
 
+///@date	2016.02.26
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
@@ -13,7 +16,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	统计出二叉树中所有子节点相同的子树数目
 	///@param	root	根节点
@@ -60,6 +63,46 @@ public:
 				}
 			}
 		}		
+		return false;
+	}
+};
+
+class Solution {
+public:
+	int countUnivalSubtrees(TreeNode* root) {
+		int rslt = 0;
+		dfs(root, rslt);
+		return rslt;
+	}
+
+	bool dfs(TreeNode* root, int& cnt) {
+		if (!root)	return true;
+		if (!root->left && !root->right) {
+			cnt++;
+			return true;
+		}
+		bool flg1 = dfs(root->left, cnt);
+		bool flg2 = dfs(root->right, cnt);
+		if (flg1 && flg2) {
+			if (root->left && root->right) {
+				if (root->val == root->left->val && root->val == root->right->val) {
+					cnt++;
+					return true;
+				}				
+			}
+			else if (!root->left && root->right) {
+				if (root->val == root->right->val) {
+					cnt++;
+					return true;
+				}
+			}
+			else if (!root->right && root->left) {
+				if (root->val == root->left->val) {
+					cnt++;
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 };
