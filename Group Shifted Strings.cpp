@@ -3,6 +3,9 @@
 ///@date	2016.01.14
 ///@versin	1.0
 
+///@date	2016.02.26
+///@version	2.0
+
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -10,7 +13,7 @@
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 private:
 	///@brief	包含有原来字符串和字符串字符之间偏移量的类
 	class shiftString {
@@ -86,6 +89,41 @@ public:
 		}
 		for (int i = 0; i != rslt.size(); i++)	sort(rslt[i].begin(), rslt[i].end());
 		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@brief	将具有相同偏移量的单词进行分组
+	///@param	strings	单词
+	///@return	返回具有相同偏移量的单词分组
+	///@note	1. 利用一个转换函数，先将所有具有一样偏移量的单词挑选出来，放置在unorder_map<string, vector<string>>中，然后再利用库函数来
+	//			对其进行排序即可；
+	//			2. 时间复杂度为O(mn + nlogn)，其中m为单词的平均长度，n为单词数。
+	vector<vector<string>> groupStrings(vector<string>& strings) {
+		unordered_map<string, vector<string>> hash_tbl;
+		vector<vector<string>> rslt;
+		for (int i = 0; i != strings.size(); i++) 
+			hash_tbl[convert(strings[i])].push_back(strings[i]);
+		for (unordered_map<string, vector<string>>::iterator i = hash_tbl.begin(); i != hash_tbl.end(); i++) {
+			vector<string> group = i->second;
+			sort(group.begin(), group.end());
+			rslt.push_back(group);
+		}
+		return rslt;
+	}
+
+	///@brief	将单词按照对应的偏移量进行转换
+	///@param	单词
+	///@return	返回转换后的单词，如果两个单词的偏移量一样，应得到相同的转换后单词
+	string convert(string s) {
+		string t;
+		for (int i = 1; i < s.size(); i++) {
+			int j = s[i] - s[i-1];
+			if (j < 0)	j += 26;
+			t += 'a' + j;
+		}
+		return t;
 	}
 };
 
