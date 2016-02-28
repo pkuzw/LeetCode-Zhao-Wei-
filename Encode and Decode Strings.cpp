@@ -11,9 +11,15 @@ using namespace std;
 class Codec {
 public:
 
+	///@note	给每一个字符串前面加上字符串长度和空格，然后在解析的时候也是根据空格来算出应该截取的长度即可。
+
 	// Encodes a list of strings to a single string.
 	string encode(vector<string>& strs) {
-
+		string str_len;
+		for (int i = 0; i != strs.size(); i++) {
+			int len = strs[i].size();
+			str_len = to_string(static_cast<long long>(len));
+		}
 	}
 
 	// Decodes a single string to a list of strings.
