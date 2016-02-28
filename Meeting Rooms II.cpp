@@ -3,6 +3,9 @@
 ///@date	2016.01.25
 ///@version	1.0
 
+///@date	2016.02.28
+///@version	1.1
+
 #include <vector>
 #include <map>
 
@@ -18,7 +21,7 @@ struct Interval {
 	Interval(int s, int e) : start(s), end(e) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一组开会的时间段，计算最少需要多少会议室
 	///@param	intervals	时间段数组
@@ -41,9 +44,27 @@ public:
     }
 };
 
+class Solution {
+public:
+	///@note	1. 如果不采用map来保存端点序列的话，还需要在填充完毕后进行一个排序，这样才能按照时间顺序找到同时开会的最大数目。
+	int minMeetingRooms(vector<Interval>& intervals) {
+		map<int, int> points;
+		for (int i = 0; i != intervals.size(); i++) {
+			points[intervals[i].start]++;
+			points[intervals[i].end]--;
+		}
+		int cnt = 0, rslt = 0;
+		for (map<int, int>::iterator i = points.begin(); i != points.end(); i++) {
+			cnt += i->second;
+			rslt = max(rslt, cnt);
+		}
+		return rslt;
+	}
+};
+
 int main() {
-	Interval inter1(0, 30);
-	Interval inter2(5, 10);
+	Interval inter1(5, 10);
+	Interval inter2(0, 30);
 	Interval inter3(15, 20);
 	vector<Interval> inter_vec;
 	inter_vec.push_back(inter1);
