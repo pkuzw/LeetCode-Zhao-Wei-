@@ -3,10 +3,13 @@
 ///@date	2016.01.29
 ///@version	1.0
 
+///@date	2016.02.28
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	刷房子的最小花费，相邻房子的颜色不能相同
 	///@param	costs	给每栋房子刷不同颜色油漆的花费
@@ -30,6 +33,22 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int minCost(vector<vector<int>>& costs) {
+		if (costs.empty())	return 0;
+		const int len = costs.size();
+		vector<vector<int>> dp(len, vector<int>(3, 0));
+		for (int i = 0; i != 3; i++)	dp[0][i] = costs[0][i];
+		for (int i = 1; i != len; i++) {
+			dp[i][0] = costs[i][0] + min(dp[i-1][1], dp[i-1][2]);
+			dp[i][1] = costs[i][1] + min(dp[i-1][0], dp[i-1][2]);
+			dp[i][2] = costs[i][2] + min(dp[i-1][0], dp[i-1][1]);
+		}
+		return min(dp.back()[0], min(dp.back()[1], dp.back()[2]));
+	}
+};
+
 int main() {
 	vector<vector<int>> costs;
 	for (int i = 0; i != 4; i++) {
@@ -40,5 +59,7 @@ int main() {
 	}
 	Solution slt;
 	int rslt = slt.minCost(costs);
+	Solution_v1 s1;
+	int r1 = s1.minCost(costs);
 	return 0;
 }
