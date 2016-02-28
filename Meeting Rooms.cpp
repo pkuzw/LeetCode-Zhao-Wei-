@@ -2,6 +2,10 @@
 ///@author	zhaowei
 ///@date	2016.01.19
 ///@version	1.0
+///@version	1.1
+
+///@date	2016.02.28
+///@version	1.2
 
 #include <algorithm>
 #include <vector>
@@ -41,7 +45,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@brief	判断给定的区间组是否有重叠
 	///@param	intervals	区间组
@@ -57,6 +61,18 @@ public:
 			if (intervals[i].start < late_point)	return false;
 			late_point = intervals[i].end;
 		}
+		return true;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 在按照会议的开始时间排序后，对于第i个会议来说，如果第i+1个会议与之不冲突，则第i+k(k > 1)一定也不与之冲突。
+	bool canAttendMeetings(vector<Interval>& intervals) {
+		if (intervals.empty())	return true;
+		sort(intervals.begin(), intervals.end(), cmp);
+		for (int i = 0; i != intervals.size() - 1; i++) 
+			if (intervals[i+1].start < intervals[i].end)	return false;
 		return true;
 	}
 };
