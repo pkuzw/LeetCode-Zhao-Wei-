@@ -14,10 +14,13 @@ Your algorithm should run in linear runtime complexity. Could you implement it u
 ///@date	2015.08.18
 ///@version	1.0
 
+///@date	2016.02.29
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	一个数组中只有两个元素只出现了一次，其余元素出现了两次。找出这两个元素
 	///@param	nums	数组
@@ -54,6 +57,32 @@ public:
 		for (int i = 1; i != b.size(); i++)
 			xor_b ^= b[i];
 		vector<int> rslt;
+		rslt.push_back(xor_a);
+		rslt.push_back(xor_b);
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 注意&运算符的优先级低于==运算符，要加括号标注清楚优先级。
+	vector<int> singleNumber(vector<int>& nums) {
+		int xor_all = nums[0];
+		for (int i = 1; i != nums.size(); i++)	xor_all ^= nums[i];
+		int tmp = 1, cnt = 0;		
+		while ((xor_all & tmp) == 0) {
+			xor_all >>= 1;
+			cnt++;
+		}					
+		tmp <<= cnt;
+		vector<int> a, b, rslt;
+		for (int i = 0; i != nums.size(); i++) {
+			if (nums[i] & tmp)	a.push_back(nums[i]);
+			else	b.push_back(nums[i]);
+		}
+		int xor_a = a[0], xor_b = b[0];
+		for (int i = 1; i != a.size(); i++)	xor_a ^= a[i];
+		for (int i = 1; i != b.size(); i++)	xor_b ^= b[i];
 		rslt.push_back(xor_a);
 		rslt.push_back(xor_b);
 		return rslt;
