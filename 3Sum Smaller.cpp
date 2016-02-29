@@ -3,11 +3,14 @@
 ///@date	2016.01.29
 ///@version	1.0
 
+///@date	2016.02.29
+///@version	1.1
+
 #include <vector>
 #include <algorithm>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	找出数组中比指定值小的三元组数目
 	///@param	nums	数组
@@ -32,6 +35,30 @@ public:
 					right--;
 				}
 			}		
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 计算比指定值小的三元组个数时，内层循环计算的是固定住第一个，第二个元素变化时的元组数目；
+	//			外层循环是改变第一个元素的位置来计算元组数目。
+	int threeSumSmaller(vector<int>& nums, int target) {
+		if (nums.size() < 3)	return 0;
+		sort(nums.begin(), nums.end());
+		int left = 0, right = nums.size() - 1, rslt = 0, sum = 0;
+		for (int i = 0; i != nums.size() - 2; i++) {
+			sum = target - nums[i];
+			left = i + 1;
+			right = nums.size() - 1;
+			while (left <= right) {
+				if (nums[left] + nums[right] < sum){
+					rslt += right - left;
+					left++;
+				}
+				else right--;
+			}
 		}
 		return rslt;
 	}
