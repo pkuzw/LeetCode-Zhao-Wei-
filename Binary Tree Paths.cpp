@@ -3,6 +3,9 @@
 ///@date	2016.01.29
 ///@version	1.0
 
+///@date	2016.02.29
+///@version	1.1
+
 #include <vector>
 #include <string>
 using namespace std;
@@ -14,7 +17,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算出所有从根节点到叶节点的路径
 	///@param	root	根节点
@@ -51,6 +54,34 @@ public:
 	vector<string> rslt;
 };
 
+class Solution {
+public:
+	vector<string> binaryTreePaths(TreeNode* root) {
+		string path;
+		dfs(root, path);
+		return paths;
+	}
+
+	void dfs(TreeNode* root, string& path) {
+		if (!root)	return;
+		path += to_string(static_cast<long long>(root->val)) + "->";
+		if (!root->left && !root->right) {
+			path.pop_back();
+			path.pop_back();
+			paths.push_back(path);
+			while(!path.empty() && path.back() != '>')	path.pop_back();
+			return;
+		}
+		if (root->left)	dfs(root->left, path);
+		if (root->right) dfs(root->right, path);
+		path.pop_back();
+		path.pop_back();
+		while(!path.empty() && path.back() != '>')	path.pop_back();
+	}
+
+	vector<string> paths;
+};
+
 int main() {
 	TreeNode* n[15];
 	for (int i = 1; i != 16; i++) n[i-1] = new TreeNode(i);
@@ -71,5 +102,7 @@ int main() {
 	
 	Solution slt;
 	vector<string> rslt = slt.binaryTreePaths(n[0]);
+	Solution_v1 s1;
+	vector<string> r1 = s1.binaryTreePaths(n[0]);
 	return 0;
 }
