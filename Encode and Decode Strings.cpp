@@ -15,16 +15,30 @@ public:
 
 	// Encodes a list of strings to a single string.
 	string encode(vector<string>& strs) {
+		string encoded_string;
 		string str_len;
 		for (int i = 0; i != strs.size(); i++) {
 			int len = strs[i].size();
 			str_len = to_string(static_cast<long long>(len));
+			encoded_string += str_len + " " + strs[i];
 		}
+		return encoded_string;
 	}
 
 	// Decodes a single string to a list of strings.
 	vector<string> decode(string s) {
-
+		vector<string> decoded_string;
+		int i = 0, j = 0;
+		while (i != s.size()) {
+			if (s[i] == ' '){
+				int len = stoi(s.substr(j, i));
+				decoded_string.push_back(s.substr(i+1, len));
+				i += len + 1;
+				j = i;
+			}
+			else i++;
+		}
+		return decoded_string;
 	}
 };
 
@@ -33,7 +47,7 @@ public:
 // codec.decode(codec.encode(strs));
 
 int main() {
-	string str[3] = {"hello", "world", "pku"};
+	string str[3] = {"hello world", "world zhaowei", "pku sess eecs"};
 	vector<string> strs;
 	for (int i = 0; i != 3; i++)	strs.push_back(str[i]);
 	Codec c;
