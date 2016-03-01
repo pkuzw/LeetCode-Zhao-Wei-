@@ -3,12 +3,15 @@
 ///@date	2016.01.31
 ///@version	1.0
 
+///@date	2016.03.01
+///@version	1.1
+
 #include <vector>
 #include <unordered_map>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	判断一个字符串能否通过重新排列形成一个回文串
 	///@param	s	字符串
@@ -27,8 +30,22 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 用一维数组代替unordered_map；
+	//			2. 字符串可能出现的字符不限于小写字母，有可能是大写字母或其他字符。
+	bool canPermutePalindrome(string s) {
+		int hash_tbl[256] = {0};
+		for (int i = 0; i != s.size(); i++)	hash_tbl[s[i]]++;
+		int odd_cnt = 0;
+		for (int i = 0; i != 256; i++) 
+			if (hash_tbl[i] % 2)	odd_cnt++;		
+		return odd_cnt <= 1;
+	}
+};
+
 int main() {
-	string s = "heloeh";
+	string s = "AaBb//a";
 	Solution slt;
 	bool rslt = slt.canPermutePalindrome(s);
 	return 0;
