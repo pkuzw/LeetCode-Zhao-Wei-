@@ -2,12 +2,15 @@
 ///@author	zhaowei
 ///@date	2016.01.30
 ///@version	1.0
+
+///@date	2016.03.01
+///@version	2.0
 //	如何把时间复杂度降到O(nk)？
 
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给n栋房子刷k种漆，要求相邻的屋子颜色不能相同，求最小花费。
 	///@param	costs	一个n * k的矩阵，costs[i][j]表示给第i栋房子刷第j种漆的花费
@@ -38,6 +41,37 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 动态规划；
+	//			2. 用两个临时变量来保存刷前i-1个房子时的最小值和次小值时的颜色；
+	//			3. 递推关系式为costs[i][j] += costs[i-1][min_color]；时间复杂度为O(nk)；
+	//			4. 然后用现有的输入数组来作为中间结果的存储空间，时间复杂度为O(1)。
+	int minCostII(vector<vector<int>>& costs) {
+		if (costs.empty() || costs[0].empty())	return 0;
+		int n = costs.size();		//	房屋数目
+		int k = costs[0].size();	//	颜色数目
+		int min1 = -1, min2 = -1;	//	前i-1栋房子最小值和次小值的颜色编号
+		for (int i = 0; i != n; i++) {
+			int last1 = min1, last2 = min2;
+			min1 = -1;
+			min2 = -1;
+			for (int j = 0; j != k; j++) {
+				if (j != last1)	costs[i][j] += last1 < 0 ? 0 : costs[i-1][last1];
+				else	costs[i][j] += last2 < 0 ? 0 : costs[i-1][last2];
+
+				//	更新最小值和次小值的颜色编号
+				if (min1 < 0 || costs[i][j] < costs[i][min1]) {
+					min2 = min1;
+					min1 = j;
+				}
+				else if (min2 < 0 || costs[i][j] < costs[i][min2]) min2 = j;
+			}
+		}
+		return costs[n-1][min1];
+	}
+};
+
 int main() {
 	vector<vector<int>> costs;
 	vector<int> cost;
@@ -50,6 +84,9 @@ int main() {
 	cost.push_back(9);
 	cost.push_back(4);
 	costs.push_back(cost);
+	Solution_v1 s1;
+	int r1 = s1.minCostII(costs);
+
 	Solution slt;
 	int rslt = slt.minCostII(costs);
 
