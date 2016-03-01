@@ -3,10 +3,13 @@
 ///@date	2016.01.30
 ///@version	1.0
 
+///@date	2016.03.01
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	生成第n个丑数
 	///@param	n	序号
@@ -32,6 +35,26 @@ public:
 		return dp[n-1];
 	}
 };
+
+class Solution {
+public:
+	int nthUglyNumber(int n) {
+		vector<int> dp(n, 0);
+		dp[0] = 1;
+		int i2 = 1, i3 = 1, i5 = 1;
+		int f2 = 2, f3 = 3, f5 = 5;
+		int min_val = dp[0];
+		for (int i = 1; i != n; i++) {
+			min_val = min(min(f2, f3), f5);
+			dp[i] = min_val;
+			if (min_val == f2)	f2 = 2 * dp[i2++];
+			if (min_val == f3)	f3 = 3 * dp[i3++];
+			if (min_val == f5)	f5 = 5 * dp[i5++];
+		}
+		return dp[n-1];
+	}
+};
+
 
 int main() {
 	Solution slt;
