@@ -3,6 +3,9 @@
 ///@date	2016.02.25
 ///@version	1.0
 
+///@date	2016.03.02
+///@version	1.1
+
 #include <string>
 #include <vector>
 #include <map>
@@ -11,7 +14,7 @@
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	通过已知的字典序好序的单词表，给出对应的字典序
 	///@param	words	单词表
@@ -59,7 +62,49 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 拓扑排序，用map<char, set<char>>来模拟正邻接表和逆邻接表；
+	//			2. 进行拓扑排序时用BFS实现。
+	string alienOrder(vector<string>& words) {
+		map<char, set<char>> adj_list, adj_list_reverse;
+		set<char> characters;		
+		for (int i = 0; i != words.size(); i++) {
+			for (int j = 0; j != words[i].size(); j++)	characters.insert(words[i][j]);
+			for (int j = i + 1; j != words.size(); j++) {
+				int k = 0;
+				while (k < words[i].size() && k < words[j].size() && words[i][k] == words[j][k])	k++;
+				if (k < words[i].size() && k < words[j].size()) {
+					adj_list[words[i][k]].insert(words[j][k]);
+					adj_list_reverse[words[j][k]].insert(words[i][k]);
+				}
+			}
+		}
+		string alphabet;
+		deque<char> deq;
+		int cnt = 0;
+		for (set<char>::iterator i = characters.begin(); i != characters.end(); i++)
+			if (adj_list_reverse[*i].empty())	deq.push_back(*i);
+		while (!deq.empty()) {
+			char j = deq.front();
+			deq.pop_front();
+			alphabet += j;
+			cnt++;
+			for (set<char>::iterator i = adj_list[j].begin(); i != adj_list[j].end(); i++) {
+				adj_list_reverse[*i].erase(adj_list_reverse[*i].find(j));
+				if (adj_list_reverse[*i].empty())	deq.push_back(*i);
+			}
+		}
+		if (cnt != characters.size())	return "";
+		return alphabet;
+	}
+};
+
 int main() {
+	string strs[2] = {"zy", "zx"};
 	vector<string> words;
+	for (int i = 0; i != 2; i++)	words.push_back(strs[i]);
+	Solution slt;
+	string rslt = slt.alienOrder(words);
 	return 0;
 }
