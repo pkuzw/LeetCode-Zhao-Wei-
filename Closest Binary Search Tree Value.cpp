@@ -3,6 +3,9 @@
 ///@date	2016.02.26
 ///@version	1.0
 
+///@date	2016.03.02
+///@version	2.0
+
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -16,7 +19,7 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	寻找距离目标值最近的节点
 	///@param	root	BST的根节点
@@ -52,6 +55,19 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 递归；
+	//			2. 在递归过程中选择当前节点和两个孩子距离目标值的最近节点。
+	int closestValue(TreeNode* root, double target) {
+		int a = root->val;
+		TreeNode* child = target < a ? root->left : root->right;
+		if (!child)	return a;
+		int b = closestValue(child, target);
+		return abs(target - a) < abs(target - b) ? a : b;
+	}
+};
+
 int main() {
 	TreeNode *n[7];
 	for (int i = 0; i != 7; i++)	n[i] = new TreeNode(i);
@@ -69,6 +85,6 @@ int main() {
 	n[2]->left = n[5];
 	n[2]->right = n[6];
 	Solution slt;
-	int r = slt.closestValue(n[0], 17.9);
+	int r = slt.closestValue(n[0], 20);
 	return 0;
 }
