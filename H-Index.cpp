@@ -3,12 +3,15 @@
 ///@date	2016.03.01
 ///@version	1.0
 
+///@date	2016.03.03
+///@version	1.1
+
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算h-index，h-indx的定义是对于n篇文章的引用次数，有h篇文章的引用次数不小于h次，其余n-h篇文章的引用次数不超过h次。
 	///@param	citations	文章的引用次数
@@ -28,8 +31,21 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int hIndex(vector<int>& citations) {
+		sort(citations.begin(), citations.end());
+		int cnt = 0;
+		for (int i = citations.size() - 1; i >= 0; i--) {
+			if (cnt < citations[i])	cnt++;
+			else break;
+		}
+		return cnt;
+	}
+};
+
 int main() {
-	int nums[5] = {0, 0, 0, 0, 0};
+	int nums[5] = {0, 1, 3, 5, 6};
 	vector<int> citations;
 	for (int i = 0; i != 5; i++)	citations.push_back(nums[i]);
 	Solution slt;
