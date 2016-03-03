@@ -3,11 +3,14 @@
 ///@date	2016.02.29
 ///@version	1.0
 
+///@date	2016.03.03
+///@version	1.1
+
 #include <string>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将正整数转换成英文单词输出
 	///@param	num	正整数
@@ -54,10 +57,52 @@ public:
 	}
 };
 
+class Solution {
+public:
+	string numberToWords(int num) {
+		string ones[10] = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+		string teens[10] = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+		string tys[10] = {"", "Hundred", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+		string quantity[4] = {"", "Thousand", "Million", "Billion"};
+		if (!num)	return "Zero";
+		vector<int> tmp;
+		string rslt;
+		while (num) {
+			tmp.push_back(num % 1000);
+			num /= 1000;
+		}
+		for (int i = tmp.size() - 1; i >= 0; i--) {
+			bool flg = false;
+			if (tmp[i] >= 100) {
+				rslt += ones[tmp[i]/100] + " " + tys[1] + " ";
+				tmp[i] %= 100;
+				flg = true;
+			}
+			if (tmp[i] >= 20) {
+				rslt += tys[tmp[i]/10] + " " + ones[tmp[i]%10] + " ";
+				if (!(tmp[i] % 10))	rslt.pop_back();	//	避免整几十时出现连续空格符。
+				flg = true;
+			}
+			else if (tmp[i] >= 10) {
+				rslt += teens[tmp[i]%10] + " ";
+				flg = true;
+			}
+			else if (tmp[i] > 0) {
+				rslt += ones[tmp[i]] + " ";
+				flg = true;
+			}
+			if (flg)	rslt += quantity[i] + " ";
+		}
+		while (rslt.back() == ' ')	rslt.pop_back();
+		return rslt;
+	}
+};
+
 int main() {
-	int num[6] = {1000000, 12, 123, 12314, 12345667, 2147483647};
+	int num[6] = {100000001, 12, 123, 50860, 12345667, 2147483647};
 	Solution slt;
 	vector<string> strs;
-	for (int i = 0; i != 6; i++) strs.push_back(slt.numberToWords(num[i]));	
+	for (int i = 0; i != 6; i++) 
+		strs.push_back(slt.numberToWords(num[i]));	
 	return 0;
 }
