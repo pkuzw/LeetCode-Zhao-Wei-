@@ -3,11 +3,14 @@
 ///@date	2016.03.01
 ///@version	1.0
 
+///@date	2016.03.03
+///@version	1.1
+
 #include <cmath>
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	有n个柱子和k种颜色，要求给柱子刷漆，最多有两个相邻柱子的颜色相同，计算有多少种方法
 	///@param	n	柱子数目
@@ -33,10 +36,27 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int numWays(int n, int k) {
+		if (!n)	return 0;
+		else if (n == 1)	return k;
+		else if (n == 2)	return k * k;
+		int same = k, diff = k * (k - 1);	//	表示第2个柱子是否和前一个柱子的颜色相同
+		for (int i = 3; i <= n; i++) {
+			int same_ = same, diff_ = diff;	// xxxx_表示第i-1个柱子的颜色是否与第i-2个柱子颜色相同
+			same = diff_ * 1;
+			diff = same_ * (k - 1) + diff_ * (k - 1);
+		}
+		return same + diff;
+	}
+};
+
 int main() {
 	int n[5] = {1, 2, 3, 4, 5};
 	vector<int> rslt;
 	Solution slt;
-	for (int i = 0; i != 5; i++)	rslt.push_back(slt.numWays(n[i], 3));
+	for (int i = 0; i != 5; i++)	
+		rslt.push_back(slt.numWays(n[i], 3));
 	return 0;
 }
