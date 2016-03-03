@@ -4,8 +4,11 @@
 ///@version	1.0
 
 //如何改进到O(n)的时间复杂度？
+///@date	2016.03.03
+///@version	2.0
 
 #include <vector>
+#include <queue>
 #include <algorithm>
 using namespace std;
 
@@ -28,7 +31,7 @@ bool cmp(const node& a, const node& b) {
 	return a.diff < b.diff;
 }
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一棵二叉搜索树，寻找距离目标值最近的k个节点
 	///@param	root	根节点
@@ -65,6 +68,42 @@ public:
 	}
 
 	vector<int> inorder;
+};
+
+class Solution {
+public:
+	///@note	1. 递归版的中序遍历
+	vector<int> closestKValues(TreeNode* root, double target, int k) {		
+		queue<int> que;
+		dfs(root, target, k, que);
+		vector<int> rslt;
+		while (!que.empty()) {
+			rslt.push_back(que.front());
+			que.pop();
+		}
+		return rslt;
+	}
+
+	///@brief	中序遍历
+	///@param	root	根节点
+	///@param	target	目标值
+	///@param	k		距离目标值最近的k个节点
+	///@param	rslt	结果数组
+	///@return	如果存在k个距离目标值最近的节点，返回true；否则返回false
+	///@note	1. 用一个队列来模拟距离目标值最近的k个元素；
+	//			2. 在中序遍历过程中，如果队列大小已经达到k个，但是当前节点距离目标值更近，由于中序遍历会维持队列的有序性，所以弹出最开始的
+	//			队首元素，将当前元素加入队尾；
+	//			3. 时间复杂度为O(n)，空间复杂度为O(k)，其中n为BST节点数目，k为距离目标值最近的元素数目。
+	bool dfs(TreeNode* root, double target, int k, queue<int>& que) {
+		if (!root)	return false;
+		if (dfs(root->left, target, k, que))	return true;
+		if (que.size() == k) {
+			if (abs(que.front() - target) < abs(root->val - target))	return true;
+			else	que.pop();
+		}
+		que.push(root->val);
+		return dfs(root->right, target, k, que);
+	}
 };
 
 int main() {
