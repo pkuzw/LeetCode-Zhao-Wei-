@@ -3,10 +3,13 @@
 ///@date	2016.03.01
 ///@version	1.0
 
+///@date	2016.03.03
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	如果文章的被引用次数已经按照升序给出，计算其h-index
 	///@param	citations	文章的被引用次数
@@ -18,6 +21,18 @@ public:
 		int cnt = 0;
 		for (int i = citations.size() - 1; i >= 0; i--) {
 			if (citations[i] > cnt)	cnt++;
+			else break;
+		}
+		return cnt;
+	}
+};
+
+class Solution {
+public:
+	int hIndex(vector<int>& citations) {
+		int cnt = 0;
+		for (int i = citations.size() - 1; i >= 0; i--) {
+			if (cnt < citations[i])	cnt++;
 			else break;
 		}
 		return cnt;
