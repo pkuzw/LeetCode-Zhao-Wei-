@@ -3,11 +3,15 @@
 ///@date	2016.03.02
 ///@version	1.0
 
+///@date	2016.03.04
+///@version	1.1
+///@version	2.0
+
 #include <vector>
 #include <cstdlib>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定一个正整数n，计算它是最少多少个平方数的和
 	///@param	n	正整数
@@ -36,8 +40,24 @@ public:
 	}
 };
 
+class Solution_v1_1 {
+public:
+	///@note	1. 动规；
+	//			2. 递推关系式为dp[i] = min(dp[i], dp[i-j*j] + 1)；初始值dp[0] = 0；
+	//			3. 时间复杂度为O(nlogn)，空间复杂度为O(n)。
+	int numSquares(int n) {
+		if (n <= 0)	return 0;
+		vector<int> dp(n + 1, INT_MAX);
+		dp[0] = 0;
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j * j <= i; j++)
+				dp[i] = min(dp[i], dp[i-j*j] + 1);
+		return dp[n];		
+	}
+};
+
 int main() {
 	Solution slt;
-	int rslt = slt.numSquares(1000000);
+	int rslt = slt.numSquares(1000);
 	return 0;
 }
