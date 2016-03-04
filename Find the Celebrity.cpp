@@ -8,6 +8,7 @@
 ///@version	2.0
 
 #include <set>
+#include <stack>
 using namespace std;
 
 ///@brief	A是否认识B
@@ -59,6 +60,29 @@ public:
 			if (j == n)	return i;
 		}
 		return -1;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 利用栈结构，在一次遍历的情况下找到可能的名人候选；
+	//			2. 然后再根据这个候选来确认其是否为名人；
+	//			3. 时间复杂度为O(n)? 应该比O(n)大，空间复杂度为O(n)
+	int findCelebrity(int n) {
+		if (n <= 0)	return -1;
+		if (n == 1)	return 0;
+		stack<int> stk;
+		for (int i = 0; i != n; i++)	stk.push(i);
+		while (stk.size() > 1) {
+			int a = stk.top();stk.pop();
+			int b = stk.top();stk.pop();
+			if (knows(a, b))	stk.push(b);
+			else	stk.push(a);
+		}
+		int c = stk.top();	//	可能的候选者，进行确认
+		for (int i = 0; i != n; i++)
+			if (i != c && (knows(c, i) || !knows(i, c)))	return -1;
+		return c;
 	}
 };
 
