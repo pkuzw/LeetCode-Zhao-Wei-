@@ -3,13 +3,16 @@
 ///@date	2016.03.02
 ///@version	1.0
 
+///@date	2016.03.04
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
 // Forward declaration of isBadVersion API.
 bool isBadVersion(int version);
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给出从1到n的一系列版本，其中i + 1版依赖于i版，前一个版本的损坏会导致后续版本的损坏。
 	//			这n个版本中至少最后一个版本是坏的，找出第一个坏的版本。
@@ -25,6 +28,21 @@ public:
 			if (isBadVersion(mid) && (mid == 1 || !isBadVersion(mid - 1)))	return mid;
 			else if (!isBadVersion(mid)) l = mid + 1;			
 			else	r = mid - 1;
+		}
+		return l;
+	}
+};
+
+class Solution {
+public:
+	int firstBadVersion(int n) {
+		if (n <= 0)	return -1;
+		long long l = 1, r = n, m = (1 + n) / 2;
+		while (l <= n) {
+			m = (l + r) / 2;
+			if (isBadVersion(m) && (m == 1 || !isBadVersion(m - 1)))		return m;
+			else if (!isBadVersion(m))	l = m + 1;
+			else	r = m - 1;
 		}
 		return l;
 	}
