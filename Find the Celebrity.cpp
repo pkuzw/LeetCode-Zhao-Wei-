@@ -3,13 +3,17 @@
 ///@date	2016.03.02
 ///@version	1.0
 
+///@date	2016.03.04
+///@version	1.1
+///@version	2.0
+
 #include <set>
 using namespace std;
 
 ///@brief	A是否认识B
 bool knows(int a, int b);
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	给定n个人，编号是0到n-1，其中有可能有一个名人。名人的定义是所有人都认识他，但是他不认识其他人。
 	//			现在给出一个辅助函数knows(a, b)来帮助你判断a是否认识b，在尽可能少的询问情况下找到这个名人。
@@ -40,6 +44,25 @@ public:
 		return candidates.empty() ? -1 : *candidates.begin();
 	}
 };
+
+class Solution_v1_1 {
+public:
+	///@note	1. 通过两重循环找出一个不认识其他人但是其他人都认识他的人；
+	//			2. 时间复杂度为O(n^2)。
+	int findCelebrity(int n) {
+		int i, j;
+		for (i = 0; i != n; i++) {
+			for (j = 0; j != n; j++) {
+				if (i != j && knows(i, j))	break;
+				if (i != j && !knows(j, i))	break;
+			}
+			if (j == n)	return i;
+		}
+		return -1;
+	}
+};
+
+
 
 int main() {
 	return 0;
