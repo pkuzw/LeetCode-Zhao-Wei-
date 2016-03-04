@@ -21,7 +21,7 @@ private:
 			for (int i=pos+1; i<=num.size(); i++) {
 				string t = num.substr(pos, i-pos);
 				long now = stol(t);
-				if (to_string(now).size() != t.size()) continue;
+				if (to_string(static_cast<long long>(now)).size() != t.size()) continue;
 				dfs(res, num, target, cur+'+'+t, i, cv+now, now, '+');
 				dfs(res, num, target, cur+'-'+t, i, cv-now, now, '-');
 				dfs(res, num, target, cur+'*'+t, i, (op == '-') ? cv+pv - pv*now : ((op == '+') ? cv-pv + pv*now : pv*now), pv*now, op);
@@ -36,7 +36,7 @@ public:
 		for (int i=1; i<=num.size(); i++) {
 			string s = num.substr(0, i);
 			long cur = stol(s);
-			if (to_string(cur).size() != s.size()) continue;
+			if (to_string(static_cast<long long>(cur)).size() != s.size()) continue;
 			dfs(res, num, target, s, i, cur, cur, '#');         // no operator defined.
 		}
 
