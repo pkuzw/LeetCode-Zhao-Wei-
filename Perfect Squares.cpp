@@ -56,8 +56,25 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 在v1的基础上进行改良，因为dp[n]要依赖于前面的dp[0..n-1]，所以将dp[]设为静态变量，这样每次计算后的结果就能被下次调用所利用上。
+	//			2. 注意静态变量的初始化。
+	int numSquares(int n) {
+		if (n <= 0)	return 0;
+		static vector<int> dp(1, 0);	//	注意dp是静态变量，需要在初始化时设置好，否则每次调用就会累积它的该变量。		
+		while (dp.size() <= n) {
+			int i = dp.size();
+			int cnt = INT_MAX;
+			for (int j = 1; j*j <= i; j++)	cnt = min(cnt, dp[i-j*j] + 1);
+			dp.push_back(cnt);
+		}
+		return dp[n];
+	}
+};
+
 int main() {
 	Solution slt;
-	int rslt = slt.numSquares(1000);
+	int rslt = slt.numSquares(2);
 	return 0;
 }
