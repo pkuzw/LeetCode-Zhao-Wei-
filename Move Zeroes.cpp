@@ -3,10 +3,13 @@
 ///@date	2016.03.04
 ///@version	1.0
 
+///@date	2016.03.05
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将数组中的0都移动到尾部，保持数组的其他元素相对顺序不变，要求空间复杂度为O(1)；
 	///@param	nums	数组
@@ -26,6 +29,24 @@ public:
 				swap(nums[i], nums[j]);
 			}
 			else	k++;
+		}
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 在v1的基础上改良为one-pass。
+	void moveZeroes(vector<int>& nums) {
+		int k = 0;
+		for (int i = 0; i != nums.size(); i++) {
+			if (!nums[i]) {
+				int j = k + 1;
+				while (j < nums.size() && !nums[j])	j++;
+				k = j;
+				if (j < nums.size())	swap(nums[i], nums[j]);
+			}
+			else	k++;
+
 		}
 	}
 };
