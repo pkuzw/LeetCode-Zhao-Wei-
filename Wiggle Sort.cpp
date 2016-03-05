@@ -3,13 +3,16 @@
 ///@date	2016.03.03
 ///@version	1.0
 
+///@date	2016.03.04
+///@version	2.0
+
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	将数组原地排序成波浪形顺序
 	///@param	nums	数组
@@ -36,6 +39,17 @@ public:
 			}
 			if (max_ != INT_MAX && i + 1 < nums.size())	swap(nums[i+1], nums[k]);	//	防止数组越界
 		}
+	}
+};
+
+class Solution {
+public:
+	///@note	1. wiggle sort应该满足如下两个条件：a. 当i % 2 == 1时，nums[i] >= nums[i-1]；当i % 2 == 0时，nums[i] <= nums[i-1]
+	//			2. 时间复杂度为O(n)，空间复杂度为O(1)。
+	void wiggleSort(vector<int>& nums) {
+		for (int i = 1; i < nums.size(); i++)
+			if (((i % 2) && nums[i] < nums[i-1]) ||
+				(!(i % 2) && nums[i] > nums[i-1]))	swap(nums[i], nums[i-1]);		
 	}
 };
 
