@@ -11,7 +11,8 @@ public:
 	///@brief	在一个二维棋盘上，0表示门，-1表示墙，INT_MAX表示空房间，计算所有空房间到门的最近距离
 	///@param	rooms	二维棋盘
 	///@note	1. dfs；
-	//			2. 从门的位置开始dfs。
+	//			2. 从门的位置开始dfs；
+	//			3. 在dfs时，如果当前房间的值小于distance或者行列号越界，直接返回。
 	void wallsAndGates(vector<vector<int>>& rooms) {
 		if (rooms.empty() || rooms[0].empty())	return;
 		for (int i = 0; i != rooms.size(); i++)
