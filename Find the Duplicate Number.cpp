@@ -2,10 +2,12 @@
 ///@author	zhaowei
 ///@date	2016.03.07
 ///@version	1.0
+///@version	2.0
+
 #include <vector>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	在数组中寻找重复元素，数组由从1到n的n + 1个元素组成，其中有且只有一个多次出现的元素，且可以出现多次。要求时间复杂度为O(n^2)之下，空间复杂度为O(1)，数组是只读的。
 	///@param	nums	数组
@@ -23,6 +25,27 @@ public:
 			}
 			k = i + 2;
 		}
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 将数组看作是一个有环链表即可，我们将问题转换为了找到环的起始点
+	//			2. 利用快慢指针法，先找到环中一点，然后再用另一个变量从头出发，另一个继续从交点出发，相交处就是环的起点，即重复元素所在。
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1).
+	int findDuplicate(vector<int>& nums) {
+		int slow = 0, fast = 0, finder = 0;
+		while (1) {
+			slow = nums[slow];
+			fast = nums[nums[fast]];
+			if (slow == fast)	break;
+		}
+		while (1) {
+			finder = nums[finder];
+			slow = nums[slow];
+			if (slow == finder)	break;
+		}
+		return finder;
 	}
 };
 
