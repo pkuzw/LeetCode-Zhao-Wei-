@@ -3,6 +3,7 @@
 ///@date	2016.03.09
 ///@version	1.0
 ///@version	2.0
+///@version	3.0
 
 #include <vector>
 using namespace std;
@@ -34,7 +35,7 @@ public:
 
 class Solution_v2 {
 public:
-	///@note	1. 递归法超时，考虑用动态规划
+	///@note	1. 递归法超时，考虑用动态规划；
 	//			2. 设dp[i]表示石子为i个时，先手能否获胜。初始条件为dp[1] = dp[2] = dp[3] = 1；
 	//			3. 递推关系式为dp[i] = dp[i-3] && dp[i-2] && dp[i-1] ? 0 : 1;
 	//			4. 时间复杂度为O(n)，空间复杂度为O(n)，后续可以改进到O(1)。
@@ -45,6 +46,16 @@ public:
 		dp[1] = dp[2] = dp[3] = true;
 		for (int i = 4; i <= n; i++)	dp[i] = dp[i-1] && dp[i-2] && dp[i-3] ? false : true;
 		return dp[n];
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 通过观察发现，石子游戏的规则会导致胜负结果按照周期为4，前三必胜，后一必负的规律累加；
+	//			2. 直接对n来模4计算结果即可；
+	//			3. 时间复杂度为O(1)，空间复杂度为O(1)。
+	bool canWinNim(int n) {
+		return !(n % 4) ? false : true;
 	}
 };
 
