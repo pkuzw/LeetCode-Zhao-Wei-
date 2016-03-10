@@ -6,53 +6,37 @@
 #include <deque>
 using namespace std;
 
+struct ListNode {
+	int val;
+	ListNode* next;
+};
+
 ///@note	
 class MedianFinder {
 public:
 
 	MedianFinder() {
-		cnt = 0;
-		left_cnt = 0;
-		right_cnt = 0;
+		head = new ListNode;
 	}
 
 	// Adds a number into the data structure.
 	void addNum(int num) {
-		if (!cnt) {
-			nums.push_back(num);
-			cnt++;
+		if (!head) {
+			head->val = num;
+			head->next = nullptr;
 		}
-		else if (cnt == 1) {
-			if (num > nums[0])	nums.push_back(num);
-			else	nums.push_front(num);			
-			cnt++;
-			left_cnt = right_cnt = cnt / 2;			
+		ListNode* indx = head;
+		ListNode* pre_indx = new ListNode;
+		pre_indx->next = head;
+		pre_indx->val = -1;
+		while (indx->val < num && indx->next) {
+			pre_indx = indx;
+			indx = indx->next;
 		}
-		else if (cnt == 2) {
-			if (num > nums[1]) {
-				nums.push_back(num);
-				right_cnt++;
-			}
-			else if (num <= nums[1] && num > nums[0]) {
-				nums.push_back(num);
-				swap(nums[1], nums[2]);
-			}
-			else	nums.push_front(num);
-			cnt++;
-		}
-		else {
-			if (num > nums[2])	nums.push_back(num);
-			else if (num <= nums[2] && num > nums[1]) {
-				nums.push_back(num);
-				swap(nums[2], nums[3]);
-				nums.pop_back();
-			}
-			else if (num <= nums[1] && num > nums[0]) {
-				nums.push_front(num);
-				swap(nums[0], nums[1]);
-				nums.pop_front();
-			}
-		}
+		ListNode* node = new ListNode;
+		node->val = num;
+		pre_indx->next = node;
+		node->next = indx;
 	}
 
 	// Returns the median of current data stream
@@ -60,10 +44,8 @@ public:
 
 	}
 
-	deque<int> nums;
-	int cnt;
-	int left_cnt;
-	int right_cnt;
+	ListNode* head;
+
 };
 
 // Your MedianFinder object will be instantiated and called as such:
