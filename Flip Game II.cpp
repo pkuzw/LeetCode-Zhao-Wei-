@@ -1,6 +1,6 @@
 ﻿///@file	Flip Game II
 ///@author	zhaowei
-///@date	2016.03.10
+///@date	2016.03.12
 ///@version	1.0
 
 //discuss中可以通过dp改进到O(n^2)的时间复杂度
