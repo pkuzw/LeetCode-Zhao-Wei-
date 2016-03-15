@@ -1,4 +1,4 @@
-///@file	Smallest Rectangle Enclosing Black Pixels
+ï»¿///@file	Smallest Rectangle Enclosing Black Pixels
 ///@author	zhaowei
 ///@date	2016.03.15
 ///@version	1.0
@@ -8,13 +8,13 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	¸ø¶¨Ò»¸öm*nµÄÍ¼Æ¬£¬ÓÉ'1'ºÍ'0'Á½ÖÖÏñËØ×é³É¡£1ÊÇÒ»¸öÁ¬Í¨¿é£¬0°üÎ§×Å1£¬¸ø¶¨Ò»¸ö1µÄ×ø±ê£¬¼ÆËã³ö¸²¸Ç1µÄÁ¬Í¨¿éËùĞèÒªµÄ×îĞ¡µÄ¾ØĞÎÃæ»ı
-	///@param	image	Í¼Æ¬
-	///@param	x, y	1µÄ×ø±ê'
-	///@return	·µ»Ø¸²¸Ç¾ØĞÎµÄÃæ»ı
-	///@note	1. Í¨¹ı¸ø¶¨µÄ×ø±êËÑË÷1ÔªËØµÄºá×İ×ø±ê×î´óÖµºÍ×îĞ¡Öµ
-	//			2. dfs£¬µİ¹éÊµÏÖ
-	//			3. ĞèÒªÉè¼ÆÒ»¸ö¶şÎ¬¾ØÕóÀ´±ê¼ÇÒÑ¾­·ÃÎÊ¹ıµÄÔªËØ£¬Ó¦¸Ã»¹ÓĞÓÅ»¯µÄ¿Õ¼ä¡£
+	///@brief	ç»™å®šä¸€ä¸ªm*nçš„å›¾ç‰‡ï¼Œç”±'1'å’Œ'0'ä¸¤ç§åƒç´ ç»„æˆã€‚1æ˜¯ä¸€ä¸ªè¿é€šå—ï¼Œ0åŒ…å›´ç€1ï¼Œç»™å®šä¸€ä¸ª1çš„åæ ‡ï¼Œè®¡ç®—å‡ºè¦†ç›–1çš„è¿é€šå—æ‰€éœ€è¦çš„æœ€å°çš„çŸ©å½¢é¢ç§¯
+	///@param	image	å›¾ç‰‡
+	///@param	x, y	1çš„åæ ‡'
+	///@return	è¿”å›è¦†ç›–çŸ©å½¢çš„é¢ç§¯
+	///@note	1. é€šè¿‡ç»™å®šçš„åæ ‡æœç´¢1å…ƒç´ çš„æ¨ªçºµåæ ‡æœ€å¤§å€¼å’Œæœ€å°å€¼
+	//			2. dfsï¼Œé€’å½’å®ç°
+	//			3. éœ€è¦è®¾è®¡ä¸€ä¸ªäºŒç»´çŸ©é˜µæ¥æ ‡è®°å·²ç»è®¿é—®è¿‡çš„å…ƒç´ ï¼Œåº”è¯¥è¿˜æœ‰ä¼˜åŒ–çš„ç©ºé—´ã€‚
 	int minArea(vector<vector<char>>& image, int x, int y) {
 		if (!image.size() || !image[0].size())	return 0;
 		row = image.size();
@@ -34,10 +34,10 @@ public:
 		return (abs(bound[1] - bound[0]) + 1) * (abs(bound[3] - bound[2]) + 1);
 	}
 
-	///@brief	µİ¹é¸¨Öúº¯Êı
-	///@param	image	Í¼Ïñ
-	///@param	x, y	µ±Ç°ÏÂ±ê
-	///@param	bound	µ±Ç°ÒÑ¾­ÕÒµ½µÄ1ÏñËØµÄ±ß½ç
+	///@brief	é€’å½’è¾…åŠ©å‡½æ•°
+	///@param	image	å›¾åƒ
+	///@param	x, y	å½“å‰ä¸‹æ ‡
+	///@param	bound	å½“å‰å·²ç»æ‰¾åˆ°çš„1åƒç´ çš„è¾¹ç•Œ
 	void dfs(vector<vector<char>>& image, int x, int y, vector<int>& bound) {		
 		if (!visited[x][y]) {
 			if (x > 0 && image[x-1][y] == '1') {
@@ -64,9 +64,9 @@ public:
 		}
 	}
 
-	vector<int> bound;	//	µ±Ç°ËÑË÷µ½µÄ1Á¬Í¨¿éµÄºá×İ×ø±ê±ß½ç 0: row_min, 1: row_max, 2: col_min, 3: col_max
-	int row, col;		//	Í¼Æ¬ĞĞÁĞºÅ
-	vector<vector<bool>> visited;	//	±ê¼ÇÄÄ¸öÔªËØÒÑ¾­·ÃÎÊ¹ıÁË£¬ÏÂ´Î²»ÓÃ·ÃÎÊ
+	vector<int> bound;	//	å½“å‰æœç´¢åˆ°çš„1è¿é€šå—çš„æ¨ªçºµåæ ‡è¾¹ç•Œ 0: row_min, 1: row_max, 2: col_min, 3: col_max
+	int row, col;		//	å›¾ç‰‡è¡Œåˆ—å·
+	vector<vector<bool>> visited;	//	æ ‡è®°å“ªä¸ªå…ƒç´ å·²ç»è®¿é—®è¿‡äº†ï¼Œä¸‹æ¬¡ä¸ç”¨è®¿é—®
 };
 
 int main() {
