@@ -3,6 +3,7 @@
 ///@date	2016.03.19
 ///@version	1.0
 
+///	在discuss中还有其他dp和自动状态机的解法，可以参考。
 #include <vector>
 using namespace std;
 
