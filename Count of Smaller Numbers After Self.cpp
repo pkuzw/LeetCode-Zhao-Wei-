@@ -3,6 +3,9 @@
 ///@date	2016.03.21
 ///@version	1.0
 ///@version	1.1
+///@version	2.0
+//	还可以通过binary indexed tree解决问题，需要再对bit好好理解一下
+
 #include <vector>
 #include <unordered_map>
 #include <map>
@@ -59,6 +62,57 @@ public:
 		}
 		reverse(rslt.begin(), rslt.end());
 		return rslt;
+	}
+};
+
+
+
+struct BinarySearchTreeNode {
+	int val;
+	int less;
+	int count;
+	BinarySearchTreeNode* left;
+	BinarySearchTreeNode* right;
+	BinarySearchTreeNode(int v) : val(v), less(0), count(1), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+	///@note	1. BST
+	//			2. 新建一棵二叉搜索树，左子树为小于当前元素的元素，右子树为大于当前元素的元素，树的每一个节点包含当前元素出现的次数，小于当前元素的元素数目
+	//			3. 时间复杂度为O(nlogn)，空间复杂度为O(n).
+	vector<int> countSmaller(vector<int>& nums) {
+		vector<int> rslt(nums.size(), 0);
+		if (nums.empty())	return rslt;
+		BinarySearchTreeNode* root = new BinarySearchTreeNode(nums.back());
+		for (int i = nums.size() - 2; i >= 0; i--) {
+			int num_less = 0;
+			insert(root, nums[i], num_less);
+			rslt[i] = num_less;
+		}
+		return rslt;
+	}
+
+	///@brief	BST的插入函数
+	///@param	root		根节点
+	///@param	val			节点值
+	///@param	num_less	比当前节点小的元素数目	
+	void insert(BinarySearchTreeNode* root, int val, int& num_less) {
+		if (!root)	return;
+		if (val < root->val) {
+			root->less++;
+			if (root->left)	insert(root->left, val, num_less);			
+			else	root->left = new BinarySearchTreeNode(val);			
+		}
+		else if (val > root->val) {
+			num_less += root->count + root->less;
+			if (root->right)		insert(root->right, val, num_less);			
+			else	root->right = new BinarySearchTreeNode(val);			
+		}
+		else {
+			num_less += root->less;
+			root->count++;
+		}		
 	}
 };
 
