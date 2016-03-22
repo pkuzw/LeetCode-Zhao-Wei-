@@ -48,7 +48,9 @@ struct word {
 	vector<int> hash_tbl;
 	string w;
 	int length;
-	word() : hash_tbl(26, 0), w(), length(0) {}
+	bool has_all_chars;
+	word() : hash_tbl(26, 0), w(), length(0), has_all_chars(false) {}
+	
 };
 
 class Solution {
@@ -72,6 +74,14 @@ public:
 			for (int j = 0; j != words[i].length(); j++) {
 				wd.hash_tbl[words[i][j] - 'a']++;
 			}
+			int k = 0;
+			for (k = 0; k != 26; k++) {
+				if (!wd.hash_tbl[k]) {	
+					wd.has_all_chars = false;
+					break;
+				}
+			}
+			if (k == 26)	wd.has_all_chars = true;
 			w_vec.push_back(wd);
 		}
 		for (int i = 0; i != w_vec.size() - 1; i++) {
@@ -86,6 +96,7 @@ public:
 	///@param	a, b	两个互相比较的单词
 	///@return	如果a和b有相同的字母，则返回true；否则返回false
 	bool hasCommonChar(word a, word b) {
+		if (a.has_all_chars || b.has_all_chars)	return true;
 		for (int i = 0; i != 26; i++)
 			if (a.hash_tbl[i] && b.hash_tbl[i])	return true;
 		return false;
