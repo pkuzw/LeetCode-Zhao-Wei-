@@ -3,6 +3,9 @@
 ///@date	2016.03.22
 ///@version	1.0
 ///@version 1.1
+///@version	1.2
+///@version	1.3
+///@version	1.4
 
 #include <string>
 #include <unordered_map>
@@ -54,6 +57,12 @@ struct word {
 	
 };
 
+
+///@brief	比较函数
+bool myCmp(string a, string b) {
+	return a.length() > b.length();
+}
+
 class Solution_v1_2 {
 public:
 	///@brief	给定一组单词，找到没有相同字母的两个单词的最大乘积
@@ -104,11 +113,7 @@ public:
 	}
 };
 
-bool myCmp(string a, string b) {
-	return a.length() > b.length();
-}
-
-class Solution {
+class Solution_v1_3 {
 public:
 	///@brief	给定一组单词，找到没有相同字母的两个单词的最大乘积
 	///@param	words	单词组
@@ -150,13 +155,44 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@brief	给定一组单词，找到没有相同字母的两个单词的最大乘积
+	///@param	words	单词组
+	///@return	返回最大乘积
+	///@note	1. 枚举法；
+	//			2. 在v1.3的基础上进行优化，把存储两个单词的哈希表由数组改为位操作，以提升速度；
+	//			3. 时间复杂度为O(n^2)，n为单词数目。
+	int maxProduct(vector<string>& words) {
+		if (words.empty())	return 0;
+		int max_product = 0;
+		sort(words.begin(), words.end(), myCmp);
+		vector<int> hash_tbl(words.size(), 0);
+		for (int i = 0; i != words.size(); i++) {
+			for (int j = 0; j != words[i].size(); j++) {
+				hash_tbl[i] |= (1 << (words[i][j] - 'a'));
+			}
+		}
+
+		for (int i = 0; i != words.size() - 1; i++) {
+			if (words[i].length() * words[i].length() < max_product)	break;
+			for (int j = i + 1; j != words.size(); j++) {
+				if (words[i].length() * words[j].length() < max_product)	break;
+				if ((hash_tbl[i] & hash_tbl[j]) == 0)	
+					max_product = words[i].length() * words[j].length();
+			}
+		}
+		return max_product;
+	}
+};
+
 int main() {
 	string w[6] = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
 	string w1[7] = {"a", "ab", "abc", "d", "cd", "bcd", "abcd"};
 	string w2[4] = {"a", "aa", "aaa", "aaaa"};
-	string w3[10] = {"eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"};
+	string w3[10] = {"abcw","baz","foo","bar","xtfn","abcdef"};
 	vector<string> words;
-	for (int i = 0; i != 10; i++)	words.push_back(w3[i]);
+	for (int i = 0; i != 6; i++)	words.push_back(w[i]);
 	Solution slt;
 	int rslt = slt.maxProduct(words);
 	return 0;
