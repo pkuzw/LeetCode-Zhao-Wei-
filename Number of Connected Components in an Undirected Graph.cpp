@@ -1,20 +1,20 @@
-///@file	Number of Connected Components in an Undirected Graph
+ï»¿///@file	Number of Connected Components in an Undirected Graph
 ///@author	zhaowei
 ///@date	2016.03.24
 ///@version	1.0
 
 #include <vector>
-#include <numeric>	//	iota: ´Óval¿ªÊ¼½øĞĞÀÛ¼Ó£¬¶ÔÊı×éÖ¸¶¨ÇøÓò½øĞĞ¸³Öµ
+#include <numeric>	//	iota: ä»valå¼€å§‹è¿›è¡Œç´¯åŠ ï¼Œå¯¹æ•°ç»„æŒ‡å®šåŒºåŸŸè¿›è¡Œèµ‹å€¼
 using namespace std;
 
 class Solution {
 public:
-	///@brief	¼ÆËãÎŞÏòÍ¼ÖĞµÄ¿éÊı
-	///@param	n	µãÊı
-	///@param	edges	±ß±í£¬ÆäÖĞµÄÔªËØ<i, j>±íÊ¾¶¥µãiºÍjÖ®¼äÓĞÒ»ÌõÎŞÏò±ß
-	///@return	·µ»ØÍ¼µÄÁ¬Í¨¿éÊı
-	///@note	1. Ñ¹ËõÂ·¾¶µÄ²¢²é¼¯
-	//			2. ±éÀú±ß±íÖĞµÄÃ¿Ò»Ìõ±ß£¬ÕÒµ½Ã¿Ìõ±ßÁ½¸ö¶¥µãµÄ×îÖÕ¸¸½Úµã£¬Èç¹û¶şÕßµÄ¸¸½ÚµãÏàÍ¬£¬ÔòËµÃ÷ËüÃÇÔÚÒ»¸ö¿éÖĞ£¬·ñÔò²»ÊÇ¡£
+	///@brief	è®¡ç®—æ— å‘å›¾ä¸­çš„å—æ•°
+	///@param	n	ç‚¹æ•°
+	///@param	edges	è¾¹è¡¨ï¼Œå…¶ä¸­çš„å…ƒç´ <i, j>è¡¨ç¤ºé¡¶ç‚¹iå’Œjä¹‹é—´æœ‰ä¸€æ¡æ— å‘è¾¹
+	///@return	è¿”å›å›¾çš„è¿é€šå—æ•°
+	///@note	1. å‹ç¼©è·¯å¾„çš„å¹¶æŸ¥é›†
+	//			2. éå†è¾¹è¡¨ä¸­çš„æ¯ä¸€æ¡è¾¹ï¼Œæ‰¾åˆ°æ¯æ¡è¾¹ä¸¤ä¸ªé¡¶ç‚¹çš„æœ€ç»ˆçˆ¶èŠ‚ç‚¹ï¼Œå¦‚æœäºŒè€…çš„çˆ¶èŠ‚ç‚¹ç›¸åŒï¼Œåˆ™è¯´æ˜å®ƒä»¬åœ¨ä¸€ä¸ªå—ä¸­ï¼Œå¦åˆ™ä¸æ˜¯ã€‚
 	int countComponents(int n, vector<pair<int, int>>& edges) {
 		vector<int> p(n, 0);
 		iota(p.begin(), p.end(), 0);
@@ -23,8 +23,8 @@ public:
 			int w = edges[i].second;
 			while (v != p[v])	v = p[v] = p[p[v]];
 			while (w != p[w])	w = p[w] = p[p[w]];
-			p[v] = w;	//	Â·¾¶Ñ¹Ëõ£¬v×÷ÎªÒ»¸ö×ÓÊ÷·ÅÔÚÁËwµÄÏÂÃæ
-			n -= (v != w);	//	Èç¹ûv»¹²»µÈÓÚw£¬ËµÃ÷¶şÕß²»ÔÚÒ»¸ö¿éÄÚ
+			p[v] = w;	//	è·¯å¾„å‹ç¼©ï¼Œvä½œä¸ºä¸€ä¸ªå­æ ‘æ”¾åœ¨äº†wçš„ä¸‹é¢
+			n -= (v != w);	//	å¦‚æœvè¿˜ä¸ç­‰äºwï¼Œè¯´æ˜äºŒè€…ä¸åœ¨ä¸€ä¸ªå—å†…
 		}
 		return n;
 	}
