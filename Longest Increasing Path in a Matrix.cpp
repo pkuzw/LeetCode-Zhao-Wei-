@@ -1,4 +1,4 @@
-///@file	Longest Increasing Path in a Matrix
+ï»¿///@file	Longest Increasing Path in a Matrix
 ///@author	zhaowei
 ///@date	2016.03.27
 ///@version	1.0
@@ -9,11 +9,11 @@ using namespace std;
 
 class Solution {
 public:
-	///@brief	¸ø¶¨Ò»¸ö¶şÎ¬¾ØÕó£¬ÕÒµ½×î³¤µÄµİÔöÂ·¾¶
-	///@param	matrix	¶şÎ¬¾ØÕó
-	///@return	·µ»Ø×î³¤µİÔöÂ·¾¶µÄ³¤¶È
-	///@note	1. dfs£»
-	//			2. Ê±¼ä¸´ÔÓ¶ÈÎªO(n^k)£¬k > 3¡£TLE
+	///@brief	ç»™å®šä¸€ä¸ªäºŒç»´çŸ©é˜µï¼Œæ‰¾åˆ°æœ€é•¿çš„é€’å¢è·¯å¾„
+	///@param	matrix	äºŒç»´çŸ©é˜µ
+	///@return	è¿”å›æœ€é•¿é€’å¢è·¯å¾„çš„é•¿åº¦
+	///@note	1. dfsï¼›
+	//			2. æ—¶é—´å¤æ‚åº¦ä¸ºO(n^k)ï¼Œk > 3ã€‚TLE
 	int longestIncreasingPath(vector<vector<int>>& matrix) {
 		if (matrix.empty() || matrix[0].empty())	return 0;
 		int m = matrix.size(), n = matrix[0].size();
@@ -30,12 +30,12 @@ public:
 		return rslt;
 	}
 
-	///@brief	µİ¹é¸¨Öúº¯Êı
-	///@param	matrix	¶şÎ¬¾ØÕó
-	///@param	visited	·ÃÎÊ¹ıµÄµã
-	///@param	i, j	µ±Ç°µãµÄÏÂ±ê
-	///@param	max_len	´Óµ±Ç°µã³ö·¢µÄ×î³¤Â·¾¶³¤¶È
-	///@param	path_len	µ±Ç°µãµÄÒ»ÌõºÏ·¨Â·¾¶³¤¶È	
+	///@brief	é€’å½’è¾…åŠ©å‡½æ•°
+	///@param	matrix	äºŒç»´çŸ©é˜µ
+	///@param	visited	è®¿é—®è¿‡çš„ç‚¹
+	///@param	i, j	å½“å‰ç‚¹çš„ä¸‹æ ‡
+	///@param	max_len	ä»å½“å‰ç‚¹å‡ºå‘çš„æœ€é•¿è·¯å¾„é•¿åº¦
+	///@param	path_len	å½“å‰ç‚¹çš„ä¸€æ¡åˆæ³•è·¯å¾„é•¿åº¦	
 	void dfs(vector<vector<int>>& matrix, vector<vector<bool>>visited, int i, int j, int& max_len, int& path_len) {
 		if (i < 0 || i >= matrix.size() || j < 0 || j >= matrix[0].size() || visited[i][j])	return;		
 		if (i > 0 && !visited[i][j] && matrix[i-1][j] > matrix[i][j]) {			
