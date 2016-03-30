@@ -31,6 +31,10 @@ public:
 					return rslt;
 			}
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 		return rslt;
 	}
 };
