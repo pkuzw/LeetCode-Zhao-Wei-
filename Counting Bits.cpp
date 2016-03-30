@@ -16,16 +16,22 @@ public:
 	vector<int> countBits(int num) {
 		vector<int> binary_flg;
 		int n = 1;
-		for (int i = 0; n < INT_MAX && n >= 0; i++) {
-			n <<= i;
+		while(n < INT_MAX && n >= 0) {
 			binary_flg.push_back(n);
+			n *= 2;
 		}
 
-		vector<int> rslt(num, 0);
-		int i = 0;
-		while (i < num) {
+		vector<int> rslt(num+1, 0);
 
+		for (int j = 1; binary_flg[j-1] <= num; j++) {
+			for (int k = 0; k < binary_flg[j] - binary_flg[j-1]; k++) {
+				if (binary_flg[j-1] + k <= num)
+					rslt[binary_flg[j-1]+k] = rslt[k] + 1;
+				else
+					return rslt;
+			}
 		}
+		return rslt;
 	}
 };
 
