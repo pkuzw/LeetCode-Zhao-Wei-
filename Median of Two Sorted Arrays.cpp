@@ -28,8 +28,11 @@ The overall run time complexity should be O(log (m+n)).
 ///@date 2014.09.24
 ///@version 1.2
 
-///@date    2015.09.011
+///@date    2015.09.11
 ///@version 2.1
+
+///@date	2016.03.31
+///@version	2.2
 
 #include <iostream>
 #include <vector>
@@ -191,7 +194,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	找到已排好序的数组nums1和nums2的合并后的中位数
 	///@param	nums1, nums2	数组
@@ -213,7 +216,7 @@ public:
 	///@param	i, j	数组1和数组2的起始下标
 	///@param	k		第k个元素
 	///@return	返回第k个元素
-	/* @note	1. 令nums1的数组剩余长度(nums1.size() - i)要比nums2的剩余长度(nums2.size() - j)更长。否则，就交换两个数组；
+	/* @note	1. 令nums1的数组剩余长度(nums1.size() - i)要比nums2的剩余长度(nums2.size() - j)更短。否则，就交换两个数组；
 				2. 如果nums1的可用长度为0（即nums1.size() - i == 0），则直接返回数组nums2的第k个元素即可；
 				3. 如果是找合并后的第一个元素，只需要比较两个数组的可用首元素即可；
 				4. 找到nums1中可用元素的中位数pa，同理可得nums2中的可用元素中位数pb；
@@ -236,30 +239,58 @@ public:
     }
 };
 
+class Solution {
+public:
+	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+		int total = nums1.size() + nums2.size();
+		if (total % 2)	return findKthNumberSortedArrays(nums1, 0, nums2, 0, total / 2 + 1);
+		else	return (findKthNumberSortedArrays(nums1, 0, nums2, 0, total / 2) + findKthNumberSortedArrays(nums1, 0, nums2, 0, total / 2 + 1)) / 2;
+	}
+
+	double findKthNumberSortedArrays(vector<int>& nums1, int i, vector<int>& nums2, int j, int k) {
+		if (nums1.size() - i > nums2.size() - j)		return findKthNumberSortedArrays(nums2, j, nums1, i, k);		
+		if (i == nums1.size())	return nums2[j+k-1];		//	先处理i在nums1的位置，不能跟下一句颠倒，否则无法处理nums1 = {}, nums2 = {1}的情形
+		if (k == 1)	return min(nums1[i], nums2[j]);
+		int pa = min(i + k / 2, (int)nums1.size()), pb = j + k - pa + i;
+		if (nums1[pa-1] < nums2[pb-1])	return findKthNumberSortedArrays(nums1, pa, nums2, j, i + k - pa);
+		else if (nums1[pa-1] > nums2[pb-1])	return findKthNumberSortedArrays(nums1, i, nums2, pb, j + k - pb);
+		else return nums1[pa-1];
+	}
+};
+
 int main()
 {
 	//样例测试
-	int len_a = 0, len_b = 0;
-	cout << "input length of A: ";
-	cin >> len_a;
-	cout << "input length of B: ";
-	cin >> len_b;
-
-	int* arr_a = new int[len_a];
-	int* arr_b = new int[len_b];
-	
-	cout << "input elements of A: ";
-	for(int i = 0; i < len_a; i++)
-		cin >> arr_a[i];
-
-	cout << "input elements of B: ";
-	for(int i = 0; i < len_b; i++)
-		cin >> arr_b[i];
+ 	int len_a = 5, len_b = 1;
+	int arr_a[5] = {1,2,3,4,5};
+	int arr_b[1] = {1};
+// 	cout << "input length of A: ";
+// 	cin >> len_a;
+// 	cout << "input length of B: ";
+// 	cin >> len_b;
+// 
+// 	int* arr_a = new int[len_a];
+// 	int* arr_b = new int[len_b];
+// 	
+// 	cout << "input elements of A: ";
+// 	for(int i = 0; i < len_a; i++)
+// 		cin >> arr_a[i];
+// 
+// 	cout << "input elements of B: ";
+// 	for(int i = 0; i < len_b; i++)
+// 		cin >> arr_b[i];
 
 	double median = 0;
-	Solution_v1 slt;
-	median = slt.findMedianSortedArrays(arr_a, len_a, arr_b, len_b);
-	cout << "program's result: " << median << endl;
+	vector<int> iveca, ivecb;
+	for (int i = 0; i != len_a; i++)	iveca.push_back(arr_a[i]);
+	for (int i = 0; i != 1; i++)	ivecb.push_back(arr_b[i]);
+	iveca.clear();
+// 	Solution_v1 slt;
+// 	median = slt.findMedianSortedArrays(arr_a, len_a, arr_b, len_b);
+// 	cout << "program's result: " << median << endl;
+
+	Solution slot;
+	median = slot.findMedianSortedArrays(iveca, ivecb);
 
 	return 0;
 	
