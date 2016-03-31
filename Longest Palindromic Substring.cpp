@@ -8,6 +8,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2016.03.31
+///@version	2.1
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -171,10 +174,12 @@ public:
 	///@brief	Manacher's Algorithm
 	///@author	zhaowei
 	///@date	2015.05.26
-	///@note	首先进行预处理，将原来的字符串的字符之间都添加上"#"，在首部添加"$"，尾部添加"^"。这样可以将中心为1个字符或2个字符的回文子串转换为1个字符；
-	//			然后利用一个数组p[i]来保存以字符s[i]为中心时的回文子串长度. 根据回文字符串的对称性特点，在中心右侧的字符s[i]对应的回文子串长度等于其左侧相应的p[2*c - i]和右边界减i的最小值，
-	//			这是因为i' = c - (i - c)，如果i没有超过p[c]的右边界。否则就要算作p[c]的右边界减去i，超出部分重新计算。因为这个差根据回文子串对称性能够
-	//			保证是回文的。如果p[i]的子串右边界超过了p[c]的右边界，那么就将c移动到i，重新确立p[c]右边界。
+	///@note	1. 首先进行预处理，将原来的字符串的字符之间都添加上"#"，在首部添加"$"，尾部添加"^"。
+	//			   这样可以将中心为1个字符或2个字符的回文子串转换为1个字符；
+	//			2. 然后利用一个数组p[i]来保存以字符s[i]为中心时的回文子串长度. 根据回文字符串的对称性特点，
+	//			   在中心右侧的字符s[i]对应的回文子串长度等于其左侧相应的p[2*c - i]和右边界减i的最小值，
+	//             这是因为i' = c - (i - c)，如果i没有超过p[c]的右边界。否则就要算作p[c]的右边界减去i，超出部分重新计算。
+	//			   因为这个差根据回文子串对称性能够保证是回文的。如果p[i]的子串右边界超过了p[c]的右边界，那么就将c移动到i，重新确立p[c]右边界。
 	
 	///@brief	对字符串进行预处理，插入"$"，"^"和"#"
 	///@param	s	待处理的字符串
@@ -249,9 +254,12 @@ public:
 };
 
 #include <vector>
-///@Manacher Algorithm. time: O(n)
-class Solution {
+
+class Solution_v2 {
 public:
+	///@note	Manacher Algorithm. time: O(n)
+	//			http://www.geeksforgeeks.org/manachers-algorithm-linear-time-longest-palindromic-substring-part-1/
+	//			http://www.geeksforgeeks.org/manachers-algorithm-linear-time-longest-palindromic-substring-part-2/
     string longestPalindrome(string s) {
         string t ="$#";
         for (int i = 0; i < s.size(); ++i) {
@@ -274,6 +282,13 @@ public:
         }
         return s.substr((resId - resMx) / 2, resMx - 1);
     }
+};
+
+class Solution {
+public:
+	string longestPalindrome(string s) {
+
+	}
 };
 
 int main()
