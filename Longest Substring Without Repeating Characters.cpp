@@ -10,11 +10,14 @@ For "bbbbb" the longest substring is "b", with the length of 1.
 ///@date	2015.09.10
 ///@version	1.0
 
+///@date	2016.03.31
+///@version	1.1
+
 #include <vector>
 #include <string>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
 	///@brief	计算最长无重复字符的子串长度
 	///@param	s	字符串
@@ -36,6 +39,28 @@ public:
 		return rslt;
 	}
 };
+
+class Solution {
+public:
+	///@note	1. 哈希表；
+	//			2. 找到每一个不含有重复字符的子串，每当遇到重复字符，就更新子串长度，并重新开始计算其最大长度；
+	//			3. 哈希表初始化为-1是为了处理只有一个字符的情形；
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为字符串长度。
+	int lengthOfLongestSubstring(string s) {
+		int hash_tbl[256] = {0};
+		memset(hash_tbl, -1, 256*sizeof(int));
+		int rslt = 0;
+		int longest_len = 0;
+		for (int i = 0; i != s.size(); i++) {
+			if (i - hash_tbl[s[i]] <= longest_len)	longest_len = i - hash_tbl[s[i]];
+			else	longest_len++;
+			hash_tbl[s[i]] = i;
+			rslt = max(rslt, longest_len);
+		}
+		return rslt;
+	}
+};
+
 
 int main()
 {
