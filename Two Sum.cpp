@@ -21,6 +21,9 @@ Output: index1=1, index2=2
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2016.03.31
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -229,7 +232,7 @@ public:
 
 ///@brief   利用map<int, int>来保存数组中的元素和它对应的下标。先遍历一边数组，将它们装入map，然后再通过map本身O(logn)的查找时间
 //          来遍历每个元素对应的和为target的另一半。时间复杂度为O(nlogn)，空间复杂度为O(n)。
-class Solution {
+class Solution_v2 {
 public:
     vector<int> twoSum(vector<int> &numbers, int target) {
         vector<int> res;
@@ -247,6 +250,27 @@ public:
         }
         return res;
     }
+};
+
+#include <unordered_map> 
+
+class Solution {
+public:
+	///@note	1. 利用hash table来存储数组元素的对应下标；
+	//			2. 注意元素自身不能和自身相加求和
+	vector<int> twoSum(vector<int>& nums, int target) {
+		unordered_map<int, int> hash_tbl;
+		for (int i = 0; i != nums.size(); i++)	hash_tbl[nums[i]] = i;
+		vector<int> rslt;
+		for (int i = 0; i != nums.size(); i++) {
+			if (hash_tbl.find(target - nums[i]) != hash_tbl.end() && hash_tbl[target-nums[i]] != i) {
+				rslt.push_back(i);
+				rslt.push_back(hash_tbl[target-nums[i]]);
+				return rslt;
+			}
+		}
+		return rslt;
+	}
 };
 
 int main()
