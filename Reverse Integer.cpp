@@ -10,6 +10,9 @@
 ///@date	2015.09.12
 ///@version	2.1
 
+///@date	2016.04.01
+///@version	2.2
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -109,7 +112,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将一个int型变量翻转
 	///@param	x	int型变量
@@ -117,13 +120,14 @@ public:
 	///@note	这里需要注意：由于int型变量的范围是-2147483648 ~ 2147483647，所以对于如果是10位的整数，末位为大于2的情形，翻转后肯定会越界。
 	//			所以在每次翻转累加前都要检查是否可能溢出，如果会溢出，则直接返回0.时间复杂度为O(logn)，空间复杂度为O(1)。
     int reverse(int x) {
-		int rslt = 0;
-		while (x) {
-			if (abs(rslt) > INT_MAX / 10)	return 0;
-			rslt = rslt * 10 + x % 10;
-			x /= 10;
-		}
-		return rslt;
+ 		int rslt = 0;
+ 		while (x) {
+ 			if (abs(rslt) > INT_MAX / 10)	
+				return 0;
+ 			rslt = rslt * 10 + x % 10;
+ 			x /= 10;
+ 		}
+ 		return rslt;
     }
 
 	///@brief	将一个int型变量翻转
@@ -141,16 +145,24 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. 利用long long来防止中间过程整型变量越界
+	int reverse(int x) {
+		long long rslt = 0;
+		while (x) {
+			rslt = rslt * 10 + x % 10;
+			x /= 10;
+		}
+		return rslt > INT_MAX || rslt < INT_MIN ? 0 : (int)rslt;
+	}
+};
+
 int main()
 {
-	Solution slt;
-	int x = 1534236469;
+	Solution slt; 
+	int x = INT_MAX;
 	
-	cout << slt.reverse(x);
-	cout << endl;
-
-	cout << slt.reverse_str(x) << endl;
-    
-	cout << -1 % 5 << endl;    
+	int rslt = slt.reverse(x);
 	return 0;
 }
