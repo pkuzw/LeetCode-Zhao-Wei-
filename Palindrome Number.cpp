@@ -12,6 +12,9 @@
 ///@date	2015.09.13
 ///@version	3.0
 
+///@date	2016.04.01
+///@version	2.2
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -78,6 +81,33 @@ public:
 	}
 };
 
+class Solution_v3 {
+public:
+	///@brief	判断一个整型变量是否回文
+	///@param	x	整型变量
+	///@return  如果该整型变量回文，则返回true；否则返回false
+	///@note	1. 利用string函数的to_string函数和模版中的reverse函数，将原来的整型变量转换成字符串，再划成两半进行比较。
+	//			2. 时间复杂度O(n)，空间复杂度为O(n)。
+	bool isPalindrome(int x) {
+		if (x < 0)	return false;
+		string str = to_string(static_cast<long long>(x));
+		int len = str.size();
+		if (len == 1)	return true;
+		int half = len / 2;
+		string left, right;
+		if (len % 2) {
+			left = str.substr(0, half);
+			right = str.substr(half + 1, half);			
+		}
+		else {
+			left = str.substr(0, half);
+			right = str.substr(half, half);
+		}
+		reverse(right.begin(), right.end());
+		return left == right;
+	}
+};
+
 class Solution_v2 {
 public:
 	///@brief	判断一个整型变量是否回文
@@ -101,33 +131,28 @@ public:
 
 class Solution {
 public:
-	///@brief	判断一个整型变量是否回文
-	///@param	x	整型变量
-	///@return  如果该整型变量回文，则返回true；否则返回false
-	///@note	利用string函数的to_string函数和模版中的reverse函数，将原来的整型变量转换成字符串，再划成两半进行比较。时间复杂度O(n)，空间复杂度为O(n)。
+	///@note	1. 在缩小x的过程中应该是先去头，再去尾，相对简洁一些。
+	//			2. 对于负数，直接返回false。
 	bool isPalindrome(int x) {
-		if (x < 0)	return false;
-		string str = to_string(static_cast<long long>(x));
-		int len = str.size();
-		if (len == 1)	return true;
-		int half = len / 2;
-		string left, right;
-		if (len % 2) {
-			left = str.substr(0, half);
-			right = str.substr(half + 1, half);			
+		int div = 1;
+		while (x / div >= 10)	div *= 10;
+		while (x) {
+			int head = x / div;
+			int tail = x % 10;
+			if (head != tail)	return false;
+			//	便于和上面版本比较，此处为先去尾，再去头
+			x /= 10;
+			div /= 10;
+			x = div == 0 ? x : x % div;
+			div /= 10;
 		}
-		else {
-			left = str.substr(0, half);
-			right = str.substr(half, half);
-		}
-		reverse(right.begin(), right.end());
-		return left == right;
+		return true;
 	}
 };
 
 int main()
 {
-	int x = 12345321;
+	int x = -1;
 	Solution slt;
 	bool rslt = slt.isPalindrome(x);
 	return 0;
