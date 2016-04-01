@@ -30,6 +30,9 @@
 ///@date	2015.09.14
 ///@version	3.0
 
+///@date	2016.04.01
+///@version	3.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -212,7 +215,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	通配符匹配
 	///@param	s	字符串
@@ -239,13 +242,28 @@ public:
 	}
 };
 
+class Solution {
+public:
+	///@note	1. '*'表示0个或多个前一个字符；所以"aab"和"c*a*b"可以匹配，"c*a*b"的第一个'*'是0个c，第二个'*'是1个a。
+	bool isMatch(string s, string p) {
+		int m = s.size(), n = p.size();
+		vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+		dp[0][0] = true;
+		for (int i = 0; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (p[j-1] == '*')	dp[i][j] = dp[i][j-2] || (i > 0 && dp[i-1][j] && (s[i-1] == p[j-2] || p[j-2] == '.'));
+				else	dp[i][j] = i > 0 && dp[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.');
+			}
+		}
+		return dp[m][n];
+	}
+};
+
 int main()
 {
-	string s = "aa";
-
-	string p = "a*";
-	Solution slt;
-	bool rslt2 = slt.isMatch2(s, p);
+	string s = "aab";
+	string p = "c*a*b";	
+	Solution slt;	
 	bool rslt = slt.isMatch(s, p);
 	return 0;
 }
