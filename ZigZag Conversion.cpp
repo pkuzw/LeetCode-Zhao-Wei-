@@ -9,6 +9,9 @@
 ///@date	2015.09.11
 ///@version	2.1
 
+///@date	2016.04.01
+///@version	2.2
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -133,7 +136,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将原本的之字形字符串转换成横行输出
 	///@param	s	原来的之字形字符串
@@ -154,6 +157,24 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	///@note	1. 横向来看，相邻的两字符间距为2*(行数-1)，对于非首行和非末行的相邻字符，其间距再减少2*行号。
+	string convert(string s, int nRows) {
+		if (nRows <= 1)	return s;
+		int interval = 2 * (nRows - 1);
+		string rslt;
+		for (int i = 0; i != nRows; i++) {
+			for (int j = i; j < s.size(); j += interval) {
+				rslt += s[j];
+				int tmp = j + interval - 2*i;
+				if (tmp < s.size() && i != 0 && i != nRows - 1)	rslt += s[tmp];
+			}
+		}
+		return rslt;
+	}
 };
 
 int main()
