@@ -9,6 +9,9 @@
 ///@date	2015.09.13
 ///@version	2.1
 
+///@date	2016.04.01
+///@version	2.2
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -139,7 +142,7 @@ public:
 
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	实现将字符串变量转换为整型变量的函数
 	///@param	str	字符串
@@ -166,6 +169,32 @@ public:
 		}
 		if (isPositive)	return rslt;
 		else return -rslt;
+	}
+};
+
+class Solution {
+public:
+	int myAtoi(string str) {
+		if (str.empty())	return 0;
+		int rslt = 0;
+		int left = 0;
+		bool isPositive = true;
+		while (str[left] == ' ' || str[left] == '	')	left++;
+		if (str[left] == '+' || str[left] == '-') {
+			if (str[left] == '-'	)	isPositive = false;
+			left++;
+		}
+		if (str[left] > '9' || str[left] < '0')	return 0;
+		while (left < str.size() && str[left] >= '0' && str[left] <= '9') {
+			if (rslt > INT_MAX / 10 || (rslt == INT_MAX / 10 && str[left] >= '8')) {
+				if (isPositive)	return INT_MAX;
+				else	return INT_MIN;
+			}
+			rslt = rslt * 10 + str[left] - '0';
+			left++;
+		}
+		if (isPositive)	return rslt;
+		return	-rslt;
 	}
 };
 
