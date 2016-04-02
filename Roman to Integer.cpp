@@ -6,6 +6,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2016.04.02
+///@version	2.1
+
 #include <string>
 #include <iostream>
 using namespace std;
@@ -75,7 +78,7 @@ public:
 };
 
 #include <map>
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将罗马数字转换成10进制的int型变量
 	///@param	s	罗马数字字符串
@@ -100,11 +103,33 @@ public:
     }
 };
 
+class Solution {
+public:
+	int romanToInt(string s) {
+		map<char, int> hash_tbl;
+		hash_tbl['I'] = 1;
+		hash_tbl['V'] = 5;
+		hash_tbl['X'] = 10;
+		hash_tbl['L'] = 50;
+		hash_tbl['C'] = 100;
+		hash_tbl['D'] = 500;
+		hash_tbl['M'] = 1000;
+		int rslt = 0;
+		for (int i = 0; i != s.size(); i++) {
+			int val = hash_tbl[s[i]];
+			if (i == s.size() - 1 || hash_tbl[s[i]] >= hash_tbl[s[i+1]])		rslt += val;
+			else	rslt -= val;
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	Solution slt;
-
-	string test = "MVII";
+	Solution_v2 s2;
+	string test = "MMMV";
 	int num = slt.romanToInt(test);
+	int n2 = s2.romanToInt(test);
 	return 0;
 }
