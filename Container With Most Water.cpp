@@ -5,10 +5,14 @@
 ///@version 1.0
 
 ///@date    2015.09.07
-///@version 2.0
+///@version 1.1
 
 ///@date	2015.09.14
-///@version	2.1
+///@version	1.2
+
+///@date	2016.04.02
+///@version	1.3
+
 
 #include <iostream>
 #include <vector>
@@ -52,7 +56,8 @@ public:
 	///@return	返回最大面积
 	///@note	贪心法。从两边向中间靠拢，每次计算移动一次的最大值
     int maxArea(vector<int>& height) {
-		int rslt = INT_MIN, l = 0, r = height.size() - 1;
+		int rslt = 0;
+		int l = 0, r = height.size() - 1;
 		while (l < r) {
 			rslt = max(rslt, min(height[l], height[r]) * (r - l));
 			if (height[l] < height[r])	l++;
