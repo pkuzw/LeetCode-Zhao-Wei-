@@ -9,6 +9,9 @@
 ///@date	2015.09.15
 ///@version	2.1
 
+///@date	2016.04.02
+///@version	2.2
+
 #include <string>
 #include <iostream>
 using namespace std;
@@ -79,7 +82,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将int型变量转换成罗马数字
 	///@param	num	十进制的阿拉伯数字，范围是1 - 3999
@@ -109,11 +112,37 @@ public:
     }
 };
 
+class Solution {
+public:
+	string intToRoman(int num) {
+		string roman[] = {"M", "D", "C", "L", "X", "V", "I"};
+		int units[] = {1000, 500, 100, 50, 10, 5, 1};
+		string rslt;
+		for (int i = 0; i < 7; i += 2) {
+			int x = num / units[i];
+			if (!x)	continue;
+			else if (x < 4)
+				for (int j = 0; j < x; j++)	rslt += roman[i];			
+			else if (x == 4)
+				rslt += roman[i] + roman[i-1];
+			else if (x > 4 && x < 9) {
+				rslt += roman[i-1];
+				for (int j = 5; j < x; j++)	rslt += roman[i];
+			}
+			else if (x == 9)
+				rslt += roman[i] + roman[i-2];
+			num %= units[i];
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
 	Solution slt;
-
-	int num = 1006;
+	Solution_v2 s2;
+	int num = 3999;
 	string t = slt.intToRoman(num);
+	string t2 = s2.intToRoman(num);
 	return 0;
 }
