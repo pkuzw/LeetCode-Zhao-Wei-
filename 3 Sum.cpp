@@ -19,6 +19,8 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 ///@date	2015.09.16
 ///@version	2.1
 
+
+
 #include <iostream>
 #include <vector>
 #include <cstdlib>
