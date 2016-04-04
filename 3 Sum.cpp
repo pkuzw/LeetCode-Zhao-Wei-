@@ -19,7 +19,8 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 ///@date	2015.09.16
 ///@version	2.1
 
-
+///@date	2016.04.04
+///@version	2.2
 
 #include <iostream>
 #include <vector>
@@ -220,7 +221,7 @@ public:
 	}
 }; 
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定一个数组，计算和为0的三元组
 	///@param	nums	数组
@@ -249,15 +250,45 @@ public:
 						right--;
 					}
 					else if (nums[left] + nums[right] < sum)	left++;
-					else right--;
-					
+					else right--;					
 				}
-
 			}
 		}
 		return rslt;
 	}
 };
+
+class Solution {
+public:
+	vector<vector<int>> threeSum(vector<int>& nums) {
+		vector<vector<int>> rslt;
+		if (nums.empty() || nums.size() < 3)	return rslt;
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i != nums.size() - 2; i++) {
+			int sum = 0;
+			int left = i + 1, right = nums.size() - 1;
+			if (i == 0 || nums[i] != nums[i-1])	sum = 0 - nums[i];
+			else continue;
+			while (left < right) {
+				vector<int> tmp;
+				if (nums[left] + nums[right] == sum) {
+					tmp.push_back(nums[i]);
+					tmp.push_back(nums[left]);
+					tmp.push_back(nums[right]);
+					rslt.push_back(tmp);
+					while (nums[left] == nums[left+1])	left++;
+					while (nums[right] == nums[right-1])		right--;
+					left++;
+					right--;
+				}
+				else if (nums[left] + nums[right] < sum)	left++;				
+				else	right--;
+			}			
+		}
+		return rslt;
+	}
+};
+
 
 int main()
 {
