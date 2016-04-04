@@ -17,6 +17,9 @@
 ///@date	2015.09.16
 ///@version	2.1
 
+///@date    2016.04.05
+///@version 2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -190,7 +193,7 @@ public:
 
 }; 
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算三元组之和距离指定值最近的和
 	///@param	nums	数组
@@ -218,6 +221,30 @@ public:
 		}
 		return rslt;
 	}
+};
+
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        int sum = nums[0] + nums[1] + nums[2];
+        int diff = abs(sum - target);
+        for (int i = 0; i < nums.size() - 2; i++) {
+            int left = i + 1;
+            int right = nums.size() - 1;
+            while (left < right) {
+                int new_sum = nums[i] + nums[left] + nums[right];
+                int new_diff = abs(new_sum - target);
+                if (new_diff < diff) {
+                    diff = new_diff;
+                    sum = new_sum;
+                }
+                if (new_sum < target)   left++;
+                else    right--;
+            }
+        }
+        return sum;
+    }
 };
 
 int main()
