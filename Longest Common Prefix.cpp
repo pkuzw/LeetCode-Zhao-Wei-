@@ -6,6 +6,9 @@
 ///@date    2015.09.07
 ///@version 2.0
 
+///@date	2016.04.04
+///@version	2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -63,7 +66,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算一组字符串的最长公共前缀
 	///@param	strs	字符串数组
@@ -81,6 +84,19 @@ public:
         }
         return strs[0];
     }
+};
+
+class Solution {
+public:
+	string longestCommonPrefix(vector<string>& strs) {
+		if (strs.empty())	return "";
+		for (int i = 0; i != strs[0].size(); i++) {
+			for (int j = 0; j != strs.size() - 1; j++) {
+				if (i >= strs[j].size() || strs[j][i] != strs[j+1][i])	return strs[j].substr(0, i);
+			}
+		}
+		return strs[0];
+	}
 };
 
 int main()
