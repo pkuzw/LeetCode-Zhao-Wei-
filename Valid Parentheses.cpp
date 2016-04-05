@@ -15,6 +15,11 @@
 
 ///@date	2015.09.21
 ///@version	2.1
+
+///@date	2016.04.05
+///@version	3.0	wa
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <stack>
@@ -110,9 +115,29 @@ public:
 	}
 };
 
+class Solution {
+public:
+	bool isValid(string s) {
+		stack<char> stk;
+		if (s.empty())	return true;
+		for (int i = 0; i != s.size(); i++) {
+			if (s[i] == '(' || s[i] == '[' || s[i] == '{') stk.push(s[i]);
+			else {
+				if (stk.empty() 
+					|| (s[i] == ')' && stk.top() != '(')
+					|| (s[i] == ']' && stk.top() != '[')
+					|| (s[i] == '}' && stk.top() != '{'))
+					return false;
+				else	stk.pop();
+			}
+		}
+		return stk.empty();
+	}
+};
+
 int main()
 {
-	string s = "([)]";
+	string s = "([])";
 	Solution slt;
 	bool rslt = slt.isValid(s);
 	Solution_v1 s1;
