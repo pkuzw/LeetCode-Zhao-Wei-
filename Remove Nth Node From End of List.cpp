@@ -18,6 +18,9 @@
 ///@date	2015.09.21
 ///@version	2.1
 
+///@date	2016.04.05
+///@version	2.2
+
 #include <iostream>
 using namespace std;
 
@@ -78,7 +81,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	删除距离链表末尾n个节点的节点，要求只能遍历链表一遍
 	///@param	head	链表首指针
@@ -98,6 +101,23 @@ public:
 		pre->next = pre->next->next;
 		return head;
     }
+};
+
+class Solution {
+public:
+	ListNode* removeNthFromEnd(ListNode* head, int n) {
+		if (!head || !head->next)	return nullptr;
+		ListNode* pre = head;
+		ListNode* cur = head;
+		for (int i = 0; i != n; i++)	cur = cur->next;
+		if (!cur)	return head->next;
+		while (cur->next) {
+			cur = cur->next;
+			pre = pre->next;
+		}
+		pre->next = pre->next->next;
+		return head;
+	}
 };
 
 int main()
