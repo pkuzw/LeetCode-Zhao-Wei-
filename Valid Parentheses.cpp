@@ -56,7 +56,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	判断一个括号字符串是否合法。
 	///@param	s	括号字符串
@@ -81,10 +81,43 @@ public:
     }
 };
 
+class Solution_wa {
+public:
+	///@note	1. 用三个变量来记录"()", "[]"和"{}"是否按照顺序成对出现；
+	//			2. 出现左括号时变量加1，出现右括号时变量减1；
+	//			3. 变量不能小于零，结束循环时变量不能不为零；	
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1).
+	//			5. 会挂在"([)]"上。
+	bool isValid(string s) {
+		int bcnt[3] = {0};
+		string brackets = "()[]{}";
+		for (int i = 0; i != s.size(); i++) {
+			for (int j = 0; j != 6; j++) {
+				if (j % 2 == 0 && s[i] == brackets[j])	bcnt[j/2]++;				
+				if (j % 2 == 1 && s[i] == brackets[j]) {
+					if (bcnt[j/2] <= 0)	return false;
+					bcnt[j/2]--;
+					if (!bcnt[j/2]) {
+						for (int k = 0; k != 3; k++) {
+							if (k == j / 2)	continue;
+							if (bcnt[k])	return false;
+						}
+					}
+				}
+			}			
+		}
+		return (!bcnt[0]) && (!bcnt[1]) && (!bcnt[2]);
+	}
+};
+
 int main()
 {
-	string s = "([]{}{}{})";
+	string s = "([)]";
 	Solution slt;
-	cout << slt.isValid(s) << endl;
+	bool rslt = slt.isValid(s);
+	Solution_v1 s1;
+	bool r1 = s1.isValid(s);
+	Solution_v2 s2;
+	bool r2 = s2.isValid(s);
 	return 0;
 }
