@@ -18,8 +18,11 @@
 ///@version 1.1
 ///@note	将所有的字母组合看做一棵树，树的每一个非叶节点就是一个原先的数字，每一条边相当于上层节点对应的字母，利用深度优先遍历即可
 
-///@version 2015.09.07
+///@date    2015.09.07
 ///@version 2.0
+
+///@date	2016.04.05
+///@version	2.1
 
 #include <iostream>
 #include <string>
@@ -140,7 +143,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算电话号码所有可能的字符组合
 	///@param	digits	电话号码，由阿拉伯数字组成
@@ -149,15 +152,9 @@ public:
 	vector<string> letterCombinations(string digits) {
 		vector<string> rslt;
 		if (digits.empty())	return rslt;
-		vector<string> dict;	//	不处理'0'和'1'。
-		dict.push_back("abc");
-		dict.push_back("def");
-		dict.push_back("ghi");
-		dict.push_back("jkl");
-		dict.push_back("mno");
-		dict.push_back("pqrs");
-		dict.push_back("tuv");
-		dict.push_back("wxyz");
+		vector<string> dict;	//	不处理'0'和'1'
+		string htbl[8] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+		for (int i = 0; i != 8; i++)	dict.push_back(htbl[i]);
 		string out;
 		dfs(rslt, dict, digits, 0, out);
 		return rslt;
@@ -176,16 +173,39 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<string> letterCombinations(string digits) {
+		vector<string> hash_tbl;
+		string htbl[8] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+		for (int i = 0; i != 8; i++)	hash_tbl.push_back(htbl[i]);
+		vector<string> rslt;
+		if (digits.empty())	return rslt;
+		string str;
+		dfs(rslt, str, digits, 0, hash_tbl);
+		return rslt;
+	}
+
+	void dfs(vector<string>& rslt, string& str, string& digits, int indx, const vector<string>& hash_tbl) {
+		if (indx == digits.size()) {
+			rslt.push_back(str);
+			return;
+		}
+		for (int i = 0; i != hash_tbl[digits[indx]-'2'].size(); i++) {
+			str += hash_tbl[digits[indx] - '2'][i];
+			dfs(rslt, str, digits, indx + 1, hash_tbl);
+			str.pop_back();
+		}
+	}
+};
+
 int main()
 {
-	string s = "23";	
+	string s = "234";	
 	Solution slt;
-	vector<string> rslt = slt.letterCombinations(s);
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		cout << rslt[i] << ' ';
-	}
-	cout << endl;
+	vector<string> rslt = slt.letterCombinations(s);	
 
+	Solution_v2 s2;
+	vector<string> r2 = s2.letterCombinations(s);
 	return 0;
 }
