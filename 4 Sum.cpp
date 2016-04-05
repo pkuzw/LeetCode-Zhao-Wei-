@@ -35,6 +35,9 @@ A solution set is:
 ///@date	2015.09.17
 ///@version	2.1
 
+///@date	2016.04.05
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -370,7 +373,7 @@ public:
 }; 
 
 // O(n^3)
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算给定数组中所有和为指定值的四元组
 	///@param	nums	数组
@@ -404,34 +407,38 @@ public:
 		vector<vector<int>> ret(rslt.begin(), rslt.end());
 		return ret;
 	}
-// 
-// 
-// 
-// 
-// 
-// 
-//         set<vector<int> > res;
-//         sort(nums.begin(), nums.end());
-//         for (int i = 0; i < int(nums.size() - 3); ++i) {
-//             for (int j = i + 1; j < int(nums.size() - 2); ++j) {
-//                 int left = j + 1, right = nums.size() - 1;
-//                 while (left < right) {
-//                     int sum = nums[i] + nums[j] + nums[left] + nums[right];
-//                     if (sum == target) {
-//                         vector<int> out;
-//                         out.push_back(nums[i]);
-//                         out.push_back(nums[j]);
-//                         out.push_back(nums[left]);
-//                         out.push_back(nums[right]);
-//                         res.insert(out);
-//                         ++left; --right;
-//                     } else if (sum < target) ++left;
-//                     else --right;
-//                 }
-//             }
-//         }
-//         return vector<vector<int> > (res.begin(), res.end());
-//     }
+};
+
+class Solution {
+public:
+	vector<vector<int>> fourSum(vector<int>& nums, int target) {
+		set<vector<int>> rslt;	// set is used to avoid duplicate elements
+		if (nums.size() < 4) {
+			vector<vector<int>> rslt2;
+			return rslt2;
+		}
+		sort(nums.begin(), nums.end());
+		for (int i = 0; i < nums.size() - 3; i++) {
+			for (int j = i + 1; j < nums.size() - 2; j++) {
+				int left = j + 1, right = nums.size() - 1;
+				while (left < right) {
+					int sum = nums[i] + nums[j] + nums[left] + nums[right];
+					if (sum == target) {
+						vector<int> tmp;
+						tmp.push_back(nums[i]);
+						tmp.push_back(nums[j]);
+						tmp.push_back(nums[left++]);
+						tmp.push_back(nums[right--]);
+						rslt.insert(tmp);						
+					}
+					else if (sum < target)	left++;
+					else right--;
+				}
+			}
+		}
+		vector<vector<int>> rslt2(rslt.begin(), rslt.end());
+		return rslt2;
+	}
 };
 
 int main()
@@ -448,30 +455,22 @@ int main()
  			cnt ++;
  		}
  	}
-// 	cout << cnt << endl;
  	for (int i = 0; i < 201; i++)
  	{
  		ivec.push_back(n[i]);
  	}
+
+	int n2[] = {1,0,-1,0,-2,2};
  	
 	vector<int> ivec2;
-	ivec2.push_back(0);
-	ivec2.push_back(0);
-	ivec2.push_back(0);
-	ivec2.push_back(0);
-
+	for (int i = 0; i != 6; i++)	ivec2.push_back(n2[i]);
 	vector<int> ivec3;
 
 	Solution slt;
 	vector<vector<int>> ivvec;
-	ivvec = slt.fourSum(ivec, 2);
-	for (int i = 0; i < ivvec.size(); i++)
-	{
-		for (int j = 0; j < ivvec[i].size(); j++)
-		{
-			cout << ivvec[i][j] << ' ';
-		}
-		cout << endl;
-	}
+	ivvec = slt.fourSum(ivec2, 0);
+	
+	Solution_v2 s2;
+	vector<vector<int>> ivvec2 = s2.fourSum(ivec2, 0);
 	return 0;
 }
