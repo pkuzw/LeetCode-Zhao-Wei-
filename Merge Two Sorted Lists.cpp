@@ -9,6 +9,9 @@
 ///@date	2015.09.22
 ///@version	2.1
 
+///@date	2016.04.06
+///@version	2.2
+
 #include <iostream>
 using namespace std;
 
@@ -114,7 +117,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	归并两个已经排好序的链表
 	///@param	l1	链表1
@@ -141,6 +144,29 @@ public:
 		else	 cur->next = l1;
 		return rslt->next;
     }
+};
+
+class Solution {
+public:
+	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+		ListNode* rslt = new ListNode(0);
+		ListNode* cur = rslt;
+		while (l1 && l2) {
+			if (l1->val < l2->val) {
+				cur->next = l1;
+				l1 = l1->next;
+				cur = cur->next;
+			}
+			else {
+				cur->next = l2;
+				l2 = l2->next;
+				cur = cur->next;
+			}
+		}
+		if (!l1)	cur->next = l2;
+		else	cur->next = l1;
+		return rslt->next;
+	}
 };
 
 int main()
