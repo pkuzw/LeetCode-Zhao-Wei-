@@ -24,6 +24,9 @@
 ///@date	2015.09.22
 ///@versin	2.1
 
+///@date	2016.04.06
+///@version	2.2
+
 #include <iostream>
 using namespace std;
 
@@ -136,14 +139,16 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
     ///@brief   翻转指定长度小组内的元素
 	///@param	head	链表首节点
 	///@param	k		翻转的小组长度
 	///@return	返回翻转后的链表首节点
-	///@note	需要设置一个首节点的前驱节点来返回翻转后的首节点；中间主要的计算部分依赖翻转函数来完成；通过设置一个计数器来计算是否满足到达小组的长度。
-	//			时间复杂度为O(n)，空间复杂度为O(1)。
+	///@note	1. 需要设置一个首节点的前驱节点来返回翻转后的首节点；
+	//			2. 中间主要的计算部分依赖翻转函数来完成；
+	//			3. 通过设置一个计数器来计算是否满足到达小组的长度；
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)。
     ListNode *reverseKGroup(ListNode *head, int k) {
 		if (!head || !head->next || k == 1)	return head;
 		ListNode* dummy = new ListNode(0);
@@ -179,6 +184,39 @@ public:
 		}
 		return last;
     }
+};
+
+class Solution {
+public:
+	ListNode* reverseKGroup(ListNode* head, int k) {
+		if (!head || !head->next || k == 1)	return head;
+		int cnt = 0;
+		ListNode* dummy = new ListNode(0);
+		dummy->next = head;
+		ListNode* cur = head;
+		ListNode* pre = dummy;
+		while (cur) {
+			cnt++;
+			if (cnt % k)	cur = cur->next;			
+			else {
+				pre = reverseList(pre, cur->next);
+				cur = pre->next;
+			}
+		}
+		return dummy->next;
+	}
+
+	ListNode* reverseList(ListNode* pre, ListNode* tail) {
+		ListNode* last = pre->next;
+		ListNode* cur = last->next;
+		while (cur != tail) {
+			last->next = cur->next;
+			cur->next = pre->next;
+			pre->next = cur;
+			cur = last->next;
+		}
+		return last;
+	}
 };
 
 int main()
