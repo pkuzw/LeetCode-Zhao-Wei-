@@ -114,10 +114,7 @@ public:
 
 	void dfs(int left, int right, string str, vector<string>& rslt) {
 		if (left > right)	return;
-		if (!left && !right) {
-			rslt.push_back(str);
-			return;
-		}
+		if (!left && !right)	rslt.push_back(str);					
 		else {
 			if (left)	dfs(left - 1, right, str + "(", rslt);
 			if (right)	dfs(left, right - 1, str + ")", rslt);
