@@ -4,7 +4,8 @@
 
 			For example, given n = 3, a solution set is:
 
-			"((()))", "(()())", "(())()", "()(())", "()()()"
+			"((()))", "(()())", "(())()", "()(())", "()()()" */
+
 ///@author	zhaowei
 ///@date	2015.06.09
 ///@note	字符串的前i位中'('不少于')'就能保证其合法。
@@ -14,7 +15,10 @@
 
 ///@date	2015.09.21
 ///@version	2.1
-*/
+
+///@date	2016.04.06
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -69,12 +73,13 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	构造n对括号所有可能的合法组合
 	///@param	n	括号的对数
 	///@return	返回所有可能的合法组合
-	///@note	递归法：所有的合法构造都要求剩余的右括号数目应该大于等于剩余的左括号数目。所以在递归时当剩余的左括号数目少于剩余的右括号数目时就不再继续递归。当剩余的左右括号数目
+	///@note	递归法：所有的合法构造都要求剩余的右括号数目应该大于等于剩余的左括号数目。
+	//			所以在递归时当剩余的左括号数目少于剩余的右括号数目时就不再继续递归。当剩余的左右括号数目
 	//			都等于0时，则将构造成的字符串压入结果数组。
 	vector<string> generateParenthesis(int n) {
 		vector<string> rslt;
@@ -98,6 +103,29 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<string> generateParenthesis(int n) {
+		vector<string> rslt;
+		string str;
+		dfs(n, n, str, rslt);
+		return rslt;
+	}
+
+	void dfs(int left, int right, string str, vector<string>& rslt) {
+		if (left > right)	return;
+		if (!left && !right) {
+			rslt.push_back(str);
+			return;
+		}
+		else {
+			if (left)	dfs(left - 1, right, str + "(", rslt);
+			if (right)	dfs(left, right - 1, str + ")", rslt);
+		}
+
+	}
+};
+
 int main()
 {
 	vector<string> parentheses;
@@ -105,11 +133,8 @@ int main()
 
 	Solution slt;
 	parentheses	= slt.generateParenthesis(n);
-
-	for (auto i = 0; i != parentheses.size(); i++)
-	{
-		cout << parentheses[i] << endl;
-	}
-
+	
+	Solution_v2 s2;
+	vector<string> p2 = s2.generateParenthesis(n);
 	return 0;
 }
