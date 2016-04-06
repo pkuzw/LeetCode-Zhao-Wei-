@@ -15,6 +15,9 @@
 ///@date	2015.09.22
 ///@version	2.1
 
+///@date	2016.04.06
+///@version	2.2
+
 #include <iostream>
 using namespace std;
 
@@ -97,14 +100,17 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将链表中两个相邻元素交换位置
 	///@param	head	链表首节点
 	///@return	返回交换相邻两元素的新链表节点
-	///@note	需要在链表头设置一个表首前驱节点，用来返回；在每次交换时，通过计数器的累加值是否为偶数来判断是否需要交换两个相邻元素；需要一个指针来保存交换前这对节点的后继节点。
-	//			还需要一个临时变量来保存交换的后一个节点；前一个节点可以通过交换节点对的前驱节点来访问。
-	//			时间复杂度为O(n)，空间复杂度为O(1)。
+	///@note	1. 需要在链表头设置一个表首前驱节点，用来返回；
+	//			2. 在每次交换时，通过计数器的累加值是否为偶数来判断是否需要交换两个相邻元素；
+	//			3. 需要一个指针来保存交换前这对节点的后继节点；
+	//			4. 还需要一个临时变量来保存交换的后一个节点；
+	//			5. 前一个节点可以通过交换节点对的前驱节点来访问；
+	//			6. 时间复杂度为O(n)，空间复杂度为O(1)。
 	ListNode* swapPairs(ListNode* head) {
 		if (!head || !head->next)	return head;
 		ListNode* dummy = new ListNode(0);
@@ -127,6 +133,36 @@ public:
 				pre = cur;
 				cur = cur->next;
 				if (next) next = next->next;
+			}
+		}
+		return dummy->next;
+	}
+};
+
+class Solution {
+public:
+	ListNode* swapPairs(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* dummy = new ListNode(0);
+		dummy->next = head;
+		ListNode* pre = dummy;
+		ListNode* cur = head;
+		ListNode* next = cur->next;
+		int cnt = 0;
+		while (cur) {
+			cnt++;
+			if (cnt % 2) {
+				if (next)	next = next->next;
+				else	break;
+			}
+			else {
+				ListNode* last = cur->next;
+				cur->next = next;
+				last->next = pre->next;
+				pre->next = last;
+				pre = cur;
+				cur = cur->next;
+				if (next)	next = next->next;
 			}
 		}
 		return dummy->next;
