@@ -11,6 +11,9 @@
 
 ///@date	2015.09.22
 ///@version	2.1
+
+///@date    2016.04.07
+///@version 2.2
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -59,7 +62,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	移除数组中的指定元素
 	///@param	nums	数组，元素未排序
@@ -76,6 +79,16 @@ public:
 			}
 		}
 		return j;
+    }
+};
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int j = 0;
+        for (int i = 0; i != nums.size(); i++)
+            if (nums[i] != val) nums[j++] = nums[i];
+        return j;
     }
 };
 
