@@ -13,6 +13,9 @@
 ///@date	2015.09.22
 ///@version	2.1
 
+///@date    2016.04.07
+///@version 2.2
+
 #include <iostream>
 using namespace std;
 
@@ -107,18 +110,20 @@ public:
 };
 
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	不用乘法、除法或求模运算来计算两个int型变量的除法
 	///@param	dividend	被除数
 	///@param	divisor		除数
 	///@return	返回商
-	///@note	首先，需要做好溢出的情况处理，对于除数为0或者被除数为INT_MIN且除数为-1的情况，直接返回INT_MAX；然后用一个标识符记录下商的符号。在对二者取绝对值后就可以进入运算环节了。
-	//			因为不能用乘法、除法和取模运算，除法的本质就是做减法，计算被除数是由多少个除数组成的。所以为了加快累计除数的速度，这里引入左移运算。可以将时间复杂度提高到O(logn)。
+	///@note	1. 首先，需要做好溢出的情况处理，对于除数为0或者被除数为INT_MIN且除数为-1的情况，直接返回INT_MAX；
+    //          2. 然后用一个标识符记录下商的符号。在对二者取绝对值后就可以进入运算环节了；
+    //          3. 为了防止中间结果溢出，采用long型变量做中间值；
+	//          4. 因为不能用乘法、除法和取模运算，除法的本质就是做减法，计算被除数是由多少个除数组成的。所以为了加快累计除数的速度，这里引入左移运算;
+    //          5. 可以将时间复杂度提高到O(logn)。
     int divide(int dividend, int divisor) {
 		if (!divisor || (dividend == INT_MIN && divisor == -1))	return INT_MAX;
-		if (divisor == 1)	return dividend;
-		int sign = (divisor < 0) ^ (dividend < 0) ? -1 : 1;
+        int sign = (divisor < 0) ^ (dividend < 0) ? -1 : 1;
 		long m = labs(dividend), n = labs(divisor);
 		int rslt = 0;
 		while (m >= n) {
@@ -135,6 +140,26 @@ public:
     }
 };
 
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if (!divisor || (dividend == INT_MIN && divisor == -1)) return INT_MAX;
+        int sign = (dividend < 0) ^ (divisor < 0) ? -1 : 1; //  不允许使用乘法，所以不能用二者相乘是否为负来判定结果的符号
+        int rslt = 0;
+        long m = labs(dividend), n = labs(divisor);
+        while (m >= n) {
+            long k = n;
+            int i = 1;
+            while (k >= 0 && m >= k) {
+                m -= k;
+                rslt += i;
+                k <<= 1;
+                i <<= 1;
+            }
+        }
+        return rslt * sign;
+    }
+};
 
 
 int main()
@@ -145,7 +170,5 @@ int main()
 
 	Solution slt;
 	int d = slt.divide(dividend, divisor);
-	cout << dividend / (divisor) << "		" << d << endl;
-
 	return 0;
 }
