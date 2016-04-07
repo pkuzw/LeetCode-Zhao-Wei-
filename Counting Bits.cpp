@@ -3,6 +3,9 @@
 ///@date	2016.03.29
 ///@version	1.0
 
+///@date	2016.04.07
+///@version	1.1
+
 #include <vector>
 using namespace std;
 
@@ -31,14 +34,12 @@ public:
 					return rslt;
 			}
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 		return rslt;
 	}
 };
 
 int main() {
+	Solution slt;
+	vector<int> rslt = slt.countBits(10);
 	return 0;
 }
