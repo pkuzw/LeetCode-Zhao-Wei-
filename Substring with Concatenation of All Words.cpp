@@ -21,6 +21,9 @@
 ///@date	2015.09.23
 ///@version	2.1
 
+///@date    2016.04.07
+///@version 2.2
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -188,14 +191,16 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定一个字符串和一组词典，词典中的每个单词的长度都是固定的。找出所有在字符串中单词全部相连出现的首元素下标。
 	///@param	s	字符串
 	///@param	words	词典
 	///@return	返回所有单词相连（顺序无关）后在字符串中出现位置的下标数组
-	///@note	先用一个hash table来保存每个单词的出现数目；再用一个hash table来保存字符串中连续出现的单词数目。如果未能在字符串中找到某个单词或者这个单词出现的次数超过了词典中
-	//			出现的次数，那么就进行下一次匹配。假设字符串长度为n，单词数目为m，单词长度为k，时间复杂度为O(mnk)，空间复杂度为O(mk)。
+	///@note	1. 先用一个hash table来保存每个单词的出现数目；
+    //          2. 再用一个hash table来保存字符串中连续出现的单词数目。如果未能在字符串中找到某个单词或者这个单词出现的次数超过了词典中
+	//			出现的次数，那么就进行下一次匹配。
+    //          3. 假设字符串长度为n，单词数目为m，单词长度为k，时间复杂度为O(mnk)，空间复杂度为O(mk)。
     vector<int> findSubstring(string s, vector<string>& words) {
 		vector<int> rslt;
 		if (s.empty() || words.empty() || s.size() < words.size() * words[0].size())	return rslt;
@@ -213,6 +218,29 @@ public:
 			if (j == words.size())	rslt.push_back(i);
 		}
 		return rslt;
+    }
+};
+
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> rslt;
+        if (s.empty() || words.empty() || s.size() < words.size() * words[0].size())    return rslt;
+        int i = 0, j = 0;
+        int word_len = words[0].size(), word_cnt = words.size();
+        unordered_map<string, int> hash_tbl1;
+        for (i = 0; i != word_cnt; i++) hash_tbl1[words[i]]++;
+        for (i = 0; i <= s.size() - word_len * word_cnt; i++) {
+            unordered_map<string, int> hash_tbl2;
+            for (j = 0; j < word_cnt; j++) {
+                string tmp = s.substr(i + j * word_len, word_len);
+                if (hash_tbl1.find(tmp) == hash_tbl1.end()) break;
+                hash_tbl2[tmp]++;
+                if (hash_tbl2[tmp] > hash_tbl1[tmp])    break;
+            }
+            if (j == word_cnt)  rslt.push_back(i);
+        }
+        return rslt;
     }
 };
 
