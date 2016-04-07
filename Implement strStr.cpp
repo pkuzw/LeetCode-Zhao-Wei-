@@ -14,6 +14,9 @@
 ///@date	2015.09.22
 ///@version	2.1
 
+///@date    2016.04.07
+///@version 2.2
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -70,7 +73,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算字符串中指定子串第一次出现的位置
 	///@param	haystack	字符串
@@ -91,11 +94,27 @@ public:
     }
 };
 
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if (needle.empty()) return 0;
+        if (needle.size() > haystack.size())    return -1;
+        int i = 0, j = 0;
+        for (i = 0; i < haystack.size() - needle.size() + 1; i++) {
+            for (j = 0; j < needle.size(); j++) {
+                if (needle[j] != haystack[i+j])   break;
+            }
+            if (j == needle.size()) return i;
+        }
+        return -1;
+    }
+};
+
 int main()
 {
 	string s = "hello";
 	string n = "ll";
 	Solution slt;
-	cout <<slt.strStr(s, n) << endl;
+	int rslt = slt.strStr(s, n);
 	return 0;
 }
