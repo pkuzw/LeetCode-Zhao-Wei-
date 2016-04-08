@@ -19,6 +19,9 @@
 ///@date	2015.09.23
 ///@version	2.1
 
+///@date	2016.04.08
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <stack>
@@ -168,7 +171,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算最长的合法括号字符串长度
 	///@param	s	字符串
@@ -193,6 +196,27 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	int longestValidParentheses(string s) {
+		int rslt = 0;
+		int start = 0;
+		stack<int> stk;
+		for (int i = 0; i != s.size(); i++) {
+			if (s[i] == '(')	stk.push(i);
+			else {
+				if (stk.empty())	start = i + 1;
+				else {
+					stk.pop();
+					if (stk.empty())	rslt = max(rslt, i - start + 1);
+					else				rslt = max(rslt, i - stk.top());					
+				}
+			}
+		}
+		return rslt;
+	}
 };
 
 int main()
