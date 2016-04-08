@@ -20,10 +20,13 @@
 ///@date	2015.09.23
 ///@version	2.1
 
+///@date	2016.04.08
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 using namespace std;
-/*
+
 class Solution_v1
 {
 public:
@@ -175,9 +178,9 @@ public:
 		}
 	}
 };
-*/
 
-class Solution {
+
+class Solution_v2 {
 public:
 	///@brief	查找出有序数组中指定元素的范围
 	///@param	nums	数组
@@ -204,6 +207,29 @@ public:
 			else	l = mid + 1;
 		}
 		rslt[1] = l - 1;		//	跳出循环后的l是右边界的后一位
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	vector<int> searchRange(vector<int>& nums, int target) {
+		vector<int> rslt(2, -1);
+		int l = 0, r = nums.size() - 1;
+		while (l < r) {
+			int m = (l + r) / 2;
+			if (nums[m] < target)	l = m + 1;
+			else r = m;
+		}
+		if (nums[l] != target)	return rslt;
+		rslt[0] = l;
+		r = nums.size();
+		while (l < r) {
+			int m = (l + r) / 2;
+			if (nums[m] > target)	r = m;
+			else l = m + 1;
+		}
+		rslt[1] = l - 1;
 		return rslt;
 	}
 };
