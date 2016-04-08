@@ -32,6 +32,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 using namespace std;
 
 
@@ -180,7 +181,7 @@ public:
 				}
 			}
 		}
-		reverse(nums.begin(), nums.end());
+		reverse(nums.begin(), nums.end());		
 	}
 };
 
