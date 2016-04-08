@@ -20,11 +20,14 @@
 ///@date	2015.09.23
 ///@version	2.1
 
+///@date	2016.04.08
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
-/*
+
 class Solution_v1
 {
 public:
@@ -95,8 +98,8 @@ public:
 		}
 	}
 };
-*/
-class Solution{
+
+class Solution_v2 {
 public:
 	///@brief	查找目标值元素的下标，如果它存在在数组中，则返回所在下标，否则返回应该插入的位置。假设数组中没有重复元素
 	///@param	nums	已经排好序的数组
@@ -113,6 +116,20 @@ public:
 		}
 		return l;
     }
+};
+
+class Solution {
+public:
+	int searchInsert(vector<int>& nums, int target) {
+		int l = 0, r = nums.size() - 1;
+		while (l <= r) {
+			int m = (l + r) / 2;
+			if (nums[m] == target)	return m;
+			else if (nums[m] < target)	l = m + 1;
+			else	r = m - 1;		
+		}
+		return l;
+	}
 };
 
 int main()
