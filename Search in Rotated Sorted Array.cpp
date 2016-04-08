@@ -18,6 +18,9 @@
 ///@date	2015.09.23
 ///@version	2.1
 
+///@date	2016.04.08
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -176,7 +179,7 @@ private:
 	}	
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	在一个翻转（轴值未知）的排好序的数组中查找一个元素
 	///@param	nums	数组
@@ -199,6 +202,26 @@ public:
 			else {
 				if (target <= nums[r] && target > nums[mid])	l = mid + 1;
 				else	r = mid - 1;
+			}
+		}
+		return -1;
+	}
+};
+
+class Solution {
+public:
+	int search(vector<int>& nums, int target) {
+		int l = 0, r = nums.size() - 1;
+		while (l <= r) {
+			int m = (l + r) / 2;
+			if (nums[m] == target)	return m;
+			else if (nums[m] < nums[r]) {
+				if (nums[m] < target && target <= nums[r])	l = m + 1;
+				else	r = m - 1;				
+			}
+			else {
+				if (nums[l] <= target && target < nums[m])	r = m - 1;
+				else	l = m + 1;
 			}
 		}
 		return -1;
