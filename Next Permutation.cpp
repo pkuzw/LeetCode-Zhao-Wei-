@@ -26,6 +26,9 @@
 ///@date	2015.09.23
 ///@version	3.0
 
+///@date	2016.04.08
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -151,7 +154,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	计算给定数组的下一个字典序排列
 	///@param	nums	数组
@@ -159,6 +162,25 @@ public:
 	///@note	STL<algorithm>中提供一个方法，能够计算下一个排列。next_permutation(iter_beg, iter_end, cmp)。与之相对应的是prev_permutation(iter_beg, iter_end)
 	void nextPermutation(vector<int>& nums) {
 		next_permutation(nums.begin(), nums.end());
+	}
+};
+
+class Solution {
+public:
+	void nextPermutation(vector<int>& nums) {
+		if (nums.empty())	return;
+		for (int i = nums.size() - 2; i >= 0; i--) {
+			if (nums[i] < nums[i + 1]) {
+				for (int j = nums.size() - 1; j >= i; j--) {
+					if (nums[j] > nums[i]) {
+						swap(nums[i], nums[j]);
+						reverse(nums.begin() + i + 1, nums.end());
+						return;
+					}
+				}
+			}
+		}
+		reverse(nums.begin(), nums.end());
 	}
 };
 
