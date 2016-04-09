@@ -20,10 +20,13 @@
 ///@version	1.0
 
 ///@date    2015.09.04
-///@version 2.0
+///@version 1.1
 
 ///@date	2015.09.24
-///@version 2.1
+///@version 1.2
+
+///@date	2016.04.09
+///@version	1.3
 
 #include <iostream>
 #include <vector>
@@ -74,7 +77,7 @@ private:
 	vector<vector<int>> combinations;	//	所有可能的组合集合
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@brief	给定一组数组（乱序）和一个给定值，计算所有可能的组合和为给定值，其中元素能够重复出现。
 	///@param	candidates	乱序数组
@@ -110,6 +113,28 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+		if (candidates.empty())	return combination;
+		vector<int> comb;
+		sort(candidates.begin(), candidates.end());
+		dfs(candidates, comb, 0, target);
+		return combination;
+	}
+
+	void dfs(vector<int>& candidates, vector<int>& comb, int indx, int target) {
+		if (!target)	combination.push_back(comb);
+		for (int i = indx;  i < candidates.size() && candidates[i] <= target; i++) {
+			comb.push_back(candidates[i]);
+			dfs(candidates, comb, i, target - candidates[i]);
+			comb.pop_back();
+		}
+	}
+
+	vector<vector<int>> combination;
+};
+
 int main()
 {
 	vector<int> test;
@@ -123,13 +148,7 @@ int main()
 	Solution slt;
 	vector<vector<int>> rslt = slt.combinationSum(test, 12);
 
-	for (int i = 0; i < rslt.size(); i++)
-	{
-		for (int j = 0; j < rslt[i].size(); j++)
-		{
-			cout << rslt[i][j] << ' ';
-		}
-		cout << endl;
-	}
+	Solution_v1_1 s11;
+	vector<vector<int>> r11 = s11.combinationSum(test, 12);
 	return 0;
 }
