@@ -16,6 +16,9 @@
 
 ///@date	2015.09.23
 ///@version	2.1
+
+///@date	2016.04.09
+///@version	2.2
 #include <iostream>
 #include <vector>
 
@@ -93,14 +96,16 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	验证一个数独是否合法
 	///@param	board	数独表。空白格子用'.'表示。
 	///@return	如果数独的每一行、每一列和每一个3*3的小正方形都没有重复数字，则返回true；否则返回false。
-	///@note	用三个9*9的bool型二维数组分表来标记数独的每一个行、每一列和每一个3*3的小正方形是否有重复数字出现。初始时这个bool型矩阵是false，每次遇到数字，就将对应的位置置为true。
-	//			其中k = board[i][j] - '1'，行标记矩阵是[i][k]，列标记矩阵为[k][j]，小正方形标记矩阵为[3 * (i / 3) + j / 3][k]（相当于从左至右标记为0，1，2，然后转换到第二行小矩阵
-	//			接着标记为3，4，5，最后一行小矩阵为6，7，8.）时间复杂度为O(n^2)，空间复杂度为O(n^2)。
+	///@note	1. 用三个9*9的bool型二维数组分表来标记数独的每一个行、每一列和每一个3*3的小正方形是否有重复数字出现。
+	//			2. 初始时这个bool型矩阵是false，每次遇到数字，就将对应的位置置为true。
+	//			3. 其中k = board[i][j] - '1'，行标记矩阵是[i][k]，列标记矩阵为[k][j]，小正方形标记矩阵为[3 * (i / 3) + j / 3][k]（相当于从左至右标记为0，1，2，然后转换到第二行小矩阵
+	//			接着标记为3，4，5，最后一行小矩阵为6，7，8.）.
+	//			4. 时间复杂度为O(n^2)，空间复杂度为O(n^2)。
     bool isValidSudoku(vector<vector<char>>& board) {
 		if (board.empty() || board[0].empty())	return false;
 		const int len = board.size();
@@ -120,6 +125,24 @@ public:
 		}
 		return true;
     }
+};
+
+class Solution {
+public:
+	bool isValidSudoku(vector<vector<char>>& board) {
+		int len = board.size();
+		vector<vector<bool>> row(len, vector<bool>(len, false)), col(len, vector<bool>(len, false)), sma(len, vector<bool>(len, false));
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				if (board[i][j] != '.') {
+					int k = board[i][j] - '1';
+					if (row[i][k] ||  col[k][j] || sma[3*(i/3)+j/3][k])	return false;
+					row[i][k] = col[k][j] = sma[3*(i/3)+j/3][k] = true;
+				}
+			}
+		}
+		return true;
+	}
 };
 
 int main()
