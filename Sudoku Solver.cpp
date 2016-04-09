@@ -16,6 +16,9 @@
 ///@date	2015.09.23
 ///@version	2.1
 
+///@date	2016.04.09
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -119,7 +122,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算数独的一个解。假设给定的数独有且只有一个解
 	///@param	board	数独
@@ -164,6 +167,40 @@ public:
 			if (j != col && board[row][j] == board[row][col])	return false;
 		for (int i = 3 * (row / 3); i != 3 * (row / 3) + 3; i++)
 			for (int j = 3 * (col / 3); j != 3 * (col / 3) + 3; j++)
+				if (i != row && j != col && board[i][j] == board[row][col])	return false;
+		return true;
+	}
+};
+
+class Solution {
+public:
+	void solveSudoku(vector<vector<char>>& board) {
+		if (board.empty() || board[0].empty())	return;
+		dfs(board, 0, 0);
+	}
+
+	bool dfs(vector<vector<char>>& board, int row, int col) {
+		if (row == 9)	return true;
+		if (col == 9)	return dfs(board, row + 1, 0);
+		if (board[row][col] == '.') {
+			for (int i = 0; i < 9; i++) {
+				board[row][col] = '1' + i;
+				if (isValid(board, row, col))
+					if (dfs(board, row, col + 1))	return true;
+				board[row][col] = '.';				
+			}
+		}
+		else	return dfs(board, row, col + 1);
+		return false;
+	}
+
+	bool isValid(vector<vector<char>>& board, int row, int col) {
+		for (int i = 0; i < 9; i++)
+			if (i != row && board[i][col] == board[row][col])	return false;
+		for (int j = 0; j < 9; j++)
+			if (j != col && board[row][j] == board[row][col])	return false;
+		for (int i = 3 * (row / 3); i < 3 * (row / 3) + 3; i++)
+			for (int j = 3 * (col / 3); j < 3 * (col / 3) + 3; j++)
 				if (i != row && j != col && board[i][j] == board[row][col])	return false;
 		return true;
 	}
