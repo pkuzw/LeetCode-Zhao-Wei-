@@ -21,6 +21,9 @@
 ///@date	2015.10.09
 ///@version	2.1
 
+///@date	2016.04.11
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -94,7 +97,7 @@ public:
 
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算跳到尾元素的最小步数
 	///@param	nums	格子
@@ -118,6 +121,22 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	int jump(vector<int>& nums) {
+		int cur = 0, pre = 0, i = 0, rslt = 0;
+		while (cur < nums.size() - 1) {
+			pre = cur;
+			while (i <= pre) {
+				cur = max(cur, i + nums[i]);
+				i++;
+			}
+			rslt++;
+		}
+		return rslt;
+	}
 };
 
 int main()
