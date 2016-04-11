@@ -28,6 +28,10 @@
 
 ///@date	2015.09.24
 ///@version	2.1
+
+///@date	2016.04.11
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -189,16 +193,17 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	带有通配符字符串的匹配。'*'可以匹配任意字符串，包括空串；'?'可以匹配任意单个字符，但不可以是空字符。
 	///@param	s	待匹配的字符串
 	///@param	p	有通配符的字符串
 	///@return	如果s和p匹配，则返回true；否则返回false
-	///@note	逐个字符向后匹配。用两个变量m和n分别保存当遇到通配符'*'时，i和j在s和p中的下标，当s[i]和p[j]不匹配且p[j]不为'?'，在存在通配符'*'的条件下，就将i更新到++m
+	///@note	1. 逐个字符向后匹配。
+	//			2. 用两个变量m和n分别保存当遇到通配符'*'时，i和j在s和p中的下标，当s[i]和p[j]不匹配且p[j]不为'?'，在存在通配符'*'的条件下，就将i更新到++m
 	//			（这里不能是m + 1，因为需要不断的向后尝试抵消不匹配的s中子串，这是最巧妙的一点），将j更新到n + 1.如果还是不匹配，则返回false。当遍历完s后，如果p还有剩余子串，
 	//			除非都是'*'，否则也是false。
-	//			这里需要注意的是每次用i或j访问字符串中字符时，需要保证其不越界。	
+	//			3. 这里需要注意的是每次用i或j访问字符串中字符时，需要保证其不越界。	
     bool isMatch(string s, string p) {
 		int i = 0;	//	s的下标
 		int j = 0;	//	p的下标
@@ -222,6 +227,30 @@ public:
 		while (j < p.size() && p[j] == '*')	j++;	//	如果s已经匹配完毕，p还有剩余的话，除非全部都是'*'，否则二者不匹配
 		return j == p.size();
     }
+};
+
+class Solution {
+public:
+	bool isMatch(string s, string p) {
+		int i = 0, j = 0, m = -1, n = -1;
+		while (i < s.size()) {
+			if (j < p.size() && (s[i] == p[j] || p[j] == '?')) {
+				i++;
+				j++;
+			}
+			else if (j < p.size() && p[j] == '*') {
+				m = i;
+				n = j++;
+			}
+			else if (m >= 0) {
+				i = ++m;
+				j = n + 1;			
+			}
+			else return false;
+		}
+		while (j < p.size() && p[j] == '*')	j++;
+		return j == p.size();
+	}
 };
 
 int main()
