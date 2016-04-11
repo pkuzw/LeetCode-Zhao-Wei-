@@ -15,6 +15,10 @@
 
 ///@date	2015.09.24
 ///@version	2.1
+
+///@date	2016.04.11
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -144,13 +148,15 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算能够储存的雨水量
 	///@param	height	地面的高度值
 	///@return	返回所储存雨水的总量
-	///@note	动态规划。利用一个数组dp[i]先从左至右保存好i处左侧的最高值，然后再从右向左遍历，保存好i处左侧最大值和右侧最大值之间的较小值。然后通过判断当前位置的地形高度和dp[i]
-	//			的差值是否大于0，如果是就将其差累计进结果。时间复杂度为O(n)，空间复杂度为O(n)。
+	///@note	1. 动态规划。
+	//			2. 利用一个数组dp[i]先从左至右保存好i处左侧的最高值，然后再从右向左遍历，保存好i处左侧最大值和右侧最大值之间的较小值。
+	//			3. 然后通过判断当前位置的地形高度和dp[i]的差值是否大于0，如果是就将其差累计进结果。
+	//			4. 时间复杂度为O(n)，空间复杂度为O(n)。
     int trap(vector<int>& height) {
 		if (height.empty())	return 0;
 		vector<int> dp(height.size(), 0);
@@ -168,6 +174,27 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	int trap(vector<int>& height) {
+		if (height.empty())	return 0;
+		vector<int> dp(height.size(), 0);
+		int maxi = 0;
+		for (int i = 0; i != height.size(); i++) {
+			dp[i] = maxi;
+			maxi = max(maxi, height[i]);
+		}
+		maxi = 0;
+		int rslt = 0;
+		for (int i = height.size() - 1; i >= 0; i--) {
+			dp[i] = min(maxi, dp[i]);
+			maxi = max(height[i], maxi);
+			if (dp[i] - height[i] > 0)	rslt += dp[i] - height[i];
+		}
+		return rslt;
+	}
 };
 
 int main()
