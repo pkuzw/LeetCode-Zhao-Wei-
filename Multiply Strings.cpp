@@ -13,6 +13,10 @@
 
 ///@date	2015.09.24
 ///@version	2.1
+
+///@date	2016.04.11
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -148,7 +152,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	大整数相乘
 	///@param	num1	乘数1
@@ -178,6 +182,30 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	string multiply(string num1, string num2) {
+		int n1 = num1.size(), n2 = num2.size();
+		int k = n1 + n2 - 2;
+		vector<int> mult(n1 + n2, 0);
+		for (int i = 0; i != n1; i++)
+			for (int j = 0; j != n2; j++)
+				mult[k-i-j] += (num1[i] - '0') * (num2[j] - '0');
+		int carry = 0;
+		for (int i = 0; i != n1 + n2; i++) {
+			mult[i] += carry;
+			carry = mult[i] / 10;
+			mult[i] %= 10;
+		}
+		int l = n1 + n2 -1;
+		while (l >= 0 && !mult[l])	l--;
+		if (l < 0)	return "0";
+		string rslt;
+		while (l >= 0)	rslt += mult[l--] + '0';
+		return rslt;
+	}
 };
 
 int main()
