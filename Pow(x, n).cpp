@@ -7,6 +7,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2016.04.12
+///@version	2.1
+
 #include <iostream>
 using namespace std;
 
@@ -98,7 +101,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算x的n次方，n有可能为负
 	///@param	x	底数
@@ -122,16 +125,28 @@ public:
 	}
 };
 
+class Solution {
+public:
+	double myPow(double x, int n) {
+		if (n < 0)	return 1 / helper(x, -n);
+		return helper(x, n);
+	}
+
+	double helper(double x, int n) {
+		if (!n)	return 1;
+		double half = helper(x, n / 2);
+		if (n % 2)	return x * half * half;
+		else	return half * half;
+	}
+};
+
 int main()
 {
-	int n;
-	double x;
+	int n = 2;
+	double x = 3.3;
 	Solution slt;
     Solution_v1 slt_v1;
-	while (cin >> x >> n)
-	{
-		cout << slt.myPow(x, n) << endl;
-        cout << slt_v1.myPow(x, n) << endl;
-	}
+	double r1 = slt_v1.myPow(x, n);
+	double r = slt.myPow(x, n);
 	return 0;
 }
