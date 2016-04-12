@@ -145,17 +145,9 @@ public:
 	}
 };
 
-int main()
-{
-	
+int main() {	
 	vector<string> test;
-	
-//	int k = 0;
-//	while (str[k] != "extemporizing")
-//	{
-//		test.push_back(str[k]);
-//		k++;
-//  }
+
     test.push_back("cat");
     test.push_back("atc");
     test.push_back("act");
@@ -163,26 +155,9 @@ int main()
     test.push_back("god");
     test.push_back("bul");
 
-// 	string a;
-// 	while (cin >> a)
-// 	{
-// 		if (a == "break")
-// 		{
-// 			break;
-// 		}
-// 		test.push_back(a);
-// 	}
 	Solution slt;
 	vector<vector<string>> rslt = slt.groupAnagrams(test);
-	for (int i = 0; i != rslt.size(); i++)
-	{
-        for (int j = 0; j != rslt[i].size(); j++)
-            cout << rslt[i][j] << ' ';
-        cout << endl;
-	}
-	cout << endl;
-	cout << rslt.size() << endl;
-	cout << endl;
+
 	return 0;
 }
 
