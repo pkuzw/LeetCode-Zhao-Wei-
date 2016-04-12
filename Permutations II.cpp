@@ -20,6 +20,9 @@
 ///@date	2015.10.14
 ///@version	2.1
 
+///@date	2016.04.12
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -86,7 +89,7 @@ private:
 	vector<vector<int>> rslt;	//	结果数组
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算所有可能的排列，但是不包括重复的排列
 	///@param	nums	候选元素数组
@@ -108,8 +111,7 @@ public:
 	///@note	在一次递归结束后选择新的元素下标时，要排除上一次压入的相同元素
 	void dfs(vector<vector<int>>& rslt, vector<int> pmt, vector<int> nums) {
 		if (nums.empty()) rslt.push_back(pmt);
-		else {
-			int i = 0;
+		else {			
 			for (int i = 0; i != nums.size(); i++) {
 				pmt.push_back(nums[i]);
 				vector<int> new_nums;
@@ -123,6 +125,35 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<vector<int>> permuteUnique(vector<int>& nums) {
+		if (nums.empty())	return rslt;
+		vector<int> pmt;
+		sort(nums.begin(), nums.end());
+		dfs(nums, pmt);
+		return rslt;
+	}
+
+	void dfs(vector<int> nums, vector<int>& pmt) {
+		if (nums.empty()) {
+			rslt.push_back(pmt);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++) {
+			pmt.push_back(nums[i]);
+			vector<int> new_nums;
+			for (int j = 0; j != nums.size(); j++)
+				if (j != i)	new_nums.push_back(nums[j]);
+			dfs(new_nums, pmt);
+			pmt.pop_back();
+			while(i < nums.size() - 1 && nums[i] == nums[i+1])	i++;
+		}
+	}
+
+	vector<vector<int>> rslt;
+};
+
 int main()
 {
 	vector<int> test;
@@ -131,28 +162,8 @@ int main()
 	test.push_back(1);
     test.push_back(1);
 	Solution slt;
-    Solution_v1 slt_v1;
-    vector<vector<int>> rslt_v1 = slt_v1.permuteUnique(test);
-    for (int i = 0; i != rslt_v1.size(); i++)
-    {
-        for (int j = 0; j != rslt_v1[i].size(); j++)
-        {
-            cout << rslt_v1[i][j] << ' ';
-        }
-        cout << endl;
-    }
-    cout << endl;
-
+    Solution_v2 slt_v2;
+    vector<vector<int>> rslt_v2 = slt_v2.permuteUnique(test);    
 	vector<vector<int>> rslt = slt.permuteUnique(test);
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		for (int j = 0; j != rslt[i].size(); j++)
-		{
-			cout << rslt[i][j] << ' ';
-		}
-		cout << endl;
-	}
-
-	cout << rslt.size() << endl;
 	return 0;
 }
