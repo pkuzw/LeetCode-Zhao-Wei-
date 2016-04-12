@@ -17,6 +17,10 @@
 ///@date	2015.10.14
 ///@version	2.1
 
+///@date	2016.04.12
+///@version	2.2
+
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -103,7 +107,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将一个n * n的二维矩阵顺时针翻转九十度
 	///@param	matrix	二维矩阵
@@ -129,6 +133,17 @@ public:
 		for (int i = 0; i != matrix.size(); i++) 
 			for (int j = 0; j != matrix.size() / 2; j++)
 				swap(matrix[j][i], matrix[matrix.size() - 1 - j][i]);		
+	}
+};
+
+class Solution {
+public:
+	void rotate(vector<vector<int>>& matrix) {
+		for (int i = 0; i != matrix.size(); i++)
+			for (int j = i + 1; j != matrix.size(); j++)
+				swap(matrix[i][j], matrix[j][i]);
+		for (int i = 0; i != matrix.size(); i++)
+			reverse(matrix[i].begin(), matrix[i].end());		
 	}
 };
 
