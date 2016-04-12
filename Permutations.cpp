@@ -15,6 +15,9 @@
 ///@date	2015.10.14
 ///@version	2.1
 
+///@date	2016.04.12
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <deque>
@@ -136,7 +139,7 @@ private:
 	vector<vector<int>> rslt;	//	结果数组
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定候选元素数组，计算所有可能的组合
 	///@param	nums	候选元素数组
@@ -172,6 +175,33 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<vector<int>> permute(vector<int>& nums) {
+		if (nums.empty())	return rslt;
+		vector<int> pmt;
+		dfs(pmt, nums);
+		return rslt;
+	}
+
+	void dfs(vector<int>& pmt, vector<int> nums) {
+		if (nums.empty()) {
+			rslt.push_back(pmt);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++) {
+			pmt.push_back(nums[i]);
+			vector<int> new_nums;
+			for (int j = 0; j != nums.size(); j++)
+				if (j != i)	new_nums.push_back(nums[j]);
+			dfs(pmt, new_nums);
+			pmt.pop_back();			
+		}
+	}
+
+	vector<vector<int>> rslt;
+};
+
 int main()
 {
 	Solution slt;
@@ -183,6 +213,8 @@ int main()
  	nums.push_back(2);
 	rslt = slt.permute(nums);
     
+	Solution_v2 s2;
+	vector<vector<int>> r2 = s2.permute(nums);
     Solution_v1 slt_v1;
     vector<vector<int>> rslt2;
     rslt2 = slt_v1.permuteUnique(nums);
