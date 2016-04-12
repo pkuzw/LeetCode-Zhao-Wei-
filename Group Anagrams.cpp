@@ -16,6 +16,9 @@
 ///@date    2015.09.04
 ///@version 2.0
 
+///@date	2016.04.12
+///@version	2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -102,7 +105,7 @@ private:
 	vector<string> anagrams_vec;	//结果数组
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将所有的变形词进行归类，对于每一组变形词，按照字母升序排序
 	///@param	strs	变形词数组
@@ -122,6 +125,24 @@ public:
 		}
 		return rslt;
     }
+};
+
+class Solution {
+public:
+	vector<vector<string>> groupAnagrams(vector<string>& strs) {
+		vector<vector<string>> rslt;
+		unordered_map<string, multiset<string>> hash_tbl;
+		for (int i = 0; i != strs.size(); i++) {
+			string tmp = strs[i];
+			sort(tmp.begin(), tmp.end());
+			hash_tbl[tmp].insert(strs[i]);
+		}
+		for (unordered_map<string, multiset<string>>::iterator i = hash_tbl.begin(); i != hash_tbl.end(); i++) {
+			vector<string> tmp(i->second.begin(), i->second.end());
+			rslt.push_back(tmp);
+		}
+		return rslt;
+	}
 };
 
 int main()
