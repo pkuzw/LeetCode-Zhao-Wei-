@@ -11,6 +11,8 @@ Now, instead outputting board configurations, return the total number of distinc
 ///@date    2015.09.03
 ///@version 2.0
 
+///@date	2016.04.13
+///@version	2.1
 
 #include <vector>
 #include <string>
@@ -180,7 +182,7 @@ private:
 	}	
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算n皇后问题的结果数
 	///@param	n	皇后数目
@@ -221,13 +223,43 @@ public:
     }
 };
 
+class Solution {
+public:
+	int totalNQueens(int n) {
+		int rslt = 0;
+		vector<int> pos(n, -1);
+		dfs(rslt, pos, 0);
+		return rslt;
+	}
+
+	bool isValid(vector<int> pos, int row, int col) {
+		for (int i = 0; i != row; i++)
+			if (pos[i] == col || abs(i - row) == abs(pos[i] - col))
+				return false;
+		return true;
+	}
+
+	void dfs(int& rslt, vector<int>& pos, int row) {
+		if (row == pos.size()) {
+			rslt++;
+			return;
+		}
+		for (int i = 0; i != pos.size(); i++) {
+			if (isValid(pos, row, i)) {
+				pos[row] = i;
+				dfs(rslt, pos, row + 1);
+				pos[row] = -1;
+			}
+		}
+	}
+};
+
 int main()
 {
-	int n;
-	while (cin >> n){
-		Solution slt;
-		int rslt = slt.totalNQueens(n);
-		cout << "Total Solutions' Number: " << rslt << endl;		
-	}
+	int n = 4;
+
+	Solution slt;
+	int rslt = slt.totalNQueens(n);
+
 	return 0;
 }
