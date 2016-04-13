@@ -33,6 +33,9 @@ There exist two distinct solutions to the 4-queens puzzle:
 ///@date	2015.10.15
 ///@version	2.1
 
+///@date	2016.04.13
+///@version	2.2
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -213,7 +216,7 @@ private:
 	vector<vector<string>> rslt;	//	结果数组
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	n皇后问题
 	///@param	n	皇后的数目
@@ -227,7 +230,7 @@ public:
 	}
 
 	///@brief	判断目前的该皇后布局是否合法
-	///@param	pos	存放有n个皇后下标的数组
+	///@param	pos	存放有n个皇后下标的数组, pos[i] = j表示棋盘上第i行的皇后在第j列
 	///@param	row	当前行
 	///@param	col	当前列
 	///@return	如果是合法布局，则将pos[row]赋值为col，否则保持为-1
@@ -263,22 +266,42 @@ public:
 	}
 };
 
-int main()
-{
-	int n;
-	while (cin >> n){
-		Solution slt;
-		vector<vector<string>> rslt = slt.solveNQueens(n);
-		cout << "Total Solutions' Number: " << rslt.size() << endl;
-		for (int i = 0; i != rslt.size(); i++)
-		{
-			cout << "Solution " << i+1 << ": " << endl;
-			for (int j = 0; j != n; j++)
-			{
-				cout << rslt[i][j];
-				cout << endl;
+class Solution {
+public:
+	vector<vector<string>> solveNQueens(int n) {
+		vector<vector<string>> rslt;
+		vector<int> pos(n, -1);
+		dfs(rslt, pos, 0);
+		return rslt;
+	}
+
+	bool isValid(vector<int> pos, int row, int col) {
+		for (int i = 0; i != row; i++)
+			if (pos[i] == col || abs(i - row) == abs(pos[i] - col))	return false;
+		return true;
+	}
+
+	void dfs(vector<vector<string>>& rslt, vector<int>& pos, int row) {
+		if (row == pos.size()) {
+			vector<string> tmp(pos.size(), string(pos.size(), '.'));
+			for (int i = 0; i != pos.size(); i++) tmp[i][pos[i]] = 'Q';			
+			rslt.push_back(tmp);
+			return;
+		}
+		for (int i = 0; i != pos.size(); i++) {
+			if (isValid(pos, row, i)) {
+				pos[row] = i;
+				dfs(rslt, pos, row + 1);
+				pos[row] = -1;
 			}
 		}
 	}
+};
+
+int main()
+{
+	int n = 4;	
+	Solution slt;
+	vector<vector<string>> rslt = slt.solveNQueens(n);
 	return 0;
 }
