@@ -21,6 +21,10 @@ A = [3,2,1,0,4], return false.
 ///@date	2015.10.21
 ///@version	2.1
 
+///@date	2016.04.13
+///@version	2.2
+
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -93,7 +97,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@brief	给定一组正整数，代表当前各自能继续向后走的步数，计算能否到达最后一个格子
 	///@param	nums	格子
@@ -110,6 +114,18 @@ public:
 			if (dp[i] <= 0)	return false;
 		return true;
 
+	}
+};
+
+class Solution {
+public:
+	bool canJump(vector<int>& nums) {
+		if (nums.size() == 1 || nums.empty())	return true;
+		vector<int> dp(nums.size() - 1, 0);
+		dp[0] = nums[0];
+		for (int i = 1; i < nums.size() - 1; i++)	dp[i] = max(dp[i-1] - 1, nums[i]);
+		for (int i = 0; i < nums.size() - 1; i++)	if (dp[i] <= 0)	return false;
+		return true;
 	}
 };
 
