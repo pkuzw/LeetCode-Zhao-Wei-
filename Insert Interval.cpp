@@ -22,6 +22,9 @@ This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 ///@date	2015.11.18
 ///@version 2.1
 
+///@date	2016.04.14
+///@version	2.2
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -92,7 +95,7 @@ private:
 	vector<Interval> rslt;
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将重叠区间进行融合
 	///@param	intervals	区间数组
@@ -115,9 +118,34 @@ public:
 			}
 		}
 		if (over_lap_cnt) intervals.erase(intervals.begin() + i - over_lap_cnt, intervals.begin() + i);
-		intervals.insert(intervals.begin() + i - over_lap_cnt, newInterval);
+		intervals.insert(intervals.begin() + (i - over_lap_cnt), newInterval);
 		return intervals;
     }
+};
+
+class Solution {
+public:
+	///@note	迭代器的加减应该把整型变量用括号括起来，提高优先级
+	vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+		if (intervals.empty()) {
+			intervals.push_back(newInterval);
+			return intervals;
+		}
+		int i = 0;
+		int cnt = 0;
+		for (i = 0; i != intervals.size(); i++) {
+			if (intervals[i].end < newInterval.start)	continue;
+			else if (intervals[i].start > newInterval.end)	break;
+			else {
+				newInterval.start = min(newInterval.start, intervals[i].start);
+				newInterval.end = max(newInterval.end, intervals[i].end);
+				cnt++;
+			}
+		}
+		if (cnt)	intervals.erase(intervals.begin() + i - cnt, intervals.begin() + i);
+		intervals.insert(intervals.begin() + (i - cnt), newInterval);
+		return intervals;
+	}
 };
 
 int main()
@@ -137,14 +165,13 @@ int main()
 
 	Interval b(5, 9);
 
+
+	Solution_v2 s2;
+	vector<Interval> r2 = s2.insert(test, b);
+
 	Solution slt;
 	rslt = slt.insert(test, b);
 
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		cout << "[" << rslt[i].start << ", " << rslt[i].end << "]	"; 
-	}
-	cout << endl;
 
 	return 0;
 }
