@@ -14,6 +14,9 @@ return [1,6],[8,10],[15,18].
 ///@date	2015.11.08
 ///@version 1.1
 
+///@date	2016.04.14
+///@version	1.2
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -28,7 +31,7 @@ struct Interval
 	Interval(int s, int e) : start(s), end(e) {}
 };
 
-class Solution
+class Solution_v1
 {
 public:
 	///@brief	将重叠区间进行融合
@@ -73,6 +76,31 @@ private:
 	vector<Interval> rslt;
 };
 
+
+//	v1.2
+bool myCmp(Interval& a, Interval& b) {
+	return a.start < b.start;
+}
+
+class Solution {
+public:
+	vector<Interval> merge(vector<Interval>& intervals) {
+		vector<Interval> rslt;
+		if (intervals.empty())	return rslt;		
+		sort(intervals.begin(), intervals.end(), myCmp);
+		Interval tmp(intervals[0].start, intervals[0].end);
+		for (int i = 0; i < intervals.size(); i++) {
+			if (intervals[i].start <= tmp.end)	tmp.end = max(tmp.end, intervals[i].end);			
+			else {
+				rslt.push_back(tmp);
+				tmp = intervals[i];
+			}
+		}
+		rslt.push_back(tmp);
+		return rslt;
+	}
+};
+
 int main()
 {
 	vector<Interval> test;
@@ -83,22 +111,16 @@ int main()
  	a[2].start = 8; a[2].end = 16;
  	a[3].start = 15; a[3].end = 18;
 
-// 	for (int i = 0; i != 4; i++)
-// 	{
-// 		test.push_back(a[i]);
-// 	}
-// 
-//  	Interval b(0, 0);
-//  	test.push_back(b);
+ 	for (int i = 0; i != 4; i++)
+ 		test.push_back(a[i]); 	
+ 
+  	Interval b(0, 1);
+  	test.push_back(b);
 
 	Solution slt;
 	rslt = slt.merge(test);
 
-	for (int i = 0; i != rslt.size(); i++)
-	{
-		cout << "[" << rslt[i].start << ", " << rslt[i].end << "]	"; 
-	}
-	cout << endl;
-	
+	Solution_v1 s1;
+	vector<Interval> r1 = s1.merge(test);
 	return 0;
 }
