@@ -22,6 +22,9 @@ You should return the following matrix:
 ///@date	2015.11.20
 ///@version	2.1
 
+///@date	2016.04.14
+///@version	2.2
+
 #include <vector>
 #include <iostream>
 
@@ -158,7 +161,7 @@ private:
 	vector<vector<bool>> visited;		//	标识二维数组，用于标定还有哪些位置可以走
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	生成顺时针旋转的二维矩阵1 - n^2
 	///@param	n	矩阵的边长
@@ -183,20 +186,28 @@ public:
     }
 };
 
+class Solution {
+public:
+	vector<vector<int>> generateMatrix(int n) {
+		vector<vector<int>> matrix(n, vector<int>(n, 0));
+		int p = n;
+		int val = 1;
+		for (int i = 0; i < n / 2; i++, p -= 2) {
+			for (int col = i; col < i + p; col++)	matrix[i][col] = val++;
+			for (int row = i + 1; row < i + p; row++)	matrix[row][i+p-1] = val++;
+			for (int col = i + p - 2; col >= i; col--)	matrix[i+p-1][col] = val++;
+			for (int row = i + p - 2; row > i; row--)	matrix[row][i] = val++;
+		}
+		if (n % 2)	matrix[n/2][n/2] = val;
+		return matrix;
+	}
+};
+
 int main()
 {
 	vector<vector<int>> matrix;
 	Solution slt;
 	int n = 5;
-	matrix = slt.generateMatrix(n);
-
-	for (int i = 0; i != n; i++)
-	{
-		for (int j = 0; j != n; j++)
-		{
-			cout << matrix[i][j] << ' ';
-		}
-		cout << endl;
-	}
+	matrix = slt.generateMatrix(n);	
 	return 0;
 }
