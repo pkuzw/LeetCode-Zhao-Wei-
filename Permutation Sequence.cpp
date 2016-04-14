@@ -25,6 +25,9 @@ Note: Given n will be between 1 and 9 inclusive.
 ///@date	2015.11.29
 ///@version 2.1
 
+///@date	2016.04.14
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -147,16 +150,17 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算制定序号的排列
 	///@param	n	候选数组的长度，从1开始，最多有9个
 	///@param	k	排列的序号，从1开始
 	///@return	返回n个候选元素的第k个排列
-	///@note	因为只是计算第k个排列，前面的k-1个和后面的n! - k个不用计算，所以不能用之前的算法来算。
-	//			先计算出i（0 < i <= 9）个候选元素的全排列数目，然后根据候选元素的长度，计算出排列中第j（0 < j <= n）位的数字，这个数字通过
-	//			除法来计算，除数是k，被除数就是n - j个候选元素的全排列数目，每次计算完，要更新k值，并从候选元素中将该数字删去。时间复杂度为O(n)，空间复杂度为O(n)，
-	//			n为候选元素的个数。
+	///@note	1. 因为只是计算第k个排列，前面的k-1个和后面的n! - k个不用计算，所以不能用之前的算法来算。
+	//			2. 先计算出i（0 < i <= 9）个候选元素的全排列数目；
+	//			3. 根据候选元素的长度，计算出排列中第j（0 < j <= n）位的数字，这个数字通过除法来计算，除数是k，被除数就是n - j个候选元素的全排列数目；
+	//			4. 每次计算完，要更新k值，并从候选元素中将该数字删去。
+	//			5. 时间复杂度为O(n)，空间复杂度为O(n)，n为候选元素的个数。
     string getPermutation(int n, int k) {
 		string s;
 		for (int i = 1; i <= n; i++)
@@ -176,10 +180,31 @@ public:
     }
 };
 
+class Solution {
+public:
+	string getPermutation(int n, int k) {
+		string s;
+		for (int i = 1; i <= n; i++)	s += char('0' + i);
+		vector<int> f(n, 1);
+		for (int i = 1; i < n; i++)	f[i] = i * f[i-1];
+		k--;
+		string rslt;
+		for (int i = n - 1; i >= 0; i--) {
+			int j = k / f[i];
+			k %= f[i];
+			rslt.push_back(s[j]);
+			s.erase(j, 1);
+		}
+		return rslt;
+	}
+};
+
 int main()
 {
-	Solution slt;
-    string s = slt.getPermutation(4, 1);
-	s = slt.getPermutation(4, 24);
+	Solution_v2 s2;
+    string r2 = s2.getPermutation(4, 10);
+
+	Solution s;
+	string r = s.getPermutation(4, 10);
 	return 0;
 }
