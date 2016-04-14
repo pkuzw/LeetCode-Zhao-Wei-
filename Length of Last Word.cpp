@@ -21,6 +21,9 @@ return 5.
 ///@date	2015.11.18
 ///@version 2.1
 
+///@date	2016.04.14
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -70,7 +73,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@brief	计算字符串中最后一个单词的长度
 	///@param	s	字符串
@@ -90,12 +93,32 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int lengthOfLastWord(string s) {
+		if (s.empty())	return 0;
+		int i = s.size() - 1;
+		while (i >= 0 && s[i] == ' ')	i--;
+		s = s.substr(0, i+1);
+		if (i == -1)		return s.size();
+		int cnt = 0;
+		while (i >= 0 && s[i] != ' ') {
+			cnt++;
+			i--;
+		}
+		return cnt;
+	}
+};
+
 int main()
 {
-	string str;
-	getline(cin, str);
+	string str = "a";
+	
 
 	Solution slt;
-	cout << slt.lengthOfLastWord(str) << endl;;
+	int rslt = slt.lengthOfLastWord(str);
+	
+	Solution_v2_1 s2;
+	int r2 = s2.lengthOfLastWord(str);
 	return 0;
 }
