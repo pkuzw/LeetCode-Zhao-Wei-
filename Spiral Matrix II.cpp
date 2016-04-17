@@ -23,7 +23,7 @@ You should return the following matrix:
 ///@version	2.1
 
 ///@date	2016.04.14
-///@version	2.2   
+///@version	2.2    
 
 #include <vector>
 #include <iostream>
