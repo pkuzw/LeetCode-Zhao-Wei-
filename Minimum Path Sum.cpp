@@ -18,6 +18,9 @@ Note: You can only move either down or right at any point in time.
 ///@date	2015.12.01
 ///@version 2.2
 
+///@date	2016.04.18
+///@version	2.3
+
 #include <vector>
 #include <iostream>
 
@@ -85,7 +88,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定一个m*n的棋盘，计算从左上角到右下角的和最小的路径
 	///@param	grid	棋盘
@@ -130,6 +133,22 @@ public:
 	}
 };
 
+class Solution {
+public:
+	int minPathSum(vector<vector<int>>& grid) {
+		if (grid.empty() || grid[0].empty())	return 0;
+		int row = grid.size(), col = grid[0].size();
+		vector<vector<int>> dp(row, vector<int>(col, 0));
+		dp[0][0] = grid[0][0];
+		for (int i = 1; i != row; i++)	dp[i][0] = grid[i][0] + dp[i-1][0];
+		for (int j = 1; j != col; j++)	dp[0][j] = grid[0][j] + dp[0][j-1];
+		for (int i = 1; i != row; i++)
+			for (int j = 1; j != col; j++)
+				dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
+		return dp[row-1][col-1];
+	}
+};
+
 int main()
 {
 	vector<vector<int>> grid;
@@ -168,8 +187,10 @@ int main()
 	grid.push_back(line);
 	
 	int minPath = slt_v1.minPathSum_saveSpace(grid);
+	Solution_v2 slt2;
+	int rslt = slt2.minPathSum(grid);
+	int r_save = slt2.minPathSum_space_O_1(grid);
 	Solution slt;
-	int rslt = slt.minPathSum(grid);
-	int r_save = slt.minPathSum_space_O_1(grid);
+	int r = slt.minPathSum(grid);
 	return 0;
 }
