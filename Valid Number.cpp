@@ -323,7 +323,7 @@ public:
 			SIGN,			// 2 '+','-'
 			DIGIT,			// 3 numbers
 			DOT,			// 4 '.'
-			EXPONENT,		// 5 'e' 'E'
+			EXPONENT		// 5 'e' 'E'
 		};
 		int transTable[][6] = {
 			//0INVA,1SPA,2SIG,3DI,4DO,5E
