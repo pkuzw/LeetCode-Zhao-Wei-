@@ -17,6 +17,12 @@ You should gather all requirements up front before implementing one.
 ///@date	2015.07.11
 ///@version	1.0
 
+///@date	2015.12.01
+///@version	2.0
+
+///@date	2016.04.18
+///@version	2.1
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -292,14 +298,14 @@ private:
 };
 
 ///@note	有限自动状态机
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	判断给定的字符串是否是一个合法的数字
 	///@param	s	字符串
 	///@return	如果是合法字符串返回true；否则返回false
 	///@note	1. 采用有限状态自动机来做状态判断。
 	//			2. 对于字符串中的每一个字符输入，总共有6种情况，分别是INVALID, SPACE, SIGN, DIGIT, DOT, EXPONENT。
-	//			3. 有限状态自动机是一个二维矩阵，矩阵的一共有6列，分别对应上面的6中输入字符状态； 矩阵有9行，分别对应着
+	//			3. 有限状态自动机是一个二维矩阵，矩阵的一共有6列，分别对应上面的6种输入字符状态； 矩阵有9行，分别对应着
 	//			3.0 初始无输入或者只有space的状态；
 	//			3.1 输入了数字之后的状态
 	//			3.2 前面无数字，只输入了Dot的状态
@@ -342,6 +348,37 @@ public:
 			else if (s[i] == 'e' || s[i] == 'E') input = EXPONENT;
 			state = transTable[state][input];
 			if (state == -1) return false;			
+		}
+		return state == 1 || state == 4 || state == 7 || state == 8;
+	}
+};
+
+class Solution {
+public:
+	bool isNumber(string s) {
+		enum InputType {INVALID, SPACE, SIGN, DIGIT, DOT, EXPONENT};
+		int transTable[9][6] = {
+//		0:INVALID  1:SPACE  2:SIGN  3.DIGIT  4.DOT  5.EXPONENT
+			{-1,        0,       3,      1,       2,     -1}, //0初始无输入或者只有space的状态  
+			{-1,        8,       -1,     1,       4,     5},  //1输入了数字之后的状态
+			{-1,        -1,      -1,     4,       -1,    -1}, //2前面无数字，只输入了Dot的状态
+			{-1,        -1,      -1,     1,       2,     -1}, //3输入了符号状态
+			{-1,        8,       -1,     4,       -1,    5}, //4前面有数字和有dot的状态
+			{-1,        -1,      6,      7,       -1,    -1}, //5'e' or 'E'输入后的状态
+			{-1,        -1,      -1,     7,       -1,    -1}, //6输入e之后输入Sign的状态
+			{-1,        8,       -1,     7,       -1,    -1},//7输入e后输入数字的状态
+			{-1,        8,       -1,     -1,      -1,    -1}//8前面有有效数输入之后，输入space的状态
+		};
+		int state = 0;
+		for (int i = 0; i != s.size(); i++) {
+			InputType input = INVALID;
+			if (s[i] == ' ')	input = SPACE;
+			else if (s[i] == '+' || s[i] == '-')		input = SIGN;
+			else if (isdigit(s[i]))	input = DIGIT;
+			else if (s[i] == '.')	input = DOT;
+			else if (s[i] == 'e' || s[i] == 'E')	input  = EXPONENT;
+			state = transTable[state][input];
+			if (state == -1)		return false;
 		}
 		return state == 1 || state == 4 || state == 7 || state == 8;
 	}
