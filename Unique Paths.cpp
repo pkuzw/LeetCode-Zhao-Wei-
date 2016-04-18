@@ -14,6 +14,10 @@ How many possible unique paths are there?
 ///@version	2.0
 
 ///@date	2015.11.29
+///@version	2.1
+
+///@date	2016.04.18
+///@version	2.2
 
 #include <iostream>
 
@@ -51,7 +55,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算一个m*n的棋盘中从左上角到右下角的方法数
 	///@param	m	棋盘的高度
@@ -65,6 +69,26 @@ public:
 		int p = m > n ? n - 1 : m - 1;
 		int t = p;
 		
+		while (t--) {
+			rslt *= k;
+			k--;
+		}
+		while (p) {
+			rslt /= p;
+			p--;
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	int uniquePaths(int m, int n) {
+		long long rslt = 1;
+		if (m == 1 || n == 1)	return rslt;
+		int p = m > n ? n - 1 : m - 1;
+		int k = m + n - 2;
+		int t = p;
 		while (t--) {
 			rslt *= k;
 			k--;
