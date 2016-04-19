@@ -25,10 +25,13 @@ Note: Each word is guaranteed not to exceed L in length.
 ///@version	1.0
 
 ///@date	2015.08.27
-///@version	2.0
+///@version	1.1
 
 ///@date	2015.12.04
-///@version	2.1
+///@version	1.2
+
+///@date	2016.04.19
+///@version	2.0
 
 #include <iostream>
 #include <vector>
@@ -128,7 +131,7 @@ private:
 	vector<string> rslt;
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@brief	将单词组均匀的分布在各行当中
 	///@param	words	原来的单词组
@@ -197,6 +200,41 @@ private:
 		}
 		s.append(maxWidth - s.size(), ' ');
 		return s;
+	}
+};
+
+class Solution {
+public:
+	vector<string> fullJustify(vector<string> &words, int L) {
+		vector<string> rslt;
+		int begin = 0;
+		while (begin < words.size()) {
+			int last = begin;
+			int linesize = words[begin++].size();
+			while (begin < words.size() && linesize + 1 + words[begin].size() <= L) {
+				linesize += 1 + words[begin].size();
+				begin++;
+			}
+
+			int spaces = 1, extra = 0;
+			if (begin < words.size() && begin != last + 1) {
+				spaces = (L - linesize) / (begin - last - 1) + 1;
+				extra = (L - linesize) % (begin - last - 1);
+			}
+
+			rslt.push_back(words[last++]);
+			while (extra--) {
+				rslt.back().append(spaces+1, ' ');
+				rslt.back().append(words[last++]);
+			}
+			while (last < begin) {
+				rslt.back().append(spaces, ' ');
+				rslt.back().append(words[last++]);
+			}
+			rslt.back().append(L-rslt.back().size(), ' ');
+		}
+
+		return rslt;
 	}
 };
 
