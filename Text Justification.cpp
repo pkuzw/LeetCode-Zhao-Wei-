@@ -31,7 +31,7 @@ Note: Each word is guaranteed not to exceed L in length.
 ///@version	1.2
 
 ///@date	2016.04.19
-///@version	2.0
+///@version	2.0 
 
 #include <iostream>
 #include <vector>
