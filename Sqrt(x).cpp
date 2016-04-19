@@ -40,7 +40,7 @@ public:
 /*
 二分查找平方根。为了防止溢出，中间结果用long long型保存。
 */
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	二分查找计算平方根
 	///@param	x	输入值，int整型变量
@@ -58,6 +58,21 @@ public:
 			else left = mid + 1;
 		}
 		return right;
+	}
+};
+
+class Solution {
+public:
+	int mySqrt(int x) {
+		long long left = 0, right = x / 2 + 1;
+		while (left <= right) {
+			long long mid = (left + right) / 2;
+			if (mid * mid == x)	return mid;
+			else if (mid * mid > x)	right = mid - 1;
+			else	left = mid + 1;
+		}
+		return right;
+
 	}
 };
 
