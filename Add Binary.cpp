@@ -17,6 +17,9 @@ Return "100".
 ///@date	2015.12.03
 ///@version	2.1
 
+///@date	2016.04.19
+///@version	2.2
+
 #include <iostream>
 #include <string>
 
@@ -71,7 +74,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算两个二进制数的加法
 	///@param	a	加数
@@ -79,52 +82,65 @@ public:
 	///@return	返回a+b的和
 	///@note	1. 先计算出a和b的长度，将短的加数补齐前端0；2. 从末尾向前逐一相加即可；3. 时间复杂度为O(n)，n为加数的长度。
 	string addBinary(string a, string b) {
-		int lenA = a.size(), lenB = b.size();
-		if (lenA < lenB)
-		{
-			swap(a, b);
-			int t = lenA;
-			lenA = lenB;
-			lenB = t;
-		}
-		b = string(lenA - lenB, '0') + b;
-		bool flg = false;
-		for (int i = lenA - 1; i >= 0; i--)
-		{
-			if (a[i] == '0' && b[i] == '0')
-			{
-				if (flg)
-				{
-					a[i] = '1';				
-					flg = false;
+		if (a.length() < b.length())	swap(a, b);
+		b = string(a.length() - b.length(), '0') + b;
+		bool carry = false;
+		for (int i = a.length() - 1; i >= 0; i--) {
+			if (a[i] == '0' && b[i] == '0') {
+				if (carry) {
+					a[i] = '1';
+					carry = false;
 				}
 			}
-			else if ((a[i] == '1' && b[i] == '0') || (a[i] == '0' && b[i] == '1'))
-			{
-				if (flg)	a[i] = '0';
+			else if (abs(a[i] - b[i]) == 1) {
+				if (carry)	a[i] = '0';				
 				else		a[i] = '1';
 			}
-			else
-			{
-				if (!flg)
-				{
+			else {
+				if (carry)	a[i] = '1';
+				else {
 					a[i] = '0';
-					flg = true;
+					carry = true;
 				}
 			}
 		}
-		if (flg)	a = "1" + a;
-		return a;
+		return carry ? "1" + a : a;
+	}
+};
+
+class Solution {
+public:
+	string addBinary(string a, string b) {
+		if (a.length() < b.length())	swap(a, b);
+		b = string(a.length() - b.length(), '0') + b;
+		bool carry = false;
+		for (int i = a.length() - 1; i >= 0; i--) {
+			if (a[i] == '0' && b[i] == '0') {
+				if (carry) {
+					a[i] = '1';
+					carry = false;
+				}
+			}
+			else if (abs(a[i] - b[i]) == 1) {
+				if (carry)	a[i] = '0';				
+				else		a[i] = '1';
+			}
+			else {
+				if (carry)	a[i] = '1';
+				else {
+					a[i] = '0';
+					carry = true;
+				}
+			}
+		}
+		return carry ? "1" + a : a;
 	}
 };
 
 int main()
 {
-	string a, b;
+	string a = "11", b = "111";
 	Solution slt;
-	while (cin >> a >> b)
-	{
-		cout << slt.addBinary(a, b) << endl;
-	}
+	string rslt = slt.addBinary(a, b);	
 	return 0;
 }
