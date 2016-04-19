@@ -14,6 +14,9 @@ The digits are stored such that the most significant digit is at the head of the
 ///@date	2015.12.01
 ///@version	2.1
 
+///@date	2016.04.19
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -102,20 +105,23 @@ public:
 		bool flg = false;
 		digits.back()++;
 		if (digits.back() == 10) {
-			digits.back() = 0;
 			flg = true;
+			digits.back() = 0;
 		}
 		for (int i = digits.size() - 2; i >= 0; i--) {
 			if (flg) {
 				digits[i]++;
 				flg = false;
-				if (digits[i] == 10) {
-					digits[i] = 0;
-					flg = true;
-				}
+			}
+			if (digits[i] == 10) {
+				digits[i] = 0;
+				flg = true;
 			}
 		}
-		if (flg) digits.insert(digits.begin(), 1);
+		if (flg) {
+			digits.insert(digits.begin(), 1);
+			flg = false;
+		}
 		return digits;
 	}
 };
@@ -126,20 +132,11 @@ int main()
 	vector<int> digits;
 	digits.push_back(9);
 	digits.push_back(9);
-	digits.push_back(8);
+	digits.push_back(9);
 
-	for (int i = 0; i != digits.size(); i++)
-	{
-		cout << digits[i];
-	}
-	cout << endl;
-
+	
 	Solution slt;
 	sum = slt.plusOne(digits);
-	for (int i = 0; i != sum.size(); i++)
-	{
-		cout << sum[i];
-	}
-	cout << endl;
+
 	return 0;
 }
