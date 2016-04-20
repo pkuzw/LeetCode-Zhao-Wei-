@@ -85,11 +85,11 @@ public:
 	}
 };
 
-class Solution {
+class Solution { 
 public:
 	///@note	1. 动态规划；
 	//			2. 设dp[i]为数值为i的最大因子积，初始设置dp[2] = 2，dp[3] = 3；如果n = 2, 3，则直接返回1, 2；
-	//			3. 递推关系式为dp[i] = dp[j] * dp[k].其中j + k = i且j > 1，k > 1.
+	//			3. 递推关系式为dp[i] = dp[j] * dp[k].其中j + k = i且j > 1，k > 1；
 	//			4. 时间复杂度为O(n^2)，空间复杂度为O(n)。
 	int integerBreak(int n) {
 		if (n == 2)	return 1;
