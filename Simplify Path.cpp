@@ -16,6 +16,9 @@ path = "/a/./b/../../c/", => "/c"
 ///@date	2015.12.04
 ///@version	2.1
 
+///@date	2016.04.20
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -122,13 +125,17 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	简化Unix路径
 	///@param	path	绝对路径
 	///@return	简化后的路径
-	///@note	1. 采用栈的思想来进行简化；2. 如果目录名称是".."，则弹栈；3. 如果目录名称不是"."且不是".."，就压栈；4. 将多个连续的"/"简化为1个'/'；5. 如果栈为空，则压入'/'；
-	//			6. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为绝对路径path的长度
+	///@note	1. 采用栈的思想来进行简化；
+	//			2. 如果目录名称是".."，则弹栈；
+	//			3. 如果目录名称不是"."且不是".."，就压栈；
+	//			4. 将多个连续的"/"简化为1个'/'；
+	//			5. 如果栈为空，则压入'/'；
+	//			6. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为绝对路径path的长度.
 	string simplifyPath(string path) {
 		string rslt = "";
 		vector<string> svec;
@@ -142,8 +149,7 @@ public:
 			if (dir == "..") {
 				if (!svec.empty()) svec.pop_back();	
 			}
-			else if (dir != ".") 	svec.push_back(dir);
-			
+			else if (dir != ".") 	svec.push_back(dir);			
 		}
 		for (int i = 0; i != svec.size(); i++) 
 			rslt += "/" + svec[i];
@@ -153,10 +159,36 @@ public:
 	}
 };
 
+class Solution {
+public:
+	string simplifyPath(string path) {
+		vector<string> svec;
+		string rslt;
+		int i = 0;
+		while (i < path.size()) {
+			while (i < path.size() && path[i] == '/')	i++;
+			if (i == path.size())	break;
+			int start = i;
+			while (i < path.size() && path[i] != '/')	i++;
+			string dir = path.substr(start, i - start);			
+			if (dir == "..") {
+				if (!svec.empty())	svec.pop_back();
+			}
+			else if (dir != ".")	svec.push_back(dir);
+		}
+		for (int i = 0; i != svec.size(); i++)	rslt += "/" + svec[i];
+		if (rslt.empty())	rslt = "/";
+		return rslt;		
+	}
+};
+
 int main()
 {
 	string path = "/a/./b/../../c/";
 	Solution slt;
 	string rslt = slt.simplifyPath(path);
+
+	Solution_v2 s2;
+	string r2 = s2.simplifyPath(path);
 	return 0;
 }
