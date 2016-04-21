@@ -12,6 +12,9 @@ Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do
 ///@date	2015.12.05
 ///@version	2.1
 
+///@date	2016.04.21
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -251,15 +254,16 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@brief	给定一个二维矩阵，如果某个元素为0，则将该元素所在行列置为0。要求空间复杂度为O(1)。
 	///@param	matrix	二维矩阵
 	///@return	无
-	///@note	1. 如果要达到空间复杂度为O(1)的要求，要尽可能的利用现有元素所占用的空间；2. 用两个变量记录第一行和第一列是否存在0元素；3. 用第一行和第一列来标记
-	//			第2..m行，第2..n列中存在0元素的下标。如果某个位于[i, j]的元素为0，则将第1行的第j列和第1列的第i行元素值为0；4. 先遍历第一行和第一列，再遍历剩余
-	//			行和列，接着根据第一行和第一列的记录将相应行列置零，最后根据临时变量中的标记决定是否将第一行和第一列置零；5. 时间复杂度为O(mn)，空间复杂度为O(1)，
-	//			其中m和n分别为二维矩阵的行数和列数。
+	///@note	1. 如果要达到空间复杂度为O(1)的要求，要尽可能的利用现有元素所占用的空间；
+	//			2. 用两个变量记录第一行和第一列是否存在0元素；3. 用第一行和第一列来标记第2..m行，第2..n列中存在0元素的下标。
+	//			   如果某个位于[i, j]的元素为0，则将第1行的第j列和第1列的第i行元素值为0；
+	//			4. 先遍历第一行和第一列，再遍历剩余行和列，接着根据第一行和第一列的记录将相应行列置零，最后根据临时变量中的标记决定是否将第一行和第一列置零；
+	//			5. 时间复杂度为O(mn)，空间复杂度为O(1)，其中m和n分别为二维矩阵的行数和列数。
 	void setZeroes(vector<vector<int>>& matrix) {
 		if (matrix.empty() || matrix[0].empty())	return;
 		int m = matrix.size();
@@ -304,6 +308,50 @@ public:
 			for (int i = 0; i != m; i++)
 				matrix[i][0] = 0;
 		}
+		return;
+	}
+};
+
+class Solution {
+public:
+	void setZeroes(vector<vector<int>>& matrix) {
+		bool flg_col0 = false, flg_row0 = false;
+		int row = matrix.size(), col = matrix[0].size();
+		//	tag 0 row and 0 col.
+		for (int i = 0; i != row; i++) {
+			if (!matrix[i][0]) {
+				flg_col0 = true;
+				break;
+			}
+		}
+		for (int j = 0; j != col; j++) {
+			if (!matrix[0][j]) {
+				flg_row0 = true;
+				break;
+			}
+		}
+
+		for (int i = 1; i != row; i++) {
+			for (int j = 1; j != col; j++) {
+				if (!matrix[i][j]) {
+					matrix[i][0] = 0;
+					matrix[0][j] = 0;
+				}
+			}
+		}
+
+		for (int i = 1; i != row; i++) 
+			if (!matrix[i][0]) 
+				for (int j = 1; j != col; j++)	matrix[i][j] = 0;
+			
+		for (int j = 1; j != col; j++)
+			if (!matrix[0][j])
+				for (int i = 1; i != row; i++)	matrix[i][j] = 0;
+
+		if (flg_col0)
+			for (int i = 0; i != row; i++)	matrix[i][0] = 0;				
+		if (flg_row0)
+			for (int j = 0; j != col; j++)	matrix[0][j] = 0;
 		return;
 	}
 };
