@@ -14,6 +14,10 @@ Here, we will use the integers 0, 1, and 2 to represent the color red, white, an
 
 ///@date	2015.12.06
 ///@version	2.1
+
+///@date	2016.04.21
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -107,7 +111,7 @@ private:
 /*
 1. 用两个指针标记出红色气球的起始下标和蓝色气球的终止下标。然后从首尾向中间遍历。只需要遍历一次数组，时间复杂度为O(n)，空间复杂度为O(1)。
 */
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	对于只有0，1，2三种元素组成的数组，进行排序。
 	///@param	nums	数组
@@ -120,6 +124,17 @@ public:
 		for (int i = red_indx; i <= blue_indx; i++) {
 			if (nums[i] == 0)	swap(nums[i], nums[red_indx++]);
 			else if (nums[i] == 2) swap(nums[i--], nums[blue_indx--]);	//	这里要将i--，因为位于i的新元素还需要再次判定是否为0或者2.
+		}
+	}
+};
+
+class Solution {
+public:
+	void sortColors(vector<int>& nums) {
+		int red_indx = 0, blue_indx = nums.size() - 1;
+		for (int i = red_indx; i <= blue_indx; i++) {
+			if (!nums[i])	swap(nums[i], nums[red_indx++]);
+			else if (nums[i] == 2)	swap(nums[i--], nums[blue_indx--]);
 		}
 	}
 };
