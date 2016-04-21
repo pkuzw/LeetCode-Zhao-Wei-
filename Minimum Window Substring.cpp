@@ -22,6 +22,9 @@ If there are multiple such windows, you are guaranteed that there will always be
 ///@date	2015.12.07
 ///@version	2.1
 
+///@date	2016.04.22
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
