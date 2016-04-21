@@ -25,6 +25,9 @@ Given target = 3, return true.
 ///@date	2015.12.05
 ///@version 3.0
 
+///@date	2016.04.21
+///@version	3.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -141,7 +144,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	给定一个二维矩阵，每一行按照升序排序，且首元素比上一行的尾元素大，寻找是否存在指定值
 	///@param	matrix	矩阵
@@ -190,6 +193,39 @@ private:
 	}
 };
 
+class Solution {
+public:
+	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+		vector<int> col0;
+		for (int i = 0; i != matrix.size(); i++)	col0.push_back(matrix[i][0]);
+		int row = binarySearchIndx(col0, target);
+		if (row == -1)	return false;
+		return binarySearchExist(matrix[row], target);
+	}
+
+	int binarySearchIndx(vector<int>& vec, int target) {
+		int l = 0, r = vec.size() - 1;
+		while (l <= r) {
+			int m = (l + r) / 2;
+			if (vec[m] == target)	return m;
+			else if (vec[m] < target)	l = m + 1;
+			else	r = m - 1;
+		}
+		return r;
+	}
+
+	bool binarySearchExist(vector<int>& vec, int target) {
+		int l = 0, r = vec.size() - 1;
+		while (l <= r) {
+			int m = (l + r) / 2;
+			if (vec[m] == target)	return true;
+			else if (vec[m] < target)	l = m + 1;
+			else	r = m - 1;
+		}
+		return false;
+	}
+};
+
 int main()
 {
 	vector<int> line;
@@ -223,6 +259,6 @@ int main()
 	Solution_v1 slt_v1;
 	bool rslt_v1 = slt_v1.searchMatrix_space_O_1(matrix, 34);
 	Solution slt;
-	bool rslt = slt.searchMatrix(matrix, 67);
+	bool rslt = slt.searchMatrix(matrix, 34);
 	return 0;
 }
