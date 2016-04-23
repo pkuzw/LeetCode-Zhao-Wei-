@@ -22,7 +22,7 @@ If there are multiple such windows, you are guaranteed that there will always be
 ///@date	2015.12.07
 ///@version	2.1
 
-///@date	2016.04.22
+///@date	2016.04.23
 ///@version	2.2
 
 #include <iostream>
@@ -182,7 +182,7 @@ private:
 	unordered_map<char, int> char_app;		//	在t字符串中字符的出现次数	
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定两个字符串s和t，在s中寻找包含t的所有字符的最小子串
 	///@param	s	源字符串
@@ -212,6 +212,35 @@ public:
 				if (ht.find(s[left]) != ht.end()) {
 					ht[s[left]]++;
 					if (ht[s[left]] > 0)	cnt--;
+				}
+				left++;
+			}
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	string minWindow(string s, string t) {
+		if (s.size() < t.size())	return "";
+		unordered_map<char, int> hash_tbl;
+		for (int i = 0; i != t.size(); i++)	hash_tbl[t[i]]++;
+		int len = s.size() + 1, left = 0, cnt = 0;
+		string rslt = "";
+		for (int right = 0; right < s.size(); right++) {
+			if (hash_tbl.find(s[right]) != hash_tbl.end()) {
+				hash_tbl[s[right]]--;
+				if (hash_tbl[s[right]] >= 0)	cnt++;
+			}
+			while (cnt == t.size()) {
+				if (len > right - left + 1) {
+					len = right - left + 1;
+					rslt = s.substr(left, len);
+				}
+				if (hash_tbl.find(s[left]) != hash_tbl.end()) {
+					hash_tbl[s[left]]++;
+					if (hash_tbl[s[left]] > 0)	cnt--;
 				}
 				left++;
 			}
