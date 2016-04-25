@@ -24,6 +24,9 @@ If n = 4 and k = 2, a solution is:
 ///@date	2015.12.07
 ///@version	2.1
 
+///@date	2016.04.25
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -74,7 +77,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算C(n, k)
 	///@param	n	候选元素数目
@@ -107,6 +110,31 @@ private:
 			combination.push_back(nums[i]);
 			vector<int> new_nums(nums.begin() + i + 1, nums.end());
 			getCombination(new_nums, rslt, combination, n - 1, k - 1);
+			combination.pop_back();
+		}
+	}
+};
+
+class Solution {
+public:
+	vector<vector<int>> combine(int n, int k) {
+		vector<vector<int>> rslt;
+		vector<int> combination;
+		vector<int> nums;
+		for (int i = 1; i <= n; i++)	nums.push_back(i);
+		dfs(nums, rslt, combination, n, k);
+		return rslt;
+	}
+
+	void dfs(vector<int> nums, vector<vector<int>>& rslt, vector<int>& combination, int n, int k) {
+		if (!k) {
+			rslt.push_back(combination);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++) {
+			combination.push_back(nums[i]);
+			vector<int> new_nums(nums.begin() + i + 1, nums.end());
+			dfs(new_nums, rslt, combination, n-1, k-1);
 			combination.pop_back();
 		}
 	}
