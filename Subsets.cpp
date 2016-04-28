@@ -29,6 +29,9 @@ If nums = [1,2,3], a solution is:
 ///@date	2015.12.07
 ///@version	2.1
 
+///@date	2016.04.29
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -77,7 +80,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定数组，计算其所有可能的子集
 	///@param	nums	数组
