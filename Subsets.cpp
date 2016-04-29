@@ -112,6 +112,30 @@ private:
 	}
 };
 
+class Solution {
+public:
+	vector<vector<int>> subsets(vector<int>& nums) {
+		vector<vector<int>> rslt;
+		vector<int> combination;
+		sort(nums.begin(), nums.end());
+		for (int k = 0; k <= nums.size(); k++) dfs(nums, rslt, combination, nums.size(), k);
+		return rslt;
+	}
+
+	void dfs(vector<int> nums, vector<vector<int>>& rslt, vector<int> combination, int n, int k) {
+		if (!k) {
+			rslt.push_back(combination);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++) {
+			combination.push_back(nums[i]);
+			vector<int> new_nums(nums.begin() + i + 1, nums.end());
+			dfs(new_nums, rslt, combination, n - 1, k - 1);
+			combination.pop_back();
+		}		
+	}
+};
+
 int main()
 {
 	vector<int> nums;
