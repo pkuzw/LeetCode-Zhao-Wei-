@@ -25,6 +25,8 @@ Write a function to determine if a given target is in the array.
 ///@date	2015.12.09
 ///@version	2.1
 
+///@date	2016.04.30
+///@version	2.2
 #include <iostream>
 #include <vector>
 
@@ -85,14 +87,18 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	寻找翻转数组中的指定元素
 	///@param	nums	数组
 	///@param	target	目标值
 	///@return	如果数组中有该元素，则返回true；否则返回false
-	///@note	1. 二分查找；2. 如果中间元素等于目标值，则返回true；3. 如果中间元素不等于目标值，则判断首元素和中间值的大小，如果首元素小于中间值，说明数组左半部分有序；
-	//			4. 如果首元素大于中间值，则说明有半部分有序；5. 如果首元素等于中间值，则将首元素左移一位以更新中间元素，继续下一次迭代；6. 时间复杂度为O(logn)，空间复杂度为O(1)
+	///@note	1. 二分查找；
+	//			2. 如果中间元素等于目标值，则返回true；
+	//			3. 如果中间元素不等于目标值，则判断首元素和中间值的大小，如果首元素小于中间值，说明数组左半部分有序；
+	//			4. 如果首元素大于中间值，则说明右半部分有序；
+	//			5. 如果首元素等于中间值，则将首元素左移一位以更新中间元素，继续下一次迭代；
+	//			6. 时间复杂度为O(logn)，空间复杂度为O(1)
 	bool search(vector<int>& nums, int target) {
 		int l = 0, r = nums.size() - 1;
 		while (l <= r) {
@@ -107,6 +113,27 @@ public:
 				else	r = mid - 1;
 			}
 			else	l++;
+		}
+		return false;
+	}
+};
+
+class Solution {
+public:
+	bool search(vector<int>& nums, int target) {
+		int l = 0, r = nums.size() - 1;
+		while (l <= r) {
+			int m = (l + r) / 2;
+			if (nums[m] == target)	return true;
+			if (nums[l] < nums[m]) {
+				if (nums[l] <= target && target < nums[m])	r = m - 1;
+				else	l = m + 1;
+			}
+			else if (nums[l] > nums[m]) {
+				if (nums[m] < target && target <= nums[r])	l = m + 1;
+				else	r = m - 1;
+			}
+			else l++;
 		}
 		return false;
 	}
