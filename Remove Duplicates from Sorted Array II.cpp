@@ -18,6 +18,9 @@ It doesn't matter what you leave beyond the new length.
 
 ///@date	2015.12.07
 ///@version	3.0
+
+///@date	2016.04.30
+///@version	3.1
 #include <iostream>
 #include <vector>
 
@@ -100,7 +103,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	将排好序的数组去重，当有相同元素出现时，最多留下2个
 	///@param	nums	排好序的数组
@@ -114,6 +117,18 @@ public:
 			else	nums[i - cnt] = nums[i];
 		}
 		return n - cnt;
+	}
+};
+
+class Solution {
+public:
+	int removeDuplicates(vector<int>& nums) {
+		int n = nums.size(), dup_cnt = 0;
+		for (int i = 2; i < n; i++) {
+			if (nums[i-2-dup_cnt] == nums[i])	dup_cnt++;
+			else	nums[i-dup_cnt] = nums[i];
+		}
+		return n - dup_cnt;
 	}
 };
 
