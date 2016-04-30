@@ -27,6 +27,9 @@ word = "ABCB", -> returns false.
 ///@date	2015.12.07
 ///@version	2.1
 
+///@date	2016.04.30
+///@version	2.2
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -362,7 +365,7 @@ private:
 };
 
 ///@note	dfs
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	在矩阵中匹配字符串
 	///@param	board	矩阵
@@ -404,6 +407,34 @@ private:
 			visited[i][j] = false;
 		}
 		return k == word.size() ? true : false;	//	对于只有一个元素的字符串，在经过上一个条件语句的判断后，到这里就可以通过这个三元符号得出结果。
+	}
+};
+
+class Solution {
+public:
+	bool exist(vector<vector<char>>& board, string word) {
+		if (board.empty() || board[0].empty())	return false;
+		if (word.empty())	return true;
+		int row = board.size(), col = board[0].size();
+		vector<vector<bool>> visited(row, vector<bool>(col, false));
+		for (int i = 0; i != row; i++)
+			for (int j = 0; j != col; j++)
+				if (dfs(board, word, visited, i, j, 0))	return true;
+		return false;
+	}
+
+	bool dfs(vector<vector<char>>& board, string& word, vector<vector<bool>>& visited, int i, int j, int k) {
+		if (k == word.size())	return true;
+		if (!visited[i][j] && word[k] == board[i][j]) {
+			visited[i][j] = true;
+			k++;
+			if (i > 0 && dfs(board, word, visited, i - 1, j, k))		return true;
+			if (i < board.size() - 1 && dfs(board, word, visited, i + 1, j, k))	return true;
+			if (j > 0 && dfs(board, word, visited, i, j - 1, k))		return true;
+			if (j < board[0].size() - 1 && dfs(board, word, visited, i, j + 1, k))	return true;			
+			visited[i][j] = false;
+		}
+		return k == word.size() ? true : false;
 	}
 };
 
