@@ -16,6 +16,9 @@ Given 1->1->1->2->3, return 2->3.
 ///@date	2015.12.09
 ///@version	1.1
 
+///@date	2016.04.30
+///@version	3.0
+
 #include <deque>
 #include <iostream>
 
@@ -128,7 +131,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@brief	删除有序链表中的重复元素
 	///@param	head	链表表头
@@ -166,6 +169,33 @@ public:
 		}
 		if (flg) pre_indx->next = next_indx;
 		return first->next;
+	}
+};
+
+class Solution {
+public:
+	///@note	1. 设置虚拟头结点；
+	//			2. 在遍历过程中找有重复的元素，找到其所有的重复区间，直接跳过；
+	//			3. 时间复杂度为O(n)，空间复杂度为O(1)。
+	ListNode* deleteDuplicates(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* preHead = new ListNode(0);
+		preHead->next = head;
+		ListNode* i = head;
+		ListNode* pre = preHead;
+		while (i) {
+			ListNode* nxt = i->next;
+			if (nxt && i->val == nxt->val) {
+				while (nxt && i->val == nxt->val)	nxt = nxt->next;
+				pre->next = nxt;
+				i = nxt;
+			}
+			else {
+				pre = i;
+				i = nxt;
+			}
+		}
+		return preHead->next;
 	}
 };
 
