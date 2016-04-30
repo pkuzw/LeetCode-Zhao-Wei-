@@ -16,6 +16,9 @@ Given 1->1->2->3->3, return 1->2->3.
 ///@date	2015.12.09
 ///@version	1.1
 
+///@date	2016.04.30
+///@version	1.2
+
 #include <iostream>
 #include <queue>
 
@@ -114,6 +117,26 @@ public:
 			else {
 				indx = indx->next;
 				nxt_indx = nxt_indx->next;
+			}
+		}
+		return head;
+	}
+};
+
+class Solution {
+public:
+	ListNode* deleteDuplicates(ListNode* head) {
+		if (!head || !head->next)	return head;
+		ListNode* indx = head;
+		ListNode* indx_nxt = indx->next;
+		while (indx_nxt) {
+			if (indx->val == indx_nxt->val) {
+				indx_nxt = indx_nxt->next;
+				indx->next = indx_nxt;
+			}
+			else {
+				indx = indx->next;
+				indx_nxt = indx_nxt->next;
 			}
 		}
 		return head;
