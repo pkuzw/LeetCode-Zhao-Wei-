@@ -18,6 +18,9 @@ return 1->2->2->4->3->5.
 ///@date	2015.12.10
 ///@version	1.1
 
+///@date	2016.05.02
+///@version	1.2
+
 #include <iostream>
 #include <queue>
 
@@ -119,13 +122,16 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@brief	将链表划分成两部分，左半部分小于指定值x，有半部分大于等于x
 	///@param	head	原始链表
 	///@param	x		指定值
 	///@return	返回划分好的链表起点
-	///@note	1. 枚举；2. 遍历链表，如果小于x，则将其归为前半部分链表，如果大于等于x，则将其归为后半部分链表；3. 然后将前后两部分连接起来；4. 时间复杂度为O(n)，空间复杂度为O(1)。
+	///@note	1. 枚举；
+	//			2. 遍历链表，如果小于x，则将其归为前半部分链表，如果大于等于x，则将其归为后半部分链表；
+	//			3. 然后将前后两部分连接起来；
+	//			4. 时间复杂度为O(n)，空间复杂度为O(1)。
 	ListNode* partition(ListNode* head, int x) {
 		if (!head)	return nullptr;
 		ListNode* lhead = new ListNode(INT_MAX);
@@ -146,6 +152,29 @@ public:
 		}
 		lindx->next = rhead->next;
 		rindx->next = nullptr;
+		return lhead->next;
+	}
+};
+
+class Solution {
+public:
+	ListNode* partition(ListNode* head, int x) {
+		ListNode* lhead = new ListNode(0);
+		ListNode* rhead = new ListNode(0);
+		ListNode* i = head, *l = lhead, *r = rhead;
+		while (i) {
+			if (i->val < x) {
+				l->next = i;
+				l = l->next;
+			}
+			else {
+				r->next = i;
+				r = r->next;
+			}
+			i = i->next;
+		}
+		l->next = rhead->next;
+		r->next = nullptr;
 		return lhead->next;
 	}
 };
