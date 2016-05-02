@@ -9,6 +9,9 @@ Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle con
 ///@date	2015.08.26
 ///@version	2.0
 
+///@date	2016.05.02
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -196,7 +199,7 @@ private:
 	}
 };
 //@note	建立三个一维数组，分别保存当前行的1的左边界，1的右边界的后一个元素下标和1的高度。
-class Solution {
+class Solution_v2 {
 public:
 	int maximalRectangle(vector<vector<char>>& matrix) {
 		if (matrix.empty())	return 0;
@@ -232,6 +235,35 @@ public:
 			}
 			for (int j = 0; j != n; j++)
 				rslt = max(rslt, (right[j] - left[j]) * height[j]);
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	int maximalRectangle(vector<vector<char>>& matrix) {
+		if (matrix.empty())	return 0;
+		int rslt = 0, row = matrix.size(), col = matrix[0].size();
+		vector<int> height(col, 0), right(col, col), left(col, 0);
+		for (int i = 0; i != row; i++) {
+			int cur_left = 0, cur_right = col;
+			for (int j = 0; j != col; j++)	height[j] = matrix[i][j] == '1' ? height[j] + 1 : 0;
+			for (int j = 0; j != col; j++) {
+				if (matrix[i][j] == '1') left[j] = max(left[j], cur_left);
+				else {
+					left[j] = 0;
+					cur_left = j + 1;
+				}
+			}
+			for (int j = col - 1; j >= 0; j--) {
+				if (matrix[i][j] == '1')	right[j] = min(right[j], cur_right);
+				else {
+					right[j] = col;
+					cur_right = j;
+				}
+			}
+			for (int j = 0; j < col; j++)	rslt = max(rslt, (right[j] - left[j]) * height[j]);			
 		}
 		return rslt;
 	}
