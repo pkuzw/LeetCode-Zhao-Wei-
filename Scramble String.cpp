@@ -47,6 +47,9 @@ Given two strings s1 and s2 of the same length, determine if s2 is a scrambled s
 ///@date	2015.12.11
 ///@version 2.1
 
+///@date	2016.05.02
+///@version	2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -169,12 +172,12 @@ private:
 /*
 dp[k][i][j]表示s1[i..i+k-1]是否与s2[j, j+k-1]为scramble string
 */
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	判断两个字符串能够通过在二叉树节点上的交换来互相转换
 	///@param	s1	字符串1
 	///@param	s2	字符串2
-	///@return	如果可以想换转换，则返回true；否则返回false
+	///@return	如果可以相互转换，则返回true；否则返回false
 	///@note	1. 动态规划：1.维护一个三维数组来dp[k][i][j]保存字符串s1[i..i+k]与字符串s2[j..j+k]是否为scramble string。
 	//			2. 初始条件为dp[1][i][j] = (s1[i] == s2[j]) ? true : false，
 	//			3. 递推关系式为dp[k][i][j] = ((dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]))。
@@ -192,6 +195,24 @@ public:
 					for (int l = 1; l != k && !dp[k][i][j]; l++)
 						dp[k][i][j] = (dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]);
 		return dp[len][0][0];
+	}
+};
+
+class Solution {
+public:
+	bool isScramble(string s1, string s2) {
+		if (s1.size() != s2.size())	return false;
+		int len = s1.size();
+		vector<vector<vector<bool>>> dp(len + 1, vector<vector<bool>>(len, vector<bool>(len, false)));
+		for (int i = 0; i != len; i++) 
+			for (int j = 0; j != len; j++)
+				dp[1][i][j] = s1[i] == s2[j] ? true : false;
+		for (int k = 2; k != len + 1; k++)
+			for (int i = 0; i != len - k + 1; i++)
+				for (int j = 0; j != len - k + 1; j++)
+					for (int l = 1; l != k && !dp[k][i][j]; l++)
+						dp[k][i][j] = (dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]);
+		return dp[len][0][0];		
 	}
 };
 
