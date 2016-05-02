@@ -15,6 +15,10 @@ return 10.
 ///@version	2.0
 
 ///@date	2015.12.09
+///@version	2.1
+
+///@date	2016.05.02
+///@version	2.2
 
 #include <vector>
 #include <iostream>
@@ -95,7 +99,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算直方图最大的矩形面积
 	///@param	height	直方图的高度数组
@@ -116,6 +120,24 @@ public:
 				int tp = stk.top();
 				stk.pop();
 				rslt = max(rslt, height[tp] * (stk.empty() ? i : i - stk.top() - 1));
+			}
+		}
+		return rslt;
+	}
+};
+
+class Solution {
+public:
+	int largestRectangleArea(vector<int>& heights) {
+		heights.push_back(0);
+		int rslt = 0, i = 0;
+		stack<int> stk;
+		while (i < heights.size()) {
+			if (stk.empty() || heights[i] >= heights[stk.top()])	stk.push(i++);
+			else {
+				int tp = stk.top();
+				stk.pop();
+				rslt = max(rslt, heights[tp] * (stk.empty() ? i : i - stk.top() - 1));
 			}
 		}
 		return rslt;
