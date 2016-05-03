@@ -27,6 +27,10 @@ For now, the judge is able to judge based on one instance of gray code sequence.
 
 ///@date	2015.12.20
 ///@version 2.1
+
+///@date	2016.05.03
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 
@@ -100,7 +104,7 @@ private:
 /*
 格雷码从二进制转换过来可以通过右移一位与自己异或得到；或者是镜面对称向下添加，然后前半部分首部加0，后半部分首部加1得到
 */
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算格雷码
 	///@param	格雷码中的位数
@@ -141,12 +145,22 @@ public:
 	}
 };
 
+class Solution {
+public:
+	vector<int> grayCode(int n) {
+		vector<int> rslt;
+		for (int i = 0; i != (1 << n); i++)	rslt.push_back((i >> 1) ^ i);
+		return rslt;
+	}
+};
+
 int main()
 {
 	int n = 6;
+	Solution_v2 s2;
 	Solution slt;
-	vector<int> rslt = slt.grayCodeMirror(n);
-	rslt = slt.grayCode(n);
+	vector<int> r2 = s2.grayCodeMirror(n);
+	vector<int> rslt = slt.grayCode(n);
 
 	Solution_v1 slt_v1;
 	rslt = slt_v1.grayCode(n);
