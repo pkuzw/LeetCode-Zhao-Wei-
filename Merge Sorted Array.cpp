@@ -15,6 +15,10 @@ The number of elements initialized in nums1 and nums2 are m and n respectively.
 
 ///@date	2015.12.19
 ///@version	3.0
+
+///@version	2016.05.03
+///@version	2.1
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -86,13 +90,15 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	归并排序
 	///@param	nums1, nums2	数组1和数组2
 	///@param	m, n			数组1和数组2的长度
 	///@return	无
-	///@note	1. 将nums1添加到nums2的后端，然后调用快速排序进行排序。2. 时间复杂度为O(nlogn)，空间复杂度为O(m+n)；3. oj报wa，过不了{}, {1}这组测试数据。
+	///@note	1. 将nums1添加到nums2的后端，然后调用快速排序进行排序。
+	//			2. 时间复杂度为O(nlogn)，空间复杂度为O(m+n)；
+	//			3. oj报wa，过不了{}, {1}这组测试数据。
 	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
 		if (nums1.empty()) {
 			nums1 = nums2;
@@ -102,6 +108,21 @@ public:
 			nums1.insert(nums1.end(), nums2.begin(), nums2.end());
 			sort(nums1.begin(), nums1.end());
 		}
+	}
+};
+
+class Solution {
+public:
+	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+		vector<int> nums3;
+		int i = 0, j = 0;
+		while (i != m && j != n) {
+			if (nums1[i] <= nums2[j])	nums3.push_back(nums1[i++]);			
+			else	nums3.push_back(nums2[j++]);			
+		}
+		if (i == m) nums3.insert(nums3.end(), nums2.begin() + j, nums2.begin() + n);
+		if (j == n)	nums3.insert(nums3.end(), nums1.begin() + i, nums1.begin() + m);
+		nums1 = nums3;
 	}
 };
 
