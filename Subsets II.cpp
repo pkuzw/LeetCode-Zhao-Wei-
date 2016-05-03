@@ -27,6 +27,9 @@ If nums = [1,2,2], a solution is:
 ///@date	2015.12.20
 ///@version	2.1
 
+///@date	2016.05.03
+///@version	2.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -85,7 +88,7 @@ private:
 	vector<int> combination;	//	一个子集
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	计算集合的所有子集，排除重复的子集
 	///@param	nums	集合
@@ -114,11 +117,36 @@ private:
 			rslt.push_back(combination);
 			return;
 		}
-		for (int i = 0; i != nums.size(); i++) {
+		for (int i = 0; i <= nums.size(); i++) {
 			if (i == 0 || nums[i] != nums[i - 1])	combination.push_back(nums[i]);
 			else continue;
 			vector<int> new_nums(nums.begin() + i + 1, nums.end());
 			getCombination(new_nums, n - 1, k - 1, rslt, combination);
+			combination.pop_back();
+		}
+	}
+};
+
+class Solution {
+public:
+	vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+		sort(nums.begin(), nums.end());
+		vector<vector<int>> rslt;
+		vector<int> combination;
+		for (int i = 0; i != nums.size(); i++)	dfs(rslt, combination, nums, nums.size(), i);
+		return rslt;
+	}
+
+	void dfs(vector<vector<int>>& rslt, vector<int>& combination, vector<int> nums, int n, int k) {
+		if (!k) {
+			rslt.push_back(combination);
+			return;
+		}
+		for (int i = 0; i != nums.size(); i++) {
+			if (!i || nums[i] != nums[i-1])	combination.push_back(nums[i]);
+			else	continue;
+			vector<int> new_nums(nums.begin() + i + 1, nums.end());
+			dfs(rslt, combination, new_nums, n - 1, k - 1);
 			combination.pop_back();
 		}
 	}
