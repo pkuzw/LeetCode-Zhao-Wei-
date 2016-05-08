@@ -26,6 +26,9 @@ Given m, n satisfy the following condition:
 ///@date	2015.12.21
 ///@version	2.1
 
+///@date	2016.05.08
+///@version	2.2
+
 #include <iostream>
 #include <stack>
 
@@ -220,7 +223,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	反转链表，从指定起点m，到指定终点n
 	///@param	head	链表表头
@@ -262,51 +265,41 @@ public:
 		rtail->next = indx_nxt;
 		return pre_head->next;
 	}
+};
 
-
-
-
-
-
-
-
-
-
-
-// 		if (!head || !head->next || m >= n)	return head;
-// 		ListNode* pre_head = new ListNode(INT_MAX);
-// 		pre_head->next = head;
-// 		ListNode* indx = head;		
-// 		int i = 1;
-// 		while (i < m)
-// 		{
-// 			indx = indx->next;			
-// 			i++;
-// 		}
-// 		ListNode* indx_next = indx->next;
-// 		ListNode* indx_next_next = indx_next;
-// 		indx->next = nullptr;
-// 		ListNode* r_tail = indx;
-// 		while (i < n)
-// 		{
-// 			if (indx_next)	indx_next_next = indx_next->next;
-// 			indx_next->next = indx;
-// 			indx = indx_next;
-// 			indx_next =  indx_next ? indx_next_next : indx_next;
-// 			
-// 			i++;
-// 		}
-// 		ListNode* pre = pre_head;
-// 		int j = 1;
-// 		while (j < m)
-// 		{
-// 			pre = pre->next;
-// 			j++;
-// 		}
-// 		pre->next = indx;
-// 		r_tail->next = indx_next;
-// 		return pre_head->next;
-// 	}
+class Solution {
+public:
+	ListNode* reverseBetween(ListNode* head, int m, int n) {
+		if (!head || !head->next || m >= n) return head;
+		ListNode* pre_head = new ListNode(INT_MAX);
+		pre_head->next = head;
+		ListNode* indx = head;
+		int i = 1;
+		while (i < m) {
+			indx = indx->next;
+			i++;
+		}
+		ListNode* rtail = indx;
+		ListNode* indx_nxt = indx->next;
+		ListNode* indx_nxt_nxt = indx_nxt ? indx_nxt->next : nullptr;
+		indx->next = nullptr;
+		while (i < n) {
+			if (indx_nxt) indx_nxt_nxt = indx_nxt->next;
+			indx_nxt->next = indx;
+			indx = indx_nxt;
+			indx_nxt = indx_nxt ? indx_nxt_nxt : indx_nxt;
+			i++;
+		}
+		ListNode* pre_indx = pre_head;
+		i = 1;
+		while (i < m) {
+			pre_indx = pre_indx->next;
+			i++;
+		}
+		pre_indx->next = indx;
+		rtail->next = indx_nxt;
+		return pre_head->next;
+	}
 };
 
 int main()
