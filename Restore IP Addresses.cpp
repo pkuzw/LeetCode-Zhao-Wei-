@@ -110,53 +110,15 @@ private:
 	}
 };
 
-// class Solution {
-// public:
-// 	vector<string> restoreIpAddresses(string s) {
-// 		vector<string> rslt;
-// 		restoreRecur(s, "", 4, rslt);
-// 		return rslt;
-// 	}
-// private:
-// 	///@param	s		剩余的IP字符串
-// 	///@param	ip		已经组成的IP地址
-// 	///@param	k		剩余的段数
-// 	///@param	rslt	结果数组
-// 	void restoreRecur(string s, string ip, int k, vector<string>& rslt)
-// 	{
-// 		if (k == 0)		
-// 		{
-// 			if (s.empty())	rslt.push_back(ip);					
-// 		}
-// 		else
-// 		{
-// 			for (int i = 1; i <= 3; i++)
-// 			{
-// 				if (i <= s.size() && isValid(s.substr(0, i)))
-// 				{
-// 					if (k == 1)	restoreRecur(s.substr(i), ip + s.substr(0, i), k-1, rslt);				
-// 					else		restoreRecur(s.substr(i), ip + s.substr(0, i) + ".", k-1, rslt);
-// 				}
-// 			}
-// 		}
-// 	}
-// 
-// 	bool isValid(string s)
-// 	{
-// 		if (s.empty() || s.size() > 3 || (s.size() > 1 && s[0] == '0'))	return false;
-// 		int n = stoi(s);
-// 		return n >= 0 && n <= 255;
-// 	}
-// };
-
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	将一组数字字符串转换成所有可能的合法IP地址
 	///@param	s	数字字符串
 	///@return	返回所有可能的IP地址集合
-	///@note	1. 递归；2. 递归函数有4个参数，分别是剩余数字字符串，当前IP段的字符子串，剩余IP段数目和结果集合；3. 当剩余段数目为0时，递归终止，
-	//			在终止时应该注意，如果此时剩余数字字符串为空时，应该将当前IP段的字符子串压入结果数组，否则直接结束；4. 因为IP地址分为4段，每段的
-	//			长度为1到3位，大小是0~255，没有前缀0，所以在判断每一段的时候应该有一个判断当前段是否合法的函数。
+	///@note	1. 递归；
+	//			2. 递归函数有4个参数，分别是剩余数字字符串，当前IP段的字符子串，剩余IP段数目和结果集合；
+	//			3. 当剩余段数目为0时，递归终止，在终止时应该注意，如果此时剩余数字字符串为空时，应该将当前IP段的字符子串压入结果数组，否则直接结束；
+	//			4. 因为IP地址分为4段，每段的长度为1到3位，大小是0~255，没有前缀0，所以在判断每一段的时候应该有一个判断当前段是否合法的函数。
 	vector<string> restoreIpAddresses(string s) {
 		vector<string> rslt;
 		helper(s, 4, "", rslt);
@@ -188,6 +150,13 @@ public:
 		if (s.size() > 3 || s.size() < 1 || (s.size() > 1 && s[0] == '0'))	return false;
 		int n = stoi(s);
 		return n <= 255 && n >= 0;
+	}
+};
+
+class Solution {
+public:
+	vector<string> restoreIpAddresses(string s) {
+
 	}
 };
 
