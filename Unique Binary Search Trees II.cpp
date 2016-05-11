@@ -21,6 +21,9 @@ Given n = 3, your program should return all 5 unique BST's shown below.
 ///@date	2015.12.29
 ///@version	1.1
 
+///@date	2016.05.11
+///@version	1.2
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -105,7 +108,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@brief	计算所有可能的二叉查找树
 	///@param	n	二叉树的节点的数目
@@ -145,9 +148,39 @@ public:
 	}
 };
 
-int main()
-{
-	int n = 0;
+class Solution {
+public:
+	vector<TreeNode*> generateTrees(int n) {
+		vector<TreeNode*> rslt;
+		if (!n)	return rslt;
+		rslt = dfs(1, n);
+		return rslt;
+	}
+
+	vector<TreeNode*> dfs(int start, int end) {
+		vector<TreeNode*> trees;
+		if (start > end) {
+			trees.push_back(nullptr);
+			return trees;
+		}
+		for (int i = start; i <= end; i++) {
+			vector<TreeNode*> left = dfs(start, i - 1);
+			vector<TreeNode*> right = dfs(i + 1, end);
+			for (int j = 0; j < left.size(); j++) {
+				for (int k = 0; k < right.size(); k++) {
+					TreeNode* node = new TreeNode(i);
+					node->left = left[j];
+					node->right = right[k];
+					trees.push_back(node);
+				}
+			}
+		}
+		return trees;
+	}
+};
+
+int main() {
+	int n = 3;
 	Solution slt;
 	vector<TreeNode*> rslt = slt.generateTrees(n);	
 	return 0;
