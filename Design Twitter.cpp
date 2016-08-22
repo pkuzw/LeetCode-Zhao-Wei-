@@ -54,6 +54,7 @@ public:
             return x.second->time < y.second->time;
         };
         
+        //  make_heap在缺省情况下默认建立最大堆，且堆顶在vec.front()处，堆在使用时包含在<algorithm>头文件中
         make_heap(h.begin(), h.end(), f);
         
         const int n = 10;   // 只关注最新的10条推特
@@ -61,10 +62,10 @@ public:
         vector<int> feeds;
         for (int i = 0; i < n && (!h.empty()); i++) {
             pop_heap(h.begin(), h.end(), f);    //  最早的用户推特出堆
-            auto& hb = h.back();    //  获取最晚的用户推特
+            auto& hb = h.back();    // 这里为什么用heap.back??? 获取最晚的用户推特？
             feeds.push_back(hb.second->tweetId);    //  将最新的推特加入结果数组
             
-            //      ???
+            // 为什么要先出堆再入堆???
             if (hb.first == hb.second--)    h.pop_back();   //  如果当前关注的用户推特已经获取完毕，将其出堆
             else    push_heap(h.begin(), h.end(), f);   //  否则入堆
         }
@@ -111,6 +112,19 @@ private:
  * obj.unfollow(followerId,followeeId);
  */
 
+bool cmp(const int& a, const int& b) {
+    return a > b;
+}
+
 int main() {
+    // 测试堆的用法
+    vector<int> vec;
+    vec.push_back(10), vec.push_back(3), vec.push_back(4), vec.push_back(1), vec.push_back(9);
+    
+    make_heap(vec.begin(), vec.end(), cmp);
+    
+  //  int a = vec.back();
+    int a = vec.front();
+    int b = vec.back();
     return 0;
 }
