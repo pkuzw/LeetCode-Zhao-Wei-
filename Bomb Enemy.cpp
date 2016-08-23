@@ -24,7 +24,7 @@ public:
     ///@return  返回杀死的最大敌人数
     ///@note    1. 枚举
     //          2. 对于所有空位进行遍历，找到能够杀死的最大敌人数
-    //          3. 时间复杂度为O(mn)，空间复杂度为O(1)，其中m和n分别是行列数
+    //          3. 时间复杂度为O(m*n*(m + n）)，空间复杂度为O(1)，其中m和n分别是行列数
     //          4. TLE
     int maxKilledEnemies(vector<vector<char>>& grid) {
         if (grid.empty() || grid[0].empty())    return 0;
@@ -82,6 +82,127 @@ public:
     }
 };
 
+class Solution_v1_1 {
+    struct segment {
+        int start_x, start_y, end_x, end_y;
+        int enemies;
+        segment(int sx, int sy, int ex, int ey, int enemies) : start_x(sx), start_y(sy), end_x(ex), end_y(ey), enemies(enemies) {}
+    };
+    
+    vector<segment> row_segments, col_segments;
+public:
+    ///@note    1. 对棋盘进行预处理，计算出每行和每列被墙所阻隔的区间内的敌人数目；
+    //          2. 对所有相交区间进行遍历，找出相交区间上敌人的最大数目，交点必须为'0'。
+    //          3. 时间复杂度为O((m + k) * l)，其中m是行数，k是墙的数目，l是区间的平均长度
+    //          4. TLE
+    int maxKilledEnemies(vector<vector<char>>& grid) {
+        if (grid.empty() || grid[0].empty())    return 0;
+        int rslt = 0;
+        getRowSeg(grid);
+        getColSeg(grid);
+        
+        for (int i = 0; i != row_segments.size(); i++) {
+            for (int j = 0; j != col_segments.size(); j++) {
+                rslt = max(rslt, killEnemiesOfTwoSeg(row_segments[i], col_segments[j], grid));
+            }
+        }
+        return rslt;
+    }
+    
+    ///@brief   对棋盘的行区间进行预处理
+    ///@param   grid    棋盘
+    void getRowSeg(vector<vector<char>>& grid) {
+        for (int i = 0; i != grid.size(); i++) {
+            int wall_x = -1, wall_y = -1;
+            int enemies_cnt = 0;
+            for (int j = 0; j != grid[0].size(); j++) {
+                if (grid[i][j] == 'W') {
+                    if (wall_x == -1 && wall_x == -1) {
+                        wall_x = i;
+                        wall_y = j;
+                        if (j > 0) {
+                            segment seg(i, 0, i, j-1, enemies_cnt);
+                            row_segments.push_back(seg);
+                            enemies_cnt = 0;
+                        }
+                    }
+                    else {
+                        segment seg(i, wall_y+1, i, j-1, enemies_cnt);
+                        row_segments.push_back(seg);
+                        enemies_cnt = 0;
+                        wall_x = i;
+                        wall_y = j;
+                    }
+                }
+                else if (grid[i][j] == 'E') {
+                    enemies_cnt++;
+                }
+            }
+            if (wall_x == -1 && wall_y == -1) {
+                segment seg(i, 0, i, grid[0].size()-1, enemies_cnt);
+                row_segments.push_back(seg);
+            }
+            else {
+                segment seg(i, wall_y+1, i, grid[0].size()-1, enemies_cnt);
+                row_segments.push_back(seg);
+            }
+        }
+    }
+    
+    ///@brief   对棋盘的列区间进行预处理
+    ///@param   grid    棋盘
+    void getColSeg(vector<vector<char>>& grid) {
+        for (int j = 0; j != grid[0].size(); j++) {
+            int wall_x = -1, wall_y = -1;
+            int enemies_cnt = 0;
+            for (int i = 0; i != grid.size(); i++) {
+                if (grid[i][j] == 'W') {
+                    if (wall_x == -1 && wall_x == -1) {
+                        wall_x = i;
+                        wall_y = j;
+                        if (i > 0) {
+                            segment seg(0, j, i-1, j, enemies_cnt);
+                            col_segments.push_back(seg);
+                            enemies_cnt = 0;
+                        }
+                    }
+                    else {
+                        segment seg(wall_x+1, j, i-1, j, enemies_cnt);
+                        col_segments.push_back(seg);
+                        wall_x = i;
+                        wall_y = j;
+                        enemies_cnt = 0;
+                    }
+                }
+                else if (grid[i][j] == 'E') {
+                    enemies_cnt++;
+                }
+            }
+            if (wall_x == -1 && wall_y == -1) {
+                segment seg(0, j, grid.size()-1, j, enemies_cnt);
+                col_segments.push_back(seg);
+            }
+            else {
+                segment seg(wall_x+1, j, grid.size()-1, j, enemies_cnt);
+                col_segments.push_back(seg);
+            }
+        }
+    }
+        
+    ///@brief   判断两个区间的最大杀敌数目
+    ///@param   s1  行区间
+    ///@param   s2  列区间
+    ///@param   grid    棋盘
+    ///@return  返回两个区间的的敌人数
+    int killEnemiesOfTwoSeg(segment& s1, segment& s2, vector<vector<char>>& grid) {
+        if (s1.start_y <= s2.start_y && s1.end_y >= s2.start_y
+            && s2.start_x <= s1.start_x && s2.end_x >= s1.start_x
+            && grid[s1.start_x][s2.start_y] == '0')
+            return s1.enemies + s2.enemies;
+        return 0;
+    }
+};
+
 int main() {
     /*
      0 E 0 0
@@ -113,6 +234,9 @@ int main() {
     
     Solution_v1_0 slt_v1;
     int rslt = slt_v1.maxKilledEnemies(grid);
+    
+    Solution slt;
+    rslt = slt.maxKilledEnemies(grid);
     return 0;
 }
 
