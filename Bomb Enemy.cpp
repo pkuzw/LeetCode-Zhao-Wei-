@@ -203,6 +203,43 @@ public:
     }
 };
 
+class Solution {
+public:
+    ///@note   1. 在v1.0的基础上进行了精简，在每一次遍历的过程中寻找其所能扩展的最大杀敌数。
+    //         2. 时间复杂度为O(mnk)，空间复杂度为O(1)，其中m和n分别是行列数，k为每个空格处能够扩展的平均长度。
+    int maxKilledEnemies(vector<vector<char>>& grid) {
+        if (grid.empty() || grid[0].empty())    return 0;
+        int row = grid.size(), col = grid[0].size();
+        int rslt = 0;
+        for (int i = 0; i != row; i++) {
+            for (int j = 0; j != col; j++) {
+                int sum = 0;
+                if (grid[i][j] == '0') {
+                    int up = i - 1, down = i + 1, left = j - 1, right = j + 1;
+                    while (up >= 0 && grid[up][j] != 'W') {
+                        if (grid[up][j] == 'E')   sum++;
+                        up--;
+                    }
+                    while (down < row && grid[down][j] != 'W') {
+                        if (grid[down][j] == 'E')   sum++;
+                        down++;
+                    }
+                    while (left >= 0 && grid[i][left] != 'W') {
+                        if (grid[i][left] == 'E')   sum++;
+                        left--;
+                    }
+                    while (right < col && grid[i][right] != 'W') {
+                        if (grid[i][right] == 'E')   sum++;
+                        right++;
+                    }
+                    rslt = sum > rslt ? sum : rslt;
+                }
+            }
+        }
+        return rslt;
+    }
+};
+
 int main() {
     /*
      0 E 0 0
@@ -232,8 +269,11 @@ int main() {
     grid.push_back(line);
     line.clear();
     
-    Solution_v1_0 slt_v1;
-    int rslt = slt_v1.maxKilledEnemies(grid);
+    Solution_v1_0 slt_v1_0;
+    int rslt = slt_v1_0.maxKilledEnemies(grid);
+    
+    Solution_v1_1 slt_v1_1;
+    rslt = slt_v1_1.maxKilledEnemies(grid);
     
     Solution slt;
     rslt = slt.maxKilledEnemies(grid);
