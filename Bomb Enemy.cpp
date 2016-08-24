@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -203,7 +204,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_1_2 {
 public:
     ///@note   1. 在v1.0的基础上进行了精简，在每一次遍历的过程中寻找其所能扩展的最大杀敌数。
     //         2. 时间复杂度为O(mnk)，空间复杂度为O(1)，其中m和n分别是行列数，k为每个空格处能够扩展的平均长度。
@@ -240,6 +241,41 @@ public:
     }
 };
 
+class Solution {
+public:
+    ///@note    1. 设置一个临时变量来保存每一行中当前连续的敌人数；
+    //          2. 设置一个临时数组保存每一列的当前连续敌人数；
+    //          3. 在遍历的时候因为在之前已经计算过当前位置的行列连续敌人数，直接相加即可；
+    //          4. 时间复杂度为O(mn)，空间复杂度为O(n)，其中m是行数，n是列数。
+    int maxKilledEnemies(vector<vector<char>>& grid) {
+        if (grid.empty() || grid[0].empty())    return 0;
+        int row = grid.size(), col = grid[0].size();
+        int rslt = 0;
+        int row_hit = 0;
+        vector<int> col_hit(col, 0);
+        for (int i = 0; i != row; i++) {
+            for (int j = 0; j != col; j++) {
+                if (!j || grid[i][j-1] == 'W') {
+                    row_hit = 0;
+                    for (int k = j; k < col && grid[i][k] != 'W'; k++) {
+                        row_hit += grid[i][k] == 'E';
+                    }
+                }
+                if (!i || grid[i-1][j] == 'W') {
+                    col_hit[j] = 0;
+                    for (int k = i; k < row && grid[k][j] != 'W'; k++) {
+                        col_hit[j] += grid[k][j] == 'E';
+                    }
+                }
+                if (grid[i][j] == '0')
+                    rslt = max(rslt, row_hit + col_hit[j]);
+            }
+        }
+        return rslt;
+    }
+};
+
+
 int main() {
     /*
      0 E 0 0
@@ -248,24 +284,11 @@ int main() {
      */
     vector<vector<char>> grid;
     vector<char> line;
-    line.push_back('0');
-    line.push_back('E');
-    line.push_back('0');
-    line.push_back('0');
-    grid.push_back(line);
-    line.clear();
-    
-    line.push_back('E');
-    line.push_back('0');
     line.push_back('W');
     line.push_back('E');
-    grid.push_back(line);
-    line.clear();
-    
+    line.push_back('W');
     line.push_back('0');
     line.push_back('E');
-    line.push_back('0');
-    line.push_back('0');
     grid.push_back(line);
     line.clear();
     
