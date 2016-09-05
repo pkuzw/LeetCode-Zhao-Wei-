@@ -17,7 +17,7 @@
 
 using namespace std;
 
-class Solution {
+class Solution_tle {
 public:
     ///@brief   对于一组初始为0的数组，通过将指定区间的值加上指定值，计算最后更新后的数组
     ///@param   length  数组的长度
