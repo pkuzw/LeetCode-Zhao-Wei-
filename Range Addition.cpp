@@ -37,6 +37,34 @@ public:
     }
 };
 
+///@brief   区间类
+class interval {
+public:
+    int begin;  //  区间起始下标
+    int end;    //  区间终止下标
+    int val;    //  区间的值
+    
+    ///@brief   区间类的构造函数
+    ///@param   beg 构造的区间类的起始下标
+    ///@param   ed  构造的区间类的终止下标
+    ///@param   vl  构造的区间类的值
+    interval(int beg, int ed, int vl) : begin(beg), end(ed), val(vl) {}
+    
+};
+
+
+class Solution {
+public:
+    ///@brief   对于一组初始值为0的数组，通过将指定区间的值加上指定值，计算最后更新后的数组
+    ///@param   length  数组的长度
+    ///@param   updates 数组的更新操作，每一个更新操作是一个三元组<a, b, c>，其中a是更新的数组起始下标，b是更新范围的终止下标，c是累加的值
+    ///@return  返回更新后的数组
+    vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
+        vector<int> rslt(length, 0);
+        return rslt;
+    }
+};
+
 int main() {
     Solution slt;
     vector<int> update;
