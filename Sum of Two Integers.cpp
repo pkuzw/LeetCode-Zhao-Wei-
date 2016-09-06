@@ -25,6 +25,7 @@ public:
     ///         2. 1 ^ 1 = 0, 1 ^ 0 = 1, 0 ^ 0 = 0
     ///         3. 在使用异或操作之外，通过每一位的进位标志来判断是否需要进位
     ///         4. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为整型变量的二进制长度
+    ///         5. 注意，在此题中结果越上界(> INT_MAX)应该返回INT_MIN，如果越下界(< INT_MIN)应该返回INT_MAX
     int getSum(int a, int b) {
         int rslt = 0;
         if (a > 0 && b > 0) rslt = sum(a, b);
@@ -77,6 +78,7 @@ public:
             a >>= 1;
             x ^= carry;
             if (x == 1 && carry == 1)   carry = 1;
+            else    carry = 0;
             int y = b & 1;
             b >>= 1;
             int z = x ^ y;
@@ -84,13 +86,14 @@ public:
             rslt = (rslt >> 1) | z;
             z >>= 30;
             if (z == 1 && x == 0)   carry = 1;
+            else    carry = 0;
         }
         return rslt;
     }
 };
 
 int main() {
-    int a = 2, b = -1;
+    int a = INT_MAX, b = 5;
     int rslt = 0;
     Solution slt;
 //    
