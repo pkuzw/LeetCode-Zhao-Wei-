@@ -12,6 +12,7 @@
 ///@version 1.0
 
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <cmath>
 
@@ -61,7 +62,30 @@ public:
     ///@return  返回更新后的数组
     vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
         vector<int> rslt(length, 0);
+        sort(updates.begin(), updates.end(), mycmp);
+        vector<interval> intervals;
+        for (int i = 0; i != updates.size(); i++) {
+            if (intervals.empty()) {
+                interval intv(updates[i][0], updates[i][1], updates[i][2]);
+                intervals.push_back(intv);
+            }
+            int j = 0;
+            for (j = 0; j != intervals.size(); j++)
+                if (intervals[j].begin >= updates[i][0] && intervals[j].begin <= updates[i][1])
+                    break;
+            if (j == intervals.size()) {
+                interval intv(updates[i][0], updates[i][1], updates[i][2]);
+                intervals.push_back(intv);
+            }
+        }
+        
         return rslt;
+    }
+    
+    ///@brief   比较函数
+    ///@note    对区间按照起始下标进行排序
+    static bool mycmp(vector<int>& a, vector<int>& b) {
+        return a[0] < b[0];
     }
 };
 
