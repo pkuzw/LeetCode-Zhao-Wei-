@@ -25,7 +25,7 @@ public:
     ///         2. 1 ^ 1 = 0, 1 ^ 0 = 1, 0 ^ 0 = 0
     ///         3. 在使用异或操作之外，通过每一位的进位标志来判断是否需要进位
     ///         4. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为整型变量的二进制长度
-    ///         5. 注意，在此题中结果越上界(> INT_MAX)应该返回INT_MIN，如果越下界(< INT_MIN)应该返回INT_MAX
+    ///         5. 注意，在此题中结果越上界(> INT_MAX)应该返回INT_MIN + 越过的值，如果越下界(< INT_MIN)应该返回INT_MAX - 越过的值
     int getSum(int a, int b) {
         int rslt = 0;
         if (a > 0 && b > 0) rslt = sum(a, b);
@@ -61,7 +61,12 @@ public:
             z <<= 30;
             rslt = (rslt >> 1) | z;
             z >>= 30;
-            carry = z == 0 && x == 1 ? 1 : 0;
+            if ((x == 1 && y == 1 && carry == 1) ||
+                (x == 1 && y == 1 && carry == 0) ||
+                (x == 1 && y == 0 && carry == 1) ||
+                (x == 0 && y == 1 && carry == 1))
+                carry = 1;
+            else    carry = 0;
         }
         return rslt;
     }
@@ -72,28 +77,49 @@ public:
     ///@return  返回a - b的差
     int difference(int a, int b) {
         int rslt = 0;
-        int carry = 0;
         for (int i = 0; i < 31; i++) {
             int x = a & 1;
             a >>= 1;
-            x ^= carry;
-            if (x == 1 && carry == 1)   carry = 1;
-            else    carry = 0;
             int y = b & 1;
             b >>= 1;
             int z = x ^ y;
             z <<= 30;
             rslt = (rslt >> 1) | z;
             z >>= 30;
-            if (z == 1 && x == 0)   carry = 1;
-            else    carry = 0;
+            if (z == 1 && x == 0) {
+                int a_ = a;
+                int c = a_ & 1;
+                int count = 0;
+                while (c == 0) {
+                    count++;
+                    a_ >>= 1;
+                    c = a_ & 1;
+                }
+                int d = 0;
+                for (int j = 0; j != 31 - count; j++) {
+                    d |= 1;
+                    d <<= 1;
+                }
+                d <<= 1;
+                for (int j = 0; j != count; j++) {
+                    d <<= 1;
+                    d |= 1;
+                }
+                a &= d;
+                d = 0;
+                for (int j = 0; j != count; j++) {
+                    d <<= 1;
+                    d |= 1;
+                }
+                a |= d;
+            }
         }
         return rslt;
     }
 };
 
 int main() {
-    int a = INT_MAX, b = 5;
+    int a = -14, b = 16;
     int rslt = 0;
     Solution slt;
 //    
