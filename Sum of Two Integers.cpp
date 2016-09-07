@@ -15,7 +15,7 @@
 #include <cmath>
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
     ///@brief   计算两个整型变量的和，在计算过程中不可以使用'+', '-'算符
     ///@param   a   加数a
@@ -115,6 +115,25 @@ public:
             }
         }
         return rslt;
+    }
+};
+
+class Solution {
+public:
+    ///@brief   通过位操作计算两个数的加减法
+    ///@param   a, b    进行加减法的两个整型变量
+    ///@return  返回两个数加减法操作后的值
+    ///@note    1. 位操作
+    ///         2. 先处理其中一个数为0的情形；
+    ///         3. 然后计算最低位的两位数的和，通过XOR运算；
+    ///         4. 然后通过与运算计算出进位的情况；
+    ///         5. 最后递归调用getSum函数本身，来处理进位和原本的两位之和。
+    int getSum(int a, int b) {
+        if (b == 0) return a;   //  如果进位为0，直接返回原来的加法之和
+        int sum = 0, carry = 0;
+        sum = a ^ b;    //  处理原来的两数的加法
+        carry = (a & b) << 1;   //  处理进位
+        return getSum(sum, carry);  //  递归处理每一位
     }
 };
 
