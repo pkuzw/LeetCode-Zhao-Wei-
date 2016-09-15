@@ -38,22 +38,6 @@ public:
     }
 };
 
-///@brief   区间类
-class interval {
-public:
-    int begin;  //  区间起始下标
-    int end;    //  区间终止下标
-    int val;    //  区间的值
-    
-    ///@brief   区间类的构造函数
-    ///@param   beg 构造的区间类的起始下标
-    ///@param   ed  构造的区间类的终止下标
-    ///@param   vl  构造的区间类的值
-    interval(int beg, int ed, int vl) : begin(beg), end(ed), val(vl) {}
-    
-};
-
-
 class Solution {
 public:
     ///@brief   对于一组初始值为0的数组，通过将指定区间的值加上指定值，计算最后更新后的数组
@@ -62,30 +46,15 @@ public:
     ///@return  返回更新后的数组
     vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
         vector<int> rslt(length, 0);
-        sort(updates.begin(), updates.end(), mycmp);
-        vector<interval> intervals;
         for (int i = 0; i != updates.size(); i++) {
-            if (intervals.empty()) {
-                interval intv(updates[i][0], updates[i][1], updates[i][2]);
-                intervals.push_back(intv);
-            }
-            int j = 0;
-            for (j = 0; j != intervals.size(); j++)
-                if (intervals[j].begin >= updates[i][0] && intervals[j].begin <= updates[i][1])
-                    break;
-            if (j == intervals.size()) {
-                interval intv(updates[i][0], updates[i][1], updates[i][2]);
-                intervals.push_back(intv);
-            }
+            int value = updates[2];
+            int start = updates[0];
+            int end = updates[1];
+            
+            rslt[start] += value;
+            
         }
-        
         return rslt;
-    }
-    
-    ///@brief   比较函数
-    ///@note    对区间按照起始下标进行排序
-    static bool mycmp(vector<int>& a, vector<int>& b) {
-        return a[0] < b[0];
     }
 };
 
