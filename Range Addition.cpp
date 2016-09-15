@@ -11,6 +11,9 @@
 ///@date    2016.09.05
 ///@version 1.0
 
+///@date    2016.09.15
+///@version 1.1
+
 #include <vector>
 #include <set>
 #include <algorithm>
@@ -44,16 +47,27 @@ public:
     ///@param   length  数组的长度
     ///@param   updates 数组的更新操作，每一个更新操作是一个三元组<a, b, c>，其中a是更新的数组起始下标，b是更新范围的终止下标，c是累加的值
     ///@return  返回更新后的数组
+    ///@note    1. 对于每一次操作，只是更新其在结果数组中的起始下标位置的值；对于末尾下标后一个元素进行哨兵标记，是减去更新的值
+    //          2. 然后设置一个临时变量，用来保存从开始到当前下标的累加和，计算进结果数组的下标位置。此时上一步操作的减法更新值的哨兵就能够起到消除上一个操作区间的作用
+    //          3. 时间复杂度为O(n)，空间复杂度为O(n)
     vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
         vector<int> rslt(length, 0);
         for (int i = 0; i != updates.size(); i++) {
-            int value = updates[2];
-            int start = updates[0];
-            int end = updates[1];
+            int value = updates[i][2];
+            int start = updates[i][0];
+            int end = updates[i][1];
             
             rslt[start] += value;
             
+            if (end < length - 1)   rslt[end + 1] -= value;
         }
+        
+            int sum = 0;
+            for (int i = 0; i != rslt.size(); i++) {
+                sum += rslt[i];
+                rslt[i] = sum;
+            }
+            
         return rslt;
     }
 };
