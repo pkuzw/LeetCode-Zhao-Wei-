@@ -42,6 +42,7 @@ public:
     ///@return  a ^ b
     int commPow(int a, int b) {
         const int k = 1337;
+        a %= k;
         int rslt = 1;
         for (int i = 0; i != b; i++) {
             rslt *= a;
