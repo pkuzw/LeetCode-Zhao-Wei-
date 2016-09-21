@@ -10,6 +10,8 @@
 ///@author  Wei Zhao
 ///@date    2016.09.21
 ///@version 1.0
+///@version 1.1
+///@version 1.2
 
 #include <vector>
 #include <algorithm>
@@ -90,6 +92,11 @@ public:
 
 class Solution_bottom_up {
 public:
+    ///@brief   bottom up dynamic programming
+    ///@param   nums    integer arrays
+    ///@param   target  the sum of combination
+    ///@return  the number of these combination
+    ///@note    1. calculate the number from bottom to top.
     int combinationSum4(vector<int>& nums, int target) {
         vector<int> comb_count(target + 1, 0);
         comb_count[0] = 1;
