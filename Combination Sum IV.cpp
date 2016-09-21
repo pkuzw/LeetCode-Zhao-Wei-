@@ -88,11 +88,30 @@ public:
     }
 };
 
+class Solution_bottom_up {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<int> comb_count(target + 1, 0);
+        comb_count[0] = 1;
+        for (int i = 1; i <= target; i++) {
+            for (int j = 0; j < nums.size(); j++) {
+                if (i - nums[j] >= 0) {
+                    comb_count[i] += comb_count[i - nums[j]];
+                }
+            }
+        }
+        return comb_count[target];
+    }
+};
+
 int main() {
     vector<int> nums = {3, 2, 1};
     Solution slt;
     int target = 4;
     int rslt = slt.combinationSum4(nums, target);
+    
+    Solution_bottom_up sbu;
+    int r = sbu.combinationSum4(nums, target);
     return 0;
 }
 
