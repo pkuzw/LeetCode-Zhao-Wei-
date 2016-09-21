@@ -9,7 +9,8 @@
 ///@file    Design Phone Directory
 ///@author  Wei Zhao
 ///@date    2016.09.21
-///@version 1.0
+///@version 1.0 tle
+///@version 1.1 tle
 
 /*
  Design a Phone Directory which supports the following operations:
@@ -46,9 +47,11 @@
 
 #include <unordered_map>
 #include <vector>
+#include <set>
 
 using namespace std;
 
+///@note    1. time limit exceeded if use sequence vector to store the numbers.
 class PhoneDirectory_tle {
 private:
     vector<bool> phone_dict;
@@ -85,6 +88,49 @@ public:
     void release(int number) {
         if (number >= phone_dict.size()) return;
         phone_dict[number] = true;
+    }
+};
+
+///@note    1. try use set(R/B tree) to store phone numbers. Its search, update, insert, delete operation take O(logn) time.
+//          2. tle.
+class PhoneDirectory {
+private:
+    set<int> ava_phone, unava_phone;
+public:
+    /** Initialize your data structure here
+     @param maxNumbers - The maximum numbers that can be stored in the phone directory. */
+    PhoneDirectory(int maxNumbers) {
+        for (int i = 0; i < maxNumbers; i++)
+            ava_phone.insert(i);
+    }
+    
+    /** Provide a number which is not assigned to anyone.
+     @return - Return an available number. Return -1 if none is available. */
+    int get() {
+        if (!ava_phone.empty()) {
+            int new_num = *ava_phone.begin();
+            ava_phone.erase(ava_phone.begin());
+            unava_phone.insert(new_num);
+            return new_num;
+        }
+        return -1;
+    }
+    
+    /** Check if a number is available or not. */
+    bool check(int number) {
+        if (find(unava_phone.begin(), unava_phone.end(), number) == unava_phone.end())
+            return true;
+        else
+            return false;
+    }
+    
+    /** Recycle or release a number. */
+    void release(int number) {
+        if (find(unava_phone.begin(), unava_phone.end(), number) != unava_phone.end()) {
+            unava_phone.erase(find(unava_phone.begin(), unava_phone.end(), number));
+            ava_phone.insert(number);
+        }
+        return;
     }
 };
 
