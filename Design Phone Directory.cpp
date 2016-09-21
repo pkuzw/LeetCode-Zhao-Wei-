@@ -11,6 +11,7 @@
 ///@date    2016.09.21
 ///@version 1.0 tle
 ///@version 1.1 tle
+///@version 1.2
 
 /*
  Design a Phone Directory which supports the following operations:
@@ -93,7 +94,7 @@ public:
 
 ///@note    1. try use set(R/B tree) to store phone numbers. Its search, update, insert, delete operation take O(logn) time.
 //          2. tle.
-class PhoneDirectory {
+class PhoneDirectory_tle2 {
 private:
     set<int> ava_phone, unava_phone;
 public:
@@ -131,6 +132,56 @@ public:
             ava_phone.insert(number);
         }
         return;
+    }
+};
+
+///@note    https://discuss.leetcode.com/topic/53136/all-c-solutions-got-lte/2
+class PhoneDirectory {
+private:
+    int* available; //  store the number available
+    bool* isAvailable;  //  store the number status
+    int n;  //  the available phone numbers' quantity
+    
+public:
+    /** Initialize your data structure here
+     @param maxNumbers - The maximum numbers that can be stored in the phone directory. */
+    PhoneDirectory(int maxNumbers) {
+        n = maxNumbers;
+        available = new int[n];
+        isAvailable = new bool[n];
+        for (int i = 0; i < n; i++) {
+            available[i] = i;
+            isAvailable[i] = true;
+        }
+    }
+    
+    ~PhoneDirectory() {
+        delete []available;
+        delete []isAvailable;
+    }
+    
+    /** Provide a number which is not assigned to anyone.
+     @return - Return an available number. Return -1 if none is available. */
+    int get() {
+        if (!n) {
+            return -1;
+        }
+        int number = available[--n];
+        isAvailable[number] = false;
+        return number;
+    }
+    
+    /** Check if a number is available or not. */
+    bool check(int number) {
+        return isAvailable[number];
+    }
+    
+    /** Recycle or release a number. */
+    void release(int number) {
+        if (!isAvailable[number]) {
+            isAvailable[number] = true;
+            available[n++] = number;
+        }
     }
 };
 
