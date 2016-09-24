@@ -32,27 +32,21 @@ public:
     ///@brief   resort the number from 1 to n in the order of lexicograhpy
     ///@param   n   number of n
     ///@return  the lexicographical order
-    ///@note    1. at first, find the largest 10^k which is no more than n
-    //          2. then insert the numbers start with 1, 2, ..., 9 in order.
+    ///@note    1. Iteration
+    //          2. https://discuss.leetcode.com/topic/55131/ac-240ms-c-solution
     vector<int> lexicalOrder(int n) {
-        int bound = n;
-        int div = 1;
-        int bcnt = 1;
-        vector<int> rslt;
-        while (n /= div) {
-            div *= 10;
-            bcnt++;
-        }
-        div /= 10;
-        for (int i = 1; i <= 9 && i <= bound; i++) {
-            for (int j = 1; j <= bcnt; j++) {
-                int a = 1;
-                for (int k = 0; k < j - 1; k++) {
-                    a *= 10;
-                }
-                for (int l = i * a; l < (i + 1) * a && l <= bound; l++) {
-                    rslt.push_back(l);
-                }
+        vector<int> rslt(n);
+        int cur = 1;
+        
+        for (int i = 0; i < n; i++) {
+            rslt[i] = cur;
+            if (cur * 10 <= n) {
+                cur *= 10;
+            }
+            else {
+                if (cur >= n)   cur /= 10;
+                cur++;
+                while (cur % 10 == 0)   cur /= 10;
             }
         }
         return rslt;
