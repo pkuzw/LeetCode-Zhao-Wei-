@@ -41,9 +41,10 @@
  */
 
 #include <vector>
+#include <set>
 using namespace std;
 
-class Solution {
+class Solution_wa {
     public:
     ///@brief   judge whether an array of rectangles can assemble a bigger rectangle or not
     ///@param   rectangles  an array of rectangles
@@ -94,9 +95,43 @@ class Solution {
     }
 };
 
+class Solution {
+    public:
+    ///@note    1. set
+    ///@note    2.http://www.cnblogs.com/grandyang/p/5825619.html
+    bool isRectangleCover(vector<vector<int>>& rectangles) {
+        int area = 0;   //  the accumulated area of each little rectangle
+        int min_x = INT_MAX, min_y = INT_MAX, max_x = INT_MIN, max_y = INT_MIN;
+        set<pair<int, int>> st; //  for each point of all the little rectangles, there should be only four point without neighbour rectangle. So if the point has existed, we should erase it, or we could insert it.
+        for (int i = 0; i < rectangles.size(); i++) {
+            min_x = min(min_x, rectangles[i][0]);
+            min_y = min(min_y, rectangles[i][1]);
+            max_x = max(max_x, rectangles[i][2]);
+            max_y = max(max_y, rectangles[i][3]);
+            
+            area += (rectangles[i][2] - rectangles[i][0]) * (rectangles[i][3] - rectangles[i][1]);
+            
+            if (st.count(make_pair(rectangles[i][0], rectangles[i][1])))    st.erase(make_pair(rectangles[i][0], rectangles[i][1]));
+            else    st.insert(make_pair(rectangles[i][0], rectangles[i][1]));
+            if (st.count(make_pair(rectangles[i][0], rectangles[i][3])))    st.erase(make_pair(rectangles[i][0], rectangles[i][3]));
+            else    st.insert(make_pair(rectangles[i][0], rectangles[i][3]));
+            if (st.count(make_pair(rectangles[i][2], rectangles[i][3])))    st.erase(make_pair(rectangles[i][2], rectangles[i][3]));
+            else    st.insert(make_pair(rectangles[i][2], rectangles[i][3]));
+            if (st.count(make_pair(rectangles[i][2], rectangles[i][1])))    st.erase(make_pair(rectangles[i][2], rectangles[i][1]));
+            else    st.insert(make_pair(rectangles[i][2], rectangles[i][1]));
+        }
+        if (!st.count(make_pair(min_x, min_y)) ||   //  the corner point must appear
+            !st.count(make_pair(min_x, max_y)) ||
+            !st.count(make_pair(max_x, max_y)) ||
+            !st.count(make_pair(max_x, min_y)) ||
+            st.size() != 4)     return false;       //  the corner points' number is only 4
+        return area == (max_x - min_x) * (max_y - min_y);
+    }
+};
+
 int main() {
     Solution slt;
-    vector<vector<int>> rectangles = {{1,1,3,3}, {3,1,4,2}, {1,3,2,4}, {2,2,4,4}};
+    vector<vector<int>> rectangles = {{0, 0, 2, 2}, {1, 1, 3, 3}, {2,0,3,1}, {0, 3, 3, 4}};
     bool rslt = slt.isRectangleCover(rectangles);
     return 0;
 }
