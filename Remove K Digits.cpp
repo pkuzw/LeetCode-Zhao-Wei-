@@ -67,6 +67,7 @@ class Solution {
                     num.erase(i, 1);
                     break;
                 }
+                //  if the digits are ordered in non-descending order, we just remove the last digit
                 if (i == num.length() - 2) {
                     if (num[i] <= num[i + 1])
                         num.pop_back();
