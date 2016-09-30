@@ -11,12 +11,16 @@
 ///@date    2016.08.28
 ///@version 1.0
 
+///@author  Wei Zhao
+///@date    09.28.2016
+///@version 1.1
+
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution_v1 {
 public:
     ///@brief   判断x和y容量的桶能否称量出z容量多的水
     ///@param   x, y, z 桶的容量
@@ -59,9 +63,41 @@ public:
     }
 };
 
+class Solution {
+public:
+    ///@note    1. https://discuss.leetcode.com/topic/49238/math-solution-java-solution
+    /*          2. Bézout's identity: Bézout's identity (also called Bézout's lemma) is a theorem in the elementary theory of numbers:
+    
+    let a and b be nonzero integers and let d be their greatest common divisor. Then there exist integers x
+    and y such that ax+by=d
+    
+    In addition, the greatest common divisor d is the smallest positive integer that can be written as ax + by
+    
+    every integer of the form ax + by is a multiple of the greatest common divisor d.
+     */
+    bool canMeasureWater(int x, int y, int z) {
+        if (x + y < z)  return false;
+        if (x == z || y == z || x + y == z) return true;
+        
+        int greatest_common_divisor = gcd(x, y);
+        
+        return !(z % greatest_common_divisor);
+    }
+    
+    ///@brief   get the gcd of x and y
+    int gcd(int x, int y) {
+        while (y) {
+            int tmp = y;
+            y = x % y;
+            x = tmp;
+        }
+        return x;
+    }
+};
+
 int main() {
     Solution slt;
-    int x = 23, y = 46, z = 12;
+    int x = 5, y = 14, z = 12;
     bool rslt = slt.canMeasureWater(x, y, z);
     return 0;
 }
