@@ -31,16 +31,38 @@
  One longest palindrome that can be built is "dccaccd", whose length is 7.
  */
 #include <stdio.h>
+#include <string>
+using namespace std;
 
 class Solution {
 public:
     ///@note    hash table
+    //          1. use an array to store all the letters' appearance time. For the even times, they should be added into the result; for the odd times, it should be minus 1 then add into the result. But for the maximum odd time, we should add it into the result originally.
     int longestPalindrome(string s) {
-        
+        int ht[52] = {0};
+        for (int i = 0; i < s.length(); i++) {
+            if (s[i] <= 'z' && s[i] >= 'a')
+                ht[26 + s[i] - 'a']++;
+            else
+                ht[s[i] - 'A']++;
+        }
+        int rslt = 0;
+        int existOdd = 0;
+        for (int i = 0; i < 52; i++) {
+            if (ht[i] % 2) {
+                rslt += ht[i] - 1;
+                existOdd = 1;
+            }
+            else
+                rslt += ht[i];
+        }
+        return rslt + existOdd;
     }
 };
 
 int main() {
-    
+    string s = "abccADFSDVaerasdfSDFWRFSSDFasdhaecxzzDFSawebdf";
+    Solution slt;
+    int rslt = slt.longestPalindrome(s);
     return 0;
 }
