@@ -18,15 +18,25 @@ using namespace std;
 
 class Solution {
 public:
+    ///@note    1. string::find_last_of(string) returns the last character's place in the string
     string parseTernary(string expression) {
-        string rslt;
-        
-        return rslt;
+        unsigned pos = 0;
+        while (expression.length() > 5) {
+            pos = expression.find_last_of('?');
+            string tmp = expression.substr(0, pos-1);
+            if (expression[pos-1] == 'T')   tmp += expression[pos+1];
+            else    tmp += expression[pos+3];
+            tmp += expression.substr(pos+4);
+            expression = tmp;
+        }
+        return expression[0] == 'T' ? expression.substr(2, 1) : expression.substr(4, 1);
     }
 };
 
 int main() {
-    
+    Solution slt;
+    string expression = "F?1:T?4:5";
+    string rslt = slt.parseTernary(expression);
     return 0;
 }
 
