@@ -6,15 +6,18 @@
 //  Copyright © 2016 Zhao Wei. All rights reserved.
 //
 
+///@source: https://www.hackerrank.com/challenges/ctci-merge-sort
+
 #include <stdio.h>
 #include <vector>
 using namespace std;
 
-///@param   b   sorted array
-void merge(vector<int>& a, int left, int mid, int right) {
+
+long long merge(vector<int>& a, int left, int mid, int right) {
     int i = left;   //  index for left subarray
     int j = mid + 1;    //  index for right subarray
     vector<int> b;  //  auxillary array for the sorted result
+    long long inversionCnt = 0; //  the inversion counter
     
     while (i <= mid && j <= right) {
         if (a[i] <= a[j]) {
@@ -24,6 +27,7 @@ void merge(vector<int>& a, int left, int mid, int right) {
         else {
             b.push_back(a[j]);
             j++;
+            inversionCnt += mid - i + 1;    //  inversion appears. count all the inversions from i to mid in the left subarray.
         }
     }
     while (i <= mid) {
@@ -34,22 +38,29 @@ void merge(vector<int>& a, int left, int mid, int right) {
         b.push_back(a[j]);
         j++;
     }
-    for (int p = left; p <= right; p++)
+    for (int p = left; p <= right; p++)     //  copy the sorted array to a
         a[p] = b[p-left];
-    return;
+    return inversionCnt;
 }
 
 ///@param   left    the start index for a
 ///@param   right   the end index for a
-void mergeSort(vector<int>& a, int left, int right) {
-    if (left >= right)  return;
+long long mergeSort(vector<int>& a, int left, int right) {
+    if (left >= right)  return 0;
     int mid = (left + right) / 2;
+    long long inversionCnt = 0;
     
-    mergeSort(a, left, mid);
-    mergeSort(a, mid+1, right);
-    merge(a, left, mid, right);
+    inversionCnt += mergeSort(a, left, mid);
+    inversionCnt += mergeSort(a, mid+1, right);
+    inversionCnt += merge(a, left, mid, right);
     
-    return;
+    return inversionCnt;
+}
+
+long long count_inversions(vector<int>& a) {
+    int left = 0;
+    int right = a.size() - 1;
+    return mergeSort(a, left, right);
 }
 
 int main() {
@@ -57,7 +68,7 @@ int main() {
     int left = 0;
     int right = a.size() - 1;
     
-    mergeSort(a, left, right);
+    long long rslt = count_inversions(a);
     
     
     return 0;
