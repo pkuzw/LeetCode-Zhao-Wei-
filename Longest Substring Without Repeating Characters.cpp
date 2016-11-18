@@ -52,8 +52,10 @@ public:
 		int rslt = 0;
 		int longest_len = 0;
 		for (int i = 0; i != s.size(); i++) {
-			if (i - hash_tbl[s[i]] <= longest_len)	longest_len = i - hash_tbl[s[i]];
-			else	longest_len++;
+			if (i - hash_tbl[s[i]] <= longest_len)
+                longest_len = i - hash_tbl[s[i]];
+			else
+                longest_len++;
 			hash_tbl[s[i]] = i;
 			rslt = max(rslt, longest_len);
 		}
@@ -64,7 +66,7 @@ public:
 
 int main()
 {
-	string s = "abcdcfg";
+	string s = "a";
 	Solution slt;
 	int rslt = slt.lengthOfLongestSubstring(s);
 
