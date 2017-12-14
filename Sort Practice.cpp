@@ -11,7 +11,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-
+#include <iostream>
 using namespace std;
 
 ///@brief   get a random array whose elements are between 0 - k and number is n
@@ -140,9 +140,16 @@ void shellSort(vector<int>& a, const int& n) {
     }
 }
 
+int func(int a, int b) {
+    int c = a + b;
+    cout << "a + b equals " << c << endl;
+    return c;
+}
+
 int main() {
     
     int k = 100, n = 10;
+    func(k, n);
     vector<int> a = getRandomArray(k, n);
     shellSort(a, n);
 //    quickSort(a, 0, n - 1);
