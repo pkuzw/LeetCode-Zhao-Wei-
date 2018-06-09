@@ -24,6 +24,9 @@ Output: index1=1, index2=2
 ///@date	2016.03.31
 ///@version	2.1
 
+///@date    June 09, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -254,7 +257,7 @@ public:
 
 #include <unordered_map> 
 
-class Solution {
+class Solution_v3 {
 public:
 	///@note	1. 利用hash table来存储数组元素的对应下标；
 	//			2. 注意元素自身不能和自身相加求和
@@ -271,6 +274,31 @@ public:
 		}
 		return rslt;
 	}
+};
+
+
+
+class Solution {
+public:
+    ///@brief   计算数组中是否存在两个元素，使得其和为指定值。
+    ///@param   nums    数组
+    ///@param   target  指定值
+    ///@return  如果存在，则返回这两个元素的数组下标所组成的数组；如果不存在，则返回一个空数组。
+    ///@note    利用unordered_map的特性，构造数组元素值为键，其数组下标为值的哈希表。
+    ///         因为哈希表的查找时间复杂度为O(1)，遍历数组的时间复杂度为O(n)，总的时间复杂度为O(n)，空间复杂度为O(n)。
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> hash_table;
+        for ( int i = 0; i < nums.size(); i++ )  hash_table[nums[i]] = i;
+        vector<int> rslt;
+        for ( int i = 0; i < nums.size(); i++ ) {
+            if ( hash_table.find(target - nums[i]) != hash_table.end() && hash_table[target - nums[i]] != i) {
+                rslt.push_back(i);
+                rslt.push_back(hash_table[target - nums[i]]);
+                return rslt;
+            }
+        }
+        return rslt;
+    }
 };
 
 int main()
