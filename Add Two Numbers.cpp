@@ -19,11 +19,12 @@
 ///@date	2016.03.31
 ///@version	2.0
 
-///@date    June 09, 2018
-///@version 2.1
+///@date    June 12, 2018
+///@version 3.0
 
 #include <stdio.h>
 #include <iostream>
+using namespace std;
 
 struct ListNode {
     int val;
@@ -69,8 +70,8 @@ public:
                 i1->val %= 10;
                 carry = 1;
             }
-            else    carry = 0;
-            if (carry) {
+            else {
+                carry = 0;
                 ListNode* n = new ListNode(1);
                 i1->next = n;
                 
@@ -150,7 +151,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@note	1. 遍历链表；
 	//			2. 因为链表的长度可能不同，所以用一个标识符来标记较长的链表，便于较短的链表计算完成后继续向后进位；
@@ -215,14 +216,59 @@ public:
 	}
 };
 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ///@brief   计算两个用链表表示的加数之和。其中加数的低有效位在表头，高有效位在表尾。
+    ///@param   l1  加数1
+    ///@param   l2  加数2
+    ///@return  返回用链表表示的两个加数之和。位的顺序也是从表头开始依次增高。
+    ///@note    先设置一个返回链表的值为0的表头哨兵，然后依次对两加数逐位相加，直至两加数都到达表尾。
+    ///         期间各位求和要记录进位值；跳出循环后如果进位值为1，要在表头补1.
+    ///         时间复杂度为O(max(m, n)), 空间复杂度为O(max(m, n))。其中m,n分别是链表l1和l2的长度。
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* p = l1, *q = l2;
+        int c = 0, sum = 0;
+        ListNode* rslt = new ListNode(0);
+        ListNode* dummyHead = rslt;
+        while (p != nullptr || q != nullptr) {
+            int a = p != nullptr ? p->val : 0;
+            int b = q != nullptr ? q->val : 0;
+            sum = a + b + c;
+            c = sum / 10;
+            sum %= 10;
+            rslt->next = new ListNode(sum);
+            rslt = rslt->next;
+            if (p != nullptr) p = p->next;
+            if (q != nullptr) q = q->next;
+        }
+        if (c)
+            rslt->next = new ListNode(c);
+        
+        return dummyHead->next;
+    }
+};
+
 int main() { 
-    ListNode* l1 = new ListNode(0);
+    ListNode* l1 = new ListNode(1);
     
-	 ListNode* l2 = new ListNode(0);
-    //ListNode* n1 = new ListNode(9);    
+	ListNode* l2 = new ListNode(9);
+    ListNode* n1 = new ListNode(9);
  
-//	l2->next = n1;
+    l2->next = n1;
     Solution slt;
     ListNode* rslt = slt.addTwoNumbers(l1, l2);
+    while (rslt) {
+        cout << rslt->val;
+        rslt = rslt->next;
+    }
+    
     return 0;
 }
