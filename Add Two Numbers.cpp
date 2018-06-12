@@ -254,6 +254,38 @@ public:
         
         return dummyHead->next;
     }
+    //          用于处理高位在表头的情况。
+    ///@brief   翻转链表。
+    ///@param   head    链表表头。
+    ///@return  如果链表非空，返回翻转后的链表表头；否则返回空指针。
+    ///@note    设置三个指针，curNode指向当前节点，prevNode指向curNode的前一节点，nextNode指向curNode的后一节点，逐个翻转，直至curNode到达表尾。
+    ListNode* reverseLinkedList(ListNode* head) {
+        if (head == nullptr)    return head;
+        ListNode* curNode = head;
+        ListNode* prevNode = nullptr, *nextNode = curNode->next;
+        
+        while (curNode) {
+            nextNode = curNode->next;
+            curNode->next = prevNode;
+            prevNode = curNode;
+            curNode = nextNode;
+        }
+        return prevNode;
+    }
+    
+    ///@brief   从表头开始打印整个链表。
+    ///@param   head    链表表头
+    ///@return  无
+    void printLinkedList(ListNode* head) {
+        if (!head)  return;
+        while (head) {
+            cout << head->val;
+            head = head->next;
+        }
+        cout << endl;
+        return;
+    }
+    
 };
 
 int main() { 
@@ -265,10 +297,10 @@ int main() {
     l2->next = n1;
     Solution slt;
     ListNode* rslt = slt.addTwoNumbers(l1, l2);
-    while (rslt) {
-        cout << rslt->val;
-        rslt = rslt->next;
-    }
+    slt.printLinkedList(rslt);
     
+    ///如果链表的输入是从高位到低位,那么先将其翻转,然后再求和,之后再翻转即可.所用函数已经定义好了,Solution::reverseLinkedList(ListNode*).
+    ListNode* rrslt = slt.reverseLinkedList(rslt);
+    slt.printLinkedList(rrslt);
     return 0;
 }
