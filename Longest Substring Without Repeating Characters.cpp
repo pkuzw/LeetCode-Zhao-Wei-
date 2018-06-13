@@ -13,6 +13,9 @@ For "bbbbb" the longest substring is "b", with the length of 1.
 ///@date	2016.03.31
 ///@version	1.1
 
+///@date    June 13, 2018
+///@version 1.2
+
 #include <vector>
 #include <string>
 using namespace std;
@@ -40,7 +43,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_1 {
 public:
 	///@note	1. 哈希表；
 	//			2. 找到每一个不含有重复字符的子串，每当遇到重复字符，就更新子串长度，并重新开始计算其最大长度；
@@ -63,11 +66,34 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   计算字符串s的最长公共子串（不含有重复字符）。
+    ///@param    s   字符串
+    ///@return  返回字符串的最长公共子串（不含重复字符）的长度。
+    ///@note    这个算法的关键点有两个：
+    ///         1. 用int hash_table[256]来保存子串字符出现的最新下标。
+    ///         2. 将hash_table[256]初始化为-1，这样的话利用i - hash_table['c']就能计算出当前子串的大小了。
+    ///         算法的时间复杂度为O(n)，空间复杂度为O(1)，其中n为字符串s的长度。
+    int lengthOfLongestSubstring(string s) {
+        int maxLen = 0, subLen = 0;
+        int hash_table[256];
+        memset(hash_table, -1, 256 * sizeof(int));
+        
+        for (int i = 0; i < s.length(); i++) {
+            if (i - hash_table[s[i]] <= subLen) subLen = i - hash_table[s[i]];
+            else    subLen++;
+            hash_table[s[i]] = i;
+            maxLen = max(maxLen, subLen);
+        }
+        return maxLen;
+    }
+};
 
 int main()
 {
-	string s = "a";
 	Solution slt;
+    string s = "HongLisaLiWenhao";
 	int rslt = slt.lengthOfLongestSubstring(s);
 
 	return 0;
