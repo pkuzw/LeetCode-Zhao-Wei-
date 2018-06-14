@@ -14,7 +14,8 @@ The overall run time complexity should be O(log (m+n)).
 ///@version 1.1
 
 ///@brief 参考链接：http://leetcode.com/2011/03/median-of-two-sorted-arrays.html
-//		  注意观察两个已经排好序的数组A和B，假设它们的长度分别是m和n，中位数分别是A[i]和B[j]，其中i = m/2，j = n/2，数组从0开始计算下标
+//		  注意观察两个已经排好序的数组A和B，假设它们的长度分别是m和n，中位数分别是A[i]和B[j]，其中i = m/2，j = n/2，
+//        数组从0开始计算下标.
 //        当A[i] == B[j]时，两个数组的中位数是(A[i]+B[j])/2；
 //        当A[i] < B[j]时， 两个数组的中位数位于[A[i..m-1], B[0..j]]中，包括A[i]和B[j]
 //		  当A[i] > B[j]时， 两个数组的中位数位于[B[j..n-1], A[0..i]]中，包括A[i]和B[j]
@@ -33,6 +34,9 @@ The overall run time complexity should be O(log (m+n)).
 
 ///@date	2016.03.31
 ///@version	2.2
+
+///@date    June 14, 2018
+///@version 2.3
 
 #include <iostream>
 #include <vector>
@@ -201,6 +205,9 @@ public:
 	///@return	返回数组nums1和nums2的合并后的中位数
 	/* @note	1. 如果nums1与nums2之和为奇数，则直接返回合并后的中位数；如果为偶数，则返回两个中位数的算术平均数。
 				2. 先实现两个已经排好序的数组的第k个元素，然后调用这个函数求中位数。
+                3. http://www.cnblogs.com/grandyang/p/4465932.html
+                4. https://blog.csdn.net/yutianzuijin/article/details/11499917
+                5. https://blog.csdn.net/zxzxy1988/article/details/8587244
 	*/
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         int total = nums1.size() + nums2.size();
@@ -219,8 +226,11 @@ public:
 	/* @note	1. 令nums1的数组剩余长度(nums1.size() - i)要比nums2的剩余长度(nums2.size() - j)更短。否则，就交换两个数组；
 				2. 如果nums1的可用长度为0（即nums1.size() - i == 0），则直接返回数组nums2的第k个元素即可；
 				3. 如果是找合并后的第一个元素，只需要比较两个数组的可用首元素即可；
-				4. 找到nums1中可用元素的中位数pa，同理可得nums2中的可用元素中位数pb；
+				4. 找到nums1中可用元素的第k/2个元素，其下标为pa，同理可得nums2中的第k/2小的元素，其下标为pb；
 				5. 如果nums1[pa - 1] < nums2[pb - 1]，则nums1[0..pa-1]不可能大于合并后的第k个元素，故抛弃；
+                   这个推论的证明采用反证法：假设nums1[pa - 1]大于合并后的第k个元素，假设其值为k + 1，则因为num2[pb - 1] > num1[pa - 1]，那么num2[pb - 1]为
+                   合并后的至少第k + 2大的数。因为pa - 1 = k/2 - 1，则在nums1中比nums[pa - 1]小的数至多为k/2 - 1个；同理，在nums2中比nums1[pa - 1]小的数
+                   至多也为k/2 - 1个，则比nums1[pa - 1]小的数至多为k - 2个，小于nums1[pa - 1]的假设值k + 1，假设不成立，证毕。
 				6. 同理，如果nums2[pb - 1] < nums1[pa - 1]，则nums2[0..pb-1]也应该抛弃；
 				7. 如果两者相同，则直接返回该值就好。
 				8. 时间复杂度为O(log(m+n))，空间复杂度为O(1)。
@@ -229,7 +239,7 @@ public:
         if (nums1.size() - i > nums2.size() - j) return findKth(nums2, j, nums1, i, k);
         if (nums1.size() == i) return nums2[j + k - 1];
         if (k == 1) return min(nums1[i], nums2[j]);
-        int pa = min(i + k / 2, int(nums1.size())), pb = j + k - pa + i;
+        int pa = min(i + k / 2, int(nums1.size())), pb = j + (k - (pa - i));    // pb用括号括起来，方便看出它的来源。
         if (nums1[pa - 1] < nums2[pb - 1])
             return findKth(nums1, pa, nums2, j, k - pa + i);
         else if (nums1[pa - 1] > nums2[pb - 1])
@@ -239,7 +249,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
 		int total = nums1.size() + nums2.size();
@@ -257,6 +267,56 @@ public:
 		else return nums1[pa-1];
 	}
 };
+
+class Solution {
+public:
+    ///@brief   给定两个排好序的数组，找到合并后仍然有序的数组的中位数。
+    ///@param   nums1   数组1
+    ///@param   nums2   数组2
+    ///@return  如果合并后数组的长度len为偶数，返回(nums[len/2] + nums[len/2 + 1]) / 2；如果len为奇数，返回nums[len/2].
+    ///@note    调用findKthNumberSortedArrays，分别处理奇数和偶数两种情况。
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        if (nums1.empty() && nums2.empty()) return 0;
+        int len = nums1.size() + nums2.size();
+        if  (len % 2 == 0)   return (double)(findKthNumberSortedArrays(nums1, 0, nums2, 0, len/2) + findKthNumberSortedArrays(nums1, 0, nums2, 0, len/2 + 1)) / 2;
+        return (double)findKthNumberSortedArrays(nums1, 0, nums2, 0, len/2 + 1);
+    }
+    
+    ///@brief   给定两个有序数组nums1和nums2，找到它们合并后的排在第k位的元素。
+    ///@param   nums1   数组1
+    ///@param   i       数组1的起始检索下标
+    ///@param   nums2   数组2
+    ///@param   j       数组2的起始检索下标
+    ///@param   k       合并后数组的检索目标，即合并后的第k个元素。
+    ///@return  返回合并后排在第k位的元素。
+    ///@note    设pa = k/2, pb = k/2。首先比较nums1[pa]和nums2[pb]的大小，结果有三种。
+    /*          1.  nums1[pa] < nums2[pb];
+                2.  nums1[pa] > nums2[pb];
+                3.  nums1[pa] = nums2[pb].
+                注意，这里为了书写简洁，没有使用i,j来调整nums1和nums2的下标，默认当前检索的范围就是0..nums.size()。
+                
+                情况1：能够推出nums1[0..pa-1]均不可能大于合并后数组的第k个元素，即nums1[0..pa-1]可被舍弃；采用反证法证明，如果nums1[pa]比合并后的数组第k个元素
+                大，则nums1[pa]的最小值为k + 1，在nums1中比nums[pa]小的数至多为k/2 - 1个；由于nums2[pb] > nums1[pa]，那么在nums2数组中比nums1[pa]小的数也至多
+                有k/2 + 1个，二者相加，在合并后的数组中比nums[pa]小的数最多有k - 2个，小于假设的最小值，故假设不成立，得证。
+     
+                情况2：与情况1类似，不过舍弃的部分是nums2[0..pb-1];
+     
+                情况3：相当于找到了合并后的第k个元素。直接返回即可。
+     */
+    int findKthNumberSortedArrays(vector<int>& nums1, int i, vector<int>& nums2, int j, int k) {
+        if (nums1.size() - i > nums2.size() - j)    return findKthNumberSortedArrays(nums2, j, nums1, i, k);
+        if (i == nums1.size()) return nums2[j + k - 1];
+        if (k == 1) return min(nums1[i], nums2[j]);
+        
+        int pa = min(i + k/2, (int)nums1.size()), pb = j + (k - (pa - i));
+        
+        if (nums1[pa - 1] < nums2[pb - 1])  return findKthNumberSortedArrays(nums1, pa, nums2, j, k - (pa - i));
+        else if (nums1[pa - 1] > nums2[pb - 1]) return findKthNumberSortedArrays(nums1, i, nums2, pb, k - (pb - j));
+        else    return nums1[pa - 1];
+    }
+};
+
+
 
 int main()
 {
