@@ -227,10 +227,8 @@ public:
 				2. 如果nums1的可用长度为0（即nums1.size() - i == 0），则直接返回数组nums2的第k个元素即可；
 				3. 如果是找合并后的第一个元素，只需要比较两个数组的可用首元素即可；
 				4. 找到nums1中可用元素的第k/2个元素，其下标为pa，同理可得nums2中的第k/2小的元素，其下标为pb；
-				5. 如果nums1[pa - 1] < nums2[pb - 1]，则nums1[0..pa-1]不可能大于合并后的第k个元素，故抛弃；
-                   这个推论的证明采用反证法：假设nums1[pa - 1]大于合并后的第k个元素，假设其值为k + 1，则因为num2[pb - 1] > num1[pa - 1]，那么num2[pb - 1]为
-                   合并后的至少第k + 2大的数。因为pa - 1 = k/2 - 1，则在nums1中比nums[pa - 1]小的数至多为k/2 - 1个；同理，在nums2中比nums1[pa - 1]小的数
-                   至多也为k/2 - 1个，则比nums1[pa - 1]小的数至多为k - 2个，小于nums1[pa - 1]的假设值k + 1，假设不成立，证毕。
+				5. 如果nums1[pa - 1] < nums2[pb - 1]，则nums1[0..pa-1]不可能大于等于合并后的第k个元素，故抛弃；
+                   这个推论的证明采用反证法：假设nums1[pa - 1]大于等于合并后的第k个元素，假设其值为k，那么比nums1[pa - 1]小的数应该为k - 1个。因为num2[pb-1] > num1[pa-1]，那么num2[pb - 1]为合并后的至少第k+1大的数。因为pa - 1 = k/2 - 1，则在nums1中比nums[pa - 1]小的数至多为k/2 - 1个,同理，在nums2中比nums1[pa - 1]小的数至多也为k/2 - 1个，则比nums1[pa - 1]小的数至多为k - 2个，小于nums1[0..pa - 2]的假设值k - 1,假设不成立，证毕。
 				6. 同理，如果nums2[pb - 1] < nums1[pa - 1]，则nums2[0..pb-1]也应该抛弃；
 				7. 如果两者相同，则直接返回该值就好。
 				8. 时间复杂度为O(log(m+n))，空间复杂度为O(1)。
@@ -239,6 +237,9 @@ public:
         if (nums1.size() - i > nums2.size() - j) return findKth(nums2, j, nums1, i, k);
         if (nums1.size() == i) return nums2[j + k - 1];
         if (k == 1) return min(nums1[i], nums2[j]);
+        
+        //pa = i + k/2，表示的意思是以i为开端的k/2下取整个数的当前下标
+        //pb = j + (k - (pa - i))，其中pa - i为k/2下取整个数，k - (pa - i)为k中剩余的元素，j + (k - (pa - i))的意思就是以j为起始下标的剩余k个元素的当前下标。
         int pa = min(i + k / 2, int(nums1.size())), pb = j + (k - (pa - i));    // pb用括号括起来，方便看出它的来源。
         if (nums1[pa - 1] < nums2[pb - 1])
             return findKth(nums1, pa, nums2, j, k - pa + i);
@@ -289,19 +290,20 @@ public:
     ///@param   j       数组2的起始检索下标
     ///@param   k       合并后数组的检索目标，即合并后的第k个元素。
     ///@return  返回合并后排在第k位的元素。
-    ///@note    设pa = k/2, pb = k/2。首先比较nums1[pa]和nums2[pb]的大小，结果有三种。
-    /*          1.  nums1[pa] < nums2[pb];
-                2.  nums1[pa] > nums2[pb];
-                3.  nums1[pa] = nums2[pb].
-                注意，这里为了书写简洁，没有使用i,j来调整nums1和nums2的下标，默认当前检索的范围就是0..nums.size()。
+    ///@note    设pa = k/2下取整, pb = k/2上取整。首先比较nums1[pa - 1]和nums2[pb - 1]的大小，结果有三种。
+    /*          1.  nums1[pa-1] < nums2[pb-1];
+                2.  nums1[pa-1] > nums2[pb-1];
+                3.  nums1[pa-1] = nums2[pb-1].
                 
-                情况1：能够推出nums1[0..pa-1]均不可能大于合并后数组的第k个元素，即nums1[0..pa-1]可被舍弃；采用反证法证明，如果nums1[pa]比合并后的数组第k个元素
-                大，则nums1[pa]的最小值为k + 1，在nums1中比nums[pa]小的数至多为k/2 - 1个；由于nums2[pb] > nums1[pa]，那么在nums2数组中比nums1[pa]小的数也至多
-                有k/2 + 1个，二者相加，在合并后的数组中比nums[pa]小的数最多有k - 2个，小于假设的最小值，故假设不成立，得证。
+                情况1：能够推出nums1[0..pa-1]均不可能大于等于合并后数组的第k个元素，即nums1[0..pa-1]可被舍弃；采用反证法证明，如果nums1[pa-1]大于等于合并后的数组第k个元素大，则nums1[pa-1]的最小值为k，合并后数组中比nums1[pa-1]小的元素数目为k - 1。在nums1中比nums[pa-1]小的数至多为k/2 - 1个；由于nums2[pb-1] > nums1[pa-1]，那么在nums2数组中比nums1[pa-1]小的数也至多有k/2 + 1个，二者相加，在合并后的数组中比nums[pa-1]小的数最多有k - 2个，小于假设的最小值k - 1，故假设不成立，得证。
      
                 情况2：与情况1类似，不过舍弃的部分是nums2[0..pb-1];
      
                 情况3：相当于找到了合并后的第k个元素。直接返回即可。
+     
+                其次，对于k元素奇偶性的处理，在于pa = i + k/2和pb = j + (k - (pa - i))，pa取的是k/2的下取整，pb取的是k/2的下取整。
+     
+                最后，之所以要保证nums1.size() - i <= nums2.size() - j，是为了后续在处理nums1整个先被舍弃完，即i == nums1.size()时，j+k-1仍然在nums2的范围内。对于相反的情况，只要颠倒nums1和nums2就好。
      */
     int findKthNumberSortedArrays(vector<int>& nums1, int i, vector<int>& nums2, int j, int k) {
         if (nums1.size() - i > nums2.size() - j)    return findKthNumberSortedArrays(nums2, j, nums1, i, k);
