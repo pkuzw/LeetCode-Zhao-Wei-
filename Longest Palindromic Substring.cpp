@@ -7,9 +7,13 @@
 
 ///@date    2015.09.07
 ///@version 2.0
+///@note    Manacher's Algorithm
 
 ///@date	2016.03.31
 ///@version	2.1
+
+///@date    June 17, 2018
+///@version 2.2
 
 #include <iostream>
 #include <string>
@@ -284,7 +288,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@note	Manacher Algorithm. time: O(n)
 	//			http://www.geeksforgeeks.org/manachers-algorithm-linear-time-longest-palindromic-substring-part-1/
@@ -374,6 +378,13 @@ public:
 		delete []L;
 		return s.substr(start, end - start + 1);
 	}
+};
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        
+    }
 };
 
 int main()
