@@ -404,17 +404,42 @@ public:
                    字符串t中的长度和位置，所以要除以2，才是s中的起始位置，而半径resLen在s中就相当于回文子串的长度了，额外减1是因为单独一个字符
                    也算作一个回文字符串，所以resLen比s的回文子串长度多1。
                 7. 时间复杂度为O(n)，空间复杂度为O(n)，n为字符串s的长度。
+                reference link:
+                http://www.cnblogs.com/grandyang/p/4464476.html
+                http://www.cnblogs.com/grandyang/p/4475985.html
+     
      
      */
     string longestPalindrome(string s) {
+        string t("$#");
+        for (int i = 0; i < s.length(); i++) {
+            t += s[i];
+            t += '#';
+        }
         
+        int resLen = 0, resCenter = 0, mx = 0, id = 0;
+        vector<int> p(t.length(), 0);
+        for (int i = 0; i < t.length(); i++) {
+            p[i] = i < mx ? min(p[2*id - i], mx - i) : 1;
+            
+            while (t[i + p[i]] == t[i - p[i]])  p[i]++;
+            if (p[i] > mx - i) {
+                mx = p[i];
+                id = i;
+            }
+            if (p[i] > resLen) {
+                resLen = p[i];
+                resCenter = i;
+            }
+        }
+        return s.substr((resCenter - resLen)/2, resLen - 1);
     }
 };
 
 int main()
 {
 	Solution_v1 slt;
-	string s = "a";
+	string s = "ababbaababaababaabbaabaabaabaa";
 	string pstr_bf = slt.longestPalindrome_BruteForce(s);
 	string pstr_dp = slt.longestPalindrome_DP(s);
 	string pstr_extend = slt.longestPalindrome_extendAroundCenter(s);
@@ -422,10 +447,11 @@ int main()
 
 	Solution slt_;
 	string rslt = slt_.longestPalindrome(s);
-	cout << pstr_bf << endl;
-	cout << pstr_dp;
+	cout << "brute force:   " << pstr_bf << endl;
+	cout << "dp         :   " << pstr_dp;
 	cout << endl;
-	cout << pstr_extend << endl;
-	cout << pstr_manacher << endl;
+	cout << "extend:        " << pstr_extend << endl;
+	cout << "manacher:      " << pstr_manacher << endl;
+    cout << "manacher:      " << rslt << endl;
 	return 0;
 };
