@@ -12,6 +12,9 @@
 ///@date	2016.04.01
 ///@version	2.2
 
+///@date    June 21, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -142,8 +145,7 @@ public:
 	///@param	s	原来的之字形字符串
 	///@param	nRows	行数
 	///@return	返回成行输出的字符串
-	///@note	通过观察可知，当按行输出时，相邻的两个字符是按照之字形输出相差2*(nRows - 1)的距离。如果是非首行和非末行，则还要减去2倍
-	///			的行数。时间复杂度为O(n)，空间复杂度为O(n)。
+	///@note	通过观察可知，当按行输出时，相邻的两个字符是按照之字形输出相差2*(nRows - 1)的距离。如果是非首行和非末行，则还要减去2倍的行数。时间复杂度为O(n)，空间复杂度为O(n)。
     string convert(string s, int nRows) {
 		if (nRows <= 1)	return s;
 		int size = 2 * (nRows - 1);
@@ -159,7 +161,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@note	1. 横向来看，相邻的两字符间距为2*(行数-1)，对于非首行和非末行的相邻字符，其间距再减少2*行号。
 	string convert(string s, int nRows) {
@@ -177,9 +179,35 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   将字符串写为“之”字形，然后逐行输出，产生新的字符串。
+    ///@param   s       字符串s
+    ///@pram    numRows 之字形的字符串行数
+    ///return   返回新的之字形字符串的逐行输出的结果
+    ///@note    1. 通过观察发现，之字形字符串在首行和末行的相邻字符之间的下标差为2 * numRows - 2。
+    //          2. 其余各行i在竖直两列之间还插有一个额外的字符，该字符和两个竖直列中靠后的同一行的字符的下标差为2 * i。
+    //          3. 时间复杂度为O(n)，空间复杂度为O(1),n为字符串长度。
+    string convert(string s, int numRows) {
+        if (numRows <= 1 || s.length() == 1 || s.empty())   return s;
+        string rslt =  "";
+        int gap = 2 * (numRows - 1);
+        for (int i = 0; i < numRows; i++) {
+            for (int j = i; j < s.length(); j += gap) {
+                rslt += s[j];   //  在这里向结果字符串添加竖列的字符
+                int mid = j + gap - 2 * i;
+                if (i > 0 && i < numRows - 1 && mid < s.length())
+                    rslt += s[mid]; //  在这里向结果字符串添加两数列所夹的字符
+            }
+        }
+        return rslt;
+    }
+};
+
 int main()
 {
 	string t = "PAYPALISHIRING";	// rslt = PAHNAPLSIIGYIR
+    t = "ABCDEFGHIJKLMN";
 	int nrows = 3;
 	
 	Solution slt;
