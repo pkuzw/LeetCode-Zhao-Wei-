@@ -207,13 +207,13 @@ public:
 int main()
 {
 	string t = "PAYPALISHIRING";	// rslt = PAHNAPLSIIGYIR
-    t = "ABCDEFGHIJKLMN";
+    t = "ABCDEFGH";
 	int nrows = 3;
 	
 	Solution slt;
 	string rslt = slt.convert(t, nrows);	
 
-
+    cout << t.length() << endl;
 	cout << rslt << endl;
 
 	return 0;
