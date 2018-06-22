@@ -13,6 +13,9 @@
 ///@date	2016.04.01
 ///@version	2.2
 
+///@date    June 22, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -145,7 +148,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	///@note	1. 利用long long来防止中间过程整型变量越界
 	int reverse(int x) {
@@ -158,10 +161,28 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   将INT32型的整型变量反转，生成一个新的整型变量
+    ///@param   x   输入变量
+    ///@return  如果x翻转后仍是有效的INT32变量，那么正常输出该数；否则输出0.
+    ///@note    考虑使用long long来保存输入变量，然后在输出时判定是否越界，如果越界则返回0.
+    //          时间复杂度为O(1)，空间复杂度为O(1)。因为输入是不会超过int类型的范围的，这是一个常数。
+    int reverse(int x) {
+        long long y = x;
+        long long z = 0;
+        while (y != 0) {
+            z = z * 10 + y % 10;
+            y /= 10;
+        }
+        return z > INT_MAX || z < INT_MIN ? 0 : (int)z;
+    }
+};
+
 int main()
 {
 	Solution slt; 
-	int x = INT_MAX;
+	int x = 6174;
 	
 	int rslt = slt.reverse(x);
 	return 0;
