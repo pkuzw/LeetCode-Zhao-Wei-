@@ -12,6 +12,9 @@
 ///@date	2016.04.01
 ///@version	2.2
 
+///@date    June 24, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -172,7 +175,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	int myAtoi(string str) {
 		if (str.empty())	return 0;
@@ -198,9 +201,39 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   将字符串转换为INT32的整型数字
+    ///@param   str 字符串
+    ///@return  如果字符串str有前置空白字符，需要忽略；如果字符串转换后的数字超过INT32的表示范围，根据正负号返回INT_MAX或INT_MIN；如果字符串有后置其他字符，可忽略。
+    ///@note    主要考察细心程度，处理若干种边界条件。时间复杂度为O(n)，空间复杂度为O(1)，n为字符串长度。
+    int myAtoi(string str) {
+        if (str.empty())    return 0;
+        int rslt = 0, isPositive = 1, left = 0;
+        
+        while (str[left] == ' ') left++;
+        if (str[left] == '+' || str[left] == '-') {
+            if (str[left] == '-')   isPositive = 0;
+            left++;
+        }
+        if (str[left] > '9' && str[left] < '0')    return 0;
+        while (left < str.length() && str[left] <= '9' && str[left] >= '0') {
+            if (rslt > INT_MAX/10 || (rslt == INT_MAX/10 && str[left] >= '8')) {
+                if (isPositive) return INT_MAX;
+                return INT_MIN;
+            }
+            rslt = rslt * 10 + str[left] - '0';
+            left++;
+        }
+    
+        if (isPositive) return rslt;
+        return -rslt;
+    }
+};
+
 int main()
 {
-	string s1 = "2147483648";
+	string s1 = "  -22147483648woking";
 //	string s2 = "1";
 	//getline(cin, s1);
 	Solution_v1 slt_v1;
@@ -209,5 +242,6 @@ int main()
 
  	int rslt = slt.myAtoi(s1);
 // 	cout << slt.myAtoi(s2) << endl;
+    cout << rslt << endl;
 	return 0;
 }
