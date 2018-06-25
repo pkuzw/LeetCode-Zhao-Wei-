@@ -15,6 +15,9 @@
 ///@date	2016.04.01
 ///@version	2.2
 
+///@date    June 25, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -129,7 +132,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	///@note	1. 在缩小x的过程中应该是先去头，再去尾，相对简洁一些。
 	//			2. 对于负数，直接返回false。
@@ -150,9 +153,33 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   计算给定数字是否为回文数，即从左到右读和从右向左读是一样的。
+    ///@param   x   整形数字
+    ///@return  如果给定数字x是回文数，则返回true；如果给定数字x不是回文数，则返回false。
+    ///@note    1. 通过除数div的模运算和除数为10的除法运算来获取x的首尾两数字，如果二者相等，则将div乘以100，即扩充2位，循环直至x变为0.
+    ///         2. 时间复杂度为O(1)，空间复杂度为O(1)，因为整型数字的长度固定，其不可能超过10位。
+    bool isPalindrome(int x) {
+        if (x < 0)  return false;
+        int div = 1;
+        while (x / div >= 10) div *= 10;
+        while (x > 0) {
+            int left = x / div;
+            int right = x % 10;
+            if (left == right) {
+                x = (x % div) / 10;
+                div /= 100;
+            }
+            else    return false;
+        }
+        return true;
+    }
+};
+
 int main()
 {
-	int x = -1;
+	int x = 154515451;
 	Solution slt;
 	bool rslt = slt.isPalindrome(x);
 	return 0;
