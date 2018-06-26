@@ -33,6 +33,9 @@
 ///@date	2016.04.01
 ///@version	3.1
 
+///@date    June 26, 2018
+///@version 3.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -244,18 +247,36 @@ public:
 
 class Solution {
 public:
-	///@note	1. '*'表示0个或多个前一个字符；所以"aab"和"c*a*b"可以匹配，"c*a*b"的第一个'*'是0个c，第二个'*'是1个a。
+    ///@brief   字符串p是否是s的正则表达式，即p能否满足正则表达式的扩充规则来表示s
+    ///@param   s   原始字符串
+    ///@param   p   正则表达式
+    ///@return  如果p是s的正则表达式，返回true；否则返回false。
+    ///@note    1. 动态规划；设dp[i][j]表示字符子串p[0..j-1]是字符子串s[0..i-1]的正则表达式。初始化dp[0][0] = true，因为
+    //             空串必是空串的正则表达式；
+    //          2. 递推关系式dp[i][j] = dp[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.'), 如果p[j-1] != '*';
+    //
+    //                              = (dp[i][j-2]) || (dp[i-1][j] && (s[i-1] == p[j-2] || p[j-2] == '.')), 如果p[j-1] == '*'.
+    //          3. 对于p[j-1] != '*'的情形，很好理解，dp[i][j]的值依赖于dp[i-1][j-1]和s[i-1]与p[j-1]是否匹配，后者又细分为
+    //             p[j-1]是否为'.'的情况，因为'.'是通配符。
+    //          4. 对于p[j-1] == '*'的情形，则稍微复杂一点。分两种情况：
+    //              a. 如果p[j-2]一次也没有出现，那么dp[i][j]依赖于dp[i][j-2]的值，相当于p[j-2..j-1]一次也没有在s中出现，
+    //                 那么直接去掉末尾这两个字符，来看剩余子串是否和s[0..i-1]相匹配。
+    //              b. 如果p[j-2]至少在s中出现一次，那么应该将s[i-1]从s中去除，然后比较剩下的s[0..i-2]和p[0..j-1]是否匹配。
+    //          5. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中n为字符串s的长度，m为字符串p的长度。
 	bool isMatch(string s, string p) {
-		int m = s.size(), n = p.size();
-		vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
-		dp[0][0] = true;
-		for (int i = 0; i <= m; i++) {
-			for (int j = 1; j <= n; j++) {
-				if (p[j-1] == '*')	dp[i][j] = dp[i][j-2] || (i > 0 && dp[i-1][j] && (s[i-1] == p[j-2] || p[j-2] == '.'));
-				else	dp[i][j] = i > 0 && dp[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.');
-			}
-		}
-		return dp[m][n];
+        int n = s.length(), m = p.length();
+        vector<vector<bool>> dp(n+1, vector<bool>(m+1, false));
+        dp[0][0] = true;
+        for (int i = 0; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                 //此处需注意i-1的越界问题，提前判定i > 0；之所不需要判定j > 1，是因为合法的正则表达式不可能在首元素出现‘*’.
+                if (p[j-1] == '*')
+                    dp[i][j] = (i > 0 && dp[i-1][j] && (s[i-1] == p[j-2] || p[j-2] == '.')) || (dp[i][j-2]);
+                else
+                    dp[i][j] = (i > 0 && dp[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.'));
+            }
+        }
+        return dp[n][m];
 	}
 };
 
