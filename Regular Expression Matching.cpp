@@ -36,6 +36,9 @@
 ///@date    June 26, 2018
 ///@version 3.2
 
+///@date    June 27, 2018
+///@version 2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -196,7 +199,7 @@ public:
 
 
 ///@note    递归求解
-class Solution_v2 {
+class Solution_v2_1 {
 public:
 	///@brief	通配符匹配
 	///@param	s	字符串
@@ -216,6 +219,19 @@ public:
 		}
 		return isMatch(s, p.substr(2));
 	}
+};
+
+class Solution {
+public:
+    ///@brief   判定字符串p能否正则表达字符串s
+    ///@param   s   字符串s
+    ///@param   p   字符串p
+    ///@return  如果字符串p能够正则表达字符串s，返回true；否则返回false
+    ///@note    1. 递归法
+    //          2.
+    bool isMatch(string s, string p) {
+        
+    }
 };
 
 class Solution_v3 {
