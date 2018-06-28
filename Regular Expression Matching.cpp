@@ -228,9 +228,23 @@ public:
     ///@param   p   字符串p
     ///@return  如果字符串p能够正则表达字符串s，返回true；否则返回false
     ///@note    1. 递归法
-    //          2.
+    //          2. 如果p为空，那么只有当s也为空时才为真。
+    //          3. 如果p的长度为1，那么只有当s为1，且s与p匹配时才为真。
+    //          4. 如果p[1]不是通配符'*'，意味着p是不包含特殊通配符的普通字符串，如果s为空，那么肯定是假。
+    //             否则，返回s[0]和p[0]是否相匹配，且递归调用isMatch(s.substr(1), p.substr(1))即可。
+    //          5. 如果p[1] == '*'，那么分成两种情况，p[0]没有出现过和至少出现一次。while循环用来判定这两种情况。
     bool isMatch(string s, string p) {
-        
+        if (p.empty())  return s.empty();
+        if (p.size() == 1)  return (s.size() == 1 && (s[0] == p[0] || p[0] == '.'));
+        if (p[1] != '*') {
+            if (s.empty())  return false;
+            return (s[0] == p[0] || p[0] == '.') && isMatch(s.substr(1), p.substr(1));
+        }
+        while (!s.empty() && (s[0] == p[0] || p[0] == '.')) {
+            if (isMatch(s, p.substr(2)))    return true;
+            s = s.substr(1);
+        }
+        return isMatch(s, p.substr(2));
     }
 };
 
@@ -261,7 +275,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3_2 {
 public:
     ///@brief   字符串p是否是s的正则表达式，即p能否满足正则表达式的扩充规则来表示s
     ///@param   s   原始字符串
