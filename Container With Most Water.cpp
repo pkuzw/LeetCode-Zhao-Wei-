@@ -13,6 +13,9 @@
 ///@date	2016.04.02
 ///@version	1.3
 
+///@date    June 29, 2018
+///@version 1.4
+
 
 #include <iostream>
 #include <vector>
@@ -54,16 +57,21 @@ public:
 	///@brief	给定一组高度数组，计算所围成的最大矩形面积
 	///@param	height	高度数组
 	///@return	返回最大面积
-	///@note	贪心法。从两边向中间靠拢，每次计算移动一次的最大值
+	///@note	1.贪心法。
+    //          2. 将左端点置为0，右端点置为height[n-1]，n为height.size()。因为初始时容器的底最宽，为了使后续的容器体积更大，其边长应该更高。
+    //             所以应该将两边更小的一端向中心移动，这样才能保证更大的边长被保留，后续可能遇到比现有边长更大的边，那么保留下较长边就使得有可能体积增大。
+    //          3. 贪心法的正确性还有待进一步学习。
+    //          4. 时间复杂度为O(n)，空间复杂度为O(1)，n为height的大小。
     int maxArea(vector<int>& height) {
-		int rslt = 0;
-		int l = 0, r = height.size() - 1;
-		while (l < r) {
-			rslt = max(rslt, min(height[l], height[r]) * (r - l));
-			if (height[l] < height[r])	l++;
-			else	r--;
-		}
-		return rslt;
+        int left = 0, right = height.size() - 1, rslt = 0;
+        while (left < right) {
+            int h = min(height[left], height[right]);
+            int w = right - left;
+            rslt = max(rslt, h * w);
+            if (height[left] < height[right])   left++;
+            else    right--;
+        }
+        return rslt;
     }
 };
 
