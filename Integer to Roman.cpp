@@ -117,6 +117,7 @@ public:
 
 class Solution {
 public:
+    ///@brief   将整型数字转换成罗马数字
 	string intToRoman(int num) {
 		string roman[] = {"M", "D", "C", "L", "X", "V", "I"};
 		int units[] = {1000, 500, 100, 50, 10, 5, 1};
