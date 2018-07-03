@@ -118,26 +118,39 @@ public:
 class Solution {
 public:
     ///@brief   将整型数字转换成罗马数字
+    ///@param   num 整型数字
+    ///@return  返回num转换后的罗马数字
+    ///@note    1. 罗马数字的表示方法通过1，5，10，50，100，500，1000将期间它们的元素分割开，分成这么几种情况：
+    //             a. 如果称1, 10, 100, 1000为单位数字，称5, 50, 500为中间数字，那么一个数字x，单位数字 < x < 中间数字-1,
+    //              则x = 若干个单位数字，x %= 单位数字；
+    //             b. 如果x比中间数字小1或者大1，那么应该在中间数字前或者后面添加单位数字；
+    //             c. 如果x比下一个单位数字小1，那么应该在下一个单位数字前添加当前的单位数字；
+    //          2. 因为输入限制为[1, 4000)，那么时间复杂度为O(1)，空间复杂度为O(1).用来存储罗马数字的单位数字和中间数字的数组长度为
+    //              常量。
 	string intToRoman(int num) {
-		string roman[] = {"M", "D", "C", "L", "X", "V", "I"};
-		int units[] = {1000, 500, 100, 50, 10, 5, 1};
-		string rslt;
-		for (int i = 0; i < 7; i += 2) {
-			int x = num / units[i];
-			if (!x)	continue;
-			else if (x < 4)
-				for (int j = 0; j < x; j++)	rslt += roman[i];			
-			else if (x == 4)
-				rslt += roman[i] + roman[i-1];
-			else if (x > 4 && x < 9) {
-				rslt += roman[i-1];
-				for (int j = 5; j < x; j++)	rslt += roman[i];
-			}
-			else if (x == 9)
-				rslt += roman[i] + roman[i-2];
-			num %= units[i];
-		}
-		return rslt;
+        string roman[7] = {"M", "D", "C", "L", "X", "V", "I"};
+        int unit[7] = {1000, 500, 100, 50, 10, 5, 1};
+        string rslt = "";
+        int x = 0;
+        for (int i = 0; i < 7; i += 2) {
+            x = num / unit[i];
+            if (!x) continue;
+            if (x < 4)
+                for (int j = 0; j < x; j++)
+                    rslt += roman[i];
+            else if (x == 4)
+                rslt += roman[i] + roman[i-1];
+            else if (x > 4 && x < 9) {
+                rslt += roman[i-1];
+                if (x > 5)
+                    for (int j = 0; j < x-5; j++)
+                        rslt += roman[i];
+            }
+            else if (x == 9)
+                rslt += roman[i] + roman[i-2];
+            num %= unit[i];
+        }
+        return rslt;
 	}
 };
 
@@ -145,7 +158,7 @@ int main()
 {
 	Solution slt;
 	Solution_v2 s2;
-	int num = 3999;
+	int num = 495;
 	string t = slt.intToRoman(num);
 	string t2 = s2.intToRoman(num);
 	return 0;
