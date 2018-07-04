@@ -9,6 +9,9 @@
 ///@date	2016.04.04
 ///@version	2.1
 
+///@date    July 4, 2018
+///@version 2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -88,14 +91,23 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算一组字符串数组最长的公共前缀。
+    ///@param   strs    字符串数组
+    ///@return  返回字符串数组最长的公共前缀。
+    ///@note    1. 所谓公共前缀，一定要是数组中每一个字符串的前缀。那么考虑用第一个字符串当做被比较的标杆，逐一和后续的字符串进行比较。
+    //          2. 当标杆字符串的长度超过了后续字符串或者当前比较的字符不相等时，就应该截断标杆字符串了。否则就一直将标杆字符串中的
+    //             比较下标后移。
+    //          3. 当遍历完整个标杆字符串，仍然没有返回的话，那么标杆字符串就是最长公共前缀。因为不可能有比它更长的公共前缀了。
+    //          4. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中m为strs[0]的长度，n为strs中字符串的数目。
 	string longestCommonPrefix(vector<string>& strs) {
-		if (strs.empty())	return "";
-		for (int i = 0; i != strs[0].size(); i++) {
-			for (int j = 0; j != strs.size() - 1; j++) {
-				if (i >= strs[j].size() || strs[j][i] != strs[j+1][i])	return strs[j].substr(0, i);
-			}
-		}
-		return strs[0];
+        if (strs.empty())  return string("");
+        for (int i = 0; i < strs[0].size(); i++) {
+            for (int j = 1; j < strs.size(); j++) {
+                if (strs[0][i] != strs[j][i] || i >= strs[j].size())
+                    return strs[0].substr(0, i);
+            }
+        }
+        return strs[0];
 	}
 };
 
