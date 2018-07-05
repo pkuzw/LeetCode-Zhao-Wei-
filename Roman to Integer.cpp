@@ -9,8 +9,12 @@
 ///@date	2016.04.02
 ///@version	2.1
 
+///@date    July 05, 2018
+///@version 2.2
+
 #include <string>
 #include <iostream>
+#include <map>
 using namespace std;
 
 class Solution_v1
@@ -103,7 +107,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_ {
 public:
 	int romanToInt(string s) {
 		map<char, int> hash_tbl;
@@ -122,6 +126,35 @@ public:
 		}
 		return rslt;
 	}
+};
+
+class Solution {
+public:
+    ///@brief   将罗马数字转换成阿拉伯数字
+    ///@param   s   罗马数字表示的字符串，范围是[1, 4000)。
+    ///@return  返回罗马数字对应的阿拉伯数字，用整型int表示。
+    ///@note    1. 考虑到罗马数字是从高位写到低位，当遇到4，40，400时，较小的数字反而出现在前面，那么分两种情况考虑。
+    //          a. 如果当前数字比后继数字大或者相等，那么将当前数字累加到和上面；
+    //          b. 如果当前数字小于后继数字，那么将和扣除当前数字即可。
+    //          2. 时间复杂度为O(1)，空间复杂度为(1)。因为罗马数字的范围确定，是一个常量。
+    int romanToInt(string s) {
+        int rslt = 0;
+        map<char, int> hash_table;
+        hash_table['I'] = 1;
+        hash_table['V'] = 5;
+        hash_table['X'] = 10;
+        hash_table['L'] = 50;
+        hash_table['C'] = 100;
+        hash_table['D'] = 500;
+        hash_table['M'] = 1000;
+        
+        for (int i = 0; i < s.size(); i++) {
+            int t = hash_table[s[i]];
+            if (i == s.size() - 1 || t >= hash_table[s[i+1]])   rslt += t;
+            else rslt -= t;
+        }
+        return rslt;
+    }
 };
 
 int main()
