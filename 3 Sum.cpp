@@ -22,6 +22,9 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 ///@date	2016.04.04
 ///@version	2.2
 
+///@date    July 7, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -215,9 +218,9 @@ public:
 		if(v == array_int[q])
 			return q;
 		else if(v < array_int[q])
-			BinarySearch(array_int, p, q-1, v);
+			return BinarySearch(array_int, p, q-1, v);
 		else 
-			BinarySearch(array_int, q+1, r, v);
+			return BinarySearch(array_int, q+1, r, v);
 	}
 }; 
 
@@ -260,32 +263,35 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定数组nums，计算数组中所有不重复的三元组，使得三元组元素之和为0。
+    ///@param   nums    数组
+    ///@return  返回所有符合条件的三元组。
+    ///@note    1. 首先对nums进行排序，然后从收尾两侧同时向中间逼近，如果收尾指针之和为外层循环指针指向元素的相反数，则将三者压入结果数组。
+    //          2. 注意，因为要求结果数组不含有重复三元组，所以对于外层循环来说，如果有两个相邻元素相等，那么就需要继续向后遍历。
+    //          3. 排序的时间复杂度O(nlgn)，两层循环为O(n^2)，综合来看为O(n^2)，空间复杂度为O(m)，其中m为符合条件的结果元素数目。
 	vector<vector<int>> threeSum(vector<int>& nums) {
-		vector<vector<int>> rslt;
-		if (nums.empty() || nums.size() < 3)	return rslt;
-		sort(nums.begin(), nums.end());
-		for (int i = 0; i != nums.size() - 2; i++) {
-			int sum = 0;
-			int left = i + 1, right = nums.size() - 1;
-			if (i == 0 || nums[i] != nums[i-1])	sum = 0 - nums[i];
-			else continue;
-			while (left < right) {
-				vector<int> tmp;
-				if (nums[left] + nums[right] == sum) {
-					tmp.push_back(nums[i]);
-					tmp.push_back(nums[left]);
-					tmp.push_back(nums[right]);
-					rslt.push_back(tmp);
-					while (nums[left] == nums[left+1])	left++;
-					while (nums[right] == nums[right-1])		right--;
-					left++;
-					right--;
-				}
-				else if (nums[left] + nums[right] < sum)	left++;				
-				else	right--;
-			}			
-		}
-		return rslt;
+        vector< vector<int> > rslt;
+        if (nums.size() < 3)    return rslt;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size() - 2; i++) {
+            int sum = nums[i];
+            if (i == 0 || nums[i] != nums[i-1]) {
+                int l = nums[i + 1], r = nums[nums.size() - 1];
+                while (l < r) {
+                    if (l + r == -sum) {
+                        vector<int> t;
+                        t.push_back(nums[i]);
+                        t.push_back(nums[l]);
+                        t.push_back(nums[r]);
+                        rslt.push_back(t);
+                        l++, r--;
+                    }
+                    else if (l + r < -sum) l++;
+                    else    r--;
+                }
+            }
+        }
+        return rslt;
 	}
 };
 
