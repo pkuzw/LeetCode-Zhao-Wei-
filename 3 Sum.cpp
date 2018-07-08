@@ -276,17 +276,19 @@ public:
         for (int i = 0; i < nums.size() - 2; i++) {
             int sum = nums[i];
             if (i == 0 || nums[i] != nums[i-1]) {
-                int l = nums[i + 1], r = nums[nums.size() - 1];
+                int l = i + 1, r = nums.size() - 1;
                 while (l < r) {
-                    if (l + r == -sum) {
+                    if (nums[l] + nums[r] == -sum) {
                         vector<int> t;
                         t.push_back(nums[i]);
                         t.push_back(nums[l]);
                         t.push_back(nums[r]);
                         rslt.push_back(t);
+                        while (l < r && nums[l] == nums[l+1])   l++;
+                        while (l < r && nums[r] == nums[r-1])   r--;
                         l++, r--;
                     }
-                    else if (l + r < -sum) l++;
+                    else if (nums[l] + nums[r] < -sum) l++;
                     else    r--;
                 }
             }
