@@ -20,6 +20,9 @@
 ///@date    2016.04.05
 ///@version 2.2
 
+///@date    July 09, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -183,11 +186,11 @@ public:
 		}
 		else if (v < ivec[q])
 		{
-			BinarySearch(ivec, p, q-1, v);
+			return BinarySearch(ivec, p, q-1, v);
 		}
 		else 
 		{
-			BinarySearch(ivec, q+1, r, v);
+			return BinarySearch(ivec, q+1, r, v);
 		}
 	}
 
@@ -225,22 +228,33 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个整型数组和一个给定值，计算距离给定值最近的三元素之和。
+    ///@param   nums    数组
+    ///@param   target  给定值
+    ///@return  返回距离给定值最近的三元素之和。假设输入保证有且只有一个解。
+    ///@note    1. 此题和3 Sum类似，不过前者是在计算所有不重复的和为给定值的三元组。基本思路是一致的。
+    //          2. 首先，进行排序，时间复杂度为O(nlgn)。
+    //          3. 其次，通过临时变量diff和sum来保存遍历过程中距离给定值最近的三元组的和与给定值之差和三元组之和。
+    //          4. 最后，从前往后挨个枚举，如果diff小于之前的diff，那么就更新diff和sum。直至循环结束，找到解。
+    //          5. 对于和小于目标值的，移动左边界，对于和大于等于目标值的，移动右边界。这里需要注意的是，diff有可能为0。故要考虑到等于的情形。
+    //          6. 时间复杂度为O(n^2)，空间复杂度为O(1)。其中n为nums的大小。
     int threeSumClosest(vector<int>& nums, int target) {
+        if (nums.size() < 3)    return INT_MAX;
         sort(nums.begin(), nums.end());
         int sum = nums[0] + nums[1] + nums[2];
         int diff = abs(sum - target);
         for (int i = 0; i < nums.size() - 2; i++) {
-            int left = i + 1;
-            int right = nums.size() - 1;
-            while (left < right) {
-                int new_sum = nums[i] + nums[left] + nums[right];
+            int l = i + 1;
+            int r = nums.size() - 1;
+            while (l < r) {
+                int new_sum = nums[i] + nums[l] + nums[r];
                 int new_diff = abs(new_sum - target);
                 if (new_diff < diff) {
-                    diff = new_diff;
                     sum = new_sum;
+                    diff = new_diff;
                 }
-                if (new_sum < target)   left++;
-                else    right--;
+                if (new_sum < target)   l++;
+                else    r--;
             }
         }
         return sum;
@@ -256,6 +270,8 @@ int main()
 	ivec.push_back(3);
 
 	Solution slt;
+    Solution_v2 s2;
+    cout << s2.threeSumClosest(ivec, -1) << endl;
 	cout << slt.threeSumClosest(ivec, -1);
 	cout << endl;
 
