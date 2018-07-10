@@ -20,7 +20,7 @@
 ///@date    2016.04.05
 ///@version 2.2
 
-///@date    July 09, 2018
+///@date    July 10, 2018
 ///@version 2.3
 
 #include <iostream>
