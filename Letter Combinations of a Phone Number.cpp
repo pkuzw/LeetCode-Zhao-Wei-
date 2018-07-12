@@ -24,6 +24,9 @@
 ///@date	2016.04.05
 ///@version	2.1
 
+///@date    July 12, 2018
+///@version 2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -173,7 +176,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	vector<string> letterCombinations(string digits) {
 		vector<string> hash_tbl;
@@ -197,6 +200,44 @@ public:
 			str.pop_back();
 		}
 	}
+};
+
+class Solution {
+public:
+    ///@brief   给定一串由2 - 9组成的数字字符串，每个数字像手机键盘一样对应若干英文字母，求所有可能的对应字母字符串。
+    ///@param   digits  数字字符串
+    ///@return  返回数字字符串对应的所有可能字母字符串组合。
+    ///@note    1. 将数字字符串中的每一个数字所对应的英文字母看作是一棵树的一层，那么一个可能的英文字符串就是从根节点到叶节点的一条路径上的所有节点依次串起来。那么问题就转换成了求解一个森林的所有路径。根据树的深度优先遍历算法求解即可。
+    vector<string> letterCombinations(string digits) {
+        vector<string> rslt;
+        string str = "";
+        if (digits.empty()) return rslt;
+        string s[8] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        vector<string> hash_table;
+        for (int i = 0; i < 8; i++) hash_table.push_back(s[i]);
+        dfs(rslt, str, digits, 0, hash_table);
+        return rslt;
+    }
+    
+    ///@brief   深度优先遍历树算法
+    ///@param   rslt    结果数组，每个元素都是一个可能字母字符串。
+    ///@param   str     一个可能的英文字母字符串，初始为空。
+    ///@param   digits  数字字符串
+    ///@param   index   当前正在遍历的数字字符串的下标
+    ///@param   hash_table  数字字符所对应的英文字符表
+    ///@note    1. 深度优先遍历的时间复杂度为O(n^m)，空间复杂度为O(n^m)。其中n为数字字符串的长度，m为一个数字所对应的英文字符的平均数目。
+    void dfs(vector<string>& rslt, string& str, const string& digits, int index, const vector<string>& hash_table) {
+        if (index == digits.size()) {
+            rslt.push_back(str);
+            return;
+        }
+        for (int i = 0; i < hash_table[digits[index] - '2'].size(); i++) {
+            str += hash_table[digits[index] - '2'][i];
+            dfs(rslt, str, digits, index + 1, hash_table);
+            str.pop_back();
+        }
+        return;
+    }
 };
 
 int main()
