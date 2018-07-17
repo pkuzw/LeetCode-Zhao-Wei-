@@ -414,34 +414,44 @@ public:
 
 class Solution {
 public:
-	vector<vector<int>> fourSum(vector<int>& nums, int target) {
-		set<vector<int>> rslt;	// set is used to avoid duplicate elements
-		if (nums.size() < 4) {
-			vector<vector<int>> rslt2;
-			return rslt2;
-		}
-		sort(nums.begin(), nums.end());
-		for (int i = 0; i < nums.size() - 3; i++) {
-			for (int j = i + 1; j < nums.size() - 2; j++) {
-				int left = j + 1, right = nums.size() - 1;
-				while (left < right) {
-					int sum = nums[i] + nums[j] + nums[left] + nums[right];
-					if (sum == target) {
-						vector<int> tmp;
-						tmp.push_back(nums[i]);
-						tmp.push_back(nums[j]);
-						tmp.push_back(nums[left++]);
-						tmp.push_back(nums[right--]);
-						rslt.insert(tmp);						
-					}
-					else if (sum < target)	left++;
-					else right--;
-				}
-			}
-		}
-		vector<vector<int>> rslt2(rslt.begin(), rslt.end());
-		return rslt2;
-	}
+    ///@brief   给定一个整型数组，计算其中的所有四元组，其和为给定值。
+    ///@param   nums    整型数组
+    ///@param   target  指定的和
+    ///@return  返回所有满足和为指定值的四元组。要求四元组之间没有重复。
+    ///@note    1. 思路类似3 sum。两层循环遍历前两个元素，剩下的设置左右指针，从两头向中间移动，如果求和满足条件，那么就将结果保存。
+    //          2. 不过略有不同的地方是使用set<vector<int>>作为中间结果的数据结构，这样就排除了重复的四元组。
+    //          这个思路也可是在3 sum上试一试。
+    //          3. set是一个C++的容器模板，其中的元素不能有重复，通过key值按照一定顺序排列，实现方式为BST(二叉搜索树)。
+    //          4. 算法的时间复杂度为O(n^3)，空间复杂度为O(m)，其中m为符合条件的四元组个数。
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> ret_em;
+        int len = nums.size();
+        if (len < 4)    return  ret_em;
+        sort(nums.begin(), nums.end());
+        set<vector<int>> rslt;
+        for (int i = 0; i < len - 3; i++) {
+            for (int j = i + 1; j < len - 2; j++) {
+                int l = j + 1, r = len - 1;
+                while (l < r) {
+                    if (nums[i] + nums[j] + nums[l] + nums[r] == target) {
+                        vector<int> vec_t;
+                        vec_t.push_back(nums[i]);
+                        vec_t.push_back(nums[j]);
+                        vec_t.push_back(nums[l]);
+                        vec_t.push_back(nums[r]);
+                        rslt.insert(vec_t);
+                        l++, r--;
+                    }
+                    else if (nums[i] + nums[j] + nums[l] + nums[r] < target)
+                        l++;
+                    else
+                        r--;
+                }
+            }
+        }
+        vector<vector<int>> ret(rslt.begin(), rslt.end());
+        return ret;
+    }
 };
 
 int main()
