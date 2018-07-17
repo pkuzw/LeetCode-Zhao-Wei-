@@ -21,6 +21,9 @@
 ///@date	2016.04.05
 ///@version	2.2
 
+///@date    July 17, 2018
+///@version 2.3
+
 #include <iostream>
 using namespace std;
 
@@ -89,7 +92,7 @@ public:
 	///@return	返回链表首节点
 	///@note	如果只能遍历一遍，那么应该建立一个哨兵元素，该哨兵元素距离首节点的距离为n，当哨兵元素是链表尾节点时，就将遍历元素的后一个元素删除即可。时间复杂度为O(n)，空间复杂度为O(1)。
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-		if (!head || !head->next)		return nullptr;
+		if (!head)		return nullptr;
 		ListNode* pre = head;	//	待删除元素的前驱节点
 		ListNode* cur = head;	//	哨兵节点
 		for (int i = 0; i != n; i++)	cur = cur->next;
@@ -105,18 +108,24 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个单向链表，在只能遍历一遍的条件下，删除距离尾结点为n的节点。
+    ///@param   head    链表首节点
+    ///@param   n       待删除节点到尾结点的距离
+    ///@return  删除节点后返回链表表头
+    ///@note    1. 先从表头开始往后数n个节点，然后开始遍历，当之前往后数n的那个节点到链表尾部时，删除当前节点即可。
+    ///         2. 时间复杂度为O(m)，空间复杂度为O(1)，其中m为链表中的节点数目。
 	ListNode* removeNthFromEnd(ListNode* head, int n) {
-		if (!head || !head->next)	return nullptr;
-		ListNode* pre = head;
-		ListNode* cur = head;
-		for (int i = 0; i != n; i++)	cur = cur->next;
-		if (!cur)	return head->next;
-		while (cur->next) {
-			cur = cur->next;
-			pre = pre->next;
-		}
-		pre->next = pre->next->next;
-		return head;
+        if (!head)  return head;
+        ListNode* cur = head;
+        ListNode* sentinel = head;
+        for (int i = 0; i < n; i++) sentinel = sentinel->next;
+        if (!sentinel)  return cur->next;
+        while (sentinel->next) {
+            cur = cur->next;
+            sentinel = sentinel->next;
+        }
+        cur->next = cur->next->next;
+        return head;
 	}
 };
 
