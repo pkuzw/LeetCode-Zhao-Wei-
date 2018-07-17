@@ -25,10 +25,14 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 ///@date    July 7, 2018
 ///@version 2.3
 
+///@date    July 17, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <set>
 
 using namespace std;
 
@@ -261,7 +265,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_3 {
 public:
     ///@brief   给定数组nums，计算数组中所有不重复的三元组，使得三元组元素之和为0。
     ///@param   nums    数组
@@ -297,6 +301,37 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   考虑一组整型数组，求所有不重复的和为0的三元组.
+    ///@param   nums    整型数组
+    ///@return  返回所有不重复的三元组，其和为0.
+    ///@note    1. 考虑使用模板set<vector<int>>来去重。
+    //          2. 此方法不如v2的效率高，在leetcode上耗时176ms，后者为72ms.
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        int len = nums.size();
+        vector<vector<int>> ret_empty;
+        if (len < 3)    return ret_empty;
+        sort(nums.begin(), nums.end());
+        set<vector<int>> rslt;
+        for (int i = 0; i < len - 2; i++) {
+            int l = i + 1, r = len - 1;
+            while (l < r) {
+                if (nums[i] + nums[l] + nums[r] == 0) {
+                    vector<int> vec_t {nums[i], nums[l], nums[r]};
+                    rslt.insert(vec_t);
+                    l++, r--;
+                }
+                else if (nums[i] + nums[l] + nums[r] < 0)
+                    l++;
+                else
+                    r--;
+            }
+        }
+        vector<vector<int>> ret(rslt.begin(), rslt.end());
+        return ret;
+    }
+};
 
 int main()
 {
