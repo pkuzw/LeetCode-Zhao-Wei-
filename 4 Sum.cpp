@@ -38,6 +38,9 @@ A solution set is:
 ///@date	2016.04.05
 ///@version	2.2
 
+///@date    July 17, 2018
+///@version 2.3S
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -226,9 +229,9 @@ public:
 		if(v == array_int[q])
 			return q;
 		else if(v < array_int[q])
-			BinarySearch(array_int, p, q-1, v);
+			return BinarySearch(array_int, p, q-1, v);
 		else 
-			BinarySearch(array_int, q+1, r, v);
+			return BinarySearch(array_int, q+1, r, v);
 	}
 
 	///@brief	利用<multimap>作为缓冲，时间复杂度O(n^2),空间复杂度O(n^2)
