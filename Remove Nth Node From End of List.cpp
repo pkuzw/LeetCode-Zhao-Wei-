@@ -118,6 +118,7 @@ public:
         if (!head)  return head;
         ListNode* cur = head;
         ListNode* sentinel = head;
+        
         for (int i = 0; i < n; i++) sentinel = sentinel->next;
         if (!sentinel)  return cur->next;
         while (sentinel->next) {
