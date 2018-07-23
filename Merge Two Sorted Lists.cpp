@@ -12,6 +12,9 @@
 ///@date	2016.04.06
 ///@version	2.2
 
+///@date    July 23, 2018
+///@version 2.3
+
 #include <iostream>
 using namespace std;
 
@@ -148,32 +151,54 @@ public:
 
 class Solution {
 public:
+    ///@brief   将两个有序的链表合并成一个链表
+    ///@param   l1  链表1
+    ///@param   l2  链表2
+    ///@return  返回合并后的链表。
+    ///@note    1. 思路类似于归并排序的merge操作。
+    //          2. 时间复杂度为O(m + n)，其中m,n分别是链表1和链表2的长度。空间复杂度为O(1)。
 	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-		ListNode* rslt = new ListNode(0);
-		ListNode* cur = rslt;
-		while (l1 && l2) {
-			if (l1->val < l2->val) {
-				cur->next = l1;
-				l1 = l1->next;
-				cur = cur->next;
-			}
-			else {
-				cur->next = l2;
-				l2 = l2->next;
-				cur = cur->next;
-			}
-		}
-		if (!l1)	cur->next = l2;
-		else	cur->next = l1;
-		return rslt->next;
-	}
+        ListNode* rslt = new ListNode(0);
+        ListNode* cur = rslt;
+        while (l1 && l2) {
+            if (l1->val <= l2->val) {
+                cur->next = l1;
+                cur = cur->next;
+                l1 = l1->next;
+            }
+            else {
+                cur->next = l2;
+                cur = cur->next;
+                l2 = l2->next;
+            }
+        }
+        if (!l1)    cur->next = l2;
+        else    cur->next = l1;
+        return rslt->next;
+    }
+    
+    ///@brief	在新链表中插入节点
+    ///@param	head	新链表的首结点
+    ///@param	链表的值
+    ///@note	用于生成测试数据
+    void insertNode(ListNode *head, int val)
+    {
+        ListNode *node = new ListNode(val);
+        
+        while (head->next != nullptr)
+        {
+            head = head->next;
+        }
+        head->next = node;
+    }
+
 };
 
 int main()
 {
 	ListNode* l1 = new ListNode(4);
 	ListNode* l2 = new ListNode(3);
- 	Solution_v1 slt;
+ 	Solution slt;
  	for (int i = 2; i <= 5; i++)
  	{
  		slt.insertNode(l1, i*3 - 1);
