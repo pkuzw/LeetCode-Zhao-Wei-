@@ -19,7 +19,7 @@
 ///@date	2016.04.06
 ///@version	2.2
 
-///@date    July 25, 2018
+///@date    August 6, 2018
 ///@version 2.3
 
 #include <iostream>
@@ -82,7 +82,7 @@ public:
 	///@param	n	括号的对数
 	///@return	返回所有可能的合法组合
 	///@note	递归法：所有的合法构造都要求剩余的右括号数目应该大于等于剩余的左括号数目。
-	//			所以在递归时当剩余的左括号数目少于剩余的右括号数目时就不再继续递归。当剩余的左右括号数目
+	//			所以在递归时当剩余的右括号数目少于剩余的左括号数目时就不再继续递归。当剩余的左右括号数目
 	//			都等于0时，则将构造成的字符串压入结果数组。
 	vector<string> generateParenthesis(int n) {
 		vector<string> rslt;
@@ -106,7 +106,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	vector<string> generateParenthesis(int n) {
 		vector<string> rslt;
@@ -124,6 +124,39 @@ public:
 		}
 
 	}
+};
+
+class Solution {
+public:
+    ///@brief   给定参数n，计算所有合法的括号组合。
+    ///@param   n   参数n，表示有n对左右括号。
+    ///@return  返回所有合法的包含n对左右括号的字符串。
+    ///@note    1. 递归法求解。注意到在拼凑合法的括号字符串时，只有当左括号的数目不少于右括号的数目时，目前的括号字符串才合法。利用这一点来进行递归。
+    ///         2. 时间复杂度为O(n^2)?空间复杂度为O(m*n)，其中m是合法的字符串数目。
+    vector<string> generateParenthesis(int n) {
+        vector<string> rslt;
+        string str = "";
+        dfs(n, n, str, rslt);
+        return rslt;
+    }
+    
+    ///@brief   递归计算合法的括号字符串。
+    ///@param   left    还没有使用的左括号的数目。
+    ///@param   right   还没有使用的右括号数目。
+    ///@param   valid_str   合法的字符串。
+    ///@param   rslt    合法字符串集合。
+    ///@note    1. 如果left > right，说明目前字符串中的左括号使用的比右括号少，那么必为非法字符串，直接返回。
+    ///         2. 如果左括号和右括号的剩余数量都为0，那么说明是一个合法字符串，压入结果集合。
+    ///         3. 否则分成两种情况，一种是将left自减1，然后给现有字符串添加一个左括号，递归调用dfs()函数本身；
+    //             另一种是将right自减1，然后将现有字符串添加一个右括号，再递归地调用dfs()。
+    void dfs(int left, int right, string valid_str, vector<string>& rslt) {
+        if (left > right)   return;
+        if (left == 0 && right == 0)    rslt.push_back(valid_str);
+        else {
+            if (left)   dfs(left - 1, right, valid_str + '(', rslt);
+            if (right)  dfs(left, right - 1, valid_str + ')', rslt);
+        }
+    }
 };
 
 int main()
