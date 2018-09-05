@@ -15,7 +15,7 @@
 ///@date	2016.04.06
 ///@version	2.2
  
-///@date    August 14, 2018
+///@date    September 5, 2018
 ///@version 2.3
 
 */
@@ -146,37 +146,68 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_3 {
 public:
-	ListNode* mergeKLists(vector<ListNode*>& lists) {
-		if (lists.empty())	return nullptr;
-		int n = lists.size();
-		while (n > 1) {
-			int k = (n + 1) / 2;
-			for (int i = 0; i < n / 2; i++)	lists[i] = mergeTwoLists(lists[i], lists[i+k]);
-			n = k;
-		}
-		return lists[0];
-	}
-
-	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-		ListNode* rslt = new ListNode(0);
-		ListNode* cur = rslt;
-		while (l1 && l2) {
-			if (l1->val < l2->val) {
-				cur->next = l1;
-				l1 = l1->next;
-			}
-			else {
-				cur->next = l2;
-				l2 = l2->next;
-			}
-			cur = cur->next;
-		}
-		if (!l1)	cur->next = l2;
-		else		cur->next = l1;
-		return rslt->next;
-	}
+    ///@brief   将k个排好序的链表合并
+    ///@param   lists   保存有k个链表表头的数组
+    ///@return  返回合并后的链表表头
+    ///@note    1. 对k个链表两两进行合并。第i个链表和第i + ((k + 1) / 2))个链表合并，每次都能减少一半的合并数量。
+    //             总共需要合并k/2 + k/4 + ... + 1次，一共是O(k)次合并。
+    //          2. 时间复杂度O(k*n)，其中k为链表的数目，n为链表的平均长度。空间复杂度为O(1)。
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if (lists.empty())  return nullptr;
+        int k = lists.size();
+        while (k > 1) {
+            int interval = (k + 1) / 2;
+            for (int i = 0; i < k / 2; i++)
+                lists[i] = merge2Lists(lists[i], lists[i + interval]);
+            k = interval;
+        }
+        return lists[0];
+    }
+    
+    ///@brief   将两个链表合并
+    ///@param   l1  链表1
+    ///@param   l2  链表2
+    ///@return  返回合并后的链表表头
+    ///@note    1. 挨个比较两个链表的节点，始终将合并后链表的遍历指针指向较小的节点，直至某一链表遍历完毕，将指针指向另一个链表的剩余元素。
+    //          2. 设两链表的长度分别为m, n，则时间复杂度为O(min(m, n))，空间复杂度为O(m + n)。
+    
+    ListNode* merge2Lists(ListNode* l1, ListNode* l2) {
+        ListNode* rslt = new ListNode(0);
+        ListNode* cur = rslt;
+        
+        while (l1 && l2) {
+            if (l1->val < l2->val) {
+                cur->next = l1;
+                l1 = l1->next;
+            }
+            else {
+                cur->next = l2;
+                l2 = l2->next;
+            }
+            cur = cur->next;
+        }
+        if (!l1)    cur->next = l2;
+        if (!l2)    cur->next = l1;
+        return rslt->next;
+    }
+    
+    
+    ///@brief	在新链表中插入节点
+    ///@param	head	新链表的首结点
+    ///@param	链表的值
+    ///@note	用于生成测试数据
+    void insertNode(ListNode *head, int val)
+    {
+        ListNode *node = new ListNode(val);
+        
+        while (head->next != nullptr)
+        {
+            head = head->next;
+        }
+        head->next = node;
+    }
 };
 
 int main ()
@@ -184,7 +215,7 @@ int main ()
 	ListNode* l1 = new ListNode(4);
 	ListNode* l2 = new ListNode(3);
 	ListNode* l3 = new ListNode(10);
-	Solution_v1 slt;
+	Solution_v2_3 slt;
 	for (int i = 2; i <= 5; i++)
 	{
 		slt.insertNode(l1, i*3 - 1);
