@@ -18,6 +18,9 @@
 ///@date	2016.04.06
 ///@version	2.2
 
+///@date    September 6, 2018
+///@version 3.0
+
 #include <iostream>
 using namespace std;
 
@@ -169,30 +172,30 @@ public:
 	}
 };
 
-class Solution2 {
-public:	
+class Solution_v3 {
+public:
+    ///@brief   交换链表中的每两个相邻元素
+    ///@param   head    链表头
+    ///@return  返回交换后的链表表头
+    ///@note    1. 创建一个指针变量作为表头的前驱节点，便于返回;
+    //          2. 在交换过程中设置三个变量，pre保存两个相邻变量的前驱节点; cur1保存第一个节点; cur2保存第二个节点;
+    //          3. 只有当两个cur1和cur2都有效时才交换，避免处理剩余的奇数个节点;
+    //          4. 在交换的时候小心顺序就好;
+    //          5. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为链表的长度。
     ListNode* swapPairs(ListNode* head) {
-        if (!head || !head->next) return head;
-        ListNode *dummy = new ListNode(-1);
-        dummy->next = head;
-        ListNode *pre = dummy, *cur = head, *next = head->next;
-        int i = 0;
-        while (cur) {
-            ++i;
-            if (i % 2 == 0) {
-                ListNode *last = cur->next;
-                cur->next = next;
-                last->next = pre->next;
-                pre->next = last;
-                pre = cur;
-                cur = next;
-                if (next) next = next->next;
-            } else {
-                if (next) next = next->next;
-                else break;
-            }
+        if (!head || !head->next)   return head;
+        ListNode* preHead = new ListNode(0);
+        preHead->next = head;
+        ListNode* cur1 = head, *cur2 = head->next, *pre = preHead;
+        while (cur1 && cur2) {
+            cur1->next = cur2->next;
+            cur2->next = cur1;
+            pre->next = cur2;
+            pre = cur1;
+            cur1 = cur1->next;
+            cur2 = cur1 ? cur1->next : nullptr;
         }
-        return dummy->next;
+        return preHead->next;
     }
 };
 
