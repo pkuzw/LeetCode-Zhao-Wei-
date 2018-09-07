@@ -27,6 +27,9 @@
 ///@date	2016.04.06
 ///@version	2.2
 
+///@date    September 7, 2018
+///@version 3.0
+
 #include <iostream>
 using namespace std;
 
@@ -186,7 +189,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	ListNode* reverseKGroup(ListNode* head, int k) {
 		if (!head || !head->next || k == 1)	return head;
@@ -219,28 +222,94 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if (!head || !head->next || k == 1) return head;
+        ListNode* preHead = new ListNode(0);
+        preHead->next = head;
+        ListNode* start = preHead;
+        ListNode* cur = head;
+        int groupCnt = 0;
+        while (cur) {
+            for (int i = 0; i < k - 1; i++) {
+                cur = cur->next;
+                if (!cur) return preHead->next;
+            }
+            groupCnt++;
+            ListNode* nextGroupStart = cur->next;
+            cur->next = nullptr;
+            cur = reverseList(start->next);
+            start->next->next = nextGroupStart;
+            start = start->next;
+            if (groupCnt == 1) preHead->next = cur;
+            cur = nextGroupStart;
+        }
+        return preHead->next;
+    }
+    
+    ListNode* reverseList(ListNode* head) {
+        if (!head || !head->next) {
+            return head;
+        }
+        ListNode* cur = head;
+        ListNode* successor = cur->next;
+        cur->next = nullptr;
+        ListNode* nextCur = successor->next;
+        while (cur && successor) {
+            successor->next = cur;
+            cur = successor;
+            successor = nextCur;
+            nextCur = nextCur ? nextCur->next : nullptr;
+        }
+        return cur;
+    }
+    
+    ///@brief	在新链表中插入节点
+    ///@param	head	新链表的首结点
+    ///@param	链表的值
+    ///@note	用于生成测试数据
+    void insertNode(ListNode *head, int val)
+    {
+        ListNode *node = new ListNode(val);
+        
+        while (head->next != nullptr)
+        {
+            head = head->next;
+        }
+        head->next = node;
+    }
+    
+    ///@brief   打印链表
+    ///@param   head    链表表头
+    void printList(ListNode* head) {
+        while (head) {
+            cout << head->val << " ";
+            head = head->next;
+        }
+        cout << endl;
+    }
+};
+
 int main()
 {
 	ListNode* l2 = nullptr;
 	ListNode* l1 = new ListNode(1);
 	//ListNode* l2 = new ListNode(3);
-	Solution_v1 slt_v1;
-	for (int i = 2; i <= 2; i++)
+	Solution slt;
+	for (int i = 2; i <= 5; i++)
 	{
-		slt_v1.insertNode(l1, i);
+        slt.insertNode(l1, i);
 		//slt.insertNode(l2, i + 1);
 	}
 
+    slt.printList(l1);
+    
+//    ListNode* reversehead = slt.reverseList(l1);
+//    slt.printList(reversehead);
 	int k = 2;
-	Solution slt;
-	ListNode* head = slt.reverseKGroup(l1, k);
+    ListNode* head = slt.reverseKGroup(l1, k);
 
-	while (head != nullptr)
-	{
-		cout << head->val;
-		cout << ' ';
-		head = head->next;
-	}
-	cout << endl;
+    slt.printList(head);
 	return 0;
 }
