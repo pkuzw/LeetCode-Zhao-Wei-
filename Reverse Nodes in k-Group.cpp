@@ -224,30 +224,40 @@ public:
 
 class Solution {
 public:
+    ///@brief   以k个元素为一组，将链表进行逆转
+    ///@param   head    链表头
+    ///@param   k       元组的元素数
+    ///@return  返回链表的表头
+    ///@note    1. 先写一个逆转链表的函数，然后调用这个函数来逆转k元素的子链表。在调用前先将子链表的表尾元素的next指针指向空，转化成
+    //          一个向普通链表一样的结构
+    //          2. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为链表长度。
     ListNode* reverseKGroup(ListNode* head, int k) {
         if (!head || !head->next || k == 1) return head;
         ListNode* preHead = new ListNode(0);
         preHead->next = head;
-        ListNode* start = preHead;
+        ListNode* preStart = preHead;
+        ListNode* start = head;
         ListNode* cur = head;
-        int groupCnt = 0;
         while (cur) {
             for (int i = 0; i < k - 1; i++) {
                 cur = cur->next;
                 if (!cur) return preHead->next;
             }
-            groupCnt++;
             ListNode* nextGroupStart = cur->next;
             cur->next = nullptr;
-            cur = reverseList(start->next);
-            start->next->next = nextGroupStart;
+            cur = reverseList(start);
+            start->next = nextGroupStart;
+            preStart->next = cur;
+            preStart = start;
             start = start->next;
-            if (groupCnt == 1) preHead->next = cur;
             cur = nextGroupStart;
         }
         return preHead->next;
     }
     
+    ///@brief   逆转链表
+    ///@param   head    链表表头
+    ///@return  返回逆转后链表的表头
     ListNode* reverseList(ListNode* head) {
         if (!head || !head->next) {
             return head;
