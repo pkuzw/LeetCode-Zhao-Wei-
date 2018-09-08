@@ -24,6 +24,9 @@
 ///@date    2016.04.07
 ///@version 2.2
 
+///@date    September 8, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -89,7 +92,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
     int removeDuplicates(vector<int>& nums) {
         if (nums.empty())   return 0;
@@ -97,6 +100,25 @@ public:
         for (int i = 0; i != nums.size(); i++)
             if (nums[i] != nums[j]) swap(nums[++j], nums[i]);
         return j + 1;
+    }
+};
+
+class Solution {
+public:
+    ///@brief   去掉已排好序的数组中的重复元素
+    ///@param   nums    排好序的vector数组
+    ///@return  返回去重后的前sorted_len元素，只需要返回sortedLen即可
+    ///@note    1. 设置两个循环变量i, j. 其中i用来保存去重后的元素当前下标，j表示去重前的元素下标。
+    //          2. 用j来逐个遍历排好序的元素，遇到重复的就跳过，直到找到不重复的元素，将其复制到i+1的位置。最后返回i+1即可.
+    //          3. 时间复杂度为O(O)，空间复杂度为O(1)。其中n为已排序数组的长度。
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.empty())   return 0;
+        int i = 0, j = 1;
+        while (j < nums.size()) {
+            if (nums[j] == nums[i]) j++;
+            else    nums[++i] = nums[j];
+        }
+        return i + 1;
     }
 };
 
