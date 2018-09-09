@@ -14,6 +14,9 @@
 
 ///@date    2016.04.07
 ///@version 2.2
+
+///@date    September 9, 2018
+///@version 3.0
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -70,6 +73,7 @@ public:
 	///@return	返回新数组的长度
 	///@note	用一个变量保存新数组的长度，初始化为0。遍历数组，如果遇到和指定值相同的元素，则继续向后遍历，否则就将该元素赋值给新数组长度下标处，并将长度自增1.
 	//			时间复杂度为O(n)，空间复杂度为O(1)。
+    //          如果原始数组中val的重复元素比较少的话，性能会不如v3版本；相反，如果val的重复次数比较多的话，v2相对性能更好一些。故可以仿照v2写一个类似的v3的改进版，只不过将重复元素复制到数组的末尾即可。
     int removeElement(vector<int>& nums, int val) {
 		int j = 0;
 		for (int i = 0; i != nums.size(); i++) {
@@ -82,7 +86,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
     int removeElement(vector<int>& nums, int val) {
         int j = 0;
@@ -92,16 +96,47 @@ public:
     }
 };
 
+class Solution {
+public:
+    ///@brief   将包含有重复元素的数组的指定元素去除掉，将其放置在数组的末尾即可。
+    ///@param   nums    数组
+    ///@param   val     指定元素
+    ///@return  返回去重后数组的长度
+    ///@note    1. 设置两个循环变量i, j，其中i用于逆序遍历整个数组， j用来逆序标记准备和重复元素置换的合法元素的下标
+    //          2. 逆序遍历整个数组，如果待去重元素已经排在数组末尾，则跳过；否则就用最末尾的合法元素和待去重元素进行置换。
+    //          3. 时间复杂度为O(n)，空间复杂度为O(1)。其中n为数组的长度.
+    int removeElement(vector<int>& nums, int val) {
+        if (nums.empty())   return 0;
+        int j = nums.size() - 1;    //  tag the last element not equal to val
+        while (j >= 0 && nums[j] == val) j--;
+        int i = j;    //  tag the element equal to val
+        while (i >= 0) {
+            if (nums[i] != val) {
+                i--;
+                continue;
+            }
+            swap(nums[i--], nums[j--]);
+            while (nums[j] == val && j >= 0) j--;
+        }
+        return j + 1;
+    }
+};
+
 int main()
 {
 	vector<int> ivec;
- 	for (int i = 0; i < 10; i++)
- 	{
- 		for (int j = 0; j != 4; j++)
-			ivec.push_back(j);
- 	}
+// 	for (int i = 0; i < 10; i++)
+//  {
+// 		for (int j = 0; j != 4; j++)
+//			ivec.push_back(j);
+// 	}
+    ivec.push_back(3);
+    ivec.push_back(2);
+    ivec.push_back(2);
+    ivec.push_back(3);
 	Solution slt;
-	int newLength = slt.removeElement(ivec, 0);
+	int newLength = slt.removeElement(ivec, 3);
+    cout << "length: " << newLength << endl;
 	for (int i = 0; i < newLength; i++)
 	{
 		cout << ivec[i] << ' ';
