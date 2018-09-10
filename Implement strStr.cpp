@@ -17,6 +17,9 @@
 ///@date    2016.04.07
 ///@version 2.2
 
+///@date    September 10, 2018
+///@version 3.0
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -94,7 +97,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
     int strStr(string haystack, string needle) {
         if (needle.empty()) return 0;
@@ -105,6 +108,28 @@ public:
                 if (needle[j] != haystack[i+j])   break;
             }
             if (j == needle.size()) return i;
+        }
+        return -1;
+    }
+};
+
+class Solution {
+public:
+    ///@brief   计算子串needle在主串haystack中第一次出现的下标
+    ///@param   haystack    主串
+    ///@param   needle      子串
+    ///@return  返回子串needle在主串haystack中第一次出现的下标。如果不存在，则返回-1；如果子串为空，则返回0.
+    ///@note    1. 双重循环。
+    //          2. 时间复杂度为O(mn)，其中m为主串的长度，n为子串的长度。
+    int strStr(string haystack, string needle) {
+        if (needle.empty())   return 0;
+        if (haystack.empty()) return -1;
+        for (int i = 0; i < haystack.length(); i++) {
+            int k = i;
+            for (int j = 0; j < needle.length(); j++) {
+                if (haystack[k++] != needle[j])   break;
+                if (j == needle.length() - 1)   return k - needle.length();
+            }
         }
         return -1;
     }
