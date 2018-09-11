@@ -16,6 +16,9 @@
 ///@date    2016.04.07
 ///@version 2.2
 
+///@date    September 11, 2018
+///@version 2.3
+
 #include <iostream>
 using namespace std;
 
@@ -129,7 +132,7 @@ public:
 		while (m >= n) {
 			long k = n;
 			int i = 1;
-			while (k >= 0 && m >= k) {
+			while (m >= k) {
 				m -= k;
 				k <<= 1;
 				rslt += i;
@@ -142,22 +145,33 @@ public:
 
 class Solution {
 public:
+    ///@brief   在不使用乘法，除法和求模运算的情况下，计算两个32位整型变量的除法运算。
+    ///@param   dividend    被除数
+    ///@param   divisor     除数
+    ///@return  如果商可以被32位整型变量表示，则返回int型的商；否则返回INT_MAX
+    ///@note    1. 题目条件限制下，只能使用减法。
+    //          2. 为了更快的进行减法，每次可以对除数进行左移运算来加快减法的速度。
+    //          3. 在程序中为了避免int型变量的溢出，用long型来做临时变量。
+    //          4. 时间复杂度为O(logn)，空间复杂度为O(1)。其中n为商的大小。
     int divide(int dividend, int divisor) {
         if (!divisor || (dividend == INT_MIN && divisor == -1)) return INT_MAX;
-        int sign = (dividend < 0) ^ (divisor < 0) ? -1 : 1; //  不允许使用乘法，所以不能用二者相乘是否为负来判定结果的符号
-        int rslt = 0;
+        int sign = 0;
+        if ((divisor > 0 && dividend > 0) || (divisor < 0 && dividend < 0)) sign = 1;
+        else sign = -1;
+        
         long m = labs(dividend), n = labs(divisor);
+        int rslt = 0;
         while (m >= n) {
             long k = n;
             int i = 1;
-            while (k >= 0 && m >= k) {
+            while (m >= k) {
                 m -= k;
                 rslt += i;
                 k <<= 1;
                 i <<= 1;
             }
         }
-        return rslt * sign;
+        return sign * rslt;
     }
 };
 
