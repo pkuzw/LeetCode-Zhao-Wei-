@@ -224,7 +224,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
         vector<int> rslt;
@@ -244,6 +244,14 @@ public:
             if (j == word_cnt)  rslt.push_back(i);
         }
         return rslt;
+    }
+};
+
+class Solution {
+public:
+    ///@brief   计算
+    vector<int> findSubstring(string s, vector<string>& words) {
+        
     }
 };
 
