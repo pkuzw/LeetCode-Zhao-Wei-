@@ -249,9 +249,32 @@ public:
 
 class Solution {
 public:
-    ///@brief   计算
+    ///@brief   计算字符串是否包含了词典中的所有单词连接起来的子串（顺序无关）
+    ///@param   s   字符串
+    ///@param   words   词典，词典中的每个单词的长度都是相同的。
+    ///@return  如果s包含了词典words中的所有单词组合起来的子串，那么返回这些子串的起始下标组成的数组。如果不存在这种子串，那么返回一个空数组。
+    ///@note    1. 用哈希表ht1保存词典中的每个单词出现的次数，哈希表ht2表示目标子串中某个单词出现的次数。如果没能在目标子串中中找到词典中的单词或者目标子串中的某一个单词的
+    //          累记出现次数超过了词典中该单词的次数，那么该目标子串不合法；否则就一直向后找，直到找到所有的单词都出现过，此时将该目标子串的首字符下标压入结果数组。
+    //          2. 该算法的时间复杂度为O(mn)，其中m是字符串的长度，n是词典的单词数目。
     vector<int> findSubstring(string s, vector<string>& words) {
-        
+        vector<int> rslt;
+        if (s.empty() || words.empty() || s.size() < words.size() * words[0].size())    return rslt;
+        int i = 0, j = 0;
+        int word_len = words[0].size();
+        int word_cnt = words.size();
+        unordered_map<string, int> ht1;
+        for (i = 0; i < word_cnt; i++)  ht1[words[i]]++;
+        for (i = 0; i <= s.size() - word_len * word_cnt; i++) {
+            unordered_map<string, int> ht2;
+            for (j = 0; j < word_cnt; j++) {
+                string tmp = s.substr(i + j * word_len, word_len);
+                if (ht1.find(tmp) == ht1.end())  break;
+                ht2[tmp]++;
+                if (ht2[tmp] > ht1[tmp]) break;
+            }
+            if (j == word_cnt)  rslt.push_back(i);
+        }
+        return rslt;
     }
 };
 
