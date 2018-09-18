@@ -29,6 +29,9 @@
 ///@date	2016.04.08
 ///@version	2.2
 
+///@date    September 18, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -168,20 +171,29 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算数组中的下一个排列
+    ///@param   nums    数组
+    ///@return  无
+    ///@note    1. 从数组的末尾开始逆序向前遍历，找到第一次出现i的下标，使得nums[i] < nums[i+1]，如果不存在i，那么整个数组都是
+    //          非升序的，直接全部翻转即可；
+    //          2. 然后接着逆序从数组尾部向i遍历，找到第一个比nums[i]大的元素nums[j]（即比nums[i]大的最小元素，、
+    //          因为nums[i+1..end]是非升序的）。将nums[i]和nums[j]交换后，把nums[i+1..end]的元素全部翻转即可。
+    //          3. 时间复杂度为O(n^2)，空间复杂度为O(1)，其中n为数组的长度。
 	void nextPermutation(vector<int>& nums) {
-		if (nums.empty())	return;
-		for (int i = nums.size() - 2; i >= 0; i--) {
-			if (nums[i] < nums[i + 1]) {
-				for (int j = nums.size() - 1; j >= i; j--) {
-					if (nums[j] > nums[i]) {
-						swap(nums[i], nums[j]);
-						reverse(nums.begin() + i + 1, nums.end());
-						return;
-					}
-				}
-			}
-		}
-		reverse(nums.begin(), nums.end());		
+        if (nums.empty())   return;
+        int len = nums.size();
+        for (int i = len - 2; i >= 0; i--) {
+            if (nums[i] < nums[i+1]) {
+                for (int j = len - 1; j >= i; j--) {
+                    if (nums[j] > nums[i]) {
+                        swap(nums[i], nums[j]);
+                        reverse(nums.begin() + i + 1, nums.end());
+                        return;
+                    }
+                }
+            }
+        }
+        reverse(nums.begin(), nums.end());
 	}
 };
 
