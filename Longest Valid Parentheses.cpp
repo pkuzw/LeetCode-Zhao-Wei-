@@ -22,6 +22,9 @@
 ///@date	2016.04.08
 ///@version	2.2
 
+///@date    September 27, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 #include <stack>
@@ -200,6 +203,14 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算最长有效括号串的长度
+    ///@param   s   字符串
+    ///@return  返回最长有效括号串的长度
+    ///@note    1. 利用栈来解决。
+    //          2. 从前向后遍历字符串，如果是左括号就压栈，如果是右括号就弹栈，并更新当前最长有效括号对字符串的值。
+    //          3. 该值通过栈是否为空分成两种情况，一种是栈为空，那么最长有效括号对的长度就是当前字符下标减去起始下标并加1；
+    //             另一种是栈不为空，那么最长有效括号对的长度为当前字符下标减去栈顶元素的下标并加1.
+    //          4. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为字符串的长度
 	int longestValidParentheses(string s) {
 		int rslt = 0;
 		int start = 0;
