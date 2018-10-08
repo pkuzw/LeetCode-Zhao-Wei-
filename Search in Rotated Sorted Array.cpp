@@ -21,6 +21,9 @@
 ///@date	2016.04.08
 ///@version	2.2
 
+///@date    October 8th, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -208,7 +211,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	int search(vector<int>& nums, int target) {
 		int l = 0, r = nums.size() - 1;
@@ -226,6 +229,34 @@ public:
 		}
 		return -1;
 	}
+};
+
+class Solution {
+public:
+    ///@brief   在旋转位移变形的有序数组里查找目标值
+    ///@param   nums    部分有序的数组
+    ///@param   target  目标值
+    ///@return  如果能够在nums中找到目标值的下标，则返回下标值；否则返回-1。
+    ///@note    1. 二分查找的变形；
+    //          2. 如果中间值小于等于尾元素，则右半部分有序；如果中间值大于尾元素，则左半部分有序；在有序的半部分中来查找目标值。
+    //          3. 时间复杂度为O(nlogn)，空间复杂度为O(1)。其中n为数组长度。
+    int search(vector<int>& nums, int target) {
+        if (nums.empty())   return -1;
+        int l = 0, r = nums.size() - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (nums[mid] == target)    return mid;
+            if (nums[mid] <= nums[r]) {
+                if (nums[mid] < target && target <= nums[r])    l = mid + 1;
+                else    r = mid - 1;
+            }
+            else {
+                if (nums[l] <= target && target < nums[mid])    r = mid - 1;
+                else    l = mid + 1;
+            }
+        }
+        return -1;
+    }
 };
 
 int main()
