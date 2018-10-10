@@ -19,6 +19,10 @@
 
 ///@date	2016.04.09
 ///@version	2.2
+
+///@date    October 10, 2018
+///version  2.3
+
 #include <iostream>
 #include <vector>
 
@@ -129,19 +133,31 @@ public:
 
 class Solution {
 public:
+    ///@brief   判断一个未填充的数独是否有效。
+    ///@param   board   一个9*9的数独，其中空白部分用'.'表示，有效数字用'1' - '9'表示。
+    ///@return  如果每一行，每一列，每一个从左上开始至右下的3*3小矩形中都没有重复的已知数字，则返回true；否则返回false。
+    ///@note    1. 枚举法。
+    //          2. 用3个9*9的矩阵来分别保存每一行，每一列和每个3*3矩阵中数字'1' - '9'是否已经出现。初始置其为false，如果遍历前
+    //          变为true，则返回false，否则将其置为true，遍历下一个元素。
+    //          3. 时间复杂度为O(n^2)，空间复杂度为O(n^3)，其中n为9.
 	bool isValidSudoku(vector<vector<char>>& board) {
-		int len = board.size();
-		vector<vector<bool>> row(len, vector<bool>(len, false)), col(len, vector<bool>(len, false)), sma(len, vector<bool>(len, false));
-		for (int i = 0; i < len; i++) {
-			for (int j = 0; j < len; j++) {
-				if (board[i][j] != '.') {
-					int k = board[i][j] - '1';
-					if (row[i][k] ||  col[k][j] || sma[3*(i/3)+j/3][k])	return false;
-					row[i][k] = col[k][j] = sma[3*(i/3)+j/3][k] = true;
-				}
-			}
-		}
-		return true;
+        if (board.empty() || board[0].empty())  return false;
+        const int len = board.size();
+        vector<vector<bool>> row(len, vector<bool>(len, false));
+        vector<vector<bool>> col(len, vector<bool>(len, false));
+        vector<vector<bool>> sub(len, vector<bool>(len, false));
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                if (board[i][j] != '.') {
+                    int k = board[i][j] - '1';
+                    if (row[i][k] || col[k][j] || sub[(i/3)*3 + j/3][k])    return false;
+                    row[i][k] = true;
+                    col[k][j] = true;
+                    sub[(i/3)*3 + j/3][k] = true;
+                }
+            }
+        }
+        return true;
 	}
 };
 
