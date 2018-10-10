@@ -23,11 +23,14 @@
 ///@date	2016.04.08
 ///@version	2.2
 
+///@date    October 10th, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
-
+/*
 class Solution_v1
 {
 public:
@@ -98,7 +101,7 @@ public:
 		}
 	}
 };
-
+*/
 class Solution_v2 {
 public:
 	///@brief	查找目标值元素的下标，如果它存在在数组中，则返回所在下标，否则返回应该插入的位置。假设数组中没有重复元素
@@ -120,16 +123,24 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个有序数组和一个目标值，查找目标值所在下标或其应该插入的位置。
+    ///@param   nums    有序数组
+    ///@param   target  目标值
+    ///@return  如果有序数组中存在该目标值，则返回该元素的下标；否则返回该元素应该插入的位置下标。
+    ///@note    1. 二分查找。
+    //          2. 如果元素存在，则mid下标作为返回值返回；如果元素不存在，则迭代终止时的左边界应该是元素插入的下标。
+    //          3. 时间复杂度为O(logn)，空间复杂度为O(1)，其中n是数组长度。
 	int searchInsert(vector<int>& nums, int target) {
-		int l = 0, r = nums.size() - 1;
-		while (l <= r) {
-			int m = (l + r) / 2;
-			if (nums[m] == target)	return m;
-			else if (nums[m] < target)	l = m + 1;
-			else	r = m - 1;		
-		}
-		return l;
-	}
+        if (nums.empty())   return 0;
+        int l = 0, r = nums.size() - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (nums[mid] == target)    return mid;
+            else if (nums[mid] < target)    l = mid + 1;
+            else    r = mid - 1;
+        }
+        return l;
+    }
 };
 
 int main()
@@ -141,7 +152,7 @@ int main()
 	ivec.push_back(6);
 
 	Solution slt;
-	int input = 2;
+	int input = 7;
 
 	int rslt = slt.searchInsert(ivec, input);
 
