@@ -19,6 +19,9 @@
 ///@date	2016.04.09
 ///@version	2.2
 
+///@date    October 10, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 
@@ -174,35 +177,53 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算数独的一个解
+    ///@param   board   数独
+    ///@return  无
+    ///@note    1. 回溯法。
+    //          2. 按照每一行从上到下，每一列从左至右的顺序，逐个对于'.'的元素进行填充尝试。
+    //          3. 每次尝试后，需要一个判定函数来判断填充是否合法，在判定时是通过每一行，每一列和每一个3*3的子矩阵不包含重复的'1' - '9'数字来进行的。
+    //          4. 时间复杂度为O(2^n)??，空间复杂度为O(1)。
 	void solveSudoku(vector<vector<char>>& board) {
-		if (board.empty() || board[0].empty())	return;
-		dfs(board, 0, 0);
+        if (board.empty() || board[0].empty())  return;
+        dfs(board, 0, 0);
 	}
 
+    ///@brief   深度优先遍历来尝试填充空白字符
+    ///@param   board   数独棋盘
+    ///@param   row     当前行
+    ///@param   col     当前列
+    ///@return  如果数独能够顺利填充完毕，则返回true；否则，如果试遍了从1 - 9的所有数字都不能满足条件，则返回false（在for循环的i到达遍历条件的尽头后，不会进入下面else的return，就需要return false）.
 	bool dfs(vector<vector<char>>& board, int row, int col) {
-		if (row == 9)	return true;
-		if (col == 9)	return dfs(board, row + 1, 0);
-		if (board[row][col] == '.') {
-			for (int i = 0; i < 9; i++) {
-				board[row][col] = '1' + i;
-				if (isValid(board, row, col))
-					if (dfs(board, row, col + 1))	return true;
-				board[row][col] = '.';				
-			}
-		}
-		else	return dfs(board, row, col + 1);
-		return false;
+        if (row == 9)   return true;
+        if (col == 9)   return dfs(board, row+1, 0);
+        if (board[row][col] == '.') {
+            for (int i = 0; i < 9; i++) {
+                board[row][col] = i + '1';
+                if (isValid(board, row, col)) {
+                    if (dfs(board, row, col + 1))   return true;
+                }
+                board[row][col] = '.';
+            }
+        }
+        else return dfs(board, row, col + 1);
+        return false;
 	}
 
+    ///@brief   判断数独是否有效
+    ///@param   board   数独棋盘
+    ///@param   row     当前行
+    ///@param   col     当前列
+    ///@return  如果数独棋盘满足数独定义，则返回true；否则返回false
 	bool isValid(vector<vector<char>>& board, int row, int col) {
-		for (int i = 0; i < 9; i++)
-			if (i != row && board[i][col] == board[row][col])	return false;
-		for (int j = 0; j < 9; j++)
-			if (j != col && board[row][j] == board[row][col])	return false;
-		for (int i = 3 * (row / 3); i < 3 * (row / 3) + 3; i++)
-			for (int j = 3 * (col / 3); j < 3 * (col / 3) + 3; j++)
-				if (i != row && j != col && board[i][j] == board[row][col])	return false;
-		return true;
+        for (int j = 0; j < 9; j++)
+            if (j != col && board[row][col] == board[row][j])   return false;
+        for (int i = 0; i < 9; i++)
+            if (i != row && board[row][col] == board[i][col])   return false;
+        for (int i = (row/3)*3; i < (row/3)*3 + 3; i++)
+            for (int j = (col/3)*3; j < (col/3)*3 + 3; j++)
+                if (i != row && j != col && board[i][j] == board[row][col]) return false;
+        return true;
 	}
 };
 
