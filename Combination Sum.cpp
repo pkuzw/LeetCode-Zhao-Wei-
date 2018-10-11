@@ -28,6 +28,9 @@
 ///@date	2016.04.09
 ///@version	1.3
 
+///@date    October 11, 2018
+///@version 1.4
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -115,24 +118,42 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个数组，不含有重复元素，找到所有和为目标值的元素组合，其中元素可以重复出现。
+    ///@param   candidates  待选元素数组
+    ///@param   target      目标值
+    ///@return  返回和为目标值的所有可能组合。
+    ///@note    1. 通过调用一个深度优先遍历的递归函数来实现。
+    //          2. 在进入递归函数前，需要先将待选数组按照升序排个序，这样便于递归结束。
 	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-		if (candidates.empty())	return combination;
-		vector<int> comb;
-		sort(candidates.begin(), candidates.end());
-		dfs(candidates, comb, 0, target);
-		return combination;
-	}
+        vector<vector<int>> rslt;
+        if (candidates.empty()) return rslt;
+        vector<int> comb;
+        sort(candidates.begin(), candidates.end());
+        dfs(rslt, candidates, comb, 0, target);
+        return rslt;
+    }
 
-	void dfs(vector<int>& candidates, vector<int>& comb, int indx, int target) {
-		if (!target)	combination.push_back(comb);
-		for (int i = indx;  i < candidates.size() && candidates[i] <= target; i++) {
-			comb.push_back(candidates[i]);
-			dfs(candidates, comb, i, target - candidates[i]);
-			comb.pop_back();
-		}
+    ///@brief   深度优先遍历递归函数
+    ///@param   rslt    结果数组
+    ///@param   candidates  候选元素数组
+    ///@param   comb    一个有效的组合
+    ///@param   index   遍历候选数组的当前元素下标
+    ///@param   target  目标值
+    ///@return  无
+    ///@note    1. 递归时并未将index自增，这是因为题意允许相同元素多次重复出现。
+    //          2. 递归的结束通过target是否小于等于当前数组元素来完成。
+	void dfs(vector<vector<int>>& rslt, vector<int>& candidates, vector<int>& comb, int index, int target) {
+        if (!target) {
+            rslt.push_back(comb);
+            return;
+        }
+        for(int i = index; i < candidates.size() && candidates[i] <= target; i++) {
+            comb.push_back(candidates[i]);
+            dfs(rslt, candidates, comb, i, target - candidates[i]);
+            comb.pop_back();
+        }
+        return;
 	}
-
-	vector<vector<int>> combination;
 };
 
 int main()
