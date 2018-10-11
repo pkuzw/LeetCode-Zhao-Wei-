@@ -22,6 +22,10 @@
 
 ///@date	2016.04.09
 ///@version	2.0
+
+///@date    October 11, 2018
+///@version 2.1
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -77,7 +81,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@note	1. 递归；
 	//			2. 每次递归时看后续字符和首字符是否连续相同，如果是则记录连续相同的子串长度，然后将其转换为结果字符串；
@@ -100,6 +104,36 @@ public:
 		rslt += to_string(static_cast<long long>(count));
 		rslt += c;
 		return rslt;
+    }
+};
+
+class Solution {
+public:
+    ///@brief   计算第n（n <= 30）次迭代后的字符串，具体释义参见题目。
+    ///@param   n   迭代次数
+    ///@return  返回迭代后的字符串。
+    ///@note    1. 递归法；
+    //          2. 如果次数n为1，直接返回"1"；如果次数n > 1，则返回countAndSay(n-1)；
+    //          3. 在遍历字符串的时候统计连续出现的相同字符，然后将其转换成次数+数字的形式拼接在结果字符串中；
+    //          4. 时间复杂度为O(n^2)，空间复杂度为O(1).
+    string countAndSay(int n) {
+        if (n == 1) return "1";
+        string rslt;
+        string tmp = countAndSay(n - 1);
+        int cnt = 1;
+        char ch = tmp[0];
+        for (int i = 1; i < tmp.size(); i++) {
+            if (tmp[i] == ch)   cnt++;
+            else {
+                rslt += to_string(static_cast<long long>(cnt));
+                rslt += ch;
+                cnt = 1;    // 连续字符中断，需要更新cnt和ch值，为下一次计算连续字符做准备。
+                ch = tmp[i];
+            }
+        }
+        rslt += to_string(static_cast<long long>(cnt));
+        rslt += ch;
+        return rslt;
     }
 };
 
