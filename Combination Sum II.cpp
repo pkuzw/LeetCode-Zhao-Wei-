@@ -28,6 +28,9 @@
 
 ///@date	2016.04.09
 ///@version	1.3
+
+///@date    October 15, 2018
+///@version 1.4
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -100,6 +103,15 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个整型数组和一个指定值，找到所有和为指定值的组合，其中数组中的元素每个只能使用1次，数组元素可以重复出现。
+    ///@param   candidates  整型数组
+    ///@param   target      目标值
+    ///@return  返回所有可能的组合。
+    ///@note    1. 此题与Combination Sum很类似，区别在于前者的候选数组元素可以有重复元素，但是每个元素只能使用一次。
+    //          2. 这就要求在递归的时候，下一次调用要从i+1个后补元素处开始遍历；
+    //          3. 此外，还需要排除掉元素的重复使用。比如说candidates = {1, 1, 2, 2, 2, 2, 3, 4, 6}, target = 8
+    //             那么，如果不排除掉重复元素的话，那么当indx = 2时， i + 1可以是3, 4, 5都可以，那么最后就会有三个重复的组合
+    //             {1, 2, 2, 3}出现在返回值中。
 	vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
 		if (candidates.empty())	return combination;
 		sort(candidates.begin(), candidates.end());
@@ -108,12 +120,18 @@ public:
 		return combination;
 	}
 
+    ///@brief   递归辅助函数
+    ///@param   candidates  候选数组
+    ///@param   comb    正在进行筛选的合法组合
+    ///@param   indx    当前遍历到的候选数组元素的下标
+    ///@param   target  目标值
+    ///@return  无
 	void dfs(vector<int>& candidates, vector<int>& comb, int indx, int target) {
 		if (!target)	combination.push_back(comb);
 		for (int i = indx; i < candidates.size() && candidates[i] <= target; i++) {
-			if (i > indx && candidates[i-1] == candidates[i])	continue;
+			if (i > indx && candidates[i-1] == candidates[i])	continue; // 去除掉结果数组中的重复子数组
 			comb.push_back(candidates[i]);
-			dfs(candidates, comb, i + 1, target - candidates[i]);
+			dfs(candidates, comb, i + 1, target - candidates[i]);   //  i+1使得每个元素只能使用一次
 			comb.pop_back();
 		}
 	}
@@ -126,6 +144,9 @@ int main()
 	test.push_back(10);
 	test.push_back(1);
 	test.push_back(2);
+    test.push_back(2);
+    test.push_back(2);
+    test.push_back(2);
 	test.push_back(7);
 	test.push_back(6);
 	test.push_back(1);
