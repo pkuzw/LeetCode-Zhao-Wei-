@@ -19,6 +19,9 @@
 ///@date	2016.04.11
 ///@version	2.2
 
+///@date    October 17, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 
@@ -153,7 +156,7 @@ public:
 	///@brief	计算能够储存的雨水量
 	///@param	height	地面的高度值
 	///@return	返回所储存雨水的总量
-	///@note	1. 动态规划。
+	///@note	1. dp??
 	//			2. 利用一个数组dp[i]先从左至右保存好i处左侧的最高值，然后再从右向左遍历，保存好i处左侧最大值和右侧最大值之间的较小值。
 	//			3. 然后通过判断当前位置的地形高度和dp[i]的差值是否大于0，如果是就将其差累计进结果。
 	//			4. 时间复杂度为O(n)，空间复杂度为O(n)。
@@ -178,23 +181,33 @@ public:
 
 class Solution {
 public:
-	int trap(vector<int>& height) {
-		if (height.empty())	return 0;
-		vector<int> dp(height.size(), 0);
-		int maxi = 0;
-		for (int i = 0; i != height.size(); i++) {
-			dp[i] = maxi;
-			maxi = max(maxi, height[i]);
-		}
-		maxi = 0;
-		int rslt = 0;
-		for (int i = height.size() - 1; i >= 0; i--) {
-			dp[i] = min(maxi, dp[i]);
-			maxi = max(height[i], maxi);
-			if (dp[i] - height[i] > 0)	rslt += dp[i] - height[i];
-		}
-		return rslt;
-	}
+    ///@brief   给定一个高程表，每个元素表示从[i, i+1]之间的海拔高度，计算能够盛接的雨水的总量。
+    ///@param   height  高程表
+    ///@return  返回盛接的雨水总量。
+    ///@note    1. 根据《算法导论》第十五章的定义，我不认为该问题属于动态规划算法。因为不是一个最优解问题。
+    //          2. version2算法的核心思想是找到当前元素所在点左侧和右侧的最大值的较小值（短板效应），如果该较小值大于当前点的高程值，
+    //             则将该较小值减去当前高程值的差累加进结果变量。
+    //          3. 时间复杂度为O(n)，空间复杂度为O(n)。其中n为高程表的元素个数。
+    int trap(vector<int>& height) {
+        if (height.empty() || height.size() == 1) return 0;
+        vector<int> lhigh(height.size(), 0), rhigh(height.size(), 0);
+        int max = 0;
+        for (int i = 1; i < height.size(); i++) {
+            max = height[i-1] > max ? height[i-1] : max;
+            lhigh[i] = max;
+        }
+        max = 0;
+        for (int i = height.size() - 2; i >= 0; i--) {
+            max = height[i+1] > max ? height[i+1] : max;
+            rhigh[i] = max;
+        }
+        int rslt = 0;
+        for (int i = 0; i < height.size(); i++) {
+            int boundary = min(lhigh[i], rhigh[i]);
+            rslt += boundary - height[i] > 0 ? boundary - height[i] : 0;
+        }
+        return rslt;
+    }
 };
 
 int main()
