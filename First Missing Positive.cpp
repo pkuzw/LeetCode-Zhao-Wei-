@@ -21,6 +21,9 @@
 ///@date	2016.04.10
 ///@version	2.2
 
+///@date    October 17, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -68,7 +71,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2 {
 public:
 	///@brief	给定一个数组，找到第一个不连续出现的正整数
 	///@param	nums	数组
@@ -96,16 +99,29 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个未排序的数组，找到最小的缺失的正数。要求时间复杂度为O(n)，空间复杂度为O(1)。
+    ///@param   numbs   未排序数组
+    ///@return  返回数组中缺失的最小正数。
+    ///@note    1. 因为题目要求时间复杂度为O(n)，故不能使用基于比较的排序算法；又因为题目的空间复杂度要求为O(1)，故不能使用
+    //          计数排序和哈希表。
+    //          2. 因为只考虑缺失的最小正数，所以用现有的未排序数组的空间来保存正数。a[i]用来保存i+1，i >= 0.
+    //          3. 如果a[i] == i + 1 || a[i] <= 0 || a[i] > a.size()，那么跳过；
+    //          4. 如果a[i]中保存的正数属于[1, a.size()]且不等于i + 1，则将a[i]放置到a[a[i] - 1]处，即它应该呆的地方；
+    //          5. 最后从头到尾进行遍历，找到第一个a[i] != i + 1的位置，返回i + 1就是正解。
 	int firstMissingPositive(vector<int>& nums) {
-		int i = 0;
-		while (i < nums.size()) {
-			if (nums[i] == i + 1 || nums[i] <= 0 || nums[i] > nums.size())	i++;
-			else if (nums[i] != nums[nums[i] - 1])	swap(nums[i], nums[nums[i] - 1])	;
-			else i++;
-		}
-		i = 0;
-		while (i < nums.size() && nums[i] == i + 1)	i++;
-		return i + 1;
+        if (nums.empty())   return 1;
+        int n = nums.size();
+        int i = 0;
+        while (i < n) {
+            if (nums[i] == i+1 || nums[i] <= 0 || nums[i] > n)   i++;
+            else if (nums[i] != nums[nums[i] - 1])   swap(nums[i], nums[nums[i] - 1]);  //不能写成nums[i] != i+1，因为当有重复的元素出现时，这里是死循环，比如{1, 1}。
+            else i++;
+        }
+        i = 0;
+        while (i < n && nums[i] == i+1) {
+            i++;
+        }
+        return i + 1;
 	}
 };
 
