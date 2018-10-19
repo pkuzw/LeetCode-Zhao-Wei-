@@ -189,25 +189,35 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算两个由字符串表示的大整数的乘法
+    ///@param   nums1   乘数1
+    ///@param   nums2   乘数2
+    ///@return  返回由字符串表示的积
+    ///@note    1. 枚举法。
+    //          2. 设nums1和nums2的长度为len1和len2，设置一个长度为len1 + len2的整型数组变量来保存nums1 * nums2的结果；
+    //          3. 在逐位累加时注意进位；在将整型数组转换成字符串时注意舍弃前缀的先导零。
+    //          4. 时间复杂度为O(n*m），空间复杂度为O(n)，其中n和m分别是两个乘数的位数。
 	string multiply(string num1, string num2) {
-		int n1 = num1.size(), n2 = num2.size();
-		int k = n1 + n2 - 2;
-		vector<int> mult(n1 + n2, 0);
-		for (int i = 0; i != n1; i++)
-			for (int j = 0; j != n2; j++)
-				mult[k-i-j] += (num1[i] - '0') * (num2[j] - '0');
-		int carry = 0;
-		for (int i = 0; i != n1 + n2; i++) {
-			mult[i] += carry;
-			carry = mult[i] / 10;
-			mult[i] %= 10;
-		}
-		int l = n1 + n2 -1;
-		while (l >= 0 && !mult[l])	l--;
-		if (l < 0)	return "0";
-		string rslt;
-		while (l >= 0)	rslt += mult[l--] + '0';
-		return rslt;
+        int len1 = num1.length(), len2 = num2.length();
+        vector<int> product(len1+len2, 0);
+        for (int i = 0; i < len1; i++) {
+            for (int j = 0; j < len2; j++) {
+                product[len1 + len2 - 2 - i -j] += (num1[i] - '0') * (num2[j] - '0');
+            }
+        }
+        int carry = 0;
+        for (int i = 0; i < len1 + len2; i++) {
+            product[i] += carry;
+            carry = product[i] / 10;
+            product[i] %= 10;
+        }
+        int k = len1 + len2 - 1;
+        while (k >= 0 && product[k] == 0) k--;
+        if (k < 0)  return "0";
+        string rslt;
+        while (k >= 0)
+            rslt += product[k--] + '0';
+        return rslt;
 	}
 };
 
