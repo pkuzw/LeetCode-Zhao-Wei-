@@ -24,6 +24,9 @@
 ///@date	2016.04.11
 ///@version	2.2
 
+///@date    October 20, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -125,17 +128,27 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个数组，每个数组元素是一个正整形变量，表示从当前元素能够向前跳跃的最大距离。要求计算从数组头到数组尾最多需要多少次跳跃？
+    ///@param   nums    数组
+    ///@return  返回最少的贯穿跳跃次数。
+    ///@note    1. 枚举法；
+    ///         2. 计算从当前元素开始，到它在一跳的范围内这段子数组中能够跳跃的最远距离；
+    //          3. 在每计算完一跳之内的范围能够到达的最远距离后，计数器累加1；
+    //          4. 当最后到达数组末尾时，返回累加器的值即可。
+    //          5. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为数组的长度。
 	int jump(vector<int>& nums) {
-		int cur = 0, pre = 0, i = 0, rslt = 0;
-		while (cur < nums.size() - 1) {
-			pre = cur;
-			while (i <= pre) {
-				cur = max(cur, i + nums[i]);
-				i++;
-			}
-			rslt++;
-		}
-		return rslt;
+        int cur = 0, pre = 0;
+        int cnt = 0;
+        int i = 0;
+        while (cur < nums.size() - 1) {
+            pre = cur;
+            while (i <= pre) {
+                cur = max(cur, i + nums[i]);
+                i++;
+            }
+            cnt++;
+        }
+        return cnt;
 	}
 };
 
