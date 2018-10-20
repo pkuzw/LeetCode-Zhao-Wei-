@@ -32,6 +32,9 @@
 ///@date	2016.04.11
 ///@version	2.2
 
+///@date    October 20, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -231,25 +234,39 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定两个字符串s和p，其中s只含有小写字母，p除了含有小写字母之外，还可能含有通配符'?'和'*'，'?'可以表示任意字符，但不能表示空字符，'*'可以表示任意字符串，包括空字符。
+    //          判断p能否表示s。
+    ///@param   s   字符串s
+    ///@param   p   字符串p
+    ///@return  如果字符串p可以表示字符串s，那么返回true；否则返回false。
+    ///@note    1. 枚举遍历
+    ///         2. 设i，j分别为字符串s和p的循环变量，m和n分别是当p[j] == '*'时，i和j的值；
+    //          3. 如果s[i] == p[j] || s[i] == '?'，那么i和j都分别自增，循环继续；
+    //          4. 如果p[j] == '*'，那么就令m = i, n = j，然后继续遍历；
+    //          5. 如果s[i] != p[j] && p[j] != '*' &&& p[j] != '?'，那么就看n是否已经指向了有效的'*'（即可以通过'*'来抵消掉s中不匹配的子串）。如果是，则继续增加m值，然后通过m来更新i
+    //             如果不是，那么就返回false；
+    //          6. 最后返回时要看j是否遍历完了所有的p中元素，除非p的末尾都是'*'，否则如果j没有遍历完p中元素，返回false；
+    //          7. 时间复杂度为O(m)，空间复杂度为O(1)，其中m是s的长度。
 	bool isMatch(string s, string p) {
-		int i = 0, j = 0, m = -1, n = -1;
-		while (i < s.size()) {
-			if (j < p.size() && (s[i] == p[j] || p[j] == '?')) {
-				i++;
-				j++;
-			}
-			else if (j < p.size() && p[j] == '*') {
-				m = i;
-				n = j++;
-			}
-			else if (m >= 0) {
-				i = ++m;
-				j = n + 1;			
-			}
-			else return false;
-		}
-		while (j < p.size() && p[j] == '*')	j++;
-		return j == p.size();
+        int i = 0, j = 0;
+        int m = -1, n = 1;
+        while (i < s.length()) {
+            if (j < p.length() && (s[i] == p[j] || p[j] == '?')) {
+                i++;
+                j++;
+            }
+            else if (j < p.length() && p[j] == '*') {
+                m = i;
+                n = j++;
+            }
+            else if (m >= 0) {
+                i = ++m;
+                j = n + 1;
+            }
+            else return false;
+        }
+        while (j < p.length() && p[j] == '*')   j++;
+        return j == p.length();
 	}
 };
 
