@@ -18,6 +18,9 @@
 ///@date	2016.04.12
 ///@version	2.2
 
+///@date    October 21, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 #include <deque>
@@ -177,29 +180,40 @@ public:
 
 class Solution {
 public:
-	vector<vector<int>> permute(vector<int>& nums) {
-		if (nums.empty())	return rslt;
-		vector<int> pmt;
-		dfs(pmt, nums);
-		return rslt;
-	}
-
-	void dfs(vector<int>& pmt, vector<int> nums) {
-		if (nums.empty()) {
-			rslt.push_back(pmt);
-			return;
-		}
-		for (int i = 0; i != nums.size(); i++) {
-			pmt.push_back(nums[i]);
-			vector<int> new_nums;
-			for (int j = 0; j != nums.size(); j++)
-				if (j != i)	new_nums.push_back(nums[j]);
-			dfs(pmt, new_nums);
-			pmt.pop_back();			
-		}
-	}
-
-	vector<vector<int>> rslt;
+    ///@brief   计算由不重复元素组成的数组所有可能的排列
+    ///@param   nums    不重复元素组成的数组
+    ///@return  返回所有可能的排列
+    ///@note    1. 深度优先遍历。
+    //          2. 每次从候选数组中取出一个元素放入排列，然后递归的调用由剩余元素组成的新数组。
+    vector<vector<int>> permute(vector<int>& nums) {
+        if (nums.empty())   return rslt;
+        vector<int> permutation;
+        dfs(permutation, nums);
+        return rslt;
+    }
+    
+    ///@brief   深度优先遍历函数
+    ///@param   pmt     排列
+    ///@param   nums    候选元素数组
+    ///@return  无
+    void dfs(vector<int>& pmt, vector<int> nums) {
+        if (nums.empty()) {
+            rslt.push_back(pmt);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            pmt.push_back(nums[i]);
+            vector<int> new_nums;
+            for (int j = 0; j < nums.size(); j++) {
+                if (i != j) new_nums.push_back(nums[j]);
+            }
+            dfs(pmt, new_nums);
+            pmt.pop_back();
+        }
+    }
+    
+private:
+    vector<vector<int>> rslt;
 };
 
 int main()
@@ -208,9 +222,10 @@ int main()
 	vector<int> nums;
 	vector<vector<int>> rslt;
  	nums.push_back(1);
- 	nums.push_back(1);
+// 	nums.push_back(1);
  	nums.push_back(2);
- 	nums.push_back(2);
+    nums.push_back(3);
+//  nums.push_back(2);
 	rslt = slt.permute(nums);
     
 	Solution_v2 s2;
