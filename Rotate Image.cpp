@@ -20,6 +20,8 @@
 ///@date	2016.04.12
 ///@version	2.2
 
+///@date    October 21, 2018
+///@version 2.3
 
 #include <iostream>
 #include <vector>
@@ -138,13 +140,17 @@ public:
 
 class Solution {
 public:
+    ///@brief   将一个矩阵顺时针翻转90°。要求翻转过程中的空间复杂度为O(1)。
+    ///@param   matrix  矩阵
+    ///@note    1. 先将矩阵转换为转置矩阵，然后翻转每一行即可。所谓转置矩阵，即原矩阵的每一行是转置矩阵的每一列。
+    //          2. 时间复杂度为O(m^2)，其中m为矩阵的行数，空间复杂度为O(1)。
 	void rotate(vector<vector<int>>& matrix) {
-		for (int i = 0; i != matrix.size(); i++)
-			for (int j = i + 1; j != matrix.size(); j++)
-				swap(matrix[i][j], matrix[j][i]);
-		for (int i = 0; i != matrix.size(); i++)
-			reverse(matrix[i].begin(), matrix[i].end());		
-	}
+        for (int i = 0; i < matrix.size(); i++)
+            for (int j = i + 1; j < matrix.size(); j++)
+                swap(matrix[i][j], matrix[j][i]);
+        for (int i = 0; i < matrix.size(); i++)
+            reverse(matrix[i].begin(), matrix[i].end());
+    }
 };
 
 void printMatrix(vector<vector<int>> matrix) {
@@ -194,17 +200,5 @@ int main()
 	slt_v1.rotate2(matrix1);
 	printMatrix(matrix1);
     
-    Solution slt;
-    slt.rotate(matrix1);
-    printMatrix(matrix1);
-
-	slt.rotate(matrix1);
-	printMatrix(matrix1);
-
-	slt.rotate(matrix1);
-	printMatrix(matrix1);
-
-	slt.rotate_anticlockwise(matrix1);
-	printMatrix(matrix1);
 	return 0;
 }
