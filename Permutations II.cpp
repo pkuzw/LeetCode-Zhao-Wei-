@@ -23,6 +23,9 @@
 ///@date	2016.04.12
 ///@version	2.2
 
+///@date    October 21, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -127,37 +130,47 @@ public:
 
 class Solution {
 public:
-	vector<vector<int>> permuteUnique(vector<int>& nums) {
-		if (nums.empty())	return rslt;
-		vector<int> pmt;
-		sort(nums.begin(), nums.end());
-		dfs(nums, pmt);
-		return rslt;
-	}
-
-	void dfs(vector<int> nums, vector<int>& pmt) {
-		if (nums.empty()) {
-			rslt.push_back(pmt);
-			return;
-		}
-		for (int i = 0; i != nums.size(); i++) {
-			pmt.push_back(nums[i]);
-			vector<int> new_nums;
-			for (int j = 0; j != nums.size(); j++)
-				if (j != i)	new_nums.push_back(nums[j]);
-			dfs(new_nums, pmt);
-			pmt.pop_back();
-			while(i < nums.size() - 1 && nums[i] == nums[i+1])	i++;
-		}
-	}
-
-	vector<vector<int>> rslt;
+    ///@brief   计算所有不重复的所有排列，候选数组中可能含有重复元素。
+    ///@param   nums    候选元素
+    ///@return  返回所有可能的排列
+    ///@note    1. 深度优先遍历。
+    //          2. 算法类似于"Permuations"，但是在dfs()函数中在pop()完后，向后移动候选数组中的循环变量时注意跳过重复元素即可。
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        if (nums.empty())   return rslt;
+        sort(nums.begin(), nums.end());
+        vector<int> permutation;
+        dfs(permutation, nums);
+        return rslt;
+    }
+    
+    ///@brief   深度优先遍历函数
+    ///@param   pmt     一个有效排列
+    ///@param   nums    候选数组
+    ///@return  无
+    void dfs(vector<int>& pmt, vector<int> nums) {
+        if (nums.empty()) {
+            rslt.push_back(pmt);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            pmt.push_back(nums[i]);
+            vector<int> new_nums;
+            for (int j = 0; j < nums.size(); j++) {
+                if (i != j) new_nums.push_back(nums[j]);
+            }
+            dfs(pmt, new_nums);
+            pmt.pop_back();
+            while (i < nums.size() - 1 && nums[i] == nums[i+1]) i++;
+        }
+    }
+private:
+    vector<vector<int>> rslt;
 };
 
 int main()
 {
 	vector<int> test;
-	test.push_back(2);
+//	test.push_back(2);
 	test.push_back(2);
 	test.push_back(1);
     test.push_back(1);
