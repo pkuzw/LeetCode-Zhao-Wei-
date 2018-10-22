@@ -10,6 +10,9 @@
 ///@date	2016.04.12
 ///@version	2.1
 
+///@date    October 22, 2018
+///@version 2.2
+
 #include <iostream>
 using namespace std;
 
@@ -127,17 +130,28 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算x^n，其中x为浮点数，n为整型变量2^-31 <= n <= 2^31 - 1.
+    ///@param   x   底数
+    ///@param   n   指数
+    ///@return  返回x^n的幂
+    ///@note    1. 递归法翻倍计算；
+    //          2. 时间复杂度为为O(logn)，空间复杂度为O(1)，其中n为指数大小。
 	double myPow(double x, int n) {
-		if (n < 0)	return 1 / helper(x, -n);
-		return helper(x, n);
-	}
-
-	double helper(double x, int n) {
-		if (!n)	return 1;
-		double half = helper(x, n / 2);
-		if (n % 2)	return x * half * half;
-		else	return half * half;
-	}
+        if (n < 0)  return 1 / helper(x, -n);
+        return helper(x, n);
+    }
+    
+    ///@brief   递归辅助函数
+    ///@param   x   底数
+    ///@param   n   指数
+    ///@return  返回幂
+    ///@note    1. 每次将指数减半，直至指数为0；如果n为奇数，那么还需要多乘一次底数，否则就是两个指数一半的幂相乘即可。B
+    double helper(double x, int n) {
+        if (n == 0) return 1;
+        double half = helper(x, n/2);
+        if (n % 2)  return x * half * half;
+        return half * half;
+    }
 };
 
 int main()
