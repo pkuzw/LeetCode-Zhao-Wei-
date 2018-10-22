@@ -157,7 +157,27 @@ public:
 	}
 };
 
-
+class Solution {
+public:
+    ///@brief   给定一个字符串数组，按照变形词进行分类。
+    ///@param   strs    字符串数组
+    ///@return  返回变形词分类的二维数组。
+    ///@note    1. 哈希表的value值不采用multiset，而直接使用vector<string>来保存。
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> rslt;
+        unordered_map<string, vector<string>> hash_table;
+        for (int i = 0; i < strs.size(); i++) {
+            string tmp = strs[i];
+            sort(tmp.begin(), tmp.end());
+            hash_table[tmp].push_back(strs[i]);
+        }
+        for (unordered_map<string, vector<string>>::iterator i = hash_table.begin(); i != hash_table.end(); i++) {
+            vector<string> svec(i->second.begin(), i->second.end());
+            rslt.push_back(svec);
+        }
+        return rslt;
+    }
+};
 
 int main() {	
 	vector<string> test;
