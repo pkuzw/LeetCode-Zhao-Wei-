@@ -19,6 +19,9 @@
 ///@date	2016.04.12
 ///@version	2.1
 
+///@date    October 22, 2018
+///@version 2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -129,19 +132,28 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一组字符串，将所有的具有相同字母的单词（变形词）归为一组。
+    ///@param   strs    字符串数组
+    ///@return  返回一个二维字符串数组，每一个子数组都是具有相同字母字符的变形词。
+    ///@note    1. 排序和哈希表
+    //          2. 先将每个单词按照字母序进行排序，这样方便找到相同的变形词；
+    //          3. 然后根据变形后的单词，把它们插入C++ STL multiset中去。这个multiset类似于set，但是可以允许有重复的value值，正好
+    //             于多个单词有相同的变形词的情况。
+    //          4. 时间复杂度为O(nmlogm)，空间复杂度为O(mn)，其中n为单词数目，m为单词的平均长度。
 	vector<vector<string>> groupAnagrams(vector<string>& strs) {
-		vector<vector<string>> rslt;
-		unordered_map<string, multiset<string>> hash_tbl;
-		for (int i = 0; i != strs.size(); i++) {
-			string tmp = strs[i];
-			sort(tmp.begin(), tmp.end());
-			hash_tbl[tmp].insert(strs[i]);
-		}
-		for (unordered_map<string, multiset<string>>::iterator i = hash_tbl.begin(); i != hash_tbl.end(); i++) {
-			vector<string> tmp(i->second.begin(), i->second.end());
-			rslt.push_back(tmp);
-		}
-		return rslt;
+        vector<vector<string>> rslt;
+        unordered_map<string, multiset<string>> hash_table;
+        for (int i = 0; i < strs.size(); i++) {
+            string tmp = strs[i];
+            sort(tmp.begin(), tmp.end());
+            hash_table[tmp].insert(strs[i]);
+        }
+        for (unordered_map<string, multiset<string>>::iterator i = hash_table.begin(); i != hash_table.end(); i++)
+        {
+            vector<string> str_vec(i->second.begin(), i->second.end());
+            rslt.push_back(str_vec);
+        }
+        return rslt;
 	}
 };
 
