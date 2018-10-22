@@ -130,7 +130,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
     ///@brief   给定一组字符串，将所有的具有相同字母的单词（变形词）归为一组。
     ///@param   strs    字符串数组
@@ -156,6 +156,8 @@ public:
         return rslt;
 	}
 };
+
+
 
 int main() {	
 	vector<string> test;
