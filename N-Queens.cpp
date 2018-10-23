@@ -36,6 +36,9 @@ There exist two distinct solutions to the 4-queens puzzle:
 ///@date	2016.04.13
 ///@version	2.2
 
+///@date    October 23, 2018
+///@version 2.3
+
 #include <vector>
 #include <string>
 #include <iostream>
