@@ -271,34 +271,57 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算n*n棋盘上所有合理的n皇后布局
+    ///@param   n   棋盘的尺寸
+    ///@return  返回所有合法的解。
+    ///@note    1. n皇后问题要求在一个n*n的棋盘上有n个皇后，没有任意两个皇后处于同一行、同一列或者同一斜线上。
+    //          2. 深度优先遍历地计算所有可能的解；
+    //          3. 用一个数组pos[n]来保存第i行的皇后在第pos[i]列上。
 	vector<vector<string>> solveNQueens(int n) {
-		vector<vector<string>> rslt;
-		vector<int> pos(n, -1);
-		dfs(rslt, pos, 0);
-		return rslt;
-	}
+        vector<vector<string>> rslt;
+        vector<int> pos(n, -1);
+        dfs(rslt, pos, 0);
+        return rslt;
+    }
 
+    ///@brief   判断在(row, col)放下一个皇后，是否不与之前的皇后位置冲突。
+    ///@param   pos     存放有皇后下标的数组，(i, pos[i])为皇后i所在的行列号。
+    ///@param   row     当前正在检验的格子所在行
+    ///@param   col     当前正在检验的格子所在列
+    ///@return  如果在当前位置(row, col)放下一个皇后不与之前的皇后冲突，则返回true；否则返回false。
+    ///@note    1. 遍历pos[0..row-1]，判断pos[i]是否等于col或者abs(row - i)是否等于abs(col - pos[i])，如果是则中断循环返回false，否则等到完成循环后返回true即可。
 	bool isValid(vector<int> pos, int row, int col) {
-		for (int i = 0; i != row; i++)
-			if (pos[i] == col || abs(i - row) == abs(pos[i] - col))	return false;
-		return true;
-	}
+        for (int i = 0; i != row; i++) {
+            if (pos[i] == col || abs(row - i) == abs(col - pos[i]))
+                return false;
+        }
+        return true;
+    }
 
+    ///@brief   深度优先遍历递归函数
+    ///@param   rslt    符合题意的所有合法解集合
+    ///@param   pos     当前正在求解的一组解中的皇后位置数组，其中pos[i]表示第i行的皇后应该位于的列号
+    ///@param   row     当前正在检验的行号
+    ///@return  无
+    ///@note    1. 如果当前行row到达了棋盘的末尾，那么应该根据pos[]数组构造一个合法解，将其加入rslt[][]数组；
+    //          2. 如果当前行row还没有到达末尾，那么应该从该行的第一列开始，逐列向后先判定是否是一个合法位置，如果是就将pos[row]置为当前列，然后递归的调用dfs()函数，求解下一列，递归结束后，
+    //             应该将pos[row]复位为初始值-1.
 	void dfs(vector<vector<string>>& rslt, vector<int>& pos, int row) {
-		if (row == pos.size()) {
-			vector<string> tmp(pos.size(), string(pos.size(), '.'));
-			for (int i = 0; i != pos.size(); i++) tmp[i][pos[i]] = 'Q';			
-			rslt.push_back(tmp);
-			return;
-		}
-		for (int i = 0; i != pos.size(); i++) {
-			if (isValid(pos, row, i)) {
-				pos[row] = i;
-				dfs(rslt, pos, row + 1);
-				pos[row] = -1;
-			}
-		}
-	}
+        if (row == pos.size()) {
+            vector<string> legalResult(row, string(row, '.'));
+            for (int i = 0; i != row; i++) {
+                legalResult[i][pos[i]] = 'Q';
+            }
+            rslt.push_back(legalResult);
+        }
+        for (int i = 0; i != pos.size(); i++) {
+            if (isValid(pos, row, i)) {
+                pos[row] = i;
+                dfs(rslt, pos, row+1);
+                pos[row] = -1;
+            }
+        }
+    }
 };
 
 int main()
