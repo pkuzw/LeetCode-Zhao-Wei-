@@ -14,6 +14,9 @@ Now, instead outputting board configurations, return the total number of distinc
 ///@date	2016.04.13
 ///@version	2.1
 
+///@date    October 25, 2018
+///@version 2.2
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -225,38 +228,57 @@ public:
 
 class Solution {
 public:
-	int totalNQueens(int n) {
-		int rslt = 0;
-		vector<int> pos(n, -1);
-		dfs(rslt, pos, 0);
-		return rslt;
-	}
-
-	bool isValid(vector<int> pos, int row, int col) {
-		for (int i = 0; i != row; i++)
-			if (pos[i] == col || abs(i - row) == abs(pos[i] - col))
-				return false;
-		return true;
-	}
-
-	void dfs(int& rslt, vector<int>& pos, int row) {
-		if (row == pos.size()) {
-			rslt++;
-			return;
-		}
-		for (int i = 0; i != pos.size(); i++) {
-			if (isValid(pos, row, i)) {
-				pos[row] = i;
-				dfs(rslt, pos, row + 1);
-				pos[row] = -1;
-			}
-		}
-	}
+    ///@brief   计算n*n的棋盘的合法皇后布局数目。
+    ///@param   n   棋盘的尺寸
+    ///@return  返回合法布局数目
+    ///@note    1. 深度优先遍历，利用递归辅助函数dfs()来计算合法的布局数。
+    int totalNQueens(int n) {
+        int rslt = 0;
+        vector<int> pos(n, -1);
+        dfs(rslt, pos, 0);
+        return rslt;
+    }
+    
+    ///@brief   辅助递归函数。
+    ///@param   rslt    合法的布局数目
+    ///@param   pos     一个合法布局的皇后的坐标数组
+    ///@param   row     当前正在尝试的行号
+    ///@return  无
+    ///@note    1. 如果当前正在尝试的行已经到达棋盘末尾，那么rslt自增1，并且返回；
+    //          2. 如果row还没有到达末尾，那么应该从棋盘的左侧向右逐列遍历，尝试该行的每一个位置；
+    //          3. 在每一个位置判断一下是否能够放下该行的皇后且不和前面的皇后冲突，如果不冲突，那么就设置pos数组，并递归地调用dfs()，其参数row增加1，调用完毕后将pos[row]复位；
+    //          4. 如果冲突，那么就继续向该行的下一列遍历。
+    void dfs(int& rslt, vector<int>& pos, int row) {
+        if (row == pos.size()) {
+            rslt++;
+            return;
+        }
+        for (int i = 0; i < pos.size(); i++) {
+            if (isValid(pos, row, i)) {
+                pos[row] = i;
+                dfs(rslt, pos, row+1);
+                pos[row] = -1;
+            }
+        }
+    }
+    
+    ///@brief   计算当前布局（pos数组表示第i行，第pos[i]列处的皇后）是否合法。
+    ///@param   pos     长度为n的数组，(i, pos[i])表示第i行，第pos[i]列的皇后。
+    ///@param   row     表示当前验证的行号。
+    ///@param   col     表示当前验证的列号。
+    ///@return  如果当前验证的行列号(row, col)不与pos数组冲突，那么返回true，否则返回false。
+    bool isValid(vector<int>& pos, int row, int col) {
+        for (int i = 0; i < row; i++) {
+            if (pos[i] == col || abs(row - i) == abs(col - pos[i]))
+                return false;
+        }
+        return true;
+    }
 };
 
 int main()
 {
-	int n = 4;
+	int n = 8;
 
 	Solution slt;
 	int rslt = slt.totalNQueens(n);
