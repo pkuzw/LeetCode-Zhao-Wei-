@@ -25,6 +25,9 @@ You should return [1,2,3,6,9,8,7,4,5].
 ///@date	2016.04.13
 ///@version	2.2
 
+///@date    October 26, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 
@@ -132,20 +135,26 @@ public:
 
 class Solution {
 public:
+    ///@brief   按照顺时针方向回旋自外向内地访问矩阵每一个元素。
+    ///@param   matrix  矩阵
+    ///@return  返回访问的元素，按照访问顺序从前往后排列。
+    ///@note    1. 枚举法；
+    //          2. 设i为正在被遍历一圈的左上角起始元素的列号和行号（因为每转一圈，其左上角元素的行列数都会自增1）；m为矩阵的行数；n为矩阵的列数，按照顺时针方向转圈遍历元素。
+    //          3. 时间复杂度为O(mn），空间复杂度为O(1)。其中m为矩阵的行数，n为矩阵的列数。
 	vector<int> spiralOrder(vector<vector<int>>& matrix) {
-		vector<int> rslt;
-		if (matrix.empty() || matrix[0].empty())	return rslt;
-		int m = matrix.size(), n = matrix[0].size();
-		int p = m, q = n;
-		for (int i = 0; i < (min(m, n) + 1) / 2; i++, p -= 2, q -= 2) {
-			for (int col = i; col < i + q; col++)	rslt.push_back(matrix[i][col]);
-			for (int row = i + 1; row < i + p; row++)	rslt.push_back(matrix[row][i+q-1]);
-			if (p == 1 || q == 1)	break;
-			for (int col = i + q - 2; col >= i; col--)	rslt.push_back(matrix[i+p-1][col]);
-			for (int row = i + p - 2; row > i; row--)	rslt.push_back(matrix[row][i]);
-		}
-		return rslt;
-	}
+        vector<int> rslt;
+        if (matrix.empty() || matrix[0].empty())    return rslt;
+        int m = matrix.size(), n = matrix[0].size();
+        int p = m, q = n;
+        for (int i = 0; i < (min(m, n) + 1) / 2; i++, p -= 2, q -= 2) {
+            for (int col = i; col < i + q; col++)   rslt.push_back(matrix[i][col]);
+            for (int row = i + 1; row < i + p; row++)   rslt.push_back(matrix[row][i+q-1]);
+            if (p == 1 || q == 1)   break;
+            for (int col = i + q - 2; col >= i; col--) rslt.push_back(matrix[i+p-1][col]);
+            for (int row = i + p - 2; row > i; row--)   rslt.push_back(matrix[row][i]);
+        }
+        return rslt;
+    }
 };
 
 int main()
