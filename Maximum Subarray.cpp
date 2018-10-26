@@ -15,6 +15,9 @@ the contiguous subarray [4,−1,2,1] has the largest sum = 6.
 ///@date	2016.04.13
 ///@version	2.1
 
+///@date    October 26, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -147,7 +150,7 @@ public:
     }
 };
 
-class Solution {
+class Solution_v2_1 {
 public:
 	int maxSubArray(vector<int>& nums) {
 		if (nums.empty())	return 0;
@@ -160,6 +163,31 @@ public:
 		return rslt;
 	}
 };
+
+class Solution {
+public:
+    ///@brief   给定一个整型数组，其元素可能为负，也可能为正，计算最大子段和。
+    ///@param   nums    整型数组变量
+    ///@return  返回最大子段和
+    ///@note    1. 动态规划；
+    //          2. 设sum[i]为以nums[i]为尾元素的最大子段和，则sum[i+1] = max(sum[i]+nums[i+1], nums[i+1])，只需要从前向后遍历，最终解就存放在sum[nums.size()-1]里面。
+    //          3. 时间按复杂度为O(n)，空间复杂度为O(n)，其中n为nums数组的长度。
+    int maxSubArray(vector<int>& nums) {
+        if (nums.empty())   return 0;
+        if (nums.size() == 1)   return nums[0];
+        vector<int> sum(nums.size(), 0);
+        int rslt = INT_MIN;
+        sum[0] = nums[0];
+        rslt = max(rslt, sum[0]);
+        for (int i = 0; i < nums.size() - 1; i++) {
+            sum[i+1] = max(nums[i+1] + sum[i], nums[i+1]);
+            rslt = max(rslt, sum[i+1]);
+        }
+        return rslt;
+    }
+};
+
+
 
 int main()
 {
