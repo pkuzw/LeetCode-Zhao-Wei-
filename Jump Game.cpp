@@ -24,6 +24,9 @@ A = [3,2,1,0,4], return false.
 ///@date	2016.04.13
 ///@version	2.2
 
+///@date    October 26, 2018
+///@version 2.3
+
 
 #include <iostream>
 #include <vector>
@@ -119,14 +122,26 @@ public:
 
 class Solution {
 public:
-	bool canJump(vector<int>& nums) {
-		if (nums.size() == 1 || nums.empty())	return true;
-		vector<int> dp(nums.size() - 1, 0);
-		dp[0] = nums[0];
-		for (int i = 1; i < nums.size() - 1; i++)	dp[i] = max(dp[i-1] - 1, nums[i]);
-		for (int i = 0; i < nums.size() - 1; i++)	if (dp[i] <= 0)	return false;
-		return true;
-	}
+    ///@brief   给定一个数组，每个元素表示从当前元素出发，能够向后移动的元素数目，如果能够从起始元素移动到末尾元素，则返回true，否则返回false。
+    ///@param   nums    数组
+    ///@return  返回值
+    ///@note    1. 动态规划
+    //          2. 设dp[i]表示从nums[i]出发能够到达的最远步数，则递推关系式为dp[i+1] = max(nums[i+1], dp[i] - 1)；
+    //          3. 如果存在dp[i] <= 0，则说明到达nums[i]无论如何都无法前进，若i != nums.size()，则说明被卡住了，不能到达末尾。
+    //          4. 该算法的时间复杂度为O(n)，空间复杂度为O(n)，其中n为数组的长度。
+    bool canJump(vector<int>& nums) {
+        if (nums.empty() || nums.size() == 1)   return true;
+        vector<int> dp(nums.size() - 1, 0);
+        dp[0] = nums[0];
+        for (int i = 1; i < nums.size() - 1; i++) {
+            dp[i] = max(dp[i-1]-1, nums[i]);
+        }
+        for (int i = 0; i < dp.size(); i++) {
+            if (dp[i] <= 0)
+                return false;
+        }
+        return true;
+    }
 };
 
 int main()
