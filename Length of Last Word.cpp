@@ -98,24 +98,39 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个由大小写字母和空格符组成的字符串，计算最后一个单词的长度。每个单词之间通过空格符隔开。
+    ///@param   s   字符串
+    ///@return  返回字符串中最后一个单词的长度。如果最后一个单词不存在，则返回0.
+    ///@note    1. 枚举法。
+    //          2. 从后往前遍历整个字符串，找到第一个空格符或者到达字符串头部时停下即可，返回此时的循环变量数目。
+    //          3. 时间复杂度为O(n)，空间复杂度为O(1)，其中n是字符串的长度。
 	int lengthOfLastWord(string s) {
-		if (s.empty())	return 0;
-		int i = s.size() - 1;
-		while (i >= 0 && s[i] == ' ')	i--;
-		s = s.substr(0, i+1);
-		if (i == -1)		return s.size();
-		int cnt = 0;
-		while (i >= 0 && s[i] != ' ') {
-			cnt++;
-			i--;
-		}
-		return cnt;
+        trim(s);
+        if (s.empty())  return 0;
+        int rslt = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s[i] != ' ')
+                rslt++;
+            else
+                break;
+        }
+        return rslt;
 	}
+    
+    ///@brief   去除掉字符串尾部的多余空白字符。
+    ///@param   s   字符串
+    void trim(string& s) {
+        int l = s.length() - 1;
+        while (l >= 0 && s[l] == ' ') {
+            l--;
+            s.pop_back();
+        }
+    }
 };
 
 int main()
 {
-	string str = "a";
+	string str = " a ";
 	
 
 	Solution slt;
