@@ -28,6 +28,9 @@ Note: Given n will be between 1 and 9 inclusive.
 ///@date	2016.04.14
 ///@version	2.2
 
+///@date    October 30, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -182,29 +185,48 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算由n个数字组成的第k个排列。
+    ///@param   n   字符串的长度，其中每个字符都不相同，都是阿拉伯数字。
+    ///@param   k   排列的序号。
+    ///@return  返回第k个排列。
+    ///@note    1. 枚举。不能使用<algorithm>中的next_permutation()方法，会超时。因为只需要计算第k个元素，没有必要计算之前的所有排列；
+    //          2. 通过观察发现，对于长度为n的字符串来说，第i位的数字等于排列序号k / (n-1)!后在现有可选阿拉伯数字中的第i个数字。
+    //          3. 比如说，要计算“1234”的第7个排列，那么因为3! = 6，7 / 6 = 1，那么排列的第0位的字符应该是{1, 2, 3, 4}中的
+    //             2；第1位应该是1 / 2! = 0，即排列k的第1位应该是剩余可选元素按照升序排序后的第0位1；依此类推，第2位和第3位分别是3
+    //             和4.
+    //          4. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为字符串的长度。
 	string getPermutation(int n, int k) {
-		string s;
-		for (int i = 1; i <= n; i++)	s += char('0' + i);
-		vector<int> f(n, 1);
-		for (int i = 1; i < n; i++)	f[i] = i * f[i-1];
-		k--;
-		string rslt;
-		for (int i = n - 1; i >= 0; i--) {
-			int j = k / f[i];
-			k %= f[i];
-			rslt.push_back(s[j]);
-			s.erase(j, 1);
-		}
-		return rslt;
+        string originStr = "123456789";
+        string s = originStr.substr(0, n);
+        string rslt;
+        k--;    //计算第k个排列，因为k >= 1，所以这里要自减1，以便从0开始计算。
+        for (int i = n-1; i >= 0; i--) {
+            int permuteCnt = factorial(i);
+            int j = k / permuteCnt;
+            k %= permuteCnt;
+            rslt.push_back(s[j]);
+            s.erase(j, 1);  //  删除s中第j位开始的1个字符
+        }
+        return rslt;
 	}
+    
+    ///@brief   计算整数n的阶乘
+    ///@param   n   整型变量n
+    ///@return  返回n阶乘
+    int factorial(int n) {
+        int rslt = 1;
+        for (int i = n; i >= 1; i--)
+            rslt *= i;
+        return rslt;
+    }
 };
 
 int main()
 {
 	Solution_v2 s2;
-    string r2 = s2.getPermutation(4, 10);
+    string r2 = s2.getPermutation(4, 12);
 
 	Solution s;
-	string r = s.getPermutation(4, 10);
+	string r = s.getPermutation(4, 12);
 	return 0;
 }
