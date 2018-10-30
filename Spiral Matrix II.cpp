@@ -23,7 +23,10 @@ You should return the following matrix:
 ///@version	2.1
 
 ///@date	2016.04.14
-///@version	2.2    
+///@version	2.2
+
+///@date    October 30, 2018
+///@version 2.3
 
 #include <vector>
 #include <iostream>
@@ -188,18 +191,25 @@ public:
 
 class Solution {
 public:
+    ///@brief   生成一个n*n的矩阵，将1~n^2个元素从左上角出发，按照顺时针顺序由外向内逐个放入矩阵。
+    ///@param   n   矩阵尺寸
+    ///@return  返回放好元素的矩阵。
+    ///@note    1. 枚举法。
+    ///         2. 类似于Spiral Matrix的算法，唯一注意的是，当n为奇数时，matrix[n/2][n/2]需要额外的赋值。
+    //          3. 时间复杂度为O(n^2)，空间复杂度为O(n^2)，其中n为矩阵的尺寸。
 	vector<vector<int>> generateMatrix(int n) {
-		vector<vector<int>> matrix(n, vector<int>(n, 0));
-		int p = n;
-		int val = 1;
-		for (int i = 0; i < n / 2; i++, p -= 2) {
-			for (int col = i; col < i + p; col++)	matrix[i][col] = val++;
-			for (int row = i + 1; row < i + p; row++)	matrix[row][i+p-1] = val++;
-			for (int col = i + p - 2; col >= i; col--)	matrix[i+p-1][col] = val++;
-			for (int row = i + p - 2; row > i; row--)	matrix[row][i] = val++;
-		}
-		if (n % 2)	matrix[n/2][n/2] = val;
-		return matrix;
+        if (n < 0)  return vector<vector<int>>();
+        vector<vector<int>> matrix(n, vector<int>(n, 0));
+        int p = n;
+        int val = 1;
+        for (int i = 0; i < n/2; i++, p -= 2) {
+            for (int col = i; col < i+p; col++, val++)      matrix[i][col] = val;
+            for (int row = i+1; row < i+p; row++, val++)    matrix[row][i+p-1] = val;
+            for (int col = i+p-2; col >= i; col--, val++)   matrix[i+p-1][col] = val;
+            for (int row = i+p-2; row >i; row--, val++)     matrix[row][i] = val;
+        }
+        if (n % 2)  matrix[n/2][n/2] = val;
+        return matrix;
 	}
 };
 
