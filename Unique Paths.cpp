@@ -19,7 +19,11 @@ How many possible unique paths are there?
 ///@date	2016.04.18
 ///@version	2.2
 
+///@date    October 31, 2018
+///@version 3.0
+
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -83,21 +87,22 @@ public:
 
 class Solution {
 public:
-	int uniquePaths(int m, int n) {
-		long long rslt = 1;
-		if (m == 1 || n == 1)	return rslt;
-		int p = m > n ? n - 1 : m - 1;
-		int k = m + n - 2;
-		int t = p;
-		while (t--) {
-			rslt *= k;
-			k--;
-		}
-		while (p) {
-			rslt /= p;
-			p--;
-		}
-		return rslt;
+    ///@brief   在一个m行n列的棋盘上，从左上角出发，只能向右或者向下，计算到达右下角的步数.
+    ///@param   m   棋盘行数
+    ///@param   n   棋盘列数
+    ///@return  返回路线总数。
+    ///@note    1. 枚举法；
+    //          2. 到达棋盘board[i][j]的路线数 = 到达board[i-1][j]的路线数 + 到达board[i][j-1]的路线数；
+    //          3. 第一行和第一列的所有格子的路线数都应该为1；
+    //          4. 时间复杂度为O(m*n)，空间复杂度为O(m*n)，其中m和n分别为棋盘的行列数。
+	unsigned long uniquePaths(int m, int n) {
+        vector<vector<unsigned long>> board(m, vector<unsigned long>(n, 1));
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                board[i][j] = board[i-1][j] + board[i][j-1];
+            }
+        }
+        return board[m-1][n-1];
 	}
 };
 
