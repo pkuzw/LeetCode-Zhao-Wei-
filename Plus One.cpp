@@ -17,6 +17,9 @@ The digits are stored such that the most significant digit is at the head of the
 ///@date	2016.04.19
 ///@version	2.2
 
+///@date    November 1, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 
@@ -91,7 +94,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	///@brief	将整数存储在一维数组当中，将其末位加1后，计算所得结果
 	///@param	digits	被加数
@@ -126,12 +129,34 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   给定一个数组，用来表示一个非负整数，计算该整数自增1后的数组表示的值。
+    ///@param   digits  数组
+    ///@return  返回自增后的数组。
+    ///@note    1. 枚举法；
+    //          2. 注意进位即可；
+    ///         3. 在数组中插入元素可以使用vector<int>::insert(iterator, val)方法，会在iterator前面插入val；
+    //          4. 实际上，当carry已经为0时，就没必要继续向前遍历了，这样节约时间；
+    //          5. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为数组长度。
+    vector<int> plusOne(vector<int>& digits) {
+        int carry = 1;
+        for (int i = digits.size() - 1; i >= 0 && carry == 1; i--) {
+            digits[i] += carry;
+            carry = digits[i] / 10;
+            digits[i] %= 10;
+        }
+        if (carry)  digits.insert(digits.begin(), carry);
+        return digits;
+    }
+};
+
 int main()
 {
 	vector<int> sum;
 	vector<int> digits;
 	digits.push_back(9);
-	digits.push_back(9);
+	digits.push_back(8);
 	digits.push_back(9);
 
 	
