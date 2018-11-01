@@ -21,6 +21,9 @@ Note: You can only move either down or right at any point in time.
 ///@date	2016.04.18
 ///@version	2.3
 
+///@date    November 1, 2018
+///@version 3.0
+
 #include <vector>
 #include <iostream>
 
@@ -135,18 +138,30 @@ public:
 
 class Solution {
 public:
+    ///@brief   在一个二维棋盘上，每个格子标注了权值grid[i][j]，计算从左上角出发，每一步只能向下或者向右移动，达到右下角的最小代价是多少。
+    ///@param   grid    棋盘
+    ///@return  返回有效路径的最小代价。
+    ///@note    1. 动态规划；
+    ///         2. 根据《算法导论》关于动态规划算法的应用场景和步骤描述，动态规划主要用来解决最优解问题。
+    //          3. 首先，我们应该刻画问题的最优子结构的特征，设dp[i][j]用来保存到达grid[i][j]时的最小权值路径，则dp[row-1][col-1]就是问题的解。其依赖于左边的格子和上边的格子的值；
+    //          4. 其次，递归地表达最优子结构，那么dp[i][j] = min{dp[i-1][j], dp[i][j-1]} + grid[i][j]；
+    //          5. 再次，自底向上进行求解即可；
+    //          6. 最后，如果有必要，再通过上述计算过程得到的值计算一条最小权值路径。不过此题不需要。
+    //          7. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中m和n分别是棋盘的行列数。
 	int minPathSum(vector<vector<int>>& grid) {
-		if (grid.empty() || grid[0].empty())	return 0;
-		int row = grid.size(), col = grid[0].size();
-		vector<vector<int>> dp(row, vector<int>(col, 0));
-		dp[0][0] = grid[0][0];
-		for (int i = 1; i != row; i++)	dp[i][0] = grid[i][0] + dp[i-1][0];
-		for (int j = 1; j != col; j++)	dp[0][j] = grid[0][j] + dp[0][j-1];
-		for (int i = 1; i != row; i++)
-			for (int j = 1; j != col; j++)
-				dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
-		return dp[row-1][col-1];
-	}
+        if (grid.empty())   return 0;
+        int row = grid.size(), col = grid[0].size();
+        vector<vector<int>> dp(row, vector<int>(col, 0));
+        dp[0][0] = grid[0][0];
+        for (int i = 1; i < col; i++)   dp[0][i] = dp[0][i-1] + grid[0][i];
+        for (int i = 1; i < row; i++)   dp[i][0] = dp[i-1][0] + grid[i][0];
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j];
+            }
+        }
+        return dp[row-1][col-1];
+    }
 };
 
 int main()
@@ -156,40 +171,28 @@ int main()
 	
 	vector<int> line;
 	line.push_back(1);
- 	line.push_back(30);
  	line.push_back(1);
- 	line.push_back(1000);
  	line.push_back(1);
+
 	grid.push_back(line);
 
 	line.clear();
 	line.push_back(1);
-	line.push_back(6);
-	line.push_back(54);
 	line.push_back(5);
-	line.push_back(1);
+	line.push_back(10);
 	grid.push_back(line);
 
 	line.clear();
-	line.push_back(1);
-	line.push_back(50);
-	line.push_back(1);
-	line.push_back(3);
+	line.push_back(4);
+	line.push_back(2);
 	line.push_back(1);
 	grid.push_back(line);
 
-	line.clear();
-	line.push_back(1);
-	line.push_back(1);
-	line.push_back(1);
-	line.push_back(100);
-	line.push_back(1);
-	grid.push_back(line);
 	
-	int minPath = slt_v1.minPathSum_saveSpace(grid);
-	Solution_v2 slt2;
-	int rslt = slt2.minPathSum(grid);
-	int r_save = slt2.minPathSum_space_O_1(grid);
+//	int minPath = slt_v1.minPathSum_saveSpace(grid);
+//	Solution_v2 slt2;
+//	int rslt = slt2.minPathSum(grid);
+//	int r_save = slt2.minPathSum_space_O_1(grid);
 	Solution slt;
 	int r = slt.minPathSum(grid);
 	return 0;
