@@ -29,6 +29,9 @@ The total number of unique paths is 2.
 ///@date	2016.04.18
 ///@version	2.2
 
+///@date    November 1, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -137,18 +140,38 @@ public:
 
 class Solution {
 public:
-	int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
-		if (obstacleGrid.empty() || obstacleGrid[0].empty())	return 0;
-		int row = obstacleGrid.size(), col = obstacleGrid[0].size();
-		vector<vector<int>> dp(row, vector<int>(col, 0));
-		dp[0][0] = obstacleGrid[0][0] ? 0 : 1;
-		for (int i = 1; i != col; i++)	dp[0][i] = obstacleGrid[0][i] ? 0 : dp[0][i-1];
-		for (int i = 1; i != row; i++)	dp[i][0] = obstacleGrid[i][0] ? 0 : dp[i-1][0];
-		for (int i = 1; i != row; i++)
-			for (int j = 1; j != col; j++)
-				dp[i][j] = obstacleGrid[i][j] ? 0 : dp[i-1][j] + dp[i][j-1];
-		return dp[row-1][col-1];
-	}
+    ///@brief   在一个二维棋盘上，0表示通路，1表示障碍，从左上角出发，只能向下或者向右，计算到达右下角的路径有多少条。
+    ///@param   obstacleGrid    棋盘
+    ///@return  返回路径数目
+    ///@note    1. 枚举法
+    //          2. 设board[i][j]为到达棋盘obstacleGrid[i][j]的路径数，则board[i][j] = board[i-1][j] + board[i][j-1]；
+    //          3. 如果obstacleGrid[i][j] == 1，则board[i][j] = 0；
+    //          4. 时间复杂度为O(mn)，空间复杂度为O(mn)，其中m和n分别是棋盘的行数和列数。
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        if (obstacleGrid.empty() || obstacleGrid[0][0] == 1)    return 0;
+        
+        int row = obstacleGrid.size(), col = obstacleGrid[0].size();
+        vector<vector<int>> board(row, vector<int>(col, 0));
+        board[0][0] = 1;
+        for (int i = 1; i < col; i++) {
+            if (obstacleGrid[0][i] == 1)    board[0][i] = 0;
+            else    board[0][i] = board[0][i-1];
+        }
+        for (int j = 1; j < row; j++) {
+            if (obstacleGrid[j][0] == 1)    board[j][0] = 0;
+            else    board[j][0] = board[j-1][0];
+        }
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    board[i][j] = 0;
+                    continue;
+                }
+                board[i][j] = board[i-1][j] + board[i][j-1];
+            }
+        }
+        return board[row-1][col-1];
+    }
 };
 
 
