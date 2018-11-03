@@ -30,7 +30,7 @@
  */
 
 ///@author  Zhao Wei
-///@date    November 2, 2018
+///@date    November 3, 2018
 ///@version 1.0
 
 #include <string>
