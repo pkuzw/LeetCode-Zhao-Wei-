@@ -47,15 +47,72 @@ public:
     //          2. 一个字符串的开头可以是数字，+/-，空格符，中间可以有一个字母e，e的两侧可以各有一个'.'和+/-号。
     //          3. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为字符串长度。
     bool isNumber(string s) {
+        trim(s);
         if (s.empty())  return false;
-        
+        vector<int> strDigitPos, strExpoPos, strPointPos, strSignPos;
+        if (!checkLegal(s, strDigitPos, strExpoPos, strPointPos, strSignPos)) return false;
+        if (strExpoPos.empty()) {
+            if  (strSignPos.size() > 1 || (strSignPos.size() == 1 && strSignPos[0] != 0))    return false;
+        }
+        else if (strExpoPos.size() == 1) {
+            string left = s.substr(0, strExpoPos[0]);
+            string right = s.substr(strExpoPos[0]+1, s.length() - strExpoPos[0] - 1);
+            vector<int> leftDigitPos, leftExpoPos, leftPointPos, leftSignPos;
+            vector<int> rightDigitPos, rightExpoPos, rightPointPos, rightSignPos;
+            if ((!strPointPos.empty() && strPointPos[0] > strExpoPos[0]) ||
+                (left.empty() || right.empty()) ||
+                !checkLegal(left, leftDigitPos, leftExpoPos, leftPointPos, leftSignPos) ||
+                !checkLegal(right, rightDigitPos, rightExpoPos, rightPointPos, rightSignPos) ||
+                (strSignPos.size() == 2 && (strSignPos[0] != 0 || strSignPos[1] != strExpoPos[0] + 1)) ||
+                (strSignPos.size() == 1 && (strSignPos[0] != 0 && strSignPos[0] != strExpoPos[0] + 1)))
+                return false;
+        }
+        return true;
+    }
+    
+    ///@brief   去掉前缀空白符和后缀空白符
+    ///@param   str     字符串
+    ///@return  无
+    void trim(string& str) {
+        int i = 0;
+        for (; i < str.length(); i++)
+            if (str[i] != ' ')  break;
+        str = str.substr(i);
+        i = str.length() - 1;
+        for(; i >= 0; i--)
+            if (str[i] != ' ')  break;
+        str = str.substr(0, i+1);
+    }
+    
+    ///@brief   字符串中是否含有非法字符
+    ///@param   str     字符串
+    ///@param   digitPos    字符串中数字字符的下标数组
+    ///@param   expoPos     字符串中幂指数符号的下标数组
+    ///@param   pointPos    字符串中小数点的下标数组
+    ///@param   signPos     字符串中正负号的下标数组
+    ///@return  如果字符串中不含有非法字符，返回true，否则返回false。
+    bool checkLegal(string str, vector<int>& digitPos, vector<int>& expoPos, vector<int>& pointPos, vector<int>& signPos) {
+        for (int i = 0; i < str.length(); i++) {
+            if (str[i] <= '9' && str[i] >= '0')     digitPos.push_back(i);
+            else if (str[i] == 'e' || str[i] == 'E')     expoPos.push_back(i);
+            else if (str[i] == '.')     pointPos.push_back(i);
+            else if (str[i] == '+' || str[i] == '-')    signPos.push_back(i);
+            else
+                return false;
+        }
+        if (pointPos.size() > 1 ||
+            expoPos.size() > 1 ||
+            signPos.size() > 2 ||
+            ((!pointPos.empty() || !expoPos.empty() || !signPos.empty()) && digitPos.empty()))
+            return false;
+        return true;
     }
 };
 
 int main() {
     Solution slt;
     string input;
-    while (cin >> input) {
+    while (getline(cin, input)) {
         cout << slt.isNumber(input) << endl;
     }
     return 0;
