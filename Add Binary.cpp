@@ -20,6 +20,9 @@ Return "100".
 ///@date	2016.04.19
 ///@version	2.2
 
+///@date    November 5, 2018
+///@version 3.0
+
 #include <iostream>
 #include <string>
 
@@ -110,36 +113,32 @@ public:
 
 class Solution {
 public:
+    ///@brief   两个二进制字符串相加求和。
+    ///@param   a   加数
+    ///@param   b   加数
+    ///@return  返回和，也是由'0'和'1'组成的二进制串。
+    ///@note    1. 枚举法；
+    //          2. 时间复杂度为O(n)，空间复杂度为O(m)，其中m为两个加数的长度差，用来给较短加数添加前导零。
 	string addBinary(string a, string b) {
-		if (a.length() < b.length())	swap(a, b);
-		b = string(a.length() - b.length(), '0') + b;
-		bool carry = false;
-		for (int i = a.length() - 1; i >= 0; i--) {
-			if (a[i] == '0' && b[i] == '0') {
-				if (carry) {
-					a[i] = '1';
-					carry = false;
-				}
-			}
-			else if (abs(a[i] - b[i]) == 1) {
-				if (carry)	a[i] = '0';				
-				else		a[i] = '1';
-			}
-			else {
-				if (carry)	a[i] = '1';
-				else {
-					a[i] = '0';
-					carry = true;
-				}
-			}
-		}
-		return carry ? "1" + a : a;
-	}
+        if (a.length() < b.length())    swap(a, b);
+        int carry = 0;
+        int deltaLen = a.length() - b.length();
+        string preZeros(deltaLen, '0');
+        b.insert(0, preZeros);
+        for (int i = b.length() - 1; i >= 0; i--) {
+            int bitSum = (a[i]-'0') + (b[i]-'0') + carry;
+            a[i] = (bitSum % 2) + '0';
+            carry = bitSum / 2;
+        }
+        if (carry)
+            a.insert(0, "1");
+        return a;
+    }
 };
 
 int main()
 {
-	string a = "11", b = "111";
+	string a = "00001", b = "111";
 	Solution slt;
 	string rslt = slt.addBinary(a, b);	
 	return 0;
