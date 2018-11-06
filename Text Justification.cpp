@@ -31,7 +31,10 @@ Note: Each word is guaranteed not to exceed L in length.
 ///@version	1.2
 
 ///@date	2016.04.19
-///@version	2.0 
+///@version	2.0
+
+///@date    November 6, 2018
+///@version 2.1
 
 #include <iostream>
 #include <vector>
@@ -205,21 +208,26 @@ private:
 
 class Solution {
 public:
-	vector<string> fullJustify(vector<string> &words, int L) {
+    ///@brief   给定一组单词和每一行的最大长度，向一行内插入若干空格符，使得一行可以包含尽可能多的单词，同时又没有单词被截断。
+    ///@param   words   单词数组
+    ///@param   maxWidth    一行的长度
+    ///@return  返回重新加入若干空白符的单词词组。如果一行内的单词间空白不能均匀分布，那么尽可能使左边的空白符长。最后一行的
+    //          单词空白符应该是右边的空白符长。
+	vector<string> fullJustify(vector<string> &words, int maxWidth) {
 		vector<string> rslt;
 		int begin = 0;
 		while (begin < words.size()) {
 			int last = begin;
 			int linesize = words[begin++].size();
-			while (begin < words.size() && linesize + 1 + words[begin].size() <= L) {
+			while (begin < words.size() && linesize + 1 + words[begin].size() <= maxWidth) {
 				linesize += 1 + words[begin].size();
 				begin++;
 			}
 
 			int spaces = 1, extra = 0;
 			if (begin < words.size() && begin != last + 1) {
-				spaces = (L - linesize) / (begin - last - 1) + 1;
-				extra = (L - linesize) % (begin - last - 1);
+				spaces = (maxWidth - linesize) / (begin - last - 1) + 1;
+				extra = (maxWidth - linesize) % (begin - last - 1);
 			}
 
 			rslt.push_back(words[last++]);
@@ -231,7 +239,7 @@ public:
 				rslt.back().append(spaces, ' ');
 				rslt.back().append(words[last++]);
 			}
-			rslt.back().append(L-rslt.back().size(), ' ');
+			rslt.back().append(maxWidth-rslt.back().size(), ' ');
 		}
 
 		return rslt;
