@@ -14,7 +14,12 @@ Compute and return the square root of x.
 ///@date	2015.12.04
 ///@version 2.1
 
+///@date    November 7, 2018
+///@version 3.0
+
 #include <iostream>
+#include <algorithm>
+#include <cmath>a17310134032
 
 using namespace std;
 
