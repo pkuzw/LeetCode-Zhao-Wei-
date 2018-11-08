@@ -15,7 +15,7 @@ Compute and return the square root of x.
 ///@version 2.1
 
 ///@date    November 7, 2018
-///@version 3.0
+///@version 2.2
 
 #include <iostream>
 #include <algorithm>
@@ -68,16 +68,22 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算平方根，忽略小数部分；
+    ///@param   待计算的数
+    ///@return  返回平方根；
+    ///@note    1. 二分查找；
+    ///         2. 为了防止中间结果溢出，用long long型变量保存left, right和mid变量；
+    //          3. 因为返回值为整型，应该向下取整，故返回right，而非跳出循环后大于right的left值；
+    //          4. 时间复杂度为O(logn)，空间复杂度为O(1)；
 	int mySqrt(int x) {
-		long long left = 0, right = x / 2 + 1;
-		while (left <= right) {
-			long long mid = (left + right) / 2;
-			if (mid * mid == x)	return mid;
-			else if (mid * mid > x)	right = mid - 1;
-			else	left = mid + 1;
-		}
-		return right;
-
+        long long left = 0, right = x / 2 + 1;
+        while (left <= right) {
+            long long mid = (left + right) / 2;
+            if (mid * mid == x) return mid;
+            else if (mid * mid < x) left = mid + 1;
+            else right = mid - 1;
+        }
+        return right;
 	}
 };
 
