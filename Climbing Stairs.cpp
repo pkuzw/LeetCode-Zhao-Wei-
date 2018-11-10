@@ -34,11 +34,8 @@ public:
 	//			中放置j个'2'，其余位置放置'1'。递归法的递归方程为T(n) = T(n-1)+T(n-2)+O(1)。时间复杂度为O(k^n)，k为常数。空间复杂度为O(n)。
 	int climbStairs_recursive(int n) {		
 		if (n == 0 || n == 1) return 1;
-		if (n > 1)
-		{
-			return climbStairs_recursive(n-1)+climbStairs(n-2);
-		}
-	}
+		return climbStairs_recursive(n-1)+climbStairs(n-2);
+    }
 
 	///@brief	计算到达梯子顶端的方法数
 	///@param	n	梯子格数
@@ -95,18 +92,24 @@ public:
 	}
 };
 
+
 class Solution {
 public:
+    
+    ///@brief   假设有n阶台阶，每次可以向上爬一层或者两层，计算爬n层台阶的总方法数；
+    ///@param   n   台阶总数
+    ///@return  返回爬台阶的方法数。
+    ///@note    1. 动态规划；
+    //          2. 假设dp[i]表示爬i阶台阶的方法数，那么存在递推关系是dp[i] = dp[i-1] + dp[i-2]，初始值dp[0] = 1, dp[1] = 1；
+    //          3. 递推关系式可以这么理解，要想爬到第i阶台阶，那么最后一步有两种可能，爬1层或者爬2层，分别对应dp[i-1]和dp[i-2]，dp[i]就是后者之和；
+    //          4. 其实此题的本质是求第n项fibonacci数；
+    //          5. 时间复杂度为O(n)，空间复杂度为O(n)，其中n是台阶数。可以将空间优化为O(1)，因为只有dp[n]有意义，其余的可以交替使用以节省空间。
 	int climbStairs(int n) {
-		int a = 1, b = 2, c = 3, i = 3;
-		if (n == 1 || n == 2)	return n;
-		while (i <= n) {
-			c = a + b;
-			a = b;
-			b = c;
-			i++;
-		}
-		return c;
+        vector<int> dp(n+1, 1);
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i-1] + dp[i-2];
+        }
+        return dp.back();
 	}
 };
 
