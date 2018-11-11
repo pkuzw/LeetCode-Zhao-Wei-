@@ -208,7 +208,7 @@ public:
         for (int i = 0, j = 1; i < path.length() && j < path.length(); i = j, j = i + 1) {
             if (path[i] == '/') {
                 while (path[j] == '/' && j < path.length()) j++;
-                if (j > i+1)    path.erase(i+1, j-i);
+                if (j > i+1)    path.erase(i+1, j-i-1);
                 j = i + 1;
                 while (path[j] != '/' && j < path.length()) j++;
                 if (j == path.length()) break;
