@@ -19,9 +19,13 @@ path = "/a/./b/../../c/", => "/c"
 ///@date	2016.04.20
 ///@version	2.2
 
+///@date    November 11, 2018
+///@version 3.0
+
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -159,7 +163,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	string simplifyPath(string path) {
 		vector<string> svec;
@@ -182,9 +186,54 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   简化Unix文件的绝对路径。
+    ///@param   path    绝对路径字符串
+    ///@return  返回简化后的绝对路径。
+    ///@note    1. 栈；
+    //          2. 输入的绝对路径有这么几种需要简化的情况：
+    //              a. '//': 相当于'/'；
+    //              b. '/../: 相当于返回上一层，如果已经返回了根目录，还继续向上层返回的话，那么最终会返回根目录；
+    //              c. 最后的子目录后面应该去掉'/'；
+    //              d. '.'相当于当前目录。
+    //          3. 首先，对于2中说明的集中情况进行处理，去除掉多于的'/'符号；
+    //          4. 然后将分隔出来的每一层目录根据不同情况压入栈，'.'不入栈；'..'弹栈；
+    //          5. 最后根据栈内的元素组合出化简后的绝对路径。
+    //          6. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为待处理的绝对路径长度。
+    string simplifyPath(string path) {
+        stack<string> stk;
+        if (path.empty())   return path;
+        path += "/";    //  为了防止绝对路径最后没有"/"的情况，手动先添加上。
+        for (int i = 0, j = 1; i < path.length() && j < path.length(); i = j, j = i + 1) {
+            if (path[i] == '/') {
+                while (path[j] == '/' && j < path.length()) j++;
+                if (j > i+1)    path.erase(i+1, j-i);
+                j = i + 1;
+                while (path[j] != '/' && j < path.length()) j++;
+                if (j == path.length()) break;
+                string subDirectory = path.substr(i+1, j-i-1);
+                if (subDirectory == "..") {
+                    if (!stk.empty()) stk.pop();
+                }
+                else if (subDirectory == ".") {}
+                else    stk.push(subDirectory);
+            }
+        }
+        string rslt = "/";
+        while (!stk.empty()) {
+            rslt = "/" + stk.top() + rslt;
+            stk.pop();
+        }
+        if (rslt.length() > 1)  rslt.pop_back();
+        return rslt;
+    }
+};
+
 int main()
 {
-	string path = "/a/./b/../../c/";
+	string path1 = "/////////a/./b/../../c/////../..///..";
+    string path = "/home//foo/";
 	Solution slt;
 	string rslt = slt.simplifyPath(path);
 
