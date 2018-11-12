@@ -28,6 +28,9 @@ Given target = 3, return true.
 ///@date	2016.04.21
 ///@version	3.1
 
+///@date    November 12, 2018
+//@version  3.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -124,11 +127,8 @@ private:
 			else if (mid < r && target >= a[mid+1])
 				return binarySearch(a, target, mid+1, r);
 		}
-		else if (target < a[mid])
-		{
-			return binarySearch(a, target, p, mid-1);
-		}
-	}
+		return binarySearch(a, target, p, mid-1);
+    }
 };
 
 class Solution_v2 {
@@ -195,70 +195,73 @@ private:
 
 class Solution {
 public:
-	bool searchMatrix(vector<vector<int>>& matrix, int target) {
-		vector<int> col0;
-		for (int i = 0; i != matrix.size(); i++)	col0.push_back(matrix[i][0]);
-		int row = binarySearchIndx(col0, target);
-		if (row == -1)	return false;
-		return binarySearchExist(matrix[row], target);
-	}
-
-	int binarySearchIndx(vector<int>& vec, int target) {
-		int l = 0, r = vec.size() - 1;
-		while (l <= r) {
-			int m = (l + r) / 2;
-			if (vec[m] == target)	return m;
-			else if (vec[m] < target)	l = m + 1;
-			else	r = m - 1;
-		}
-		return r;
-	}
-
-	bool binarySearchExist(vector<int>& vec, int target) {
-		int l = 0, r = vec.size() - 1;
-		while (l <= r) {
-			int m = (l + r) / 2;
-			if (vec[m] == target)	return true;
-			else if (vec[m] < target)	l = m + 1;
-			else	r = m - 1;
-		}
-		return false;
-	}
+    ///@brief   给定矩阵，其中每一行从左至右按照升序排列，并且每一行的最左侧首元素按照从上至下的顺序升序排列，找到指定元素；
+    ///@param   matrix  排好序的矩阵；
+    ///@param   target  目标元素；
+    ///@return  如果矩阵中存在该元素，则返回true；否则返回false。
+    ///@note    1. 二分查找；
+    //          2. 首先，通过矩阵首列元素组成的数组，找到元素所在行。这里要注意，在二分查找时，返回右边界可以得到没有找到目标元素时的小于该目标值的最大元素；返回左边界可以找到大于该目标值的最小元素；
+    //          3. 找到所在行后再在这一行查找是否存在该元素即可；
+    //          4. 时间复杂度为O(logm + logn)，空间复杂度为O(1)，其中m为矩阵行数，n为矩阵列数。
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if (matrix.empty() || matrix[0].empty())    return false;
+        vector<int> colZero;
+        int m = matrix.size(), n = matrix[0].size();
+        for (int i = 0; i < m; i++) colZero.push_back(matrix[i][0]);
+        int row = searchColumn(colZero, target);
+        if (row == -1)  return false;
+        return searchRow(matrix[row], target);
+    }
+    
+    ///@brief   查找目标值所在的行；
+    ///@param   colZero 矩阵首列所组成的数组；
+    ///@param   target  目标值；
+    ///@return  返回目标值所在行的行号。
+    ///@note    1. 注意，当目标值不等于中间值时，返回右边界r可以得到小于目标值的最大元素；返回左边界l可以得到大于目标值的最小元素。
+    int searchColumn(vector<int>& colZero, int target) {
+        int l = 0, r = colZero.size() - 1;
+        while (l <= r) {
+            int m = (l+r) / 2;
+            if (colZero[m] == target)   return m;
+            else if (colZero[m] < target)   l = m + 1;
+            else r = m - 1;
+        }
+        return r;
+    }
+    
+    ///@brief   查找该行元素中是否存在目标值；
+    ///@param   row 矩阵的一行
+    ///@param   target  目标值
+    ///@return  如果目标值存在，返回true；否则返回false。
+    bool searchRow(vector<int>& row, int target) {
+        int l = 0, r = row.size() - 1;
+        while (l <= r) {
+            int m = (l+r) / 2;
+            if (row[m] == target)   return true;
+            else if (row[m] < target)   l = m + 1;
+            else r = m - 1;
+        }
+        return false;
+    }
 };
+
+
 
 int main()
 {
-	vector<int> line;
-	vector<vector<int>> matrix;
-
+    vector<vector<int>> matrix;
+    vector<int> line;
 	line.push_back(1);
 	line.push_back(3);
 	line.push_back(5);
 	line.push_back(7);
 	matrix.push_back(line);
 
-	line.clear();
-	line.push_back(10);
-	line.push_back(11);
-	line.push_back(16);
-	line.push_back(20);
-	matrix.push_back(line);
-
-	line.clear();
-	line.push_back(23);
-	line.push_back(30);
-	line.push_back(34);
-	line.push_back(50);
-	matrix.push_back(line);
-
-// 	matrix.clear();
-// 	line.clear();
-// 	matrix.push_back(line);
-// 	matrix.push_back(line);
-
 	Solution_v1 slt_v1;
-	bool rslt_v1 = slt_v1.searchMatrix_space_O_1(matrix, 34);
+    int target = 0;
+	bool rslt_v1 = slt_v1.searchMatrix_space_O_1(matrix, target);
 	Solution slt;
-	bool rslt = slt.searchMatrix(matrix, 34);
+
+    bool rslt = slt.searchMatrix(matrix, target);
 	return 0;
 }
