@@ -18,6 +18,9 @@ Here, we will use the integers 0, 1, and 2 to represent the color red, white, an
 ///@date	2016.04.21
 ///@version	2.2
 
+///@date    November 12, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 
@@ -130,12 +133,19 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定由红色，白色和蓝色三种颜色组成的气球集合，对其进行排序，要求空间复杂度为O(1)；
+    ///@param   nums    0代表红色，1代表白色，2代表蓝色；
+    ///@note    1. 枚举法；
+    //          2. 用一个临时变量存储排好序后的最后一个红色气球；用一个变量存储排好序后的第一个蓝色气球；
+    //          3. 从前向后遍历，遇到红色气球，就与第一个临时变量交换；遇到蓝色气球，就与第二个临时变量交换；
+    //          4. 这样只需要遍历一遍数组就可以得到排好序的气球集合；
+    //          5. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为气球数目。
 	void sortColors(vector<int>& nums) {
-		int red_indx = 0, blue_indx = nums.size() - 1;
-		for (int i = red_indx; i <= blue_indx; i++) {
-			if (!nums[i])	swap(nums[i], nums[red_indx++]);
-			else if (nums[i] == 2)	swap(nums[i--], nums[blue_indx--]);
-		}
+        int redTail = 0, blueHead = nums.size() - 1;
+        for (int i = redTail; i <= blueHead; i++) {
+            if (nums[i] == 0)       swap(nums[i], nums[redTail++]);
+            else if (nums[i] == 2)  swap(nums[i--], nums[blueHead--]);  //  这里要同时将blueHead--，是因为有可能也将原本就是蓝色气球（2）给交换出来，如果不自减后退的话，就可能跳过被换出来的2；红色气球0不存在这个问题，因为它是从后面换到前面，本身也是小的数，不存在逆序的情况。
+        }
 	}
 };
 
