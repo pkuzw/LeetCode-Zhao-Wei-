@@ -15,6 +15,9 @@ Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do
 ///@date	2016.04.21
 ///@version	2.2
 
+///@date    November 12, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 
@@ -314,46 +317,40 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个矩阵，将0元素所在行列都置为0。要求空间复杂度为O(1)。
+    ///@param   matrix  矩阵；
+    ///@note    1. 要想使空间复杂度为O(1)，应该尽可能地利用现有的内存空间；
+    //          2. 考虑用两个临时变量保存第一行和第一列是否需要置0；然后用矩阵本身的第一行和第一列来保存剩下的0元素的坐标；
+    //          3. 时间复杂度为O(mn)，空间复杂度为O(1)，其中m和n分别为矩阵的行列数。
 	void setZeroes(vector<vector<int>>& matrix) {
-		bool flg_col0 = false, flg_row0 = false;
-		int row = matrix.size(), col = matrix[0].size();
-		//	tag 0 row and 0 col.
-		for (int i = 0; i != row; i++) {
-			if (!matrix[i][0]) {
-				flg_col0 = true;
-				break;
-			}
-		}
-		for (int j = 0; j != col; j++) {
-			if (!matrix[0][j]) {
-				flg_row0 = true;
-				break;
-			}
-		}
-
-		for (int i = 1; i != row; i++) {
-			for (int j = 1; j != col; j++) {
-				if (!matrix[i][j]) {
-					matrix[i][0] = 0;
-					matrix[0][j] = 0;
-				}
-			}
-		}
-
-		for (int i = 1; i != row; i++) 
-			if (!matrix[i][0]) 
-				for (int j = 1; j != col; j++)	matrix[i][j] = 0;
-			
-		for (int j = 1; j != col; j++)
-			if (!matrix[0][j])
-				for (int i = 1; i != row; i++)	matrix[i][j] = 0;
-
-		if (flg_col0)
-			for (int i = 0; i != row; i++)	matrix[i][0] = 0;				
-		if (flg_row0)
-			for (int j = 0; j != col; j++)	matrix[0][j] = 0;
-		return;
+        if (matrix.empty()) return;
+        int  m = matrix.size(), n = matrix[0].size();
+        bool firstRowIsZero = false, firstColIsZero = false;
+        for (int j = 0; j < n; j++)
+            if (!matrix[0][j])  firstRowIsZero = true;
+        for (int i = 0; i < m; i++)
+            if (!matrix[i][0])  firstColIsZero = true;
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (!matrix[i][j]) {
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+        for (int j = 1; j < n; j++)
+            if (!matrix[0][j])
+                for (int i = 1; i < m; i++) matrix[i][j] = 0;
+        for (int i = 1; i < m; i++)
+            if (!matrix[i][0])
+                for (int j = 1; j < n; j++) matrix[i][j] = 0;
+        if (firstRowIsZero)
+            for (int j = 0; j < n; j++) matrix[0][j] = 0;
+        if (firstColIsZero)
+            for (int i = 0; i < m; i++) matrix[i][0] = 0;
+        return;
 	}
+    
 };
 
 int main()
