@@ -25,6 +25,9 @@ If there are multiple such windows, you are guaranteed that there will always be
 ///@date	2016.04.23
 ///@version	2.2
 
+///@date    November 13, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -222,36 +225,51 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个源字符串s和目标字符串t，求解在字符串s中包含t的最短子串。要求时间复杂度为O(n)，其中n为s的长度。
+    ///@param   s   源字符串
+    ///@param   t   目标字符串
+    ///@return  返回s中包含t的最短子串。
+    ///@note    1. 哈希表；
+    ///         2. 使用左右两个指针来收缩范围；
+    //          3. 首先，通过遍历t来建立t中字符和其出现数目的哈希表；
+    //          4. 然后从s的首字符开始移动右指针，每当遇到t中字符，就将哈希表中对应表项自减1，并将计数器自增1；
+    //          5. 如果计数器到达t的长度时，则开始移动左指针；
+    //          6. 如果左指针指向的元素是t中字符，那么应该将哈希表中的表项自增1，将计数器自减1，因为这意味着窗口字符串会吐了一个目标字符串中的字符，应该进行第4步中的逆操作；
+    //          7. 如果当前窗口字符串的长度比之前的窗口要短，则更新窗口；
+    //          8. 时间复杂度为O(n)，空间复杂度为O(m)，其中n是s的长度，m是t的长度。
 	string minWindow(string s, string t) {
-		if (s.size() < t.size())	return "";
-		unordered_map<char, int> hash_tbl;
-		for (int i = 0; i != t.size(); i++)	hash_tbl[t[i]]++;
-		int len = s.size() + 1, left = 0, cnt = 0;
-		string rslt = "";
-		for (int right = 0; right < s.size(); right++) {
-			if (hash_tbl.find(s[right]) != hash_tbl.end()) {
-				hash_tbl[s[right]]--;
-				if (hash_tbl[s[right]] >= 0)	cnt++;
-			}
-			while (cnt == t.size()) {
-				if (len > right - left + 1) {
-					len = right - left + 1;
-					rslt = s.substr(left, len);
-				}
-				if (hash_tbl.find(s[left]) != hash_tbl.end()) {
-					hash_tbl[s[left]]++;
-					if (hash_tbl[s[left]] > 0)	cnt--;
-				}
-				left++;
-			}
-		}
-		return rslt;
+        int n = s.length(), m = t.length();
+        if (n < m)  return string();
+        int len = n + 1;
+        int left = 0, right = 0;
+        int cnt = 0;
+        unordered_map<char, int> hashTable;
+        string rslt;
+        for (int i = 0; i < m; i++) hashTable[t[i]]++;
+        for (right = 0; right < n; right++) {
+            if (hashTable.find(s[right]) != hashTable.end()) {
+                hashTable[s[right]]--;
+                if (hashTable[s[right]] >= 0)    cnt++; //  只要hashTable[s[right]]非负，就应该将计数器自增1。这里的>=是为了保证t中的所有字符都能够在窗口中充分匹配。
+            }
+            while (cnt == m) {
+                if (len > right - left + 1) {
+                    len = right - left + 1;
+                    rslt = s.substr(left, len);
+                }
+                if (hashTable.find(s[left]) != hashTable.end()) {
+                    hashTable[s[left]]++;
+                    if (hashTable[s[left]] > 0)    cnt--;   //  只要hashTable[s[left]]为正，就应该将计数器自减1。这里取>而非>=，是因为在前面hashTable[s[right]]中有可能将目标字符串中的目标字符自减为负值，如果这时候发现左指针指向的字符也是目标字符串中的字符，通过自增hashTable[s[left]]之后，该字符会变为0，那么此时窗口中的该字符数目会比目标串中多1个。所以应该取>，而非>=。
+                }
+                left++;
+            }
+        }
+        return rslt;
 	}
 };
 
 int main()
 {
-	string s = "ADOBECODEBANC", t = "ABBC";
+	string s = "ADOBECODBEBANC", t = "ABBC";
 	Solution slt;
 	string rslt = slt.minWindow(s, t);
 	return 0;
