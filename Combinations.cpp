@@ -27,6 +27,9 @@ If n = 4 and k = 2, a solution is:
 ///@date	2016.04.25
 ///@version	2.2
 
+///@date    November 14, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 
@@ -115,7 +118,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	vector<vector<int>> combine(int n, int k) {
 		vector<vector<int>> rslt;
@@ -140,9 +143,46 @@ public:
 	}
 };
 
+class Solution {
+public:
+    ///@brief   计算从1到n选k个数的所有可能组合；
+    ///@param   n   候选元素数目；
+    ///@param   k   选出的元素数目；
+    ///@return  返回所有可能的组合，不重不漏。
+    ///@note    1. dfs；
+    //          2. 设计一个递归辅助函数来帮助计算组合；
+    //          3. 时间复杂度为O(n!)？？，空间复杂度为O(1)。
+    vector<vector<int>> combine(int n, int k) {
+        if (k > n) return rslt;
+        vector<int> cmb;
+        dfs(cmb, 1, n, k);
+        return rslt;
+    }
+    
+    ///@brief   递归辅助函数
+    ///@param   cmb 一个正在计算中的有效组合；
+    ///@param   base    进入该递归函数时的起始元素；
+    ///@param   n       组合应该选出的元素总数；
+    ///@param   k       还剩余多少个元素没选出来；
+    void dfs(vector<int>& cmb, int base, int n, int k) {
+        if (!k) {
+            rslt.push_back(cmb);
+            return;
+        }
+        for (int i = base; i <= n; i++) {
+            cmb.push_back(i);
+            dfs(cmb, i+1, n, k-1);
+            cmb.pop_back();
+        }
+    }
+    
+    vector<vector<int>> rslt;
+};
+
+
 int main()
 {
-	int n = 5, k = 2;
+	int n = 5, k = 3;
 
 	Solution slt;
 	vector<vector<int>> rslt = slt.combine(n, k);
