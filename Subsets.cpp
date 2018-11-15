@@ -32,6 +32,9 @@ If nums = [1,2,3], a solution is:
 ///@date	2016.04.29
 ///@version	2.2
 
+///@date    November 15, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -114,39 +117,48 @@ private:
 
 class Solution {
 public:
-	vector<vector<int>> subsets(vector<int>& nums) {
-		vector<vector<int>> rslt;
-		vector<int> combination;
-		sort(nums.begin(), nums.end());
-		for (int k = 0; k <= nums.size(); k++) dfs(nums, rslt, combination, nums.size(), k);
-		return rslt;
-	}
-
-	void dfs(vector<int> nums, vector<vector<int>>& rslt, vector<int> combination, int n, int k) {
-		if (!k) {
-			rslt.push_back(combination);
-			return;
-		}
-		for (int i = 0; i != nums.size(); i++) {
-			combination.push_back(nums[i]);
-			vector<int> new_nums(nums.begin() + i + 1, nums.end());
-			dfs(new_nums, rslt, combination, n - 1, k - 1);
-			combination.pop_back();
-		}		
-	}
+    ///@brief   计算给定集合的所有子集
+    ///@param   nums    由不重复元素组成的集合
+    ///@return  返回所有子集组成的集合
+    ///@note    1. dfs；
+    ///         2. 利用上一题Combination中的解法，对所有的可能组合进行遍历即可。
+    //          3. 时间复杂度为O(n!)？，空间复杂度为O(n!)，其中n为集合的元素数目。
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<int> sub;
+        for (int i = 0; i <= nums.size(); i++)
+            dfs(nums, sub, 0, nums.size() - i);
+        return rslt;
+    }
+    
+    ///@brief   递归辅助函数
+    ///@param   nums    由不重复元素构成的集合；
+    ///@param   sub     一个可能的子集；
+    ///@param   base    一次递归调用应该压入的元素下标；
+    ///@param   k       该子集剩余的元素数目；
+    void dfs(vector<int>& nums, vector<int>& sub, int base, int k) {
+        if (!k) {
+            rslt.push_back(sub);
+            return;
+        }
+        for (int i = base; i < nums.size(); i++) {
+            sub.push_back(nums[i]);
+            dfs(nums, sub, i+1, k-1);
+            sub.pop_back();
+        }
+    }
+    
+    vector<vector<int>> rslt;
 };
+
 
 int main()
 {
-	vector<int> nums;
-	nums.push_back(1);
-	nums.push_back(2);
-	nums.push_back(3);
-	nums.push_back(4);
-	Solution_v1 slt_v1;
-	vector<vector<int>> rslt = slt_v1.subsets(nums);
+    int a[4] = {1, 2, 3, 4};
+    vector<int> nums(a, a+4);
+//	Solution_v1 slt_v1;
+//	vector<vector<int>> rslt = slt_v1.subsets(nums);
 
 	Solution slt;	
-	rslt = slt.subsets(nums);
+	vector<vector<int>> rslt = slt.subsets(nums);
 	return 0;
 }
