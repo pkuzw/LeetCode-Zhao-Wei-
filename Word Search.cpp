@@ -30,6 +30,9 @@ word = "ABCB", -> returns false.
 ///@date	2016.04.30
 ///@version	2.2
 
+///@date    November 16, 2018
+///@version 2.3
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -412,29 +415,47 @@ private:
 
 class Solution {
 public:
+    ///@brief   给定一个二维字符矩阵，在矩阵中能否找到相邻的一个字符串，使之与单词word相同。
+    ///@param   board   二维字符矩阵
+    ///@param   word    目标单词
+    ///@return  如果能够找到这么一个子串，则返回true；否则返回false。
+    ///@note    1. dfs;
+    ///         2. 使用一个二维bool型矩阵来保存从某一点[i, j]出发能否找到该单词；
+    //          3. 时间复杂度为O(mnk)，空间复杂度为O(mn)，其中m，n是二维字符矩阵的尺寸，k是单词的长度。
 	bool exist(vector<vector<char>>& board, string word) {
-		if (board.empty() || board[0].empty())	return false;
-		if (word.empty())	return true;
-		int row = board.size(), col = board[0].size();
-		vector<vector<bool>> visited(row, vector<bool>(col, false));
-		for (int i = 0; i != row; i++)
-			for (int j = 0; j != col; j++)
-				if (dfs(board, word, visited, i, j, 0))	return true;
-		return false;
+        if (board.empty() && !word.empty()) return false;
+        if (word.empty())   return true;
+        int m = board.size(), n = board[0].size();
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dfs(board, word, visited, i, j, 0))
+                    return true;
+            }
+        }
+        return false;
 	}
 
+    ///@brief   递归辅助函数
+    ///@param   board   字符二维矩阵
+    ///@param   word    单词
+    ///@param   visited 二维bool型矩阵，用来标记从该点出发是否能够找到单词
+    ///@param   i, j    矩阵的行号和列号
+    ///@param   k       已经匹配的单词的长度
+    ///@note   如果从board[i, j]出发，能够匹配word.length()个字符，则返回true
 	bool dfs(vector<vector<char>>& board, string& word, vector<vector<bool>>& visited, int i, int j, int k) {
-		if (k == word.size())	return true;
-		if (!visited[i][j] && word[k] == board[i][j]) {
-			visited[i][j] = true;
-			k++;
-			if (i > 0 && dfs(board, word, visited, i - 1, j, k))		return true;
-			if (i < board.size() - 1 && dfs(board, word, visited, i + 1, j, k))	return true;
-			if (j > 0 && dfs(board, word, visited, i, j - 1, k))		return true;
-			if (j < board[0].size() - 1 && dfs(board, word, visited, i, j + 1, k))	return true;			
-			visited[i][j] = false;
-		}
-		return k == word.size() ? true : false;
+        if (k == word.length()) return true;
+        if (!visited[i][j] && board[i][j] == word[k]) {
+            visited[i][j] = true;
+            k++;
+            if (i > 0 && dfs(board, word, visited, i-1, j, k))    return true;
+            if (i < board.size()-1 && dfs(board, word, visited, i+1, j, k))   return true;
+            if (j > 0 && dfs(board, word, visited, i, j-1, k))    return true;
+            if (j < board[0].size()-1 && dfs(board, word, visited, i, j+1, k))    return true;
+            visited[i][j] = false;
+        }
+        return k == word.length();
+        
 	}
 };
 
