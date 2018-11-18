@@ -22,7 +22,7 @@ It doesn't matter what you leave beyond the new length.
 ///@date	2016.04.30
 ///@version	3.1
 
-///@date    November 18, 2018
+///@date    November 19, 2018
 ///@version 3.2
 
 #include <iostream>
