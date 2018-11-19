@@ -27,6 +27,10 @@ Write a function to determine if a given target is in the array.
 
 ///@date	2016.04.30
 ///@version	2.2
+
+///@date    November 19, 2018
+///@version 2.3
+
 #include <iostream>
 #include <vector>
 
@@ -120,55 +124,39 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个部分旋转的含有重复元素的有序数组，判定其中是否存在指定值；
+    ///@param   nums    数组
+    ///@param   target  目标值
+    ///@return  如果目标值存在，返回true；否则返回false。
+    ///@note    1. 二分查找；
+    //          2. 如果中间值大于左边界，那么说明左半部分有序。这种情况下如果目标值在左半部分，就将右边界移到中间值左边，如果目标值在右半部分，就将左边界移动到中间值右侧；
+    //          3. 如果中间值小于左边界，那么说明右半部分有序。这种情况下如果目标值在右半部分，就将左边界移到中间值右侧，如果目标值在左半部分，就将右边界移到中间值左侧；
+    //          4. 如果中间值等于左边界，说明中间值到左边界一直都是重复元素，那么将左边界右移一个元素，重新计算中间值。
+    //          5. 该算法属于二分查找的变形，时间复杂度为O(logn)，空间复杂度为O(1)，其中n为数组的长度。
 	bool search(vector<int>& nums, int target) {
-		int l = 0, r = nums.size() - 1;
-		while (l <= r) {
-			int m = (l + r) / 2;
-			if (nums[m] == target)	return true;
-			if (nums[l] < nums[m]) {
-				if (nums[l] <= target && target < nums[m])	r = m - 1;
-				else	l = m + 1;
-			}
-			else if (nums[l] > nums[m]) {
-				if (nums[m] < target && target <= nums[r])	l = m + 1;
-				else	r = m - 1;
-			}
-			else l++;
-		}
-		return false;
+        int l = 0, r = nums.size() - 1;
+        while (l <= r) {
+            int m = (l + r) / 2;
+            if (nums[m] == target)  return true;
+            if (nums[l] < nums[m]) {
+                if (nums[l] <= target && target < nums[m])   r = m - 1;
+                else l = m + 1;
+            }
+            else if (nums[l] > nums[m]) {
+                if (nums[m] < target && target <= nums[r])   l = m + 1;
+                else r = m - 1;
+            }
+            else l++;
+        }
+        return false;
 	}
 };
 
 int main()
 {
-	vector<int> nums;
-// 	for (int i = 6; i <= 10; i++)
-// 	{
-// 		nums.push_back(i);
-// 	}
-// 	for (int i = 1; i <= 5; i++)
-// 	{
-// 		nums.push_back(i);
-// 	}
-
-//	nums.clear();
-	nums.push_back(5);
-	nums.push_back(1);
-	nums.push_back(3);
-	Solution slt;
-	for (int i = 0; i != nums.size(); i++)
-	{
-		cout << nums[i] << ' ';
-	}
-	cout << endl;
-	cout << "Target's Index: " << endl;
-// 	int k = 0;
-// 	while (k <= 12)
-// 	{
-// 		cout << slt.search(nums, k) << endl;
-// 		k++;
-// 	}
-	cout << slt.search(nums, 3) << endl;
-	
-	return 0;
+    int a[] = {1, 3, 5};
+	vector<int> nums(a, a+3);
+    Solution slt;
+    bool rslt = slt.search(nums, 1);
+    return 0;
 }
