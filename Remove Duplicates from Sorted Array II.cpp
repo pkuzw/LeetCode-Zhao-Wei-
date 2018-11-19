@@ -126,14 +126,22 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个已经排好序的数组，里面可能会有重复元素，对于这些重复元素，相同的最多保留两个，删除剩余的。要求空间复杂度为O(1)。
+    ///@param   nums    排好序的数组
+    ///@return  返回删除多余重复元素后数组的长度。
+    ///@note    1. 枚举法；
+    //          2. 从前向后遍历数组，如果nums[i-2-cnt] == nums[i]，那么说明元素相同，自增cnt；否则，用nums[i]替换掉nums[i-cnt]，最后返回n - cnt即可。
+    //          3. cnt应该是被删除的多余元素的累计值；
+    //          4. 时间复杂度为O(n)，空间复杂度为O(1)。其中n为数组的长度。
 	int removeDuplicates(vector<int>& nums) {
-		int n = nums.size(), dup_cnt = 0;
-		for (int i = 2; i < n; i++) {
-			if (nums[i-2-dup_cnt] == nums[i])	dup_cnt++;
-			else	nums[i-dup_cnt] = nums[i];
-		}
-		return n - dup_cnt;
-	}
+        if (nums.empty())   return 0;
+        int len = nums.size(), cnt = 0; // cnt是整个数组中应该被删除的元素的累计总数。
+        for (int i = 2; i < len; i++) {
+            if (nums[i] == nums[i-2-cnt])   cnt++;
+            else nums[i-cnt] = nums[i];
+        }
+        return len - cnt;
+    }
 };
 
 int main()
