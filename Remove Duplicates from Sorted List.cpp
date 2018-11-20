@@ -19,6 +19,9 @@ Given 1->1->2->3->3, return 1->2->3.
 ///@date	2016.04.30
 ///@version	1.2
 
+///@date    November 20, 2018
+///@version 2.0
+
 #include <iostream>
 #include <queue>
 
@@ -99,7 +102,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_2 {
 public:
 	///@brief	给定一个有序链表，删除其中的重复出现的元素的多余部分，每个元素只能出现一次
 	///@param	head	链表首元素
@@ -125,22 +128,25 @@ public:
 
 class Solution {
 public:
-	ListNode* deleteDuplicates(ListNode* head) {
-		if (!head || !head->next)	return head;
-		ListNode* indx = head;
-		ListNode* indx_nxt = indx->next;
-		while (indx_nxt) {
-			if (indx->val == indx_nxt->val) {
-				indx_nxt = indx_nxt->next;
-				indx->next = indx_nxt;
-			}
-			else {
-				indx = indx->next;
-				indx_nxt = indx_nxt->next;
-			}
-		}
-		return head;
-	}
+    ///@brief   给定一个有序链表，删除链表中的重复元素。
+    ///@param   head    有序链表的表头节点指针
+    ///@return  返回删除重复元素的有序链表。
+    ///@note    1. 枚举法；
+    ///         2. 从前往后遍历链表，在循环变量后设置一个next指针，如果该节点和当前循环变量的值相同，则删除，直至不同为止；
+    ///         3. 时间复杂度为O(n)，空间复杂度为O(1)。其中n为链表的长度。
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head || !head->next)   return head;
+        ListNode* i = head, *n = i->next;
+        while (n) {
+            while (n && i->val == n->val) {
+                i->next = n->next;
+                n = n->next;
+            }
+            i = i->next;
+            n = n ? n->next : n;
+        }
+        return head;
+    }
 };
 
 int main()
@@ -155,8 +161,8 @@ int main()
 	n[2]->val = 2;
 	n[3]->val = 3;
 	n[4]->val = 3;
-	Solution_v2 slt_v2;
-	ListNode* rslt = slt_v2.deleteDuplicates(n[0]);
+//	Solution_v2 slt_v2;
+//	ListNode* rslt = slt_v2.deleteDuplicates(n[0]);
 
 	Solution slt_v1_1;
 
