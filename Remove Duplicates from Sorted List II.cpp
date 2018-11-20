@@ -19,6 +19,9 @@ Given 1->1->1->2->3, return 2->3.
 ///@date	2016.04.30
 ///@version	3.0
 
+///@date    November 20, 2018
+///@version 4.0
+
 #include <deque>
 #include <iostream>
 
@@ -172,7 +175,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@note	1. 设置虚拟头结点；
 	//			2. 在遍历过程中找有重复的元素，找到其所有的重复区间，直接跳过；
@@ -197,6 +200,38 @@ public:
 		}
 		return preHead->next;
 	}
+};
+
+class Solution {
+public:
+    ///@brief   给定一个有序链表，其中节点值有可能会有重复的，删除所有重复节点，只保留不重复的节点。
+    ///@param   head    有序链表表头
+    ///@return  返回去重之后的链表表头。
+    ///@note    1. 枚举法；
+    ///         2. 在"Remove Duplicates from Sorted List"的基础上，增加一个临时变量用来保存当前循环变量的前驱节点，如果当前循环
+    //             变量是重复节点，一直向后找到下一个不重复节点后，将前驱节点的next指针指向该节点即可；
+    //          3. 考虑到有可能首元素就是重复节点，需要删除，所以还需要设置一个preHead节点来作为首节点的前驱；
+    //          4. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为链表长度。
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head || !head->next)   return head;
+        ListNode* preHead = new ListNode(0);
+        preHead->next = head;
+        ListNode* i = head;
+        ListNode* pre = preHead;
+        while (i) {
+            ListNode* nxt = i->next;
+            if (nxt && i->val == nxt->val) {
+                while (nxt && i->val == nxt->val)  nxt = nxt->next;
+                pre->next = nxt;
+                i = nxt;
+            }
+            else {
+                pre = i;
+                i = nxt;
+            }
+        }
+        return preHead->next;
+    }
 };
 
 int main()
