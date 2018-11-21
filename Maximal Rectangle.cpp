@@ -12,6 +12,9 @@ Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle con
 ///@date	2016.05.02
 ///@version	2.1
 
+///@date    November 21, 2018
+///@version 2.2
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -242,6 +245,9 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个由0和1组成的矩阵，计算由1围城的矩形的最大面积。
+    ///@param   matrix  矩阵
+    ///@return  返回矩阵中由1组成的子矩阵的最大面积。
 	int maximalRectangle(vector<vector<char>>& matrix) {
 		if (matrix.empty())	return 0;
 		int rslt = 0, row = matrix.size(), col = matrix[0].size();
@@ -250,10 +256,10 @@ public:
 			int cur_left = 0, cur_right = col;
 			for (int j = 0; j != col; j++)	height[j] = matrix[i][j] == '1' ? height[j] + 1 : 0;
 			for (int j = 0; j != col; j++) {
-				if (matrix[i][j] == '1') left[j] = max(left[j], cur_left);
+				if (matrix[i][j] == '1') left[j] = max(left[j], cur_left);  //?
 				else {
 					left[j] = 0;
-					cur_left = j + 1;
+					cur_left = j + 1;   //?
 				}
 			}
 			for (int j = col - 1; j >= 0; j--) {
