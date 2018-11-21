@@ -20,6 +20,9 @@ return 10.
 ///@date	2016.05.02
 ///@version	2.2
 
+///@date    November 20, 2018
+///@version 2.3
+
 #include <vector>
 #include <iostream>
 #include <stack>
@@ -128,41 +131,54 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一组直方图，每个长方形柱体的宽度为1，高度通过数组给定。计算直方图所包含矩形的最大面积。
+    ///@param   heights 直方图的高度数组
+    ///@return  返回直方图包含的矩形的最大面积。
+    ///@note    1. 栈；
+    //          2. 通过栈来记录连续非降直方图序列；
+    //          3. 从前向后遍历整个直方图序列，如果当前遍历的直方图柱体不比栈顶直方图高度低，就压栈；
+    //             否则就弹栈，并计算弹栈后该柱体的高度乘以当前柱体的下标减去当前栈顶柱体的下标（注意：不是弹栈后柱体的下标！）再减1（作
+    //             为宽度）。
+    //          4. 这样计算能够保证计算出所有连续柱体中不同高度的最大矩形面积。注意，因为栈中始终是保存着非降柱体的序列，所以无论何时，
+    //             heights[tp]作为已经弹出的柱体的高度，视为矩形的高度；i - stk.top() - 1是这么个意思，i是矩形的右边界的右邻居柱
+    //             体下标，stk.top()是矩形左边界的左邻居下标，那么这两个求差再减1就是矩形的宽度，因为栈内保存的柱体高度是非降的，那么
+    //             无论stk.top()和已经弹出的tp = stk.pop()是否连续，一定能够保证(stk.top(), tp)之间的柱体最低高度是
+    //             heights[tp]；
+    //          5. 最后，为了收尾，需要实现在heights数组中的末尾添加0，以确保所有的栈内元素都会被弹出。
+    //          5. 时间复杂度为O(n)，空间复杂度为O(n)，其中n是直方图柱体的个数。这个算法确实巧妙，第4步的理解也比较违反直觉，需要仔细
+    //             构造例子来理解。
+    //          6. 几个例子：a. {1, 100, 99, 100}；
+    //                     b. {1, 99, 100, 1, 100}.
+    //             把这两个例子想明白，你也就理解了。
 	int largestRectangleArea(vector<int>& heights) {
-		heights.push_back(0);
-		int rslt = 0, i = 0;
-		stack<int> stk;
-		while (i < heights.size()) {
-			if (stk.empty() || heights[i] >= heights[stk.top()])	stk.push(i++);
-			else {
-				int tp = stk.top();
-				stk.pop();
-				rslt = max(rslt, heights[tp] * (stk.empty() ? i : i - stk.top() - 1));
-			}
-		}
-		return rslt;
-	}
+        if (heights.empty())    return 0;
+        stack<int> stk;
+        int rslt = 0;
+        int i = 0;
+        heights.push_back(0);
+        while (i < heights.size()) {
+            if (stk.empty() || heights[i] >= heights[stk.top()]) {
+                stk.push(i++);
+            }
+            else {
+                int tp = stk.top();
+                stk.pop();
+                rslt = max(rslt, heights[tp] * (stk.empty() ? i : i - stk.top() - 1));
+            }
+        }
+        return rslt;
+    }
 };
 
 int main()
 {
-	vector<int> histogram;
-// 	for (int i = 0; i < 20000; i++)
-// 	{
-// 		histogram.push_back(i);
-// 	}
- 	
- 	histogram.push_back(4);
- 	histogram.push_back(2);
- 	histogram.push_back(7);
- 	histogram.push_back(3);
- 	histogram.push_back(2);
- 	histogram.push_back(5);
+    int a[6] = {1,99,100,1,100};
+	vector<int> histogram(a, a+4);
 
-	Solution_v1 slt_v1;
-	int rslt = slt_v1.largestRectangleArea_time_O_n(histogram);
-	rslt = slt_v1.largestRectangleArea_time_O_n2(histogram);
+//	Solution_v1 slt_v1;
+//	int rslt = slt_v1.largestRectangleArea_time_O_n(histogram);
+//	rslt = slt_v1.largestRectangleArea_time_O_n2(histogram);
 	Solution slt;
-	rslt = slt.largestRectangleArea(histogram);
+	int rslt = slt.largestRectangleArea(histogram);
 	return 0;
 }
