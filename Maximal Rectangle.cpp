@@ -248,6 +248,8 @@ public:
     ///@brief   给定一个由0和1组成的矩阵，计算由1围城的矩形的最大面积。
     ///@param   matrix  矩阵
     ///@return  返回矩阵中由1组成的子矩阵的最大面积。
+    ///@note    1. 枚举法；
+    //          2. 具体算法解释参见之前的注释。算法时间复杂度为O(mn)，空间复杂度为O(n)，其中m是矩阵的行数，n是矩阵的列数。
 	int maximalRectangle(vector<vector<char>>& matrix) {
 		if (matrix.empty())	return 0;
 		int rslt = 0, row = matrix.size(), col = matrix[0].size();
