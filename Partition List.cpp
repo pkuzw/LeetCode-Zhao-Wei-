@@ -21,6 +21,9 @@ return 1->2->2->4->3->5.
 ///@date	2016.05.02
 ///@version	1.2
 
+///@date    November 23, 2018
+///@version 2.1
+
 #include <iostream>
 #include <queue>
 
@@ -158,24 +161,12 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个链表和给定值，使得所有小于该值的节点都位于该值之前，所有大于等于该值的节点都位于该值之后。
+    ///@param   head    链表表头
+    ///@param   x       给定值
+    ///@return  返回怀分后的链表表头。
 	ListNode* partition(ListNode* head, int x) {
-		ListNode* lhead = new ListNode(0);
-		ListNode* rhead = new ListNode(0);
-		ListNode* i = head, *l = lhead, *r = rhead;
-		while (i) {
-			if (i->val < x) {
-				l->next = i;
-				l = l->next;
-			}
-			else {
-				r->next = i;
-				r = r->next;
-			}
-			i = i->next;
-		}
-		l->next = rhead->next;
-		r->next = nullptr;
-		return lhead->next;
+
 	}
 };
 
