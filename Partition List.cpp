@@ -21,7 +21,7 @@ return 1->2->2->4->3->5.
 ///@date	2016.05.02
 ///@version	1.2
 
-///@date    November 23, 2018
+///@date    November 24, 2018
 ///@version 2.1
 
 #include <iostream>
@@ -166,7 +166,7 @@ public:
     ///@param   x       给定值
     ///@return  返回怀分后的链表表头。
 	ListNode* partition(ListNode* head, int x) {
-
+        
 	}
 };
 
