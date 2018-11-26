@@ -164,9 +164,30 @@ public:
     ///@brief   给定一个链表和给定值，使得所有小于该值的节点都位于该值之前，所有大于等于该值的节点都位于该值之后。
     ///@param   head    链表表头
     ///@param   x       给定值
-    ///@return  返回怀分后的链表表头。
+    ///@return  返回划分后的链表表头。
+    ///@note    1. 枚举法；
+    //          2. 从前往后遍历链表，遇到比目标值小的元素，放入较小的链表；反之放入较大的链表；
+    //          3. 注意的是，两个子链表的表头和循环变量要独立设置，防止影响到原链表；
+    //          4. 时间复杂度为O(n)，空间复杂度为O(1)。其中n是链表的长度。
 	ListNode* partition(ListNode* head, int x) {
-        
+        if (!head || !head->next)   return head;
+        ListNode* smallerNode = new ListNode(0);
+        ListNode* biggerNode = new ListNode(0);
+        ListNode* i = smallerNode, *j = biggerNode, *k = head;
+        while (k) {
+            if (k->val < x) {
+                i->next = k;
+                i = i->next;
+            }
+            else {
+                j->next = k;
+                j = j->next;
+            }
+            k = k->next;
+        }
+        i->next = biggerNode->next;
+        j->next = nullptr;
+        return smallerNode->next;
 	}
 };
 
