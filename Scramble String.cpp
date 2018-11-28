@@ -50,7 +50,7 @@ Given two strings s1 and s2 of the same length, determine if s2 is a scrambled s
 ///@date	2016.05.02
 ///@version	2.2
 
-///@date    November 27, 2018
+///@date    November 28, 2018
 ///@version 2.3
 
 #include <iostream>
