@@ -201,6 +201,14 @@ public:
 	}
 };
 
+///@brief	判断两个字符串能够通过在二叉树节点上的交换来互相转换
+///@param	s1	字符串1
+///@param	s2	字符串2
+///@return	如果可以相互转换，则返回true；否则返回false
+///@note	1. 动态规划：1.维护一个三维数组来dp[k][i][j]保存字符串s1[i..i+k]与字符串s2[j..j+k]是否为scramble string。
+//			2. 初始条件为dp[1][i][j] = (s1[i] == s2[j]) ? true : false，
+//			3. 递推关系式为dp[k][i][j] = ((dp[l][i][j] && dp[k-l][i+l][j+l]) || (dp[l][i][j+k-l] && dp[k-l][i+l][j]))。
+//			4. 时间复杂度为O(n^4)，空间复杂度为O(n^3)。其中n为字符串长度。
 class Solution {
 public:
 	bool isScramble(string s1, string s2) {
