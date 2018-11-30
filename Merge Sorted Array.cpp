@@ -16,8 +16,11 @@ The number of elements initialized in nums1 and nums2 are m and n respectively.
 ///@date	2015.12.19
 ///@version	3.0
 
-///@version	2016.05.03
+///@date	2016.05.03
 ///@version	2.1
+
+///@date    November 30, 2018
+///@version 4.0
 
 #include <iostream>
 #include <vector>
@@ -113,17 +116,20 @@ public:
 
 class Solution {
 public:
+    ///@brief   将两个有序数组合并成一个。
+    ///@param   nums1   数组1
+    ///@param   nums2   数组2
+    ///@return  无
+    ///@note    1. 枚举；两种思路，要么新建一个数组用来存放中间结果，时间复杂度为O(m+n)，其中m和n分别是nums1和nums2的长度；
+    //             要么将nums2先拷贝到nums1里面，然后在nums1里面做排序，时间复杂度为O((m+n)lg(m+n))，空间复杂度为O(1)。
+    //          2. 将nums2先拷贝到nums1里面
 	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
-		vector<int> nums3;
-		int i = 0, j = 0;
-		while (i != m && j != n) {
-			if (nums1[i] <= nums2[j])	nums3.push_back(nums1[i++]);			
-			else	nums3.push_back(nums2[j++]);			
-		}
-		if (i == m) nums3.insert(nums3.end(), nums2.begin() + j, nums2.begin() + n);
-		if (j == n)	nums3.insert(nums3.end(), nums1.begin() + i, nums1.begin() + m);
-		nums1 = nums3;
-	}
+        if (nums1.empty() || nums2.empty()) return;
+        for (int i = m; i < m + n; i++) {
+            nums1[i] = nums2[i-m];
+        }
+        sort(nums1.begin(), nums1.end());
+    }
 };
 
 int main()
