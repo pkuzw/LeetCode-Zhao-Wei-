@@ -31,6 +31,9 @@ For now, the judge is able to judge based on one instance of gray code sequence.
 ///@date	2016.05.03
 ///@version	2.2
 
+///@date    December 1, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 
@@ -145,7 +148,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	vector<int> grayCode(int n) {
 		vector<int> rslt;
@@ -153,6 +156,35 @@ public:
 		return rslt;
 	}
 };
+
+
+class Solution {
+public:
+    ///@brief   计算格雷码。格雷码是指用二进制表示的连续两个数之间只有1位不同。
+    ///@param   n   给定一个非负数n，计算n位的所有格雷码编码，用十进制表示。
+    ///@return  返回所有的n位格雷码。
+    ///@note    1. 通过观察，注意到n位的格雷码就是将n-1位的格雷码的首位添加0，然后再逆序的在首位添加1。
+    //          2. 初始的0位的格雷码默认设为0，1位的格雷码设为0和1。
+    //          3. 时间复杂度为O(2^n)，其中n为格雷码的位数。
+    vector<int> grayCode(int n) {
+        vector<int> rslt(1, 0);
+        if (!n) return rslt;
+        if (n == 1) {
+            rslt.push_back(1);
+            return rslt;
+        }
+        rslt.push_back(1);
+        for (int i = 2; i <= n; i++) {
+            int addLen = rslt.size();
+            while (addLen) {
+                rslt.push_back(rslt[addLen-1] + (1 << (i-1)));
+                addLen--;
+            }
+        }
+        return rslt;
+    }
+};
+
 
 int main()
 {
