@@ -30,6 +30,9 @@ If nums = [1,2,2], a solution is:
 ///@date	2016.05.03
 ///@version	2.2
 
+///@date    December 2, 2018
+///@version 3.0
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -127,7 +130,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v2_2 {
 public:
 	vector<vector<int>> subsetsWithDup(vector<int>& nums) {
 		sort(nums.begin(), nums.end());
@@ -150,6 +153,13 @@ public:
 			combination.pop_back();
 		}
 	}
+};
+
+class Solution {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        
+    }
 };
 
 int main()
