@@ -157,8 +157,38 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个集合，计算所有可能的子集，去除掉所有重复子集。
+    ///@param   nums    集合
+    ///@return  返回所有可能的子集，且每个子集都不重复。
+    ///@note    1. 深度优先遍历。
+    ///         2. 先对整个数组进行排序，这样能够将重复的元素放到一起；
+    ///         3. 然后设计一个辅助函数dfs()，来递归调用，深度遍历所有可能的子集。在其中，对于重复元素要跳过。
+    ///         4. 时间复杂度为O(2^n)，空间复杂度为O(1)，其中n是集合的长度。
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
-        
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> rslt;
+        vector<int> combination;
+        for (int i = 0; i <= nums.size(); i++)	dfs(rslt, combination, nums, i);
+        return rslt;
+    }
+    
+    ///@brief   辅助函数
+    ///@param   rslt    最后所有可能子集的集合
+    ///@param   combination 一个正在被计算的子集
+    ///@param   nums    候选元素数组
+    ///@param   k       候选元素数组中剩余元素的数量
+    void dfs(vector<vector<int>>& rslt, vector<int>& combination, vector<int> nums, int k) {
+        if (!k) {
+            rslt.push_back(combination);
+            return;
+        }
+        for (int i = 0; i != nums.size(); i++) {
+            if (!i || nums[i] != nums[i-1])	combination.push_back(nums[i]);
+            else	continue;
+            vector<int> new_nums(nums.begin() + i + 1, nums.end());
+            dfs(rslt, combination, new_nums, k - 1);
+            combination.pop_back();
+        }
     }
 };
 
@@ -166,11 +196,8 @@ int main()
 {
 	vector<int> nums;
 	nums.push_back(1);
-	nums.push_back(1);
 	nums.push_back(2);
 	nums.push_back(2);
-	nums.push_back(2);
-	nums.push_back(3);
 
 	Solution slt;
 	vector<vector<int>> rslt = slt.subsetsWithDup(nums);
