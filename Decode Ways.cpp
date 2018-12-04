@@ -26,6 +26,9 @@ The number of ways decoding "12" is 2.
 ///@date	2016.05.05
 ///@version	2.2
 
+///@date    December 4, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -179,6 +182,13 @@ public:
 
 class Solution {
 public:
+    ///@brief   如果用数字表示字母在字母表中的序号，给定一个数字组成的串，计算所有可能的字符串数目。
+    ///@param   s   数字组成的字符串
+    ///@return  返回所有可能的字母组合数目。
+    ///@note    1. 动态规划；
+    //          2. 设dp[i]为s[0..i-1]的所有可能的字符串数目，那么根据最后一位能否转换为字母和最后两位能否转换为字母，有如下递推关系式：
+    //              dp[i] = (s[i-1] == 0 ? 0 : dp[i-1]) + ((s[i-2] == 1) || (s[i-2] == 2 && s[i-1] >= 0 && s[i-1] <= 6) ? dp[i-2] : 0)
+    //          4. 时间复杂度为O(n)，空间复杂度为O(n)，其中n为数字串的长度。空间复杂度为可以优化到O(1)。
 	int numDecodings(string s) {
 		if (s.empty())	return 0;
 		vector<int> dp(s.size() + 1, 0);
