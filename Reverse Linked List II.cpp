@@ -29,6 +29,9 @@ Given m, n satisfy the following condition:
 ///@date	2016.05.08
 ///@version	2.2
 
+///@date    December 5, 2018
+///@version 3.0
+
 #include <iostream>
 #include <stack>
 
@@ -269,37 +272,49 @@ public:
 
 class Solution {
 public:
+    ///@brief   反转指定区间内的链表节点。
+    ///@param   head    链表表头
+    ///@param   m       区间起始下标，从1开始计数；
+    ///@param   n       区间终止下标。能够保证不超过链表长度。
+    ///@return  返回翻转后的链表表头。
+    ///@note    1. 枚举；
+    //          2. 先找到要反转的区间，然后做好前驱和后继的标记，逐个翻转后返回。
+    //          3. 时间复杂度为O(n)，空间复杂度为O(1)。其中n为区间的终止下标大小。
 	ListNode* reverseBetween(ListNode* head, int m, int n) {
-		if (!head || !head->next || m >= n) return head;
-		ListNode* pre_head = new ListNode(INT_MAX);
-		pre_head->next = head;
-		ListNode* indx = head;
-		int i = 1;
-		while (i < m) {
-			indx = indx->next;
-			i++;
-		}
-		ListNode* rtail = indx;
-		ListNode* indx_nxt = indx->next;
-		ListNode* indx_nxt_nxt = indx_nxt ? indx_nxt->next : nullptr;
-		indx->next = nullptr;
-		while (i < n) {
-			if (indx_nxt) indx_nxt_nxt = indx_nxt->next;
-			indx_nxt->next = indx;
-			indx = indx_nxt;
-			indx_nxt = indx_nxt ? indx_nxt_nxt : indx_nxt;
-			i++;
-		}
-		ListNode* pre_indx = pre_head;
-		i = 1;
-		while (i < m) {
-			pre_indx = pre_indx->next;
-			i++;
-		}
-		pre_indx->next = indx;
-		rtail->next = indx_nxt;
-		return pre_head->next;
-	}
+        if (!head || !head->next || m >= n) return head;
+        int reverseLen = n - m + 1;
+        int startIndex = m;
+        ListNode* preM = new ListNode(0);   //  m的前驱节点
+        preM->next = head;
+        ListNode* postN = new ListNode(0);  //  n的后继节点
+        ListNode* index = head;
+        while (m > 1 && index) {
+            preM = preM->next;
+            index = index->next;
+            m--;
+        }
+        ListNode* nodeM = index; // m结点
+        ListNode* nodeN = new ListNode(0);  //    n结点
+        while (reverseLen > 1 && index) {
+            index = index->next;
+            reverseLen--;
+        }
+        nodeN = index;
+        postN = nodeN ? nodeN->next : nullptr;
+        
+        index = nodeM;
+        ListNode* preIndex = preM;
+        ListNode* postIndex = index->next;
+        while (index != postN) {
+            index->next = preIndex;
+            preIndex = index;
+            index = postIndex;
+            postIndex = index ? index->next : nullptr;
+        }
+        nodeM->next = postN;
+        preM->next = nodeN;
+        return startIndex == 1 ? preM->next : head;
+    }
 };
 
 int main()
@@ -307,9 +322,9 @@ int main()
 	Solution_v1 slt_v1;
 	ListNode* head = new ListNode(1);
  	slt_v1.insertNode(head, 2);
-//  	slt_v1.insertNode(head, 3);
-//  	slt_v1.insertNode(head, 4);
-//  	slt_v1.insertNode(head, 5);
+  	slt_v1.insertNode(head, 3);
+  	slt_v1.insertNode(head, 4);
+  	slt_v1.insertNode(head, 5);
 
 	ListNode* display = head;
 	cout << "Before: ";
@@ -327,8 +342,9 @@ int main()
 //	head = slt_v1.reverseBetween_Space_O_1(display, 1, 2);
 	
 	Solution slt;
-	ListNode* rslt = slt.reverseBetween(display, 1, 2);
-	cout << "After: ";
+	ListNode* rslt = slt.reverseBetween(display, 3, 3);
+    head = rslt;
+    cout << "After: ";
 	while (head != nullptr)
 	{
 		cout << head->val;
