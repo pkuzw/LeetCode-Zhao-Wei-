@@ -20,6 +20,9 @@ return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
 ///@date	2016.05.10
 ///@version	2.2
 
+///@date    December 5, 2018
+///@version 2.3
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -158,6 +161,9 @@ public:
 
 class Solution {
 public:
+    ///@brief   给定一个只由数字组成的字符串，计算所有转化成合法IPv4地址的可能。
+    ///@param   s   字符串
+    ///@return  返回所有的可能。
 	vector<string> restoreIpAddresses(string s) {
 		vector<string> rslt;
 		dfs(s, rslt, 4, "");
@@ -165,12 +171,20 @@ public:
 	}
 
 private:
+    ///@brief   判断一个子段是否合法。
+    ///@param   s   子段字符串。
+    ///@return  返回是否合法。
 	bool isValid(string s) {
 		if (s.size() > 3 || s.size() < 1 || (s.size() > 1 && s[0] == '0'))	return false;
 		int n = stoi(s);
 		return n <= 255 && n >= 0;
 	}
 
+    ///@brief   递归辅助函数。
+    ///@param   s   字符串剩余的子串
+    ///@param   rslt    结果数组
+    ///@param   k   一个合法IP地址的剩余段数
+    ///@param   ip  一个正在拼接的IP地址
 	void dfs(string s, vector<string>& rslt, int k, string ip) {
 		if (!k) {
 			if (s.empty())	rslt.push_back(ip);
