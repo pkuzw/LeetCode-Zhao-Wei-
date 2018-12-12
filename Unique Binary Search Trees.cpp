@@ -87,6 +87,10 @@ public:
 
 class Solution {
 public:
+    ///@brief   计算所有可能的二叉搜索树数目
+    ///@param   n   节点为从1到n
+    ///@return  返回所有可能的二叉搜索树数目
+    ///@note    refer above.
 	int numTrees(int n) {
 		vector<int> dp(n + 1, 0);
 		dp[0] = dp[1] = 1;
