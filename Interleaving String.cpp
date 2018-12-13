@@ -20,6 +20,9 @@ When s3 = "aadbbbaccc", return false.
 ///@date	2015.12.30
 ///@version 2.1
 
+///@date    December 13, 2018
+///@version 2.2
+
 #include <iostream>
 #include <string>
 #include <vector>
