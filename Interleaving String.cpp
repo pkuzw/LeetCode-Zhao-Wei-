@@ -128,7 +128,8 @@ public:
 	///@brief	判断字符串s3是否由s1和s2交叉组合而成
 	///@param	s1, s2, s3	字符串
 	///@return	如果s3可以由s1和s2交叉组合而成（各自字符顺序不变），则返回true；否则返回false
-	///@note	1. 动态规划；2. 设dp[i][j]表示字符串s1[0..i-1]和字符串s2[0..j-1]能否交叉组成s3[0..i+j-1]，初始化dp[i][0] = s1[0..i-1] == s3[0..i-1] ? true : false，
+	///@note	1. 动态规划；
+    //          2. 设dp[i][j]表示字符串s1[0..i-1]和字符串s2[0..j-1]能否交叉组成s3[0..i+j-1]，初始化dp[i][0] = s1[0..i-1] == s3[0..i-1] ? true : false，
 	//			dp[0][j] = s2[0..j-1] == s3[0..j-1] ? true : false，递推方程为dp[i][j] = (dp[i-1][j] && s1[i-1] == s3[i+j-1]) || (dp[i][j-1] && s2[j-1] == s3[i+j-1]) ? true : false；
 	//			3. 时间复杂度为O(n^2)，空间复杂度为O(n^2)。
 	bool isInterleave(string s1, string s2, string s3) {
@@ -143,35 +144,6 @@ public:
 			for (int j = 1; j != len2 + 1; j++)
 				dp[i][j] = (dp[i-1][j] && s1[i-1] == s3[i+j-1]) || (dp[i][j-1] && s2[j-1] == s3[i+j-1]) ? true : false;
 		return dp[len1][len2];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 		int len1 = s1.size(), len2 = s2.size(), len3 = s3.size();
-// 		if (len1 + len2 != len3)	return false;
-// 		vector<vector<bool>> dp(len1 + 1, vector<bool>(len2 + 1, false));
-// 		for (int i = 0; i != len1+1; i++)
-// 			dp[i][0] = (s1.substr(0, i) == s3.substr(0, i)) ? true : false;
-// 		for (int j = 0; j != len2+1; j++)
-// 			dp[0][j] = (s2.substr(0, j) == s3.substr(0, j)) ? true : false;
-// 		for (int i = 1; i != len1+1; i++)
-// 			for (int j = 1; j != len2+1; j++)
-// 				dp[i][j] = (dp[i][j-1] && s2[j-1] == s3[i+j-1]) || (dp[i-1][j] && s1[i-1] == s3[i+j-1]) ? true : false;
-// 		return dp[len1][len2];
 	}
 };
 
