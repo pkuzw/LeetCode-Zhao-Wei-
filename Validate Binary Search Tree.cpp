@@ -75,7 +75,9 @@ public:
 	///@brief	判断一棵二叉树是否满足BST的性质
 	///@param	root	根节点
 	///@return	如果这棵二叉树是BST，则返回true；否则返回false
-	///@note	1. 递归；2. 通过遍历二叉树节点时其值是否满足上下限来进行判断；3. 上下限用LONG_MAX和LONG_MIN来做初始值，这样可以包含比INT_MAX和INT_MIN更大的值。
+	///@note	1. 递归；
+    //          2. 通过遍历二叉树节点时其值是否满足上下限来进行判断；
+    //          3. 上下限用LONG_MAX和LONG_MIN来做初始值，这样可以包含比INT_MAX和INT_MIN更大的值。
 	bool isValidBST(TreeNode* root) {		
 		return helper(root, LONG_MAX, LONG_MIN);
 	}
