@@ -18,6 +18,9 @@ A solution using O(n) space is pretty straight forward. Could you devise a const
 ///@date	2015.12.31
 ///@version	3.1
 
+///@date    December 19, 2018
+///@version 3.2
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -198,7 +201,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3_1 {
 public:
 	///@brief	将二叉树中的异常节点交换，转换成正常的BST
 	///@param	root	根节点
@@ -241,6 +244,13 @@ public:
 		}
 		if (first && second) swap(first->val, second->val);
 	}
+};
+
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        
+    }
 };
 
 
