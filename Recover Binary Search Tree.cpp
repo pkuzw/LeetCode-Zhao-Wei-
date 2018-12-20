@@ -248,6 +248,9 @@ public:
 
 class Solution {
 public:
+    ///@brief   恢复一个二叉搜索树
+    ///@param   root    二叉搜索树的树根
+    ///@return  无
     void recoverTree(TreeNode* root) {
         
     }
