@@ -39,7 +39,10 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@version v1.2
 
 ///@date    December 8, 2018
-///@version v1.3
+///@version 1.3
+
+///@date    December 20, 2018
+///@version 3.2
 
 #include <iostream>
 #include <vector>
@@ -254,7 +257,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v1_3 {
 public:
     ///@brief   中序遍历二叉树
     ///@param   root    二叉树根节点
@@ -277,6 +280,29 @@ private:
         rslt.push_back(root->val);
         dfs(root->right);
     }
+};
+
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        return recursiveInorderTraversal(root);
+    }
+    
+    vector<int> recursiveInorderTraversal(TreeNode* root) {
+        recursiveDFS(root);
+        return rslt;
+    }
+    
+    void recursiveDFS(TreeNode* root) {
+        if (!root)  return;
+
+        recursiveInorderTraversal(root->left);
+        rslt.push_back(root->val);
+        recursiveInorderTraversal(root->right);
+    }
+    
+private:
+    vector<int> rslt;
 };
 
 int main()
