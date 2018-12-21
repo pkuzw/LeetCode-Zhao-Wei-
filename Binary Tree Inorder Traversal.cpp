@@ -284,21 +284,55 @@ private:
 
 class Solution {
 public:
+    ///@brief   中序遍历二叉树
+    ///@param   root    根节点
+    ///@return  返回遍历后的节点数组
+    ///@note    1. 一共有三种不同的方法来遍历二叉树：
+    //              a. 递归法，时间复杂度为O(n)，空间复杂度为O(n)；
+    //              b. 栈法，时间复杂度为O(n)，空间复杂度为O(n)；
+    //              c. Morris法，时间复杂度为O(n)，空间复杂度为O(1)。
     vector<int> inorderTraversal(TreeNode* root) {
-        return recursiveInorderTraversal(root);
+        //return recursiveInorderTraversal(root);
+        return stackInorderTraversal(root);
     }
     
+    ///@brief   递归法中序遍历二叉树
+    ///@param   root    根节点
+    ///@return  返回遍历后的节点数组
     vector<int> recursiveInorderTraversal(TreeNode* root) {
         recursiveDFS(root);
         return rslt;
     }
     
+    ///@brief   递归法的辅助函数
+    ///@param   root    二叉树的根节点
     void recursiveDFS(TreeNode* root) {
         if (!root)  return;
 
         recursiveInorderTraversal(root->left);
         rslt.push_back(root->val);
         recursiveInorderTraversal(root->right);
+    }
+    
+    ///@brief   栈法
+    ///@param   root    二叉树根节点
+    ///@return  返回遍历后的节点数组
+    vector<int> stackInorderTraversal(TreeNode* root) {
+        TreeNode* cur = root;
+        stack<TreeNode*> stk;
+        while (cur || !stk.empty()) {
+            if (cur) {
+                stk.push(cur);
+                cur = cur->left;
+            }
+            else if (!cur && !stk.empty()) {
+                cur = stk.top();
+                stk.pop();
+                rslt.push_back(cur->val);
+                cur = cur->right;
+            }
+        }
+        return rslt;
     }
     
 private:
