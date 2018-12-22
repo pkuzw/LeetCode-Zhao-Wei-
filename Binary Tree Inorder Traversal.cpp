@@ -325,7 +325,7 @@ public:
                 stk.push(cur);
                 cur = cur->left;
             }
-            else if (!cur && !stk.empty()) {
+            else if (!stk.empty()) {
                 cur = stk.top();
                 stk.pop();
                 rslt.push_back(cur->val);
