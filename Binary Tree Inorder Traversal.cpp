@@ -41,7 +41,7 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 ///@date    December 8, 2018
 ///@version 1.3
 
-///@date    December 20, 2018
+///@date    December 22, 2018
 ///@version 3.2
 
 #include <iostream>
@@ -293,7 +293,8 @@ public:
     //              c. Morris法，时间复杂度为O(n)，空间复杂度为O(1)。
     vector<int> inorderTraversal(TreeNode* root) {
         //return recursiveInorderTraversal(root);
-        return stackInorderTraversal(root);
+        //return stackInorderTraversal(root);
+        return morrisInorderTraversal(root);
     }
     
     ///@brief   递归法中序遍历二叉树
@@ -335,6 +336,47 @@ public:
         return rslt;
     }
     
+    ///@brief   Morris中序遍历
+    ///@param   root    二叉树根节点
+    ///@return  返回中序遍历后的数组
+    ///@note    1. Morris中序遍历最关键的点在于找到当前节点的前驱节点（其左子树的最右子节点，是一个叶节点），令其前驱节点的右孩子为当前节点，这样在遍历完前驱节点后能够直接找到当前节点；
+    //          2. 算法整个分成这么几个部分：
+    //             当前节点是否有左孩子：
+    //             a. 如果有，则找到前驱节点：
+    //                  I.  如果前驱节点的右孩子为空，则令其右孩子为当前节点，然后当前节点变为其左孩子；
+    //                  II. 如果前驱节点的右孩子不为空，说明已经将其置为了当前节点，当前节点通过步骤b，已经通过这个前驱节点的右孩子指针返回了它自身，那么应该将这个前驱节点的右孩子指针置空，恢
+    //                      复二叉树的原貌，并输出点前节点，然后将当前节点变为其右孩子；
+    //             b. 如果没有，则输出当前节点（此时当前节点已经没有左子树，按照中序遍历的定义，应该输出），并将当前节点变为其右孩子。因为如果当前节点原本有右子树，根据中序遍历的定义进入右子树没
+    //                问题；相反，如果没有右子树，那么通过a情况的第I步，也可以通过这一步回到当前节点的后继节点，所以这是整个Morris算法的最精妙之处；
+    //             c. 不断重复a, b两步骤，直至当前节点为空。
+    //          3. 时间复杂度为O(n)，空间复杂度为O(1)，其中n为二叉树中节点的数目。
+    vector<int> morrisInorderTraversal(TreeNode* root) {
+        TreeNode* cur = root;
+        while (cur) {
+            //a
+            if (cur->left) {
+                TreeNode* pre = cur->left;
+                while (pre->right && pre->right != cur) pre = pre->right;
+                //a.I
+                if (!pre->right) {
+                    pre->right = cur;
+                    cur = cur->left;
+                }
+                //a.II
+                else {
+                    pre->right = nullptr;
+                    rslt.push_back(cur->val);
+                    cur = cur->right;
+                }
+            }
+            //b
+            else {
+                rslt.push_back(cur->val);
+                cur = cur->right;
+            }
+        }
+        return rslt;
+    }
 private:
     vector<int> rslt;
 };
