@@ -243,7 +243,8 @@ public:
     //          2. 用栈实现，相对复杂，时间复杂度为O(n)，空间复杂度为O(n)；
     //          3. Morris线索二叉树遍历，利用叶节点中的空白左孩子作为当前节点的后继节点，最复杂，但是时间复杂度为O(n)，空间复杂度为O(1)。其中n就是二叉树中的节点数目。
     vector<int> postorderTraversal(TreeNode* root) {
-        return recursivePostorderTraversal(root);
+        //return recursivePostorderTraversal(root);
+        return stackPostorderTraversal(root);
     }
 private:
     vector<int> rslt;
@@ -265,6 +266,32 @@ private:
         rslt.push_back(root->val);
     }
     
+    ///@brief   栈实现二叉树后序遍历
+    ///@param   root    二叉树的根节点
+    ///@return  返回二叉树后序遍历的节点值数组
+    ///@note    1. 最外层的循环判定式为栈是否为空；
+    //          2. 利用一个临时变量保存最近一次输出的节点，在输出时更新，以此来判定是否应该输出其父节点；
+    //          3. 在压栈的时候注意先压右孩子，再压左孩子，这样在弹栈的时候能够保证先输出左孩子，再输出右孩子。
+    vector<int> stackPostorderTraversal(TreeNode* root) {
+        if (!root)  return rslt;
+        TreeNode* cur = root;
+        TreeNode* visited = root;
+        stack<TreeNode*> stk;
+        stk.push(root);
+        while (!stk.empty()) {
+            cur = stk.top();
+            if ((!cur->left && !cur->right) || cur->left == visited || cur->right == visited) {
+                rslt.push_back(cur->val);
+                visited = cur;
+                stk.pop();
+            }
+            else {
+                if (cur->right)     stk.push(cur->right);
+                if (cur->left)      stk.push(cur->left);
+            }
+        }
+        return rslt;
+    }
 };
 
 int main()
