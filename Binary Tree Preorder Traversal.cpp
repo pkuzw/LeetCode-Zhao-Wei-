@@ -29,6 +29,9 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@version	2.1
 ///@version	3.0
 
+///@date    December 23, 2018
+///@version 3.1
+
 #include <vector>
 #include <stack>
 
@@ -110,7 +113,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	前序遍历二叉树
 	///@param	root	根节点
@@ -184,6 +187,39 @@ private:
 		}
 		return rslt;
 	}
+};
+
+class Solution {
+public:
+    ///@brief   前序遍历二叉树
+    ///@param   root    二叉树的根节点
+    ///@return  返回前序遍历二叉树的节点值数组
+    ///@note    1. 前序遍历二叉树有三种实现：a. 递归；b. 栈；c. Morris Threaded Binary Tree遍历算法；
+    //          2. 每种实现的方法的时间复杂度都是O(n)，但是a和b的空间复杂度为O(n)，c的空间复杂度为O(1)。
+    vector<int> preorderTraversal(TreeNode* root) {
+        return recursivePreorderTraversal(root);
+    }
+    
+    
+    ///@brief   递归法实现二叉树的前序遍历
+    ///@param   root    二叉树的根节点
+    ///@return  返回前序遍历二叉树后的结点值数组。
+    vector<int> recursivePreorderTraversal(TreeNode* root) {
+        helper(root);
+        return rslt;
+    }
+    
+    ///@brief   递归辅助函数
+    ///@param   root    二叉树的根节点
+    void helper(TreeNode* root) {
+        if (!root) return;
+        rslt.push_back(root->val);
+        helper(root->left);
+        helper(root->right);
+    }
+    
+private:
+    vector<int> rslt;
 };
 
 int main()
