@@ -30,6 +30,9 @@ Note: Recursive solution is trivial, could you do it iteratively?
 ///@date	2016.01.13
 ///@version	3.0
 
+///@date    December 23, 2018
+///@version 3.1
+
 #include <vector>
 #include <stack>
 
@@ -115,7 +118,7 @@ private:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	后序遍历二叉树
 	///@param	root	二叉树树根
@@ -228,7 +231,41 @@ private:
 			if (x == to)	break;
 		}
 	}
-};		
+};
+
+class Solution {
+public:
+    ///@brief   后序遍历二叉树
+    ///@param   root    二叉树根节点
+    ///@return  返回后序遍历后的节点值数组
+    ///@note    实现后序遍历二叉树的方法有三种：
+    //          1. 递归实现，最直观，时间复杂度为O(n)，空间复杂度为O(n)；
+    //          2. 用栈实现，相对复杂，时间复杂度为O(n)，空间复杂度为O(n)；
+    //          3. Morris线索二叉树遍历，利用叶节点中的空白左孩子作为当前节点的后继节点，最复杂，但是时间复杂度为O(n)，空间复杂度为O(1)。其中n就是二叉树中的节点数目。
+    vector<int> postorderTraversal(TreeNode* root) {
+        return recursivePostorderTraversal(root);
+    }
+private:
+    vector<int> rslt;
+    
+    ///@brief   递归实现二叉树后序遍历
+    ///@param   root    二叉树根节点
+    ///@return  二叉树后序遍历的节点值数组。
+    vector<int> recursivePostorderTraversal(TreeNode* root) {
+        helper(root);
+        return rslt;
+    }
+    
+    ///@brief   递归辅助函数
+    ///@param   root    二叉树根节点
+    void helper(TreeNode* root) {
+        if (!root)  return;
+        helper(root->left);
+        helper(root->right);
+        rslt.push_back(root->val);
+    }
+    
+};
 
 int main()
 {
