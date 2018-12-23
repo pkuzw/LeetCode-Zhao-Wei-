@@ -202,7 +202,7 @@ public:
         return morrisPreorderTraversal(root);
     }
     
-    
+private:
     ///@brief   递归法实现二叉树的前序遍历
     ///@param   root    二叉树的根节点
     ///@return  返回前序遍历二叉树后的结点值数组。

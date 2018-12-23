@@ -297,6 +297,7 @@ public:
         return morrisInorderTraversal(root);
     }
     
+private:
     ///@brief   递归法中序遍历二叉树
     ///@param   root    根节点
     ///@return  返回遍历后的节点数组
