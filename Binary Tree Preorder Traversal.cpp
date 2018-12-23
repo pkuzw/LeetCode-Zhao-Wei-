@@ -198,7 +198,8 @@ public:
     //          2. 每种实现的方法的时间复杂度都是O(n)，但是a和b的空间复杂度为O(n)，c的空间复杂度为O(1)。
     vector<int> preorderTraversal(TreeNode* root) {
         //return recursivePreorderTraversal(root);
-        return stackPreorderTraversal(root);
+        //return stackPreorderTraversal(root);
+        return morrisPreorderTraversal(root);
     }
     
     
@@ -236,7 +237,37 @@ public:
         }
         return rslt;
     }
-     
+    
+    ///@brief   Morris线二叉树前序遍历实现
+    ///@param   root    二叉树根节点
+    ///@return  返回前序二叉树遍历后的节点值数组
+    ///@note    1. 前序的morris遍历算法和中序morris遍历很类似，具体算法可以参考我在Binary Tree Inorder Traversal中的相关实现。
+    //          2. 唯一的不同之处在于，当找到当前节点的前驱节点后，在将前驱节点的空右孩子指向当前节点时就对当前节点进行输出，而不是等到断开这个连接时再输出。
+    vector<int> morrisPreorderTraversal(TreeNode* root) {
+        TreeNode* cur = root;
+        TreeNode* pre = cur ? cur->left : nullptr;
+        while (cur) {
+            if (cur->left) {
+                pre = cur->left;
+                while (pre->right && pre->right != cur)
+                    pre = pre->right;
+                if (!pre->right) {
+                    pre->right = cur;
+                    rslt.push_back(cur->val);
+                    cur = cur->left;
+                }
+                else {
+                    pre->right = nullptr;
+                    cur = cur->right;
+                }
+            }
+            else {
+                rslt.push_back(cur->val);
+                cur = cur->right;
+            }
+        }
+        return rslt;
+    }
 private:
     vector<int> rslt;
 };
