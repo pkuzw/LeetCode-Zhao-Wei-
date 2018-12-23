@@ -244,7 +244,9 @@ public:
     //          3. Morris线索二叉树遍历，利用叶节点中的空白左孩子作为当前节点的后继节点，最复杂，但是时间复杂度为O(n)，空间复杂度为O(1)。其中n就是二叉树中的节点数目。
     vector<int> postorderTraversal(TreeNode* root) {
         //return recursivePostorderTraversal(root);
-        return stackPostorderTraversal(root);
+        //return stackPostorderTraversal(root);
+        vector<int> morrisRslt = morrisPostorderTraversal(root);
+        return morrisRslt;
     }
 private:
     vector<int> rslt;
@@ -291,6 +293,38 @@ private:
             }
         }
         return rslt;
+    }
+    
+    ///@brief   Morris线索二叉树遍历算法
+    ///@param   root    二叉树的根节点
+    ///@return  返回后序遍历二叉树的节点值数组
+    ///@note    1. 这次的实现与之前都有所不同，是利用了二叉树的左右对称性和前序与后序遍历算法的对称性来实现的。
+    //          2. 将Morris前序遍历二叉树算法中对当前节点的前驱节点的寻找改为其后继节点的寻找，然后利用后继节点的左孩子的空白指针指向当前节点。
+    //          3. 在具体实现上，就是将原来的left都改为了right，原来的right都改为了left。在最后返回时需要重新将整个结果数组逆序返回。
+    vector<int> morrisPostorderTraversal(TreeNode* root) {
+        TreeNode* cur = root;
+        TreeNode* post = cur ? cur->right : nullptr;
+        while (cur) {
+            if (cur->right) {
+                post = cur->right;
+                while (post->left && post->left != cur)
+                    post = post->left;
+                if (!post->left) {
+                    post->left = cur;
+                    rslt.push_back(cur->val);
+                    cur = cur->right;
+                }
+                else {
+                    post->left = nullptr;
+                    cur = cur->left;
+                }
+            }
+            else {
+                rslt.push_back(cur->val);
+                cur = cur->left;
+            }
+        }
+        return vector<int>(rslt.rbegin(), rslt.rend());
     }
 };
 
