@@ -225,7 +225,7 @@ public:
     ///@return  返回前序遍历的节点值数组。
     ///@note    1. 用栈实现前序遍历二叉树注意两点：首先，压栈的时候应该先压右孩子，再压左孩子，这样才能在弹栈的时候保证先访问左子树，再访问右子树；
     //          2. 其次，在我这个实现里面，外层的循环变量的判定条件是当前节点是否为空，而不是之前的栈是否为空，所以要在给当前节点赋下一节点（即弹出栈顶元素给它）时，需要提前判断一下栈是否为空。
-    vector<int> stackPreorderTraversal(TreeNode* root) {
+    vector<int> stackPreorderTraversal_1(TreeNode* root) {
         stack<TreeNode*> stk;
         TreeNode* cur = root;
         while (cur) {
@@ -234,6 +234,23 @@ public:
             if (cur->left)     stk.push(cur->left);
             cur = stk.empty() ? nullptr : stk.top();
             if (!stk.empty())   stk.pop();
+        }
+        return rslt;
+    }
+    
+    ///@brief   栈法实现二叉树的前序遍历
+    ///@param   root    根节点
+    ///@return  返回前序遍历的节点值数组。
+    vector<int> stackPreorderTraversal(TreeNode* root) {
+        if (!root)  return rslt;
+        stack<TreeNode*> stk;
+        stk.push(root);
+        while (!stk.empty()) {
+            TreeNode* cur = stk.top();
+            stk.pop();
+            rslt.push_back(cur->val);
+            if (cur->right)     stk.push(cur->right);
+            if (cur->left)      stk.push(cur->left);
         }
         return rslt;
     }
