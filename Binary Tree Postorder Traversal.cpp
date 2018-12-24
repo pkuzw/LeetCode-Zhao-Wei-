@@ -292,7 +292,8 @@ private:
                 if (cur->left)      stk.push(cur->left);
             }
         }
-        return rslt;
+        
+return rslt;
     }
     
     ///@brief   Morris线索二叉树遍历算法
