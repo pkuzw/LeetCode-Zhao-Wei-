@@ -29,6 +29,9 @@ return its level order traversal as:
 ///@date	2016.01.04
 ///@version	3.0
 
+///@date    December 25, 2018
+///@version 3.1
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -129,7 +132,7 @@ public:
 	}
 };
 
-class Solution {
+class Solution_v3 {
 public:
 	///@brief	层序遍历二叉树
 	///@param	root	根节点
@@ -153,6 +156,26 @@ public:
 		helper(root->left, rslt, lvl + 1);
 		helper(root->right, rslt, lvl + 1);
 	}
+};
+
+class Solution {
+public:
+    ///@brief   二叉树的水平遍历
+    ///@param   root    二叉树的根节点
+    ///@return  返回二叉树的宽度优先遍历的节点值二维数组，其中每个二级数组代表二叉树的一层。
+    ///@note    1. 二叉树的宽度优先遍历有两种实现方式，一种是递归实现，另一种是迭代实现。
+    //          2. 两种实现的时间复杂度都是O(n)，空间复杂度为O(n)。其中n是二叉树的节点数目。
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        
+    }
+    
+private:
+    
+    void recursiveLevelOrderTraversal(TreeNode* root, int lvlCnt) {
+        
+    }
+    
+    vector<vector<int>> rslt;
 };
 
 int main()
