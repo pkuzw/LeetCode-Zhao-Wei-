@@ -166,13 +166,27 @@ public:
     ///@note    1. 二叉树的宽度优先遍历有两种实现方式，一种是递归实现，另一种是迭代实现。
     //          2. 两种实现的时间复杂度都是O(n)，空间复杂度为O(n)。其中n是二叉树的节点数目。
     vector<vector<int>> levelOrder(TreeNode* root) {
-        
+        int levelCnt = 0;
+        recursiveLevelOrderTraversal(root, levelCnt);
+        return rslt;
     }
     
 private:
-    
+    ///@brief   递归实现
+    ///@param   root    二叉树根节点
+    ///@param   lvlCnt  二叉树的层号
+    ///@return  无
+    ///@note    1. 如果当前节点为空，则直接返回；
+    //          2. 如果当前层号大于等于结果数组中的元素，则说明应该向结果数组中添加新的层（子数组）；
+    //          3. 然后将当前节点的值压入层号所在的子数组；
+    //          4. 递归调用函数自身，将当前节点的左右孩子分别作为参数，层号也相应加1作为参数传入。
+    //          5. 时间复杂度为O(n)，空间复杂度为O(n)，其中n是二叉树节点数目。
     void recursiveLevelOrderTraversal(TreeNode* root, int lvlCnt) {
-        
+        if (!root)  return;
+        if (lvlCnt >= rslt.size())   rslt.push_back(vector<int>());
+        rslt[lvlCnt].push_back(root->val);
+        recursiveLevelOrderTraversal(root->left, lvlCnt+1);
+        recursiveLevelOrderTraversal(root->right, lvlCnt+1);
     }
     
     vector<vector<int>> rslt;
@@ -180,5 +194,27 @@ private:
 
 int main()
 {
+    TreeNode* nodeArray[7];
+    for (int i = 0; i < 7; i++) {
+        nodeArray[i] = new TreeNode(i+1);
+    }
+    for (int i = 0; i < 7; i++) {
+        if (i < 3)
+            nodeArray[i]->left = nodeArray[i*2+1];
+        if (i < 3)
+            nodeArray[i]->right = nodeArray[i*2+2];
+        if (i > 3) {
+            nodeArray[i]->left = nullptr;
+            nodeArray[i]->right = nullptr;
+        }
+    }
+    Solution_v2 slt2;
+    vector<vector<int>> rslt2 = slt2.levelOrder(nodeArray[0]);
+    
+    Solution slt;
+    vector<vector<int>> rslt = slt.levelOrder(nodeArray[0]);
+    for (int i = 0; i < 7; i++) {
+        delete nodeArray[i];
+    }
 	return 0;
 }
