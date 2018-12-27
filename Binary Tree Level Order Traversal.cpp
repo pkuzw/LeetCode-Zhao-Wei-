@@ -167,7 +167,8 @@ public:
     //          2. 两种实现的时间复杂度都是O(n)，空间复杂度为O(n)。其中n是二叉树的节点数目。
     vector<vector<int>> levelOrder(TreeNode* root) {
         int levelCnt = 0;
-        recursiveLevelOrderTraversal(root, levelCnt);
+        //recursiveLevelOrderTraversal(root, levelCnt);
+        queueLevelOrderTraversal(root);
         return rslt;
     }
     
@@ -187,6 +188,35 @@ private:
         rslt[lvlCnt].push_back(root->val);
         recursiveLevelOrderTraversal(root->left, lvlCnt+1);
         recursiveLevelOrderTraversal(root->right, lvlCnt+1);
+    }
+    
+    ///@brief   队列实现
+    ///@param   root    根节点
+    ///@return  无
+    ///@note    1. 队列实现就是将每一层的节点压入队列，然后取队头元素，再依次将它们的孩子压入队列。每一层元素结束后要加上一个空指针，标示该层已经结束。
+    //          2. 时间复杂度为O(n)，空间复杂度为O(n)，其中n是二叉树的节点数目。
+    void queueLevelOrderTraversal(TreeNode* root) {
+        if (!root)  return;
+        queue<TreeNode*> que;
+        que.push(root);
+        que.push(nullptr);
+        vector<int> level;
+        while (!que.empty()) {
+            TreeNode* cur = que.front();
+            que.pop();
+            if (cur) {
+                level.push_back(cur->val);
+                if (cur->left)  que.push(cur->left);
+                if (cur->right) que.push(cur->right);
+            }
+            else {
+                if (!que.empty()) {
+                    que.push(nullptr);
+                }
+                rslt.push_back(level);
+                level.clear();
+            }
+        }
     }
     
     vector<vector<int>> rslt;
